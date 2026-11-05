@@ -174,7 +174,7 @@ def validate(d):
     covered = {x['dd'] for x in d.get('supplements', [])}
     for x in d.get('domain_depth', []):
         if x['moscow'] == 'Must' and x['id'] not in covered: errs.append(f"{x['id']}: a Must-have theme has no supplement")
-    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all'}
+    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all', 'data', 'test'}
     for r in d.get('design', {}).get('requirements', []):
         for c in r['checks']:
             if c not in KNOWN_CHECKS: errs.append(f"{r['id']}: unknown check {c}")
@@ -241,6 +241,14 @@ def validate_frameworks(d, errs, src, roles):
             if r not in rb: errs.append(f"{x['id']}: unknown rulebook entry {r}")
         for r in x['cr']:
             if r not in crs: errs.append(f"{x['id']}: unknown capability {r}")
+    if 'testing' in d:
+        tids = [x['id'] for x in d['testing']['tasks']]
+        if len(tids) != len(set(tids)): errs.append('duplicate testing task ids')
+        for x in d['testing']['tasks']:
+            for r in x['roles']:
+                if r != 'all' and r not in personas: errs.append(f"{x['id']}: unknown role {r}")
+            page = x['start'].split('#')[0]
+            if page[:-5] not in {k for k, _, _ in NAV} | {'contact'}: errs.append(f"{x['id']}: unknown start page {page}")
     mt = d['maturity']
     if len(mt['topics']) != 10 or len(mt['levels']) != 5: errs.append('maturity: expected 10 topics and 5 levels')
     for st in mt['strands']:
@@ -419,6 +427,8 @@ PAGE_DESC = {
     'capability-model': 'Every capability the DAM Policy and related guidance need, flagged explicit, implicit or inferred, with a data maturity model and self-assessment.',
     'professions': 'Government professions, Digital and Data capability framework roles, career pathways, skills and learning routes for data asset management.',
     'change': 'Embedding the DAM Policy in business as usual and in change programmes: business cases, assurance, legacy exits, contracts and handover.',
+    'data': 'Open data from the DAM capability playbooks: requirements, vocabulary, capability map, quality rules and more, with a DCAT catalogue for harvesting.',
+    'test': 'Help test the Data Asset Management (DAM) capability playbooks: short tasks for each role and a feedback form.',
     'design': 'Theory of change, research plan, service blueprint, requirements traceability, architecture and Service Standard self-assessment for the portal.',
     'notices': 'Disclaimers, transparency notices, credits and full citations for every source used by the DAM capability playbooks.',
     'accessibility': 'Accessibility statement for the DAM capability playbooks, following the GOV.UK model statement for public sector websites.',
@@ -583,6 +593,8 @@ class Site:
 <meta name="description" content="{E(seo_desc)}">
 <meta name="robots" content="{"noindex" if key == "404" else "index, follow"}">
 <link rel="canonical" href="{E(canonical)}">
+<link rel="alternate" type="application/ld+json" href="data/catalogue.jsonld" title="Open data catalogue (DCAT, JSON-LD)">
+<link rel="alternate" type="text/turtle" href="data/catalogue.ttl" title="Open data catalogue (DCAT, Turtle)">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -614,7 +626,7 @@ class Site:
 <button type="button" id="display-toggle" aria-expanded="false" aria-controls="display-panel" hidden>{icon("a-large-small")}<span>Display options</span></button></div></div>
 {display}
 </header>
-<div class="banner"><strong class="tag">Prototype</strong>This is not an official GOV.UK service or published guidance. Where it repeats GDS guidance, the GOV.UK page is the authority. <a href="contact.html">Use the contact form</a> to tell us what you think.</div>
+<div class="banner"><strong class="tag">Prototype</strong>This is not an official GOV.UK service or published guidance. Where it repeats GDS guidance, the GOV.UK page is the authority. <a href="test.html">Help us test it</a> or <a href="contact.html">use the contact form</a> to tell us what you think.</div>
 <nav class="gbar" id="gbar" aria-label="Portal sections"><ul class="top">{nav}<li class="more" hidden><button type="button" aria-expanded="false">{icon("chevron-down")}More sections</button><ul></ul></li></ul></nav>
 <div class="wrap">
 {drawer_html}
@@ -663,7 +675,7 @@ class Site:
 <div><h2>{icon("info")} About this portal</h2>
 <p>{E(m["status"])}</p>
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
-<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#open">Open register</a></li></ul></div>
+<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="test.html">Help us test</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
 <p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>
 <p>{E(m["contact_note"])}</p></div>
@@ -704,7 +716,7 @@ class Site:
                  'personas': self.p_personas, 'learning': self.p_learning, 'library': self.p_library, 'knowledge': self.p_knowledge,
                  'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
                  'professions': self.p_professions, 'change': self.p_change, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
-                 'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices,
+                 'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices, 'data': self.p_data, 'test': self.p_test,
                  'accessibility': self.p_accessibility, '404': self.p_404}
         for k, fn in pages.items():
             (self.out / f'{k}.html').write_text(fn(), encoding='utf-8')
@@ -1230,8 +1242,7 @@ class Site:
 <h2 id="templates">{icon("file-text")} Templates</h2>{table("t-tmpl", "Templates in the three playbooks", ["Template", "Capability", "Fields", "Download"], tm)}
 <h2 id="sectors">{icon("layers")} Sector supplements</h2>
 <p>Extra governance, catalogue fields and quality rules for {len(d["supplements"])} kinds of data are in the <a href="sectors.html">Sectors</a> section, and signposted from each capability playbook.</p>
-<h2 id="data">{icon("download")} Open data</h2><p>Every page is generated from one content file, also published in open formats.</p>
-<ul class="link-list">{"".join(f'<li><a href="{u}">{icon("download")}{E(t)}</a></li>' for u, t in dl)}</ul>'''
+<h2 id="data">{icon("download")} Open data</h2><p>Everything on this portal is also published as open data, described in a catalogue other portals can harvest. See <a href="data.html">Open data</a> for every dataset, its formats and licence.</p>'''
         drawer = [{'label': 'Library', 'icon': 'library', 'items': [
             {'id': 'library', 'label': 'All material', 'icon': 'library', 'count': len(d['library'])},
             {'id': 'templates', 'label': 'Templates', 'icon': 'file-text', 'count': len(tm)},
@@ -1359,44 +1370,36 @@ class Site:
 
     def p_about(self):
         d, m = self.d, self.m
-        orr = ''.join(f'<tr id="{o["id"]}"><th scope="row">{E(o["id"])}</th><td>{E(o["item"])}</td><td>{E(o["who"])}</td></tr>' for o in d['open_register'])
-        n = self.counts()
+        lim = [o for o in d['open_register'] if o.get('reader')]
+        orr = ''.join(f'<tr id="{o["id"]}"><th scope="row">{E(o["id"])}</th><td><strong>{E(o["reader"])}.</strong> {E(o["item"])}</td></tr>' for o in sorted(lim, key=lambda o: o['id']))
         provs = ''.join(f'<li>{prov(k)} {E(v)}</li>' for k, v in PROV_TEXT.items())
         body = self.hero('info', 'About', 'About this portal', E(m['subtitle']) + '.',
                          brief=['A prototype that brings together the playbooks for the three capabilities behind the DAM Policy.',
-                                'Every fact is labelled with where it came from.', 'What it cannot yet do is listed openly in the open register.'])
+                                'Every fact is labelled with where it came from.', 'What it cannot yet do is listed openly under known limitations.'])
         body += f'''<h2 id="intent">{icon("target")} Purpose</h2><p>{E(m["intent"])}</p>
-<p>Standard applied: {E(m["profile"])} {E(m["grade_reason"])}</p>
-<h2 id="checkpoint">{icon("milestone")} Checkpoint</h2>
-<p><strong>Brief.</strong> Bring together the playbook material for governance, cataloguing and quality in one interactive portal, organised around the people who use it and how they learn.</p>
-<p><strong>How it was built.</strong> Material came from the GOV.UK guidance behind the policy ({n["verified"]} sources checked on {E(m["verified_on"])}), the Data Quality Commons playbook, the cross-government Data Governance Playbook draft and the Metadata Exchange Model. It was combined into one content file with a requirements spine, three step-by-step methods, one set of roles, routes for {len(d["personas"])} roles and {n["modules"]} learning modules.</p>
-<p><strong>Against the brief.</strong> Met for governance and quality. Partly met for cataloguing, which is built from public guidance because the fuller cataloguing playbook is not yet published (OR-01). Routes and personas are not yet tested with users (OR-04).</p>
 <h2 id="provenance">{icon("tag")} How sources are labelled</h2><ul>{provs}</ul>
 <p>Requirement strength follows the wording of the source. Step sequences are labelled as synthesis or practitioner material; they are not GOV.UK requirements.</p>
 <h2 id="findings">{icon("search")} Verification findings</h2>
 {"".join(f'<section class="finding" id="{x["id"]}"><h3>{E(x["id"])}: {E(x["title"])}</h3><p>{E(x["detail"])}</p><p><strong>Action:</strong> {E(x["action"])} <span class="hint">Verified {E(x["verified"])} against {self.finding_src(x)}</span></p></section>' for x in d["findings"])}
-<h2 id="standards">{icon("badge-check")} Assessment against the build standard</h2>
-<p>How this portal meets the self-routines and practices of the reusable build standard, rated MoSCoW for a shared portal. Status is what is in place in this release.</p>
-{table("t-std", "Build standard assessment", ["ID", "Routine or practice", "MoSCoW", "Status", "How"], [[E(x["id"]), E(x["name"]), E(x["moscow"]), f'<strong class="status s-{slug(x["status"]).replace("met", "completed").replace("partly", "in-progress").replace("not-yet", "not-started")}">{E(x["status"])}</strong>', E(x["how"])] for x in d["standards"]])}
 <h2 id="explain">{icon("lightbulb")} How the portal decides things</h2>
 <ul><li><strong>Search order.</strong> Exact title matches first, then titles that start with your words, then titles containing all your words, then other matches, each in page order.</li>
 <li><strong>Progress.</strong> A step is done when you mark it. A module is done when all its activities are marked. A route counts both.</li>
 <li><strong>Status page.</strong> A weekly automated run checks sources, the review date and page weight. It never changes content; it opens an issue for a person to act on.</li></ul>
-<h2 id="open">{icon("clipboard-list")} Open register</h2>
-<div class="table-wrap" role="region" aria-labelledby="t-open" tabindex="0"><table><caption id="t-open">What design cannot close, and who must act</caption><thead><tr><th scope="col">ID</th><th scope="col">Item</th><th scope="col">Who must act</th></tr></thead><tbody>{orr}</tbody></table></div>
+<h2 id="limitations">{icon("clipboard-list")} Known limitations</h2>
+<p>What this prototype cannot yet do or promise. Bear these in mind while you test it, and tell us through the <a href="test.html">testing page</a> or the <a href="contact.html">contact form</a> if you can help close one.</p>
+<div class="table-wrap" role="region" aria-labelledby="t-open" tabindex="0"><table><caption id="t-open">Known limitations of this prototype</caption><thead><tr><th scope="col">ID</th><th scope="col">Limitation</th></tr></thead><tbody>{orr}</tbody></table></div>
 <h2 id="accessibility">{icon("accessibility")} Accessibility statement</h2>
 <p>This portal aims to meet WCAG 2.2 at level AA. Each release is checked automatically with axe-core in a real browser, for keyboard use, for sideways scrolling from 320 to 1920 pixels wide, and in light and dark modes. You can change text size, line spacing and colours in Display options.</p>
 <p>Known limitations: it has not been tested in person with disabled users or with assistive technology users (OR-09). The knowledge graph is a visual aid; the same relationships are in tables on the policy and capability pages. Progress tracking needs scripts; every page can be read without them.</p>
 <p>If you find a problem, use the <a href="contact.html">contact form</a>. If you cannot use it, ask a colleague to send it for you. If you are not happy with the response, contact the Equality Advisory and Support Service (EASS).</p>
 <h2 id="privacy">{icon("lock-keyhole")} Privacy</h2><p>The portal sets no cookies and loads nothing from other sites. Your display choices and progress are kept only in your own browser and can be cleared from the home page. The contact form opens GitHub, where messages are public.</p>
-<h2 id="build">{icon("badge-check")} Build and checks</h2><p>Build {E(self.build_id)}. Generated from one content file. Each release runs structural, link, provenance, email, language, accessibility and layout checks. Each check is shown to fail on a deliberate break before it is trusted. Defects and the checks that now prevent each one are recorded in the repository's <a href="https://github.com/{E(m["repo"])}/blob/main/docs/defect-register.md">defect register</a>.</p>'''
+<h2 id="build">{icon("badge-check")} Build and checks</h2><p>Build {E(self.build_id)}. Generated from one content file. Each release runs structural, link, provenance, email, language, accessibility and layout checks. Each check is shown to fail on a deliberate break before it is trusted. Defects and the checks that now prevent each one are recorded in the repository, with the build report and the full register of open items: <a href="https://github.com/{E(m["repo"])}/tree/main/docs">repository documents</a>.</p>'''
         drawer = [{'label': 'About', 'icon': 'info', 'items': [
-            {'id': 'intent', 'label': 'Purpose', 'icon': 'target'}, {'id': 'checkpoint', 'label': 'Checkpoint', 'icon': 'milestone'},
+            {'id': 'intent', 'label': 'Purpose', 'icon': 'target'},
             {'id': 'provenance', 'label': 'Source labels', 'icon': 'tag', 'count': 5},
             {'id': 'findings', 'label': 'Verification findings', 'icon': 'search', 'count': len(d['findings']), 'new': True},
-            {'id': 'standards', 'label': 'Build standard assessment', 'icon': 'badge-check', 'count': len(d['standards'])},
             {'id': 'explain', 'label': 'How the portal decides', 'icon': 'lightbulb', 'count': 3},
-            {'id': 'open', 'label': 'Open register', 'icon': 'clipboard-list', 'count': len(d['open_register'])},
+            {'id': 'limitations', 'label': 'Known limitations', 'icon': 'clipboard-list', 'count': len(lim)},
             {'id': 'accessibility', 'label': 'Accessibility', 'icon': 'accessibility'},
             {'id': 'privacy', 'label': 'Privacy', 'icon': 'lock-keyhole'}, {'id': 'build', 'label': 'Build and checks', 'icon': 'badge-check'}]}]
         return self.page('about', 'About', body, drawer, crumbs=['About'])
@@ -1732,6 +1735,141 @@ class Site:
                   {'label': 'Practices', 'icon': 'list-checks', 'items': [{'id': x['id'], 'label': x['title'], 'icon': x['icon']} for x in ch['items']]}]
         return self.page('change', 'Delivery and change', body, drawer, crumbs=['Playbooks', 'Delivery and change'])
 
+    # -- version 1.5.1: open data and testing ------------------------------------------------
+    def datasets(self):
+        """Each dataset the portal publishes, with its files. The DCAT catalogue, the Open data page and check C-28 all use this list."""
+        d = self.d
+        ds = [
+            ('requirements', 'DAM Policy requirements', 'Every requirement in the DAM Policy and its guidance, with strength, capability, source and provenance.', ['requirements.csv'], ['requirements', 'policy']),
+            ('capability-map', 'Capability requirements map', f'{len(d.get("capmap", []))} capabilities the policy and adjacent guidance need, flagged explicit, implicit or inferred, with signposts to the exact GOV.UK sections.', ['capability-map.csv'], ['capability model', 'maturity']),
+            ('maturity-structure', 'Data maturity model structure', 'Topics, themes and row counts of the Data Maturity Assessment for Government, with links to each topic. Structure only; the framework text is not copied.', ['maturity-structure.csv'], ['data maturity']),
+            ('vocabulary', 'Data asset management vocabulary', 'Glossary and thesaurus as SKOS concepts, with definitions, alternative labels and broader terms.', ['vocabulary.ttl', 'vocabulary.jsonld', 'glossary.csv'], ['glossary', 'SKOS', 'thesaurus']),
+            ('metadata-dictionary', 'Metadata data dictionary', 'The metadata properties to record for critical data assets, with obligation and Metadata Exchange Model slot.', ['metadata-dictionary.csv'], ['metadata', 'DCAT']),
+            ('templates', 'Playbook templates', 'Fields of every template in the three playbooks.', ['templates.csv'], ['templates']),
+            ('sector-rules', 'Sector data quality rules', f'{sum(len(x["rules"]) for x in d.get("supplements", []))} starter quality rules for {len(d.get("supplements", []))} kinds of data, runnable with the Data Quality Commons kit.',
+             ['sector-rules.csv'] + [f'rules/{x["id"].lower()}.yaml' for x in d.get('supplements', [])], ['data quality', 'rules', 'dqkit']),
+            ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
+            ('ddat-role-skills', 'Data role skills and levels', 'Skills and skill levels for Digital and Data capability framework roles with data asset management duties.', ['ddat-role-skills.csv'], ['skills', 'professions']),
+            ('rulebook', 'Related policies, standards and legislation', 'Every policy, standard, piece of legislation and framework the portal links to, with publisher and update date.', ['rulebook.csv', 'sources.jsonld'], ['rulebook', 'standards']),
+            ('traceability', 'Portal requirements traceability', 'Each portal requirement, the features that meet it and the checks that prove it.', ['traceability.csv'], ['traceability']),
+            ('playbooks', 'Full portal content', 'Everything on the portal in one JSON file.', ['playbooks.json'], ['playbooks']),
+            ('status', 'Portal health', 'Latest automated health run: source currency, signposted sections, links and page weight.', ['status.json'], ['status']),
+        ]
+        return [dict(id=a, title=b, desc=c, files=[f for f in fs if (self.out / 'data' / f).exists() or f == 'status.json' and self.status], kw=k) for a, b, c, fs, k in ds]
+
+    MEDIA = {'.csv': 'text/csv', '.json': 'application/json', '.jsonld': 'application/ld+json', '.ttl': 'text/turtle', '.yaml': 'application/yaml'}
+
+    def write_catalogue(self, out):
+        """A DCAT 3 catalogue of the portal's own datasets, as JSON-LD and Turtle, for harvesters such as CKAN and data.gov.uk."""
+        m, base = self.m, self.m['site_url']
+        lic = m['licence_content_url']
+        pub = {'@id': base + '#publisher', '@type': 'foaf:Agent', 'foaf:name': m['title'] + ' (prototype)'}
+        contact = {'@type': 'vcard:Kind', 'vcard:fn': 'Contact form', 'vcard:hasURL': {'@id': base + 'contact.html'}}
+        dsets = []
+        for x in self.datasets():
+            dsets.append({'@id': base + 'data.html#' + x['id'], '@type': 'dcat:Dataset', 'dcterms:identifier': f'{m["id"]}-{x["id"]}',
+                          'dcterms:title': {'@value': x['title'], '@language': 'en-GB'}, 'dcterms:description': {'@value': x['desc'], '@language': 'en-GB'},
+                          'dcat:keyword': x['kw'], 'dcterms:license': {'@id': lic}, 'dcterms:publisher': pub, 'dcat:contactPoint': contact,
+                          'dcterms:modified': {'@value': m['as_of'], '@type': 'xsd:date'}, 'dcat:version': m['version'],
+                          'dcat:landingPage': {'@id': base + 'data.html#' + x['id']},
+                          'dcat:distribution': [{'@id': base + 'data/' + f + '#distribution', '@type': 'dcat:Distribution', 'dcterms:title': f,
+                                                 'dcat:downloadURL': {'@id': base + 'data/' + f}, 'dcat:accessURL': {'@id': base + 'data/' + f},
+                                                 'dcat:mediaType': {'@id': 'https://www.iana.org/assignments/media-types/' + self.MEDIA[Path(f).suffix]},
+                                                 'dcterms:license': {'@id': lic}} for f in x['files']]})
+        cat = {'@context': {'dcat': 'http://www.w3.org/ns/dcat#', 'dcterms': 'http://purl.org/dc/terms/', 'foaf': 'http://xmlns.com/foaf/0.1/',
+                            'vcard': 'http://www.w3.org/2006/vcard/ns#', 'xsd': 'http://www.w3.org/2001/XMLSchema#'},
+               '@id': base + 'data/catalogue.jsonld', '@type': 'dcat:Catalog', 'dcterms:title': {'@value': m['title'] + ': open data', '@language': 'en-GB'},
+               'dcterms:description': {'@value': 'Open data published by the DAM capability playbooks prototype. Not an official government catalogue.', '@language': 'en-GB'},
+               'dcterms:publisher': pub, 'dcterms:license': {'@id': lic}, 'dcterms:modified': {'@value': m['as_of'], '@type': 'xsd:date'},
+               'dcat:contactPoint': contact, 'foaf:homepage': {'@id': base}, 'dcat:dataset': dsets}
+        (out / 'catalogue.jsonld').write_text(json.dumps(cat, indent=1, ensure_ascii=False), encoding='utf-8')
+        q = lambda t: '"' + str(t).replace('\\', '\\\\').replace('"', '\\"') + '"'
+        ttl = ['@prefix dcat: <http://www.w3.org/ns/dcat#> .', '@prefix dcterms: <http://purl.org/dc/terms/> .', '@prefix foaf: <http://xmlns.com/foaf/0.1/> .',
+               '@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .', '@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .', '',
+               f'<{base}#publisher> a foaf:Agent ; foaf:name {q(pub["foaf:name"])}@en-GB .', '',
+               f'<{base}data/catalogue.jsonld> a dcat:Catalog ; dcterms:title {q(m["title"] + ": open data")}@en-GB ; dcterms:publisher <{base}#publisher> ;',
+               f'  dcterms:description {q("Open data published by the DAM capability playbooks prototype. Not an official government catalogue.")}@en-GB ;',
+               f'  dcat:contactPoint [ a vcard:Kind ; vcard:fn "Contact form" ; vcard:hasURL <{base}contact.html> ] ;',
+               f'  dcterms:license <{lic}> ; dcterms:modified "{m["as_of"]}"^^xsd:date ; foaf:homepage <{base}> ;',
+               '  dcat:dataset ' + ' , '.join(f'<{base}data.html#{x["id"]}>' for x in self.datasets()) + ' .', '']
+        for x in self.datasets():
+            dist = ' , '.join(f'<{base}data/{f}#distribution>' for f in x['files'])
+            ttl.append(f'<{base}data.html#{x["id"]}> a dcat:Dataset ; dcterms:identifier {q(m["id"] + "-" + x["id"])} ; dcterms:title {q(x["title"])}@en-GB ;\n'
+                       f'  dcterms:description {q(x["desc"])}@en-GB ; ' + ' ; '.join(f'dcat:keyword {q(k)}@en-GB' for k in x['kw']) + ' ;\n'
+                       f'  dcterms:license <{lic}> ; dcterms:publisher <{base}#publisher> ; dcterms:modified "{m["as_of"]}"^^xsd:date ; dcat:version {q(m["version"])} ;\n'
+                       f'  dcat:contactPoint [ a vcard:Kind ; vcard:fn "Contact form" ; vcard:hasURL <{base}contact.html> ] ;\n'
+                       f'  dcat:landingPage <{base}data.html#{x["id"]}> ; dcat:distribution {dist} .')
+            for f in x['files']:
+                ttl.append(f'<{base}data/{f}#distribution> a dcat:Distribution ; dcterms:title {q(f)} ; dcat:downloadURL <{base}data/{f}> ; dcat:accessURL <{base}data/{f}> ;\n'
+                           f'  dcat:mediaType <https://www.iana.org/assignments/media-types/{self.MEDIA[Path(f).suffix]}> ; dcterms:license <{lic}> .')
+            ttl.append('')
+        (out / 'catalogue.ttl').write_text('\n'.join(ttl), encoding='utf-8')
+
+    def p_data(self):
+        m, base = self.m, self.m['site_url']
+        ds = self.datasets()
+        rows = []
+        for x in ds:
+            files = ' '.join(f'<a class="pill" href="data/{E(f)}">{icon("download")}{E(f.split("/")[-1])}</a>' for f in x['files'][:6])
+            more = f' <span class="hint">and {len(x["files"]) - 6} more files</span>' if len(x['files']) > 6 else ''
+            rows.append([f'<span id="{x["id"]}">{E(x["title"])}</span>', E(x['desc']), files + more])
+        sd = {'@type': 'DataCatalog', 'name': m['title'] + ': open data', 'url': base + 'data.html',
+              'dataset': [{'@type': 'Dataset', 'name': x['title'], 'description': x['desc'], 'url': base + 'data.html#' + x['id'],
+                           'identifier': f'{m["id"]}-{x["id"]}', 'keywords': x['kw'], 'license': m['licence_content_url'], 'isAccessibleForFree': True,
+                           'dateModified': m['as_of'], 'version': m['version'], 'creator': {'@type': 'Organization', 'name': m['title'] + ' (prototype)', 'url': base},
+                           'distribution': [{'@type': 'DataDownload', 'contentUrl': base + 'data/' + f, 'encodingFormat': self.MEDIA[Path(f).suffix]} for f in x['files']]} for x in ds]}
+        body = self.hero('download', 'Open data', 'Open data', 'Everything on this portal is also published as open data that people and other portals can reuse.',
+                         brief=['Download any dataset in open formats, under the Open Government Licence.', 'Harvest the whole set through a DCAT catalogue.', 'Files can be fetched directly from other websites.'],
+                         meta=[('database', f'{len(ds)} datasets'), ('file-text', f'{sum(len(x["files"]) for x in ds)} files'), ('scale', m['licence_content'])])
+        body += f'''<h2 id="datasets">{icon("database")} Datasets</h2>
+{table("t-datasets", "Datasets published by this portal", ["Dataset", "What it contains", "Download"], rows)}
+<h2 id="harvest">{icon("share-2")} Harvesting and reuse</h2>
+<ul><li><strong>Catalogue.</strong> A DCAT 3 catalogue of every dataset and file: <a href="data/catalogue.jsonld">JSON-LD</a> and <a href="data/catalogue.ttl">Turtle</a>. Every page links to it in its header, so harvesters can find it from any address.</li>
+<li><strong>Each dataset</strong> carries an identifier, title, description, keywords, licence, publisher, contact point (the contact form), modification date and version.</li>
+<li><strong>Search engines.</strong> This page describes each dataset with schema.org markup, which dataset search services read.</li>
+<li><strong>Direct access.</strong> Files are served with permission for other websites to fetch them, so other portals and tools can read them directly.</li>
+<li><strong>Vocabulary.</strong> Concepts are published as SKOS, so other glossaries and catalogues can link to them.</li>
+<li><strong>Updates.</strong> Files change only with a release. The version and date are in every file's catalogue entry and on <a href="whats-new.html">What's new</a>.</li></ul>
+<div class="notice-box">{icon("info")}<p>This is a prototype, not an official government catalogue. Where data repeats GOV.UK guidance, the GOV.UK page is the authority. The sources it draws on are catalogued separately in <a href="data/sources.jsonld">sources.jsonld</a>.</p></div>'''
+        drawer = [{'label': 'Open data', 'icon': 'download', 'items': [{'id': 'datasets', 'label': 'Datasets', 'icon': 'database', 'count': len(ds)},
+                                                                        {'id': 'harvest', 'label': 'Harvesting and reuse', 'icon': 'share-2', 'count': 6}]}]
+        return self.page('data', 'Open data', body, drawer, crumbs=['Open data'], jsonld={'mainEntity': sd})
+
+    def p_test(self):
+        d, m, t = self.d, self.m, self.d['testing']
+        pers = {p['id']: p for p in d['personas']}
+        form = f'https://github.com/{m["repo"]}/issues/new'
+        cards = ''
+        for x in t['tasks']:
+            who = 'Everyone' if 'all' in x['roles'] else ', '.join(pers[r]['title'] for r in x['roles'])
+            fb = form + '?' + urllib.parse.urlencode({'template': t['feedback_form'], 'title': f'[Testing] {x["id"]}: {x["title"]}', 'task': x['id']})
+            data_roles = 'all ' + ' '.join(pers) if 'all' in x['roles'] else ' '.join(x['roles'])
+            cards += (f'<li class="cr-card test-task" id="{x["id"]}" data-item data-role="{data_roles}"><div class="cr-head"><span class="lv-n">{E(x["id"][2:])}</span><div><p class="caption">{E(x["id"])} · {E(who)}</p><h3>{E(x["title"])}</h3></div></div>'
+                      f'<p><strong>Done when:</strong> {E(x["done"])}</p>'
+                      f'<p class="sa-actions"><a class="btn secondary" href="{E(x["start"])}">{icon("play")}Start this task</a> <a class="btn secondary" href="{E(fb)}">{icon("message-square-text")}Tell us how it went</a> {mark_done("test:" + x["id"], "Done")}</p></li>')
+        opts = ''.join(f'<option value="{p["id"]}">{E(p["title"])}</option>' for p in d['personas'])
+        ids = ['test:' + x['id'] for x in t['tasks']]
+        body = self.hero('play', 'Help us test', 'Help us test this portal', E(t['intro']),
+                         brief=['Pick the tasks closest to your role.', 'Try each one without help, then tell us how it went.', 'Feedback is public on GitHub, so do not include names or sensitive information.'],
+                         meta=[('list-checks', f'{len(t["tasks"])} tasks'), ('clock', 'About 20 minutes'), ('users-round', f'{len(d["personas"])} roles')])
+        body += f'''<h2 id="how">{icon("route")} How to take part</h2>
+<ol><li>Choose your role below to see the tasks for it.</li><li>Select <strong>Start this task</strong>. Try to finish it without asking anyone.</li>
+<li>Select <strong>Tell us how it went</strong>. Say whether you finished, how easy it was from 1 to 7, and what got in your way.</li>
+<li>Tick <strong>Done</strong> to keep track. This is kept in your browser only.</li></ol>
+<p>If you use a screen reader, magnifier, voice control or other assistive technology, your feedback is especially valuable. The form lets you say so.</p>
+<h2 id="tasks">{icon("list-checks")} Tasks</h2>{progress_widget(ids, "Tasks done")}
+<div class="filters" data-filter="task-list" role="group" aria-label="Filter tasks by role"><div><label for="t-role">Your role</label><select id="t-role" name="role"><option value="">All roles</option>{opts}</select></div><p class="count-out" aria-live="polite"></p></div>
+<ul class="cr-list two" id="task-list">{cards}</ul>
+<h2 id="after">{icon("message-square-text")} What happens to your feedback</h2>
+<p>Feedback is read by the people maintaining this prototype, grouped by task and role, and used to decide what to change. Changes are listed on <a href="whats-new.html">What's new</a>.</p>
+<p>The feedback form opens GitHub, where messages are public and you need a free account. If you cannot use GitHub, ask a colleague to send your feedback for you; a private route is being arranged (see <a href="about.html#OR-02">known limitations</a>).</p>
+<h2 id="other">{icon("circle-help")} Anything else</h2><p>For anything not covered by a task, use the <a href="contact.html">contact form</a> or the "was this page useful?" link at the bottom of every page.</p>'''
+        drawer = [{'label': 'Testing', 'icon': 'play', 'items': [{'id': 'how', 'label': 'How to take part', 'icon': 'route', 'count': 4},
+                                                                  {'id': 'tasks', 'label': 'Tasks', 'icon': 'list-checks', 'count': len(t['tasks'])},
+                                                                  {'id': 'after', 'label': 'What happens next', 'icon': 'message-square-text'},
+                                                                  {'id': 'other', 'label': 'Anything else', 'icon': 'circle-help'}]}]
+        return self.page('test', 'Help us test', body, drawer, crumbs=['Help us test'])
+
     def p_status(self):
         st = self.status
         if not st:
@@ -1942,18 +2080,48 @@ class Site:
                           **({'skos:broader': {'@id': base + c['broader']}} if c['broader'] else {})} for c in d['concepts']]}
         (out / 'vocabulary.jsonld').write_text(json.dumps(jl, indent=1, ensure_ascii=False), encoding='utf-8')
         cat = {'@context': {'dcat': 'http://www.w3.org/ns/dcat#', 'dcterms': 'http://purl.org/dc/terms/'},
-               '@id': m['site_url'] + 'data/catalogue.jsonld', '@type': 'dcat:Catalog', 'dcterms:title': m['title'] + ': sources',
+               '@id': m['site_url'] + 'data/sources.jsonld', '@type': 'dcat:Catalog', 'dcterms:title': m['title'] + ': sources',
                'dcterms:modified': m['as_of'], 'dcat:contactPoint': {'@type': 'http://www.w3.org/2006/vcard/ns#Kind', 'http://www.w3.org/2006/vcard/ns#hasURL': m['site_url'] + 'contact.html'},
                'dcat:resource': [{'@id': s['url'], '@type': 'dcat:Resource', 'dcterms:title': s['title'], 'dcterms:publisher': s['publisher'],
                                   'dcterms:type': s['type'], 'dcterms:description': s['note']} for s in d['sources']]
                + [{'@id': x['url'], '@type': 'dcat:Resource', 'dcterms:title': x['title'], 'dcterms:publisher': x['publisher'],
                    'dcterms:type': x['group'], 'dcterms:description': x['why']} for x in d['rulebook']]}
-        (out / 'catalogue.jsonld').write_text(json.dumps(cat, indent=1, ensure_ascii=False), encoding='utf-8')
-        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])
+        (out / 'sources.jsonld').write_text(json.dumps(cat, indent=1, ensure_ascii=False), encoding='utf-8')
+        self.write_catalogue(out)
+        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility', 'data', 'test'])
         (self.out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>', encoding='utf-8')
 
 
 def write_registers(d, docs):
+    write_owner_docs(d, docs)
+    _write_registers(d, docs)
+
+
+def write_owner_docs(d, docs):
+    """Full open register, build report and build standard assessment: for the service team, kept in the repository (version 1.5.1)."""
+    docs.mkdir(exist_ok=True)
+    cell = lambda t: str(t).replace('|', '\\|').replace('\n', ' ')
+    head = 'Generated from `content/` by `tools/build.py`. Do not edit by hand.\n\n'
+    rows = '\n'.join(f'| {o["id"]} | {"Yes" if o.get("reader") else "No"} | {cell(o["item"])} | {cell(o["who"])} |' for o in sorted(d['open_register'], key=lambda o: o['id']))
+    (docs / 'open-register.md').write_text('# Open register\n\n' + head + 'Items design cannot close, and who must act. "On portal" items appear as known limitations on the About page.\n\n'
+                                           '| ID | On portal | Item | Who must act |\n|---|---|---|---|\n' + rows + '\n', encoding='utf-8')
+    rows = '\n'.join(f'| {x["id"]} | {cell(x["name"])} | {x["moscow"]} | {x["status"]} | {cell(x["how"])} |' for x in d['standards'])
+    (docs / 'build-standard-assessment.md').write_text('# Assessment against the build standard\n\n' + head + f'{cell(d["meta"]["profile"])} {cell(d["meta"]["grade_reason"])}\n\n'
+                                                       '| ID | Routine or practice | MoSCoW | Status | How |\n|---|---|---|---|---|\n' + rows + '\n', encoding='utf-8')
+    m = d['meta']
+    (docs / 'checkpoint.md').write_text(f'''# Checkpoint
+
+{head}Version {m["version"]}, as of {m["as_of"]}.
+
+**Brief.** Bring together the playbook material for data governance, data cataloguing and data quality in one interactive portal, organised around the people who use it and how they learn; then add the capabilities the DAM Policy relies on, the maturity model, professions and skills, sector supplements and delivery and change guidance.
+
+**Arc of development.** See `CHANGELOG.md` for each release from 1.0.0.
+
+**Against the brief.** Met for governance, quality, the capability model, professions and skills, sector supplements and delivery and change. Partly met for cataloguing, which is built from public guidance because the fuller cataloguing playbook is not yet published (OR-01). Not yet tested with users (OR-04) or with disabled people (OR-09); the testing page and form exist to start that.
+''', encoding='utf-8')
+
+
+def _write_registers(d, docs):
     """Defect register and challenge review live in the repository, not on the portal (version 1.5). C-27 keeps them in step."""
     docs.mkdir(exist_ok=True)
     cell = lambda t: str(t).replace('|', '\\|').replace('\n', ' ')

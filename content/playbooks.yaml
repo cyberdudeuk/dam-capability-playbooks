@@ -16,7 +16,7 @@ meta:
   short_title: DAM capability playbooks
   subtitle: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
   keywords: [data asset management, DAM policy, critical data assets, data governance, data catalogue, metadata, data quality, DQAP, data ownership, UK government]
-  version: 1.5.0
+  version: 1.5.1
   as_of: '2026-11-05'
   review: '2027-02-05'
   verified_on: '2026-11-05'
@@ -851,20 +851,20 @@ concepts:
 # Accountability records shown on the About page
 # ---------------------------------------------------------------------------
 open_register:
-- {id: OR-01, item: "The internal Data Cataloguing Playbook v2.6 is not public. The cataloguing stages here are a synthesis of GOV.UK guidance and need checking against it, or replacing with it once cleared.", who: Service owner}
-- {id: OR-02, item: "Contact is the repository's issue form. Replace it with a dedicated form service that delivers privately, so people without a GitHub account can get in touch.", who: Service owner}
-- {id: OR-03, item: "Not cleared as official guidance. Clearance, and a move to an official GitHub organisation, are needed before departments are told to rely on it.", who: Service owner}
-- {id: OR-04, item: "No research with real users yet. A research plan with questions, methods, hypotheses and falsification conditions is now published on the Service design page; it needs participants through the Working Group.", who: Service owner, with the Working Group}
-- {id: OR-05, item: "The policy promises minimum interoperability requirements that its body does not state.", who: GDS Data Frameworks and Standards}
-- {id: OR-06, item: "Four metadata properties in the guidance have no slot in the published MEM. A crosswalk to DCAT and Dublin Core terms is proposed on the cataloguing page (finding F-04) and needs agreement.", who: Metadata standards owner}
-- {id: OR-07, item: "Dates for the rollout phases, returns and support offer come from practitioner material, not a public page. Confirm before external use.", who: Service owner}
-- {id: OR-08, item: "The governance escalation timescales are this playbook's recommendation. Each organisation should set its own.", who: Each organisation's board}
-- {id: OR-09, item: "Not tested with disabled users or assistive technology users in person; automated checks only.", who: Service owner}
+- {id: OR-01, reader: "The cataloguing method is built from public guidance", item: "The internal Data Cataloguing Playbook v2.6 is not public. The cataloguing stages here are a synthesis of GOV.UK guidance and need checking against it, or replacing with it once cleared.", who: Service owner}
+- {id: OR-02, reader: "Messages sent through the contact form are public", item: "Contact is the repository's issue form. Replace it with a dedicated form service that delivers privately, so people without a GitHub account can get in touch.", who: Service owner}
+- {id: OR-03, reader: "Not cleared as official guidance", item: "Not cleared as official guidance. Clearance, and a move to an official GitHub organisation, are needed before departments are told to rely on it.", who: Service owner}
+- {id: OR-04, reader: "Not yet tested with users", item: "No research with real users yet. A research plan with questions, methods, hypotheses and falsification conditions is now published on the Service design page; it needs participants through the Working Group.", who: Service owner, with the Working Group}
+- {id: OR-05, reader: "Interoperability requirements are not yet stated", item: "The policy promises minimum interoperability requirements that its body does not state.", who: GDS Data Frameworks and Standards}
+- {id: OR-06, reader: "Proposed metadata terms are not agreed", item: "Four metadata properties in the guidance have no slot in the published MEM. A crosswalk to DCAT and Dublin Core terms is proposed on the cataloguing page (finding F-04) and needs agreement.", who: Metadata standards owner}
+- {id: OR-07, reader: "Some dates come from material that is not public", item: "Dates for the rollout phases, returns and support offer come from practitioner material, not a public page. Confirm before external use.", who: Service owner}
+- {id: OR-08, reader: "Escalation timescales are a recommendation", item: "The governance escalation timescales are this playbook's recommendation. Each organisation should set its own.", who: Each organisation's board}
+- {id: OR-09, reader: "Not yet tested with disabled people", item: "Not tested with disabled users or assistive technology users in person; automated checks only.", who: Service owner}
 - {id: OR-10, item: "Data owner versus information asset owner is resolved by the GOV.UK data ownership model (three options). The two maturity models and the remaining glossary conflicts are not resolved here.", who: Service owner}
-- {id: OR-12, item: "All 14 sector themes now have supplements on the Sectors page, signposted from each capability playbook. Each supplement is this portal's synthesis and needs review by subject experts from its sector before organisations rely on it.", who: Service owner, with sector data leads}
+- {id: OR-12, reader: "Sector supplements need review by sector experts", item: "All 14 sector themes now have supplements on the Sectors page, signposted from each capability playbook. Each supplement is this portal's synthesis and needs review by subject experts from its sector before organisations rely on it.", who: Service owner, with sector data leads}
 - {id: OR-13, item: "Done on 5 November 2026: description, homepage, topics, Discussions, private vulnerability reporting, Dependabot, secret push protection and approval for workflows from all external contributors. Still to do: a ruleset on main that blocks force pushes and deletion and requires the 'Build, check and publish' check.", who: Repository owner}
-- {id: OR-14, item: "The Data Maturity Assessment framework is CC BY-NC-SA 4.0 and asks government users to contact CDDO. Confirm whether its level descriptions may be shown inside this portal; until then it is linked, not copied (F-05).", who: Service owner}
-- {id: OR-15, item: "The explicit, implicit and inferred flags on the capability model are this portal's reading of the policy. Ask the GDS data policy team to confirm them, especially the inferred ones.", who: Service owner, with GDS Data Frameworks and Standards}
+- {id: OR-14, reader: "The maturity framework is linked, not copied", item: "The Data Maturity Assessment framework is CC BY-NC-SA 4.0 and asks government users to contact CDDO. Confirm whether its level descriptions may be shown inside this portal; until then it is linked, not copied (F-05).", who: Service owner}
+- {id: OR-15, reader: "Capability flags are this portal''s reading of the policy", item: "The explicit, implicit and inferred flags on the capability model are this portal's reading of the policy. Ask the GDS data policy team to confirm them, especially the inferred ones.", who: Service owner, with GDS Data Frameworks and Standards}
 - {id: OR-16, item: "Done on 5 November 2026: Pages publishes the built site from the gh-pages branch. Still to do: set the default workflow token to read-only and stop GitHub Actions creating or approving pull requests; every workflow already declares the permissions it needs. Narrow installed GitHub Apps to the repositories each needs.", who: Repository owner}
 - {id: OR-17, item: "Decide whether to rewrite the four commits credited to the unrelated 'noreply' account (D-021). It removes the false credit but changes their identifiers and needs a force push to main.", who: Repository owner}
 - {id: OR-11, item: "Verified on GOV.UK: Table 4 of the issues framework contradicts its own rule for a 97.5% target (finding F-01). Raise with the GDS data quality team; tracked as a repository issue.", who: Service owner}

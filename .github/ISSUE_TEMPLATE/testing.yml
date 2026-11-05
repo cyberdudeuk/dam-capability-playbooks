@@ -1,0 +1,67 @@
+name: Testing feedback
+description: Tell us how a test task went
+title: "[Testing] "
+labels: ["testing"]
+body:
+  - type: markdown
+    attributes:
+      value: This form is public. Do not include your name, colleagues' names, personal data or anything above OFFICIAL.
+  - type: dropdown
+    id: role
+    attributes:
+      label: Which role is closest to yours?
+      options:
+        - Chief data officer
+        - Lead policy coordinator
+        - Data owner
+        - Data steward
+        - Catalogue manager or data custodian
+        - Data quality lead or analyst
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: task
+    attributes:
+      label: Task
+      description: For example T-03
+    validations:
+      required: true
+  - type: dropdown
+    id: completed
+    attributes:
+      label: Did you complete the task?
+      options:
+        - "Yes"
+        - Partly
+        - "No"
+    validations:
+      required: true
+  - type: dropdown
+    id: ease
+    attributes:
+      label: How easy was it? (1 very difficult, 7 very easy)
+      options: ["1", "2", "3", "4", "5", "6", "7"]
+    validations:
+      required: true
+  - type: textarea
+    id: blocked
+    attributes:
+      label: What got in your way? (optional)
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: What would make it better? (optional)
+  - type: checkboxes
+    id: assistive
+    attributes:
+      label: Access (optional)
+      options:
+        - label: I used assistive technology, such as a screen reader, magnifier or voice control
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I have not included personal data or anything sensitive
+          required: true

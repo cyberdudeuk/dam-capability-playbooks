@@ -2559,3 +2559,17 @@ change:
     - CR-17
     - CR-28
     prov: O
+testing:
+  intro: "This portal is ready for early testing with people who will use it. We want to know whether you can find what you need, understand it and act on it. It takes about 20 minutes. Choose the tasks closest to your role; you do not need to do them all."
+  feedback_form: testing.yml
+  tasks:
+  - {id: T-01, roles: [all], title: "Find what the DAM Policy requires of your organisation", start: dam.html, done: "You can name two 'must' requirements and the step that meets each one."}
+  - {id: T-02, roles: [cdo, coo], title: "Assess your organisation's maturity and download the result", start: capability-model.html#cm-self, done: "You have a radar profile and a downloaded CSV file."}
+  - {id: T-03, roles: [cdo, coo], title: "Find what to build into a programme business case and its assurance plan", start: change.html#practices, done: "You can list the actions for business cases and for assurance."}
+  - {id: T-04, roles: [own], title: "Find what a data owner is accountable for and what happens when you move role", start: personas.html#persona-own, done: "You know your duties and the steps to hand over ownership."}
+  - {id: T-05, roles: [stw, dql], title: "Find which sector supplements apply to an adult social care asset and download its quality rules", start: sectors.html#which, done: "You have the social care supplement open and its rules file downloaded."}
+  - {id: T-06, roles: [cat], title: "Find the metadata you must record, and the extra fields for geospatial data", start: cataloguing.html#metadata, done: "You can list the 'must' properties and two extra geospatial fields."}
+  - {id: T-07, roles: [dql, stw], title: "Set a target and performance bands for a data quality rule", start: quality.html#method, done: "You can say what target and bands you would set, and why."}
+  - {id: T-08, roles: [all], title: "Find a learning route and the career pathway closest to your job", start: professions.html#pf-route, done: "You have marked at least one learning resource as done."}
+  - {id: T-09, roles: [all], title: "Look up what 'data steward' means and where stewards appear in the methods", start: knowledge.html, done: "You found the definition and one step that names the steward."}
+  - {id: T-10, roles: [all], title: "Change the text size and colours, then move around using only the keyboard", start: index.html, done: "You reached a playbook step without a mouse, with your display settings kept."}

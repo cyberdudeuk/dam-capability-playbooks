@@ -306,7 +306,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.5.0', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.5.1', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -355,6 +355,34 @@ class Vaccination(unittest.TestCase):
     def test_c27_register_back_on_portal(self):
         edit(self.s / 'about.html', '</main>', '<h2 id="defects">Defect register</h2></main>')
         self.fails('c27_registers_in_repository')
+
+    def test_c27_checkpoint_back_on_portal(self):
+        edit(self.s / 'about.html', '</main>', '<h2 id="checkpoint">Checkpoint</h2></main>')
+        self.fails('c27_registers_in_repository')
+
+    def test_c28_file_missing_from_catalogue(self):
+        (self.s / 'data' / 'extra.csv').write_text('a\n1\n', encoding='utf-8')
+        self.fails('c28_open_data_catalogue')
+
+    def test_c28_page_without_catalogue_link(self):
+        edit(self.s / 'library.html', 'href="data/catalogue.jsonld"', 'href="data/elsewhere.jsonld"')
+        self.fails('c28_open_data_catalogue')
+
+    def test_c28_dataset_without_licence(self):
+        import json as _json
+        p = self.s / 'data' / 'catalogue.jsonld'
+        c = _json.loads(p.read_text(encoding='utf-8'))
+        del c['dcat:dataset'][0]['dcterms:license']
+        p.write_text(_json.dumps(c), encoding='utf-8')
+        self.fails('c28_open_data_catalogue')
+
+    def test_c29_unexplained_reference(self):
+        edit(self.s / 'dam.html', '</main>', '<p>See OR-10.</p></main>')
+        self.fails('c29_limitations_referenced')
+
+    def test_c30_task_without_feedback_link(self):
+        edit(self.s / 'test.html', 'template=testing.yml', 'template=other.yml')
+        self.fails('c30_testing_pack')
 
     def test_build_rejects_unverified_signpost(self):
         y = self.r / 'content' / 'frameworks.yaml'

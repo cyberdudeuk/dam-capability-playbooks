@@ -525,8 +525,78 @@ def c27_registers_in_repository(site, repo, pages):
         errs.append('docs/challenge-review.md missing or out of date; run tools/build.py')
     for name in pages:
         h = (site / name).read_text(encoding='utf-8')
-        if 'id="defects"' in h or 'id="adversarial"' in h:
+        if any(f'id="{x}"' in h for x in ('defects', 'adversarial', 'checkpoint', 'standards')):
             errs.append(f'{name}: publishes the defect register or challenge review, which belong in the repository')
+    return errs
+
+
+def c28_open_data_catalogue(site, repo, pages):
+    """Rule (version 1.5.1): every published data file is described in a DCAT catalogue (JSON-LD and Turtle) with licence, publisher, contact point and date; every page links to it; the Open data page carries schema.org Dataset markup."""
+    import json as _json
+    errs = []
+    data = site / 'data'
+    try:
+        cat = _json.loads((data / 'catalogue.jsonld').read_text(encoding='utf-8'))
+    except (OSError, ValueError) as e:
+        return [f'data/catalogue.jsonld missing or invalid: {e}']
+    if cat.get('@type') != 'dcat:Catalog':
+        errs.append('catalogue.jsonld is not a dcat:Catalog')
+    urls = set()
+    for ds in cat.get('dcat:dataset', []):
+        for k in ('dcterms:title', 'dcterms:description', 'dcterms:license', 'dcterms:publisher', 'dcat:contactPoint', 'dcterms:modified', 'dcterms:identifier'):
+            if not ds.get(k): errs.append(f'{ds.get("@id")}: no {k}')
+        if not ds.get('dcat:distribution'): errs.append(f'{ds.get("@id")}: no distributions')
+        for dist in ds.get('dcat:distribution', []):
+            u = dist.get('dcat:downloadURL', {}).get('@id', '')
+            urls.add(u.split('/data/', 1)[-1])
+            if not dist.get('dcat:mediaType'): errs.append(f'{u}: no media type')
+    published = {str(f.relative_to(data)) for f in data.rglob('*') if f.is_file() and f.name not in ('catalogue.jsonld', 'catalogue.ttl')}
+    errs += [f'data/{f} is published but not in the catalogue' for f in sorted(published - urls)]
+    errs += [f'catalogue lists data/{f}, which does not exist' for f in sorted(urls - published)]
+    ttl = data / 'catalogue.ttl'
+    if not ttl.exists() or ttl.read_text(encoding='utf-8').count('a dcat:Dataset') != len(cat.get('dcat:dataset', [])):
+        errs.append('catalogue.ttl missing or out of step with catalogue.jsonld')
+    for name in pages:
+        if 'href="data/catalogue.jsonld"' not in (site / name).read_text(encoding='utf-8'):
+            errs.append(f'{name}: no link to the open data catalogue in its header')
+    dp = site / 'data.html'
+    if not dp.exists() or '"@type":"Dataset"' not in dp.read_text(encoding='utf-8').replace('": "', '":"'):
+        errs.append('data.html: no schema.org Dataset markup')
+    return errs
+
+
+def c29_limitations_referenced(site, repo, pages):
+    """Rule (version 1.5.1): every open-register item a reader can see mentioned on the portal is explained under known limitations."""
+    errs = []
+    about = (site / 'about.html').read_text(encoding='utf-8') if (site / 'about.html').exists() else ''
+    for name in pages:
+        text = re.sub(r'<[^>]+>', ' ', (site / name).read_text(encoding='utf-8'))
+        for ref in sorted(set(re.findall(r'\bOR-\d\d\b', text))):
+            if f'<tr id="{ref}">' not in about:
+                errs.append(f'{name}: mentions {ref}, which is not explained under known limitations')
+    return errs
+
+
+def c30_testing_pack(site, repo, pages):
+    """Rule (version 1.5.1): the testing page offers each task with a start link and a pre-filled feedback form, and the form exists."""
+    errs = []
+    form = repo / '.github' / 'ISSUE_TEMPLATE' / 'testing.yml'
+    if not form.exists():
+        errs.append('.github/ISSUE_TEMPLATE/testing.yml missing')
+    elif 'id: task' not in form.read_text(encoding='utf-8') or 'id: ease' not in form.read_text(encoding='utf-8'):
+        errs.append('testing.yml does not ask for the task and how easy it was')
+    t = (site / 'test.html').read_text(encoding='utf-8') if (site / 'test.html').exists() else ''
+    tasks = re.findall(r'<li class="cr-card test-task" id="(T-\d+)"(.*?)</li>\s*(?=<li class="cr-card test-task"|</ul>)', t, re.S)
+    if not tasks:
+        errs.append('test.html: no tasks')
+    for tid, body in tasks:
+        if 'template=testing.yml' not in body or f'task={tid}' not in body:
+            errs.append(f'{tid}: no pre-filled feedback link')
+        if 'Start this task' not in body:
+            errs.append(f'{tid}: no start link')
+    for name in pages:
+        if name != '404.html' and 'href="test.html"' not in (site / name).read_text(encoding='utf-8'):
+            errs.append(f'{name}: no link to the testing page')
     return errs
 
 
@@ -536,7 +606,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance, c21_no_restricted_licence_text,
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
           c25_workflow_inventory, c26_commit_identity,
-          c27_registers_in_repository]
+          c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack]
 
 
 def run(site, repo, only=None, quiet=False):

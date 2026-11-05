@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.1 (2026-11-05)
+- Ready for user testing: a "Help us test" page with 10 tasks filtered by role, each with a start link and a pre-filled feedback form asking whether it was completed, how easy it was (1 to 7) and what got in the way. Linked from the prototype banner and every page footer.
+- Open data page listing 13 datasets and 30 files, and a DCAT 3 catalogue of the portal's own datasets in JSON-LD and Turtle with licence, publisher, contact point, version and media types. Every page links to the catalogue in its header; the Open data page carries schema.org Dataset markup for dataset search. Sources move to their own catalogue, sources.jsonld.
+- About page: the open register becomes "Known limitations", showing only what readers need to know. The build report, the build standard assessment and the full open register move to the repository's docs folder.
+- New checks C-28 (catalogue complete and linked), C-29 (every limitation mentioned is explained) and C-30 (testing pack complete), each proved by deliberate breaks.
+
 ## 1.5.0 (2026-11-05)
 - Fixed: the Playbooks and Frameworks menus opened but could not be seen or clicked (D-022). New browser check B-14 opens every grouped menu on desktop and phone and follows its links.
 - Sector content is now signposted where it is used: each capability playbook has a Sectors tab showing what each supplement adds to it, and its step-by-step method opens with a link to the finder (ADR 0004). The sector-depth assessment is removed now that every theme has a supplement.
