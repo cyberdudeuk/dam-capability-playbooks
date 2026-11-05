@@ -4429,7 +4429,7 @@ reuse:
     cautions:
     - Follow your organisation's rules for approving third-party integrations.
 tooling:
-  intro: Most organisations run several tools for data asset management, often from different suppliers, and many are offered a bundled suite. This page sets out the kinds of tool involved, the open standards and patterns that let them work together, where bundles and contracts create lock-in, and questions to ask in a request for information (RFI) or tender. It names no products and endorses none.
+  intro: Most organisations run several tools for data asset management, often from different suppliers, and many are offered a bundled suite. This page sets out the kinds of tool involved, the open standards and patterns that let them work together, where bundles and contracts create lock-in, and questions to ask in a request for information (RFI) or tender, framed by what the DAM Policy needs. It names no products and endorses none; for named products and a fuller question builder, see the related links at the end of this page.
   principles:
   - 'Your metadata, glossary, quality rules, lineage and results are your data. Make sure you can get all of them out, in open formats, at any time and at no extra charge.'
   - 'Prefer open standards at the boundaries between tools, even when the tools come from one supplier. That keeps the option to replace one part without replacing the rest.'
@@ -4711,3 +4711,43 @@ tooling:
     text: Include export in open formats, content ownership, separate capability prices, capped increases and a costed exit plan.
   - name: Keep checking
     text: Repeat the export test each year before renewal, and record the result in your assurance evidence.
+related:
+  intro: Two other open projects cover ground next to this one. Each has its own owner, purpose, audience and status, so they are signposted here, not merged.
+  portals:
+  - id: dqc
+    name: Public Sector Data Quality Commons
+    url: https://cyberdudeuk.github.io/dq-commons/
+    status: Community project
+    nature: Open, crowdsourced and voluntary. Built with and for data quality practitioners.
+    licence: Code MIT; content Open Government Licence v3.0
+  - id: cat
+    name: GitHub Repos Asset Catalogue
+    url: https://cyberdudeuk.github.io/github-repos-asset-catalogue/
+    status: Specialist evidence tool
+    nature: What public bodies publish as code on GitHub, explained for technical and non-technical readers.
+    licence: Code MIT; content and data Open Government Licence v3.0
+  placements:
+    quality:
+    - {portal: dqc, title: Check a CSV file, path: check.html, why: Run quality rules on a file in your browser; nothing is uploaded.}
+    - {portal: dqc, title: Issues framework calculator, path: guidance.html, why: Score an issue's priority and time to fix with the GOV.UK issues framework.}
+    - {portal: dqc, title: Data quality management playbook, path: playbook.html, why: The community's eight-stage practice guide, for more depth than the policy steps here.}
+    cataloguing:
+    - {portal: cat, title: Data catalogues and standards, path: '#standards', why: Which public bodies' code shows a catalogue platform or applies DCAT, SKOS or the Metadata Exchange Model.}
+    - {portal: dqc, title: Metadata weaver, path: weaver.html, why: Describe a dataset once and output it in several metadata standards.}
+    tooling:
+    - {portal: dqc, title: Catalogues and data quality tools, path: catalogues.html, why: Named products and how they connect, a lock-in risk checker, an RFI and RFP question builder and a proof-of-concept test script.}
+    - {portal: dqc, title: Commercial clause builder, path: commercial.html, why: Contract clauses that make suppliers responsible for data quality and exit.}
+    - {portal: cat, title: Data tools and suppliers, path: '#suppliers', why: Which data tools appear in public bodies' code, and where.}
+    - {portal: cat, title: Data catalogues and standards, path: '#standards', why: Catalogue platforms and metadata standards found in public code.}
+    perspectives:
+    - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: Legacy and debt signals in each organisation's public code, with the evidence.}
+    - {portal: dqc, title: Data debt and migration, path: legacy.html, why: A data debt self-assessment and quality gates for a migration.}
+    change:
+    - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: Evidence of legacy in an organisation's public code, to plan exits from.}
+    - {portal: dqc, title: Data debt and migration, path: legacy.html, why: Data quality gates to carry through a modernisation programme.}
+    capability-model:
+    - {portal: cat, title: Data management wheel, path: '#dama', why: Public code projects with evidence of each DAMA knowledge area.}
+    - {portal: dqc, title: Data quality capability model, path: models.html, why: The data quality capability in more detail, with workflows and downloads.}
+    reuse:
+    - {portal: dqc, title: Use the Commons your way, path: reuse.html, why: The Commons' own API, embed mode and MCP tools.}
+    - {portal: cat, title: Search all code projects, path: '#search', why: Download catalogue records as DCAT or CSV.}

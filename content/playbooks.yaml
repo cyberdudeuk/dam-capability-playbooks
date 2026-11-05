@@ -16,7 +16,7 @@ meta:
   short_title: DAM capability playbooks
   subtitle: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
   keywords: [data asset management, DAM policy, critical data assets, data governance, data catalogue, metadata, data quality, DQAP, data ownership, UK government]
-  version: 1.8.0
+  version: 1.8.1
   as_of: '2026-11-05'
   review: '2027-02-05'
   verified_on: '2026-11-05'
@@ -903,6 +903,7 @@ defects:
 - {id: D-023, found: Browser checks (version 1.7, before release), defect: "The DAMA wheel's segment links had spoken names that did not match their visible labels, and the wheel's area cards pushed the page sideways at 320 pixels.", cause: "Segment names were set separately from the visible text, and the card grid had a fixed minimum column width wider than a small phone.", check: "B-01 (axe label and name match) and B-02 (sideways scrolling) caught both before release. Segment names now come from the visible label with the detail in a title, and the grid columns shrink to the screen."}
 - {id: D-024, found: Browser checks (version 1.8, before release), defect: "Search found nothing on any page and Escape stopped closing it.", cause: "The new guided tour script declared a step counter called idx in the same scope as the search index, so the index was replaced by the number 0.", check: "B-05 (search finds results and Escape closes it) caught it before release. The tour counter is renamed and commented; B-16 now runs every tour and B-05 runs in the same browser session."}
 - {id: D-025, found: Browser checks (version 1.8, before release), defect: "Keyboard shortcut hints in the header failed colour contrast in light mode, and the example configuration on the Use and reuse page pushed the page sideways on phones.", cause: "A general style for keyboard keys overrode the header's own style, and the code block had no scrolling of its own.", check: "B-01 (axe colour contrast) and B-02 (sideways scrolling) caught both. Key styles now apply only inside the main content and code blocks scroll within themselves."}
+- {id: D-026, found: Comparison with the sister portals (version 1.8.0, after release), defect: "The new Tools and interoperability page covered the same ground as the Data Quality Commons Catalogues page released earlier the same day, which goes further, with named products, a lock-in checker, an RFI builder and a test script.", cause: "The page was written without first looking at what the sister portals already offer.", check: "The runbook now starts every new topic with a search of the sister portals. The tooling page keeps what the DAM Policy adds and signposts the Commons and the catalogue; C-34 checks those signposts go only to the sister portals and name them and their status."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1587,6 +1588,7 @@ design:
   - {id: FR-12, kind: Functional, moscow: Should, text: "Help readers find their way: a share menu on every page, a site map, a user guide with guided tours and tutorials.", features: [guide, site-map], checks: [C-31, B-16]}
   - {id: FR-13, kind: Functional, moscow: Should, text: "Let organisations reuse the content through links, embedding, open data, AI assistants and an MCP server.", features: [reuse, data], checks: [C-28, C-31, C-32]}
   - {id: FR-14, kind: Functional, moscow: Should, text: "Help organisations connect and buy data management tools without lock-in, with open standards and RFI questions.", features: [tooling], checks: [C-33]}
+  - {id: FR-15, kind: Functional, moscow: Should, text: "Signpost the sister portals where they help, naming each and its status, without merging their journeys or copying their content.", features: [quality, tooling, reuse], checks: [C-34]}
   - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services (Pages, issue forms, Discussions, Actions and releases), plus an optional Microsoft Forms route for private feedback.", features: [contact, status, whats-new], checks: [C-05, C-33, HL-01]}
   architecture:
     components:

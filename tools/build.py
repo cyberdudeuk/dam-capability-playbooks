@@ -276,6 +276,16 @@ def validate_frameworks(d, errs, src, roles):
         for p in c['for_']:
             if p not in {pp['id'] for pp in d['personas']}: errs.append(f"community {c['name']}: unknown persona {p}")
         if not c['url'].startswith('https://'): errs.append(f"community {c['name']}: url must be https")
+    if 'related' in d:
+        R = d['related']
+        pids = {p['id'] for p in R['portals']}
+        for p in R['portals']:
+            if not p['url'].startswith('https://') or not p['url'].endswith('/'): errs.append(f"related portal {p['id']}: url must be https and end with /")
+        for page, items in R['placements'].items():
+            if page not in {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'data', 'test', 'guide', 'site-map', 'reuse'}: errs.append(f"related: unknown page {page}")
+            for it in items:
+                if it['portal'] not in pids: errs.append(f"related on {page}: unknown portal {it['portal']}")
+                if '://' in it['path'] or it['path'].startswith('/'): errs.append(f"related on {page}: path must be relative to the portal")
     if 'tooling' in d:
         T = d['tooling']
         pids = {x['id'] for x in T['patterns']}
@@ -322,7 +332,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 34)} | {f"B-{i:02d}" for i in range(1, 17)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 35)} | {f"B-{i:02d}" for i in range(1, 17)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -714,6 +724,7 @@ class Site:
 {crumb_html}
 <div class="toolbar">{toggle}<div class="page-actions">{self.page_actions(key, title, canonical)}</div></div>
 {body}
+{self.related_html(key)}
 {self.edit_links(key, title)}
 </main>
 </div>
@@ -760,6 +771,38 @@ class Site:
                  f'<li><a href="{teams}">{icon("users")}Share in Microsoft Teams</a></li>'
                  f'<li class="share-status" aria-live="polite"></li></ul></details>')
         return tour + share
+
+    def related_html(self, key):
+        """Signposts to the sister portals (version 1.8.1). Shown only where they help, named with each portal's status and owner model, never merged into this portal's own journeys."""
+        R = self.d.get('related') or {}
+        items = (R.get('placements') or {}).get(key) or []
+        if not items:
+            return ''
+        P = {p['id']: p for p in R['portals']}
+        lis = ''
+        for it in items:
+            p = P[it['portal']]
+            url = p['url'] + it['path']
+            lis += (f'<li><a href="{E(url)}" rel="noopener">{E(it["title"])}</a> <span class="rel-portal" data-tip="{E(p["nature"] + " " + p["licence"] + ".")}">'
+                    f'in {E(p["name"])} <span class="rel-status">{E(p["status"])}</span></span><br><span class="hint">{E(it["why"])}</span></li>')
+        return (f'<aside class="related" id="related-{key}" aria-labelledby="rel-h-{key}"><h2 id="rel-h-{key}">{icon("signpost")} Related elsewhere</h2>'
+                f'<p class="hint">{E(R["intro"])}</p><ul>{lis}</ul></aside>')
+
+    def write_xref(self):
+        """Cross-reference manifest (version 1.8.1): this portal's shared keys and where each lives, for sister portals and tools to link to. Ids only, no copied text."""
+        d, base = self.d, self.m['site_url']
+        man = {'portal': self.m['title'], 'id': 'dam', 'version': self.m['version'], 'as_of': self.m['as_of'], 'url': base,
+               'status': 'Prototype guidance for implementing the DAM Policy; central ownership', 'licence': self.d['meta'].get('licence_content', 'Open Government Licence v3.0'),
+               'keys': {
+                   'dama_areas': [{'id': a['id'], 'name': a['name'], 'url': f'{base}capability-model.html#{a["id"].lower()}'} for a in d.get('dama', {}).get('areas', [])],
+                   'requirements': [{'id': r['id'], 'strength': r['strength'], 'url': f'{base}dam.html#{r["id"]}'} for r in d['requirements']],
+                   'capabilities': [{'id': c['id'], 'name': c['name'], 'dmbok': c['dmbok'], 'url': f'{base}capability-model.html#{c["id"]}'} for c in d.get('capmap', [])],
+                   'practices': [{'id': x['id'], 'title': x['title'], 'url': f'{base}change.html#{x["id"]}'} for x in d.get('change', {}).get('items', [])],
+                   'sectors': [{'id': x['id'], 'title': x['title'], 'url': f'{base}sectors.html#{x["id"]}'} for x in d.get('supplements', [])],
+                   'roles': [{'code': r['code'], 'name': r['name'], 'url': f'{base}together.html#role-{r["code"]}'} for r in d['roles']],
+                   'tool_categories': [{'id': c['id'], 'name': c['name'], 'url': f'{base}tooling.html#{c["id"]}'} for c in d.get('tooling', {}).get('categories', [])]},
+               'related': [{k: p[k] for k in ('id', 'name', 'url', 'status', 'licence')} for p in (d.get('related') or {}).get('portals', [])]}
+        (self.out / 'data' / 'xref.json').write_text(json.dumps(man, indent=1, ensure_ascii=False), encoding='utf-8')
 
     def ms_form_url(self):
         return (self.d.get('ms_form') or {}).get('url') or ''
@@ -831,6 +874,7 @@ class Site:
         mods = {mm['id']: self.mod_units(mm['id']) for mm in d['modules']}
         (self.out / 'assets' / 'search-index.js').write_text(
             'window.DCP_INDEX=' + json_safe(self.search) + ';\nwindow.DCP_MODULES=' + json_safe(mods) + ';\n', encoding='utf-8')
+        self.write_xref()
         self.exports()
         (self.out / '.nojekyll').write_text('')
         return self.build_id
@@ -1863,6 +1907,7 @@ class Site:
             ('sector-rules', 'Sector data quality rules', f'{sum(len(x["rules"]) for x in d.get("supplements", []))} starter quality rules for {len(d.get("supplements", []))} kinds of data, runnable with the Data Quality Commons kit.',
              ['sector-rules.csv'] + [f'rules/{x["id"].lower()}.yaml' for x in d.get('supplements', [])], ['data quality', 'rules', 'dqkit']),
             ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
+            ('xref', 'Cross-reference manifest', 'The shared keys this portal uses (DAMA areas, requirements, capabilities, practices, sectors, roles, tool categories) and where each lives, so sister portals and tools can link to them.', ['xref.json'], ['interoperability', 'linked data']),
             ('interoperability-questions', 'Tool interoperability questions', 'Questions for a request for information or tender for catalogue, data quality, lineage and governance tools, to test interoperability and avoid lock-in.', ['interoperability-questions.csv'], ['procurement', 'interoperability', 'RFI']),
             ('ddat-role-skills', 'Data role skills and levels', 'Skills and skill levels for Digital and Data capability framework roles with data asset management duties.', ['ddat-role-skills.csv'], ['skills', 'professions']),
             ('rulebook', 'Related policies, standards and legislation', 'Every policy, standard, piece of legislation and framework the portal links to, with publisher and update date.', ['rulebook.csv', 'sources.jsonld'], ['rulebook', 'standards']),
@@ -2349,7 +2394,7 @@ class Site:
         procure = (f'<h2 id="steps">{icon("route")} Six steps to buy without lock-in</h2><ol class="tut">{steps}</ol>'
                    f'<p>These steps support {self.rb_link("RB-TCOP11")} and {self.rb_link("RB-TCOP4")}, and the delivery and change practices on <a href="change.html#CH-06">building DAM into contracts</a>, <a href="change.html#CH-14">designing out lock-in</a> and <a href="change.html#CH-16">buying routes and contract terms</a>.</p>'
                    f'<h2 id="rfi">{icon("circle-help")} Questions for a request for information or tender</h2><p>{qn} questions, grouped. Use them as written or adapt them{prov("O")}. '
-                   f'Download them as <a href="data/interoperability-questions.csv">CSV</a> to load into your own RFI template.</p><div class="cr-list two">{qhtml}</div>')
+                   f'Download them as <a href="data/interoperability-questions.csv">CSV</a> to load into your own RFI template. They focus on what the DAM Policy needs from a tool; for product-level questions, a lock-in checker and a test script, see <a href="#related-tooling">Related elsewhere</a> at the end of this page.</p><div class="cr-list two">{qhtml}</div>')
         res_groups = [('Government policy and guidance', ['RB-OSP', 'RB-TCOP4', 'RB-TCOP11', 'RB-PPN0715', 'RB-LOCKIN', 'RB-API', 'RB-REFARCH', 'RB-DDATPB', 'RB-SOURCING']),
                       ('Data standards for government', ['RB-METASTD', 'RB-DSACAT', 'RB-DSA']),
                       ('Open standards and reference projects', ['RB-DCAT', 'RB-DQV', 'RB-SKOS', 'RB-PROVO', 'RB-CSVW', 'RB-OLINEAGE', 'RB-ODCS', 'RB-ODPS', 'RB-OAS', 'RB-EGERIA', 'RB-MCPSPEC']),

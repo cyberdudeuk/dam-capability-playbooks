@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.1 (2026-11-05)
+- Related elsewhere: signposts to the Data Quality Commons and the GitHub Repos Asset Catalogue at the end of eight pages (quality, cataloguing, tools, perspectives, delivery and change, capability model and reuse), each naming the portal and its status (community project, specialist evidence tool). The portals stay distinct: different owners, licences, audiences and status; nothing is copied across.
+- Tools and interoperability now frames its questions by what the DAM Policy needs and points to the Commons for named products, the lock-in checker, the RFI builder and the test script (D-026).
+- Cross-reference manifest `data/xref.json`: this portal's shared keys (DAMA areas, requirements, capabilities, practices, sectors, roles, tool categories) and their addresses, listed in the DCAT catalogue.
+- New check C-34 (signposts go only to the sister portals, name them and their status and sit outside this portal's tabs; every manifest address exists), proved by four deliberate breaks. The runbook now starts each new topic with a search of the sister portals.
+
 ## 1.8.0 (2026-11-05)
 - Tools and interoperability page: nine kinds of data management tool (catalogue, glossary, data quality, lineage, master data, governance workflow, data contracts, records, AI assistants) mapped to DAMA knowledge areas, with the open standards and integration patterns that connect them; nine common pairings rated established, emerging or vendor-specific; one supplier or several; eight commercial barriers with how to avoid them; six steps to buy without lock-in; and 23 questions for a request for information or tender, downloadable as CSV.
 - 21 new verified rulebook entries, including the Open Standards principles, Technology Code of Practice points 4 and 11, Managing technical lock-in in the cloud, PPN 07/15, the Data Standards Authority catalogue and metadata standards, the CMA cloud services market investigation and follow-up actions, Find a Tender, OpenLineage, the Open Data Contract and Data Product Standards, PROV-O, SKOS, CSVW, OpenAPI, Egeria and the Model Context Protocol. G-Cloud 14 updated to G-Cloud 15. The EU Data Act is labelled as found by search.

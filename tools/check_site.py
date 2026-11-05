@@ -752,6 +752,55 @@ def c33_tooling_and_feedback(site, repo, pages):
     return errs
 
 
+def c34_sister_portals(site, repo, pages):
+    """Rule (version 1.8.1): signposts to sister portals go only to those portals, name the portal and its status every time, sit outside this portal's own journeys, and the cross-reference manifest points only at anchors that exist."""
+    import yaml
+    errs = []
+    fw = yaml.safe_load((repo / 'content' / 'frameworks.yaml').read_text(encoding='utf-8'))
+    R = fw.get('related') or {}
+    P = {p['id']: p for p in R.get('portals', [])}
+    for key, items in (R.get('placements') or {}).items():
+        name = f'{key}.html'
+        html = (site / name).read_text(encoding='utf-8') if (site / name).exists() else ''
+        m = re.search(r'<aside class="related" id="related-' + re.escape(key) + r'".*?</aside>', html, re.S)
+        if not m:
+            errs.append(f'{name}: related signposts missing'); continue
+        box = m.group(0)
+        at = html.find(box)
+        start = html.rfind('role="tabpanel"', 0, at)
+        if start > -1:
+            seg = html[start:at]
+            if seg.count('<section') + 1 > seg.count('</section>'):
+                errs.append(f'{name}: related signposts sit inside a tab, inside this portal\'s own journey')
+        links = re.findall(r'<li><a href="([^"]+)"', box)
+        if len(links) != len(items):
+            errs.append(f'{name}: {len(links)} related links shown, content has {len(items)}')
+        for href in links:
+            if not any(href.startswith(p['url']) for p in P.values()):
+                errs.append(f'{name}: related link {href} does not go to a sister portal')
+        for p in {it['portal'] for it in items}:
+            if P[p]['name'] not in box or P[p]['status'] not in box:
+                errs.append(f'{name}: related links do not name {p} and its status')
+    xf = site / 'data' / 'xref.json'
+    if not xf.exists():
+        return errs + ['data/xref.json missing']
+    man = json.loads(xf.read_text(encoding='utf-8'))
+    base = man.get('url', '')
+    for group, rows in man.get('keys', {}).items():
+        if not rows:
+            errs.append(f'xref.json: {group} is empty')
+        for r in rows:
+            u = r.get('url', '')
+            if not u.startswith(base):
+                errs.append(f'xref.json: {group} {u} is not on this portal'); continue
+            page, _, frag = u[len(base):].partition('#')
+            if not (site / page).exists():
+                errs.append(f'xref.json: {group} points at missing page {page}'); continue
+            if frag and frag not in pages.get(page, parse(site / page)).ids:
+                errs.append(f'xref.json: {group} points at missing anchor {page}#{frag}')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -759,7 +808,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
-          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback]
+          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals]
 
 
 def run(site, repo, only=None, quiet=False):

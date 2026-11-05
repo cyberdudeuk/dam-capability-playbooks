@@ -20,7 +20,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-SERVER = {'name': 'dam-playbooks', 'version': '1.8.0'}
+SERVER = {'name': 'dam-playbooks', 'version': '1.8.1'}
 DEFAULT_PROTOCOL = '2025-06-18'
 REPO = Path(__file__).resolve().parents[2]
 SITE = 'https://cyberdudeuk.github.io/dam-capability-playbooks/'

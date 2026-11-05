@@ -307,7 +307,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.8.0', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.8.1', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -410,7 +410,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c31_navigation_aids')
 
     def test_c32_mcp_version_mismatch(self):
-        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.0'", "'version': '0.0.1'")
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.1'", "'version': '0.0.1'")
         self.fails('c32_mcp_server')
 
     def test_c32_mcp_tool_undescribed(self):
@@ -430,6 +430,36 @@ class Vaccination(unittest.TestCase):
     def test_c33_private_feedback_missing(self):
         edit(self.s / 'contact.html', 'id="private-feedback"', 'id="feedback-x"')
         self.fails('c33_tooling_and_feedback')
+
+    def test_c34_related_link_to_other_site(self):
+        f = self.s / 'quality.html'
+        h = f.read_text(encoding='utf-8')
+        i = h.index('<aside class="related"')
+        f.write_text(h[:i] + h[i:].replace('href="https://cyberdudeuk.github.io/dq-commons/check.html"', 'href="https://example.org/check.html"', 1), encoding='utf-8')
+        self.fails('c34_sister_portals')
+
+    def test_c34_related_without_status(self):
+        edit(self.s / 'tooling.html', '<span class="rel-status">Community project</span>', '<span class="rel-status"></span>', count=99)
+        self.fails('c34_sister_portals')
+
+    def test_c34_related_moved_into_a_tab(self):
+        t = (self.s / 'tooling.html').read_text(encoding='utf-8')
+        box = t[t.index('<aside class="related"'):t.index('</aside>') + 8]
+        t = t.replace(box, '')
+        i = t.index('<section role="tabpanel"')
+        j = t.index('>', i) + 1
+        (self.s / 'tooling.html').write_text(t[:j] + box + t[j:], encoding='utf-8')
+        self.fails('c34_sister_portals')
+
+    def test_c34_xref_points_at_missing_anchor(self):
+        edit(self.s / 'data' / 'xref.json', 'dam.html#DAM-R01"', 'dam.html#DAM-R99"')
+        self.fails('c34_sister_portals')
+
+    def test_build_rejects_related_on_unknown_page(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        edit(y, '  placements:\n    quality:', '  placements:\n    qualityx:')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
 
     def test_build_rejects_unknown_tool_standard(self):
         y = self.r / 'content' / 'frameworks.yaml'

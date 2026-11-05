@@ -621,3 +621,9 @@ ol.rfi .caption{display:inline-block;min-width:4.2rem;font-size:.8rem;font-weigh
 pre.code{max-width:100%;overflow-x:auto;white-space:pre;background:var(--panel);border:1px solid var(--border);padding:.75rem;font-size:.85rem}
 pre.code:focus-visible{outline:3px solid #ffdd00}
 a.btn{text-decoration:none}.ms-form a.btn.secondary{background:var(--bg);border:1px solid var(--border)}
+/* v1.8.1 signposts to sister portals: distinct, at the end of the page, never inside its journeys */
+.related{margin:2.5rem 0 1rem;border:1px solid var(--border);border-left:6px solid var(--secondary);padding:.75rem 1rem;background:var(--panel)}
+.related h2{margin-top:0;font-size:1.2rem}
+.related ul{margin:0;padding-left:1.1rem}.related li{margin:.5rem 0}
+.rel-portal{font-size:.9rem;color:var(--secondary)}
+.rel-status{display:inline-block;font-size:.8rem;font-weight:700;border:1px solid var(--border);padding:0 .4rem;margin-left:.25rem;color:var(--text);background:var(--bg)}

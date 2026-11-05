@@ -55,6 +55,8 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 
 Nothing in the portal depends on any service other than GitHub and GitHub Pages, except the optional private feedback form.
 
+Two sister portals are signposted, not merged: the [Public Sector Data Quality Commons](https://cyberdudeuk.github.io/dq-commons/) (a community project) and the [GitHub Repos Asset Catalogue](https://cyberdudeuk.github.io/github-repos-asset-catalogue/) (a specialist evidence tool). Their links live in `related` in `content/frameworks.yaml`; `data/xref.json` publishes this portal's shared keys for them to link back.
+
 `integrations/mcp/server.py` is a reference Model Context Protocol server: standard library only, reading the published `data/playbooks.json`. See `integrations/mcp/README.md`.
 
 ## How it is built

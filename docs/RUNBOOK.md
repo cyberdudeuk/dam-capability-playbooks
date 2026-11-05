@@ -5,6 +5,11 @@
 2. The workflow builds, runs every check and its vaccination, and shows the result on the pull request.
 3. A person reviews and merges. The merge to `main` publishes to GitHub Pages.
 
+## Before adding a page or a section on a new topic (D-026)
+1. Search the sister portals for the topic: the [Data Quality Commons](https://cyberdudeuk.github.io/dq-commons/sitemap.html) site map and API (`api/pages.json`), and the [GitHub Repos Asset Catalogue](https://cyberdudeuk.github.io/github-repos-asset-catalogue/) hubs.
+2. If one of them already covers it, write only what the DAM Policy adds, and add the sister page to `related.placements` in `content/frameworks.yaml`. Check C-34 keeps those signposts pointing at the sister portals, naming them and their status.
+3. Keep each portal distinct: they have different owners, licences, audiences and status. Link to them; never copy their text into this portal.
+
 ## Cut a release
 1. Add a section to `CHANGELOG.md` and bump `meta.version` in `content/playbooks.yaml`.
 2. Merge, then push a tag such as `v1.2.0`. The release workflow builds, checks and attaches the site as a zip, with generated notes.
