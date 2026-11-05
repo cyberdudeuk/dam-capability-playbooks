@@ -175,7 +175,7 @@ def validate(d):
     covered = {x['dd'] for x in d.get('supplements', [])}
     for x in d.get('domain_depth', []):
         if x['moscow'] == 'Must' and x['id'] not in covered: errs.append(f"{x['id']}: a Must-have theme has no supplement")
-    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all', 'data', 'test'}
+    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all', 'data', 'test', 'guide', 'site-map', 'reuse'}
     for r in d.get('design', {}).get('requirements', []):
         for c in r['checks']:
             if c not in KNOWN_CHECKS: errs.append(f"{r['id']}: unknown check {c}")
@@ -276,6 +276,22 @@ def validate_frameworks(d, errs, src, roles):
         for p in c['for_']:
             if p not in {pp['id'] for pp in d['personas']}: errs.append(f"community {c['name']}: unknown persona {p}")
         if not c['url'].startswith('https://'): errs.append(f"community {c['name']}: url must be https")
+    if 'tooling' in d:
+        T = d['tooling']
+        pids = {x['id'] for x in T['patterns']}
+        areas = {a['id'] for a in d.get('dama', {}).get('areas', [])}
+        mats = {'Established', 'Emerging', 'Vendor-specific'}
+        for c in T['categories']:
+            for r in c['standards']:
+                if r not in rb: errs.append(f"{c['id']}: unknown rulebook entry {r}")
+            for x in c['patterns']:
+                if x not in pids: errs.append(f"{c['id']}: unknown integration pattern {x}")
+            for a in c['dama']:
+                if a not in areas: errs.append(f"{c['id']}: unknown DAMA area {a}")
+        for x in T['pairs']:
+            if x['maturity'] not in mats: errs.append(f"tooling pair {x['between']}: maturity must be one of {sorted(mats)}")
+        for x in T['patterns']:
+            if x['risk'] not in ('low', 'medium', 'high'): errs.append(f"{x['id']}: risk must be low, medium or high")
     if 'testing' in d:
         tids = [x['id'] for x in d['testing']['tasks']]
         if len(tids) != len(set(tids)): errs.append('duplicate testing task ids')
@@ -306,7 +322,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 25)} | {f'B-{i:02d}' for i in range(1, 16)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 34)} | {f"B-{i:02d}" for i in range(1, 17)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -348,16 +364,28 @@ def prov(code, date=None):
     return f'<abbr class="prov {code}" title="{E(t)}">{code}<span class="visually-hidden">: {E(t)}</span></abbr>'
 
 
+def col_sizes(headers, rows):
+    """Size each column from the length of its visible text: short columns shrink, long-text columns get room (version 1.8)."""
+    out = []
+    for j, h in enumerate(headers):
+        vals = [re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', str(r[j]))).strip() for r in rows if j < len(r)]
+        avg = (sum(len(v) for v in vals) / len(vals)) if vals else len(h)
+        longest_word = max([len(w) for v in vals for w in v.split()] + [len(w) for w in h.split()] + [1])
+        out.append('c-xs' if avg <= 12 and longest_word <= 14 else 'c-sm' if avg <= 32 else 'c-md' if avg <= 90 else 'c-lg')
+    return out
+
+
 def table(cap_id, caption, headers, rows, cls=None, row_attrs=None, tbody_id=None):
-    th = ''.join(f'<th scope="col"{" class=raci" if (cls and h in cls) else ""}>{E(h)}</th>' for h in headers)
+    sizes = col_sizes(headers, rows)
+    th = ''.join(f'<th scope="col" class="{sizes[i]}{" raci" if (cls and h in cls) else ""}">{E(h)}</th>' for i, h in enumerate(headers))
     body = []
     for i, r in enumerate(rows):
         cells = []
         for j, c in enumerate(r):
             tag = 'th scope="row"' if j == 0 else 'td'
-            klass = ''
+            klass = f' class="{sizes[j]}"' if j < len(sizes) else ''
             if cls and headers[j] in cls:
-                klass = f' class="raci r-{E(c)}"' if c else ' class="raci"'
+                klass = f' class="{sizes[j]} raci r-{E(c)}"' if c else f' class="{sizes[j]} raci"'
             cells.append(f'<{tag}{klass}>{c}</{tag.split()[0]}>')
         body.append(f'<tr{row_attrs[i] if row_attrs else ""}>' + ''.join(cells) + '</tr>')
     tb = f' id="{tbody_id}"' if tbody_id else ''
@@ -440,13 +468,18 @@ NAV = [
     ('index', 'Home', 'house'), ('dam', 'The policy', 'landmark'), ('governance', 'Governance', 'shield-check'),
     ('cataloguing', 'Cataloguing', 'library-big'), ('quality', 'Quality', 'gauge'), ('sectors', 'Sectors', 'layers'), ('together', 'Joined up', 'workflow'),
     ('change', 'Delivery and change', 'construction'),
-    ('capability-model', 'Capability model', 'radar'), ('perspectives', 'Perspectives', 'eye'), ('community', 'Working together', 'handshake'), ('professions', 'Professions and skills', 'briefcase'),
+    ('capability-model', 'Capability model', 'radar'), ('perspectives', 'Perspectives', 'eye'), ('community', 'Working together', 'handshake'), ('professions', 'Professions and skills', 'briefcase'), ('tooling', 'Tools and interoperability', 'plug'),
     ('personas', 'Your role', 'users-round'), ('learning', 'Learning', 'graduation-cap'), ('library', 'Library', 'library'),
     ('knowledge', 'Knowledge', 'network'), ('inclusion', 'Inclusion', 'heart-handshake'), ('about', 'About', 'info'),
 ]
 # Grouped menus keep the global bar to about ten top-level destinations (build standard: use hubs before adding more)
 NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', 'together', 'change'],
-              'Frameworks': ['capability-model', 'perspectives', 'community', 'professions']}
+              'Frameworks': ['capability-model', 'perspectives', 'community', 'professions', 'tooling']}
+# Section colour coding (version 1.8): every page carries a section, styled as an accent colour for orientation
+SECTION = {'index': 'home', 'dam': 'policy', 'governance': 'gov', 'cataloguing': 'cat', 'quality': 'dq', 'sectors': 'sectors', 'together': 'together',
+           'change': 'change', 'capability-model': 'model', 'perspectives': 'lens', 'community': 'community', 'professions': 'skills',
+           'personas': 'roles', 'learning': 'learning', 'library': 'library', 'knowledge': 'knowledge', 'inclusion': 'inclusion',
+           'data': 'data', 'test': 'test', 'guide': 'guide', 'site-map': 'guide', 'reuse': 'reuse', 'tooling': 'tooling'}
 NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3'}
 CAP_PAGE = {'gov': 'governance', 'cat': 'cataloguing', 'dq': 'quality'}
 PAGE_DESC = {
@@ -470,6 +503,10 @@ PAGE_DESC = {
     'design': 'Theory of change, research plan, service blueprint, requirements traceability, architecture and Service Standard self-assessment for the portal.',
     'notices': 'Disclaimers, transparency notices, credits and full citations for every source used by the DAM capability playbooks.',
     'accessibility': 'Accessibility statement for the DAM capability playbooks, following the GOV.UK model statement for public sector websites.',
+    'tooling': 'How catalogue, data quality, lineage, master data and governance tools work together, the open standards that connect them, and RFI questions to avoid lock-in.',
+    'guide': 'User guide for the DAM capability playbooks: getting around, what the colours and labels mean, guided tours, tutorials and keyboard shortcuts.',
+    'site-map': 'Every page on the DAM capability playbooks portal, grouped the way the menus are, with the main sections of each page.',
+    'reuse': 'Ways to use the DAM capability playbooks content: intranet links, embedding, open data, white-label copies, AI assistants and an MCP server.',
     'whats-new': 'Changes in each release of the Data Asset Management (DAM) capability playbooks, newest first.',
     '404': 'The page you were looking for could not be found on the DAM capability playbooks portal.',
 }
@@ -488,7 +525,7 @@ class Site:
         self.rb = {x['id']: x for x in d.get('rulebook', [])}
         self.cr = {c['id']: c for c in d.get('capmap', [])}
         self.prof = {p['id']: p for p in d['professions']['profs']} if 'professions' in d else {}
-        self.search, self.build_id = [], None
+        self.search, self.build_id, self.reg = [], None, {}
         sp = ROOT / 'build' / 'status.json'
         self.status = json.loads(sp.read_text()) if sp.exists() else None
 
@@ -526,7 +563,7 @@ class Site:
         return f'<a href="{E(s["url"])}">{E(s["title"])}</a>{prov(s["prov"], self.m["verified_on"])}'
 
     def req_links(self, ids):
-        return ' '.join(f'<a class="pill {self.req[i]["cap"]}" href="dam.html#{i}">{E(i)}</a>' for i in ids)
+        return ' '.join(f'<a class="pill {self.req[i]["cap"]}" href="dam.html#{i}" data-tip="{E(self.req[i]["text"])}">{E(i)}</a>' for i in ids)
 
     def stage_url(self, ref):
         c, st = self.stage[ref]
@@ -534,7 +571,7 @@ class Site:
 
     def stage_ref(self, ref):
         c, st = self.stage[ref]
-        return f'<a class="pill {c["id"]}" href="{self.stage_url(ref)}">{E(c["short"])} {st["n"]}: {E(st["name"])}</a>'
+        return f'<a class="pill {c["id"]}" href="{self.stage_url(ref)}" data-tip="{E(st["goal"])}">{E(c["short"])} {st["n"]}: {E(st["name"])}</a>'
 
     def mod_units(self, mid):
         return [f'{mid}.{a["id"]}' for a in self.mods[mid]['activities']]
@@ -562,6 +599,10 @@ class Site:
     # -- page shell ------------------------------------------------------------
     def page(self, key, title, body, drawer=None, desc='', crumbs=None, jsonld=None, extra_json=None):
         m = self.m
+        self.reg[key] = (title, drawer or [])
+        tours = [t for t in self.d.get('tours', []) if t['page'] == key]
+        if tours:
+            extra_json = dict(extra_json or {}, **{'tour-data': tours})
         canonical = m['site_url'] + ('' if key == 'index' else f'{key}.html')
         seo_desc = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', '', desc or PAGE_DESC.get(key) or m['subtitle'])).strip()
         if len(seo_desc) > 158:
@@ -577,11 +618,11 @@ class Site:
                 done.add(grp)
                 members = [x for x in NAV if x[0] in NAV_GROUPS[grp]]
                 cur = key in NAV_GROUPS[grp]
-                sub = ''.join(f'<li><a href="{mk}.html"{" aria-current=" + chr(34) + "page" + chr(34) if mk == key else ""}>{icon(mic)}<span>{E(ml)}</span></a></li>' for mk, ml, mic in members)
+                sub = ''.join(f'<li><a href="{mk}.html" data-tip="{E(PAGE_DESC.get(mk, ""))}"{" aria-current=" + chr(34) + "page" + chr(34) if mk == key else ""}>{icon(mic)}<span>{E(ml)}</span></a></li>' for mk, ml, mic in members)
                 nav += (f'<li class="group{" current" if cur else ""}"><button type="button" aria-expanded="false">{icon(NAV_GROUP_ICONS[grp])}<span>{E(grp)}</span>{icon("chevron-down")}</button>'
                         f'<ul aria-label="{E(grp)}">{sub}</ul></li>')
             else:
-                nav += f'<li><a href="{k}.html"{" aria-current=" + chr(34) + "page" + chr(34) if k == key else ""}>{icon(ic)}<span>{E(lbl)}</span></a></li>'
+                nav += f'<li><a href="{k}.html" data-tip="{E(PAGE_DESC.get(k, m["subtitle"]))}"{" aria-current=" + chr(34) + "page" + chr(34) if k == key else ""}>{icon(ic)}<span>{E(lbl)}</span></a></li>'
         drawer_html, toggle = '', ''
         if drawer:
             groups = []
@@ -655,13 +696,14 @@ class Site:
 <link rel="stylesheet" href="assets/style.css">
 <script type="application/ld+json">{json_safe(ld)}</script>
 </head>
-<body>
+<body data-section="{E(SECTION.get(key, "other"))}">
 <a class="skip" href="#main">Skip to main content</a>
 <header class="mast">
 <div class="mast-in"><a class="name" href="index.html"><img class="brand-mark" src="assets/favicon.svg" alt="" width="36" height="36"><span>{E(m["title"])}</span></a>
 <div class="mast-tools">
 <button type="button" data-open-search hidden aria-haspopup="dialog">{icon("search")}<span>Search</span> <kbd>Ctrl K</kbd></button>
-<button type="button" id="display-toggle" aria-expanded="false" aria-controls="display-panel" hidden>{icon("a-large-small")}<span>Display options</span></button></div></div>
+<button type="button" id="display-toggle" aria-expanded="false" aria-controls="display-panel" hidden>{icon("a-large-small")}<span>Display options</span></button>
+<a class="mast-link" href="guide.html">{icon("circle-help")}<span>Help</span></a><a class="mast-link" href="site-map.html">{icon("map")}<span>Site map</span></a></div></div>
 {display}
 </header>
 <div class="banner"><strong class="tag">Prototype</strong>This is not an official GOV.UK service or published guidance. Where it repeats GDS guidance, the GOV.UK page is the authority. <a href="test.html">Help us test it</a> or <a href="contact.html">use the contact form</a> to tell us what you think.</div>
@@ -670,7 +712,7 @@ class Site:
 {drawer_html}
 <main id="main" tabindex="-1">
 {crumb_html}
-<div class="toolbar">{toggle}</div>
+<div class="toolbar">{toggle}<div class="page-actions">{self.page_actions(key, title, canonical)}</div></div>
 {body}
 {self.edit_links(key, title)}
 </main>
@@ -706,6 +748,31 @@ class Site:
                 f'<a href="{gh}/commits/main/content/playbooks.yaml">{icon("clock")}See the change history</a>'
                 f'<a href="{gh}/discussions">{icon("users")}Ask the community</a></nav>')
 
+    def page_actions(self, key, title, url):
+        enc = urllib.parse.quote
+        tour = ''.join(f'<button type="button" class="tour-btn" data-tour="{t["id"]}" hidden>{icon("play")}Take the tour</button>' for t in self.d.get('tours', []) if t['page'] == key)
+        mail = f'mailto:?subject={enc(title + " - " + self.m["short_title"])}&amp;body={enc("I thought this might be useful: " + url)}'
+        teams = f'https://teams.microsoft.com/share?href={enc(url, safe="")}&amp;msgText={enc(title)}'
+        share = (f'<details class="share"><summary>{icon("share-2")}Share this page</summary><ul>'
+                 f'<li><button type="button" data-copy-link hidden>{icon("link")}Copy link</button></li>'
+                 f'<li><button type="button" data-native-share hidden>{icon("send")}Share using your device</button></li>'
+                 f'<li><a href="{mail}">{icon("message-square-text")}Email a link</a></li>'
+                 f'<li><a href="{teams}">{icon("users")}Share in Microsoft Teams</a></li>'
+                 f'<li class="share-status" aria-live="polite"></li></ul></details>')
+        return tour + share
+
+    def ms_form_url(self):
+        return (self.d.get('ms_form') or {}).get('url') or ''
+
+    def ms_form_block(self):
+        """The private feedback route. Shown only when a form address is set, so an empty setting never leaves a dead link."""
+        f, url = self.d.get('ms_form') or {}, self.ms_form_url()
+        if not url:
+            return ''
+        return (f'<div class="notice-box ms-form" id="private-feedback">{icon("lock-keyhole")}<div><h2 class="fs-h">Prefer not to use GitHub?</h2>'
+                f'<p>{E(f["note"])}</p><p><a class="btn secondary" href="{E(url)}" rel="noopener">{icon("message-square-text")}{E(f["title"])}</a></p>'
+                f'<p class="hint">Do not include your name, colleagues\' names, personal data or anything above OFFICIAL.</p></div></div>')
+
     def footer(self):
         m = self.m
         return f'''<footer class="site" id="colophon">
@@ -713,9 +780,9 @@ class Site:
 <div><h2>{icon("info")} About this portal</h2>
 <p>{E(m["status"])}</p>
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
-<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="test.html">Help us test</a></li></ul></div>
+<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
-<p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>
+<p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>{f'<p>Or <a href="{E(self.ms_form_url())}" rel="noopener">use the private feedback form</a> (Microsoft Forms, no GitHub account needed).</p>' if self.ms_form_url() else ''}
 <p>{E(m["contact_note"])}</p></div>
 <div><h2>{icon("file-text")} Licence and version</h2>
 <p>Content: <a href="{E(m["licence_content_url"])}">{E(m["licence_content"])}</a>, except where stated. Code: {E(m["licence_code"])}. Icons: Lucide (ISC).</p>
@@ -755,9 +822,12 @@ class Site:
                  'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
                  'professions': self.p_professions, 'change': self.p_change, 'perspectives': self.p_lenses, 'community': self.p_community, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
                  'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices, 'data': self.p_data, 'test': self.p_test,
-                 'accessibility': self.p_accessibility, '404': self.p_404}
+                 'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, '404': self.p_404}
         for k, fn in pages.items():
             (self.out / f'{k}.html').write_text(fn(), encoding='utf-8')
+        # The site map is built last, from the registry every other page has filled
+        (self.out / 'site-map.html').write_text(self.p_sitemap(), encoding='utf-8')
+        self.write_llms()
         mods = {mm['id']: self.mod_units(mm['id']) for mm in d['modules']}
         (self.out / 'assets' / 'search-index.js').write_text(
             'window.DCP_INDEX=' + json_safe(self.search) + ';\nwindow.DCP_MODULES=' + json_safe(mods) + ';\n', encoding='utf-8')
@@ -1041,7 +1111,7 @@ class Site:
 
     def rb_link(self, rid):
         x = self.rb[rid]
-        return f'<a href="{E(x["url"])}">{E(x["title"])}</a>{prov(x["prov"], self.m["verified_on"])}'
+        return f'<a href="{E(x["url"])}" data-tip="{E(x["publisher"] + ": " + x["why"])}">{E(x["title"])}</a>{prov(x["prov"], self.m["verified_on"])}'
 
     def rulebook_html(self, items, filt_id):
         groups = []
@@ -1236,7 +1306,7 @@ class Site:
         body = self.hero('message-square-text', 'Contact', 'Contact form', E(self.d['pages']['contact']['lede']),
                          brief=['Messages are sent through GitHub and are public. Do not include personal data, names of colleagues or anything above OFFICIAL.',
                                 'You need a free GitHub account to send the message.',
-                                'If you cannot use this form, ask a colleague to send it for you.'])
+                                ('No GitHub account? Use the private feedback form further down this page.' if self.ms_form_url() else 'If you cannot use this form, ask a colleague to send it for you.')])
         body += f'''<form class="contact" id="contact-form" data-target="{E(repo_issue)}" novalidate>
 <div class="error-summary" id="cf-errors" tabindex="-1" hidden role="alert"><h2>There is a problem</h2><ul></ul></div>
 <fieldset><legend><h2 class="fs-h">{icon("message-square-text")} What is this about?</h2></legend>
@@ -1250,6 +1320,7 @@ class Site:
 <p><button type="submit" class="btn">{icon("send")}Continue to send on GitHub</button></p>
 <p class="hint">You will see your message on GitHub before you send it.</p></form>
 <noscript><p><a href="{E(m["contact_form"])}">Open the contact form on GitHub</a>.</p></noscript>
+{self.ms_form_block()}
 <h2 id="privacy-notice">{icon("lock-keyhole")} Privacy notice</h2>
 <p>This form does not store anything. It opens GitHub with your message filled in. When you send it, GitHub publishes it as a public issue under your GitHub account, and GitHub's own privacy statement applies. Only include what is needed to answer you.</p>'''
         return self.page('contact', 'Contact form', body, None, crumbs=['Contact'])
@@ -1542,10 +1613,10 @@ class Site:
 
     def cr_pill(self, cid):
         c = self.cr[cid]
-        return f'<a class="pill" href="capability-model.html#{cid}">{E(cid)} {E(c["name"])}</a>'
+        return f'<a class="pill" href="capability-model.html#{cid}" data-tip="{E(c["note"])}">{E(cid)} {E(c["name"])}</a>'
 
     def role_pills(self, codes):
-        return ' '.join(f'<a class="pill" href="together.html#role-{c}">{E(self.roles[c]["name"])}</a>' for c in codes)
+        return ' '.join(f'<a class="pill" href="together.html#role-{c}" data-tip="{E(self.roles[c]["text"])}">{E(self.roles[c]["name"])}</a>' for c in codes)
 
     def skill_link(self, anchor, name=None):
         nm = name or next((s[0] for r in self.d['professions']['roles'] for s in r['skills'] if s[1] == anchor), anchor)
@@ -1792,6 +1863,7 @@ class Site:
             ('sector-rules', 'Sector data quality rules', f'{sum(len(x["rules"]) for x in d.get("supplements", []))} starter quality rules for {len(d.get("supplements", []))} kinds of data, runnable with the Data Quality Commons kit.',
              ['sector-rules.csv'] + [f'rules/{x["id"].lower()}.yaml' for x in d.get('supplements', [])], ['data quality', 'rules', 'dqkit']),
             ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
+            ('interoperability-questions', 'Tool interoperability questions', 'Questions for a request for information or tender for catalogue, data quality, lineage and governance tools, to test interoperability and avoid lock-in.', ['interoperability-questions.csv'], ['procurement', 'interoperability', 'RFI']),
             ('ddat-role-skills', 'Data role skills and levels', 'Skills and skill levels for Digital and Data capability framework roles with data asset management duties.', ['ddat-role-skills.csv'], ['skills', 'professions']),
             ('rulebook', 'Related policies, standards and legislation', 'Every policy, standard, piece of legislation and framework the portal links to, with publisher and update date.', ['rulebook.csv', 'sources.jsonld'], ['rulebook', 'standards']),
             ('traceability', 'Portal requirements traceability', 'Each portal requirement, the features that meet it and the checks that prove it.', ['traceability.csv'], ['traceability']),
@@ -1893,7 +1965,7 @@ class Site:
         opts = ''.join(f'<option value="{p["id"]}">{E(p["title"])}</option>' for p in d['personas'])
         ids = ['test:' + x['id'] for x in t['tasks']]
         body = self.hero('play', 'Help us test', 'Help us test this portal', E(t['intro']),
-                         brief=['Pick the tasks closest to your role.', 'Try each one without help, then tell us how it went.', 'Feedback is public on GitHub, so do not include names or sensitive information.'],
+                         brief=['Pick the tasks closest to your role.', 'Try each one without help, then tell us how it went.', 'Task feedback is public on GitHub' + (', or use the private feedback form' if self.ms_form_url() else '') + '. Do not include names or sensitive information.'],
                          meta=[('list-checks', f'{len(t["tasks"])} tasks'), ('clock', 'About 20 minutes'), ('users-round', f'{len(d["personas"])} roles')])
         body += f'''<h2 id="how">{icon("route")} How to take part</h2>
 <ol><li>Choose your role below to see the tasks for it.</li><li>Select <strong>Start this task</strong>. Try to finish it without asking anyone.</li>
@@ -1905,7 +1977,7 @@ class Site:
 <ul class="cr-list two" id="task-list">{cards}</ul>
 <h2 id="after">{icon("message-square-text")} What happens to your feedback</h2>
 <p>Feedback is read by the people maintaining this prototype, grouped by task and role, and used to decide what to change. Changes are listed on <a href="whats-new.html">What's new</a>.</p>
-<p>The feedback form opens GitHub, where messages are public and you need a free account. If you cannot use GitHub, ask a colleague to send your feedback for you; a private route is being arranged (see <a href="about.html#OR-02">known limitations</a>).</p>
+<p>The task feedback links open GitHub, where messages are public and you need a free account.</p>{self.ms_form_block()}
 <h2 id="other">{icon("circle-help")} Anything else</h2><p>For anything not covered by a task, use the <a href="contact.html">contact form</a> or the "was this page useful?" link at the bottom of every page.</p>'''
         drawer = [{'label': 'Testing', 'icon': 'play', 'items': [{'id': 'how', 'label': 'How to take part', 'icon': 'route', 'count': 4},
                                                                   {'id': 'tasks', 'label': 'Tasks', 'icon': 'list-checks', 'count': len(t['tasks'])},
@@ -1915,8 +1987,8 @@ class Site:
 
     # -- version 1.6: perspectives (lenses) ----------------------------------------------------
     def ch_pills(self, ids):
-        t = {x['id']: x['title'] for x in self.d['change']['items']}
-        return ' '.join(f'<a class="pill" href="change.html#{c}">{E(c)} {E(t[c])}</a>' for c in ids)
+        t = {x['id']: x for x in self.d['change']['items']}
+        return ' '.join(f'<a class="pill" href="change.html#{c}" data-tip="{E(t[c]["why"])}">{E(c)} {E(t[c]["title"])}</a>' for c in ids)
 
     def p_lenses(self):
         d, L = self.d, self.d['lenses']
@@ -2057,6 +2129,260 @@ class Site:
                                                                               {'id': 'communities', 'label': 'Communities', 'icon': 'users-round', 'count': len(j['communities'])},
                                                                               {'id': 'map', 'label': 'Who contributes to what', 'icon': 'grid-3x3', 'count': len(d['capmap'])}]}]
         return self.page('community', 'Working together', body, drawer, crumbs=['Frameworks', 'Working together'])
+
+    # -- version 1.8: user guide, site map, use and reuse -----------------------------------------
+    SECTION_NAMES = [('policy', 'The policy and home'), ('gov', 'Data governance'), ('cat', 'Data cataloguing'), ('dq', 'Data quality'),
+                     ('sectors', 'Sector supplements'), ('together', 'Joined up'), ('change', 'Delivery and change'), ('model', 'Capability model'),
+                     ('lens', 'Perspectives'), ('community', 'Working together'), ('skills', 'Professions and skills'), ('roles', 'Your role'),
+                     ('learning', 'Learning'), ('library', 'Library'), ('knowledge', 'Knowledge'), ('inclusion', 'Inclusion'), ('data', 'Open data'),
+                     ('test', 'Help us test'), ('guide', 'Guide and site map'), ('reuse', 'Use and reuse'), ('tooling', 'Tools and interoperability'), ('other', 'About, contact and notices')]
+
+    def p_guide(self):
+        d = self.d
+        tours = d.get('tours', [])
+        tour_rows = [[E(t['title']), E(self.reg.get(t['page'], (t['page'],))[0] if t['page'] in self.reg else t['page']), f'{len(t["steps"])} steps',
+                      f'<a href="{"index" if t["page"] == "index" else t["page"]}.html#tour={t["id"]}">{icon("play")}Start this tour</a>'] for t in tours]
+        sw = ''.join(f'<li><span class="swatch sw-{k}" aria-hidden="true"></span>{E(v)}</li>' for k, v in self.SECTION_NAMES)
+        badges = ''.join(f'<li>{prov(k)} {E(v)}</li>' for k, v in PROV_TEXT.items())
+        flags = ''.join(f'<li>{self.flag(k)} {E(v[1])}</li>' for k, v in FLAGS.items())
+        tutorials = [
+            ('tut-return', 'Prepare your first return', [('dam.html', 'Read what the policy requires and which requirements are "must".'), ('cataloguing.html#method', 'Follow the cataloguing steps to find and designate critical assets.'), ('governance.html#method', 'Confirm a named data owner for each one.'), ('cataloguing.html#metadata', 'Record the core metadata for each asset.'), ('together.html', 'Use the yearly cycle to plan the return and the annual review.')]),
+            ('tut-dqap', 'Write a data quality action plan', [('quality.html#method', 'Work through the eight quality steps.'), ('sectors.html#which', 'Check whether any sector supplement adds rules for your asset.'), ('quality.html#escalation', 'Set targets and performance bands, and agree escalation.'), ('learning.html#M08', 'Check your understanding with the DQAP module.')]),
+            ('tut-maturity', 'Assess maturity and plan improvements', [('capability-model.html#cm-overview', 'Read the capabilities the policy depends on.'), ('capability-model.html#cm-self', 'Run the self-assessment and download your profile.'), ('capability-model.html#cm-dama', 'Choose your role on the DAMA wheel to see what to improve.'), ('change.html#CH-12', 'Set target levels with dates.')]),
+            ('tut-programme', 'Build data asset management into a programme', [('personas.html#persona-prg', 'Follow the programme or project lead route.'), ('change.html#programme-roles', 'Agree data responsibilities with each programme role.'), ('change.html#blueprint', 'Use the programme blueprint as an overlay on your plan.'), ('perspectives.html', 'Check the commercial, cyber and technology lenses with those teams.')]),
+            ('tut-tools', 'Specify interoperable tools', [('tooling.html#categories', 'Map the kinds of tool you have or plan, and the DAMA areas they support.'), ('tooling.html#pairs', 'Choose the open standard for each boundary between tools.'), ('tooling.html#barriers', 'Check the commercial barriers in current and planned contracts.'), ('tooling.html#rfi', 'Download the RFI questions and add them to your tender.'), ('change.html#CH-14', 'Record the decision and exit plan in your programme.')]),
+            ('tut-reuse', 'Bring the content into your organisation', [('reuse.html', 'Choose an approach: link, embed, data, white-label or AI.'), ('data.html', 'Download the datasets you need or harvest the catalogue.'), ('community.html', 'Agree join-up actions with other professions.')]),
+        ]
+        tut_html = ''.join(f'<section id="{tid}" class="cr-card"><h3>{icon("route")} {E(t)}</h3><ol class="tut">' + ''.join(f'<li><a href="{u}">{E(x)}</a></li>' for u, x in steps) + '</ol></section>' for tid, t, steps in tutorials)
+        keys = [('<kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd>', 'Open search from any page'), ('<kbd>Esc</kbd>', 'Close search, menus, tooltips or a tour'),
+                ('<kbd>Tab</kbd> and <kbd>Shift</kbd> + <kbd>Tab</kbd>', 'Move between links and controls'), ('Arrow keys', 'Move between tabs once a tab is selected'),
+                ('<kbd>Enter</kbd> or <kbd>Space</kbd>', 'Open a menu, tab or step, or tick a checkbox')]
+        faqs = [('Is this official guidance?', 'No. It is a prototype. Where it repeats GOV.UK guidance, the GOV.UK page is the authority.'),
+                ('Is my progress saved?', 'Only in your own browser. Nothing is sent anywhere. Clear it from the home page.'),
+                ('What do the coloured edges and badges mean?', 'Colours show which part of the portal you are in. Badges show where each fact comes from; see the legends above.'),
+                ('Can I use this content in my organisation?', 'Yes. See Use and reuse for links, embedding, data, your own copy and AI options.'),
+                ('How do I give feedback?', 'Use the testing page, the contact form or the "was this page useful?" link at the bottom of every page.')]
+        body = self.hero('circle-help', 'Help', 'User guide', 'How the portal is organised, how to find your way around, what the labels mean, guided tours and step-by-step tutorials.',
+                         brief=['Take a guided tour on the pages that have one.', 'Follow a tutorial for common jobs.', 'Use the site map to see everything at once.'],
+                         meta=[('play', f'{len(tours)} tours'), ('route', f'{len(tutorials)} tutorials'), ('map', 'Site map')])
+        body += f'''<h2 id="around">{icon("compass")} Getting around</h2>
+<ul class="ticks"><li><strong>Portal sections bar</strong> at the top lists every part of the portal. Playbooks and Frameworks open menus. On small screens, items fold into More sections.</li>
+<li><strong>On this page</strong> panel on the left lists the sections of the current page, with counts and "New" flags. The Page contents switch hides or shows it.</li>
+<li><strong>Tabs</strong> split long pages. A link to a section opens the right tab.</li>
+<li><strong>Breadcrumbs</strong> above each page show where you are.</li>
+<li><strong>Site map</strong> shows every page and its sections: <a href="site-map.html">open the site map</a>.</li>
+<li><strong>Share this page</strong> copies a link, emails it or shares it in Microsoft Teams.</li></ul>
+<h2 id="finding">{icon("search")} Finding things</h2>
+<ul class="ticks"><li><strong>Search</strong> covers steps, requirements, capabilities, practices, glossary terms, modules and more.</li>
+<li><strong>Filters</strong> above long lists narrow them by capability, role, priority or stage, and show how many items match.</li>
+<li><strong>Tooltips</strong> appear when you hover over or move to a dotted term, a pill, a menu item or a source link.</li></ul>
+<h2 id="labels">{icon("tag")} What the colours and labels mean</h2>
+<h3>Section colours</h3><p>Each part of the portal has its own colour on headings, tiles and borders, so you can tell where you are at a glance. Text always stays in the standard high-contrast colours.</p><ul class="legend-swatches">{sw}</ul>
+<h3>Where facts come from</h3><ul>{badges}</ul>
+<h3>How the policy states a capability</h3><ul>{flags}</ul>
+<h2 id="tours">{icon("play")} Guided tours</h2><p>Tours highlight each part of a page and explain it. Press <kbd>Esc</kbd> to leave a tour at any time.</p>
+{table("t-tours", "Guided tours", ["Tour", "Page", "Length", "Start"], tour_rows)}
+<h2 id="tutorials">{icon("route")} Tutorials</h2><div class="cr-list two">{tut_html}</div>
+<h2 id="keyboard">{icon("a-large-small")} Keyboard shortcuts</h2>{table("t-keys", "Keyboard shortcuts", ["Keys", "What they do"], [[k, E(v)] for k, v in keys])}
+<h2 id="faq">{icon("circle-help")} Common questions</h2>{"".join(f'<details class="kc-answer"><summary>{E(q)}</summary><p>{E(a)}</p></details>' for q, a in faqs)}'''
+        drawer = [{'label': 'User guide', 'icon': 'circle-help', 'items': [
+            {'id': 'around', 'label': 'Getting around', 'icon': 'compass', 'count': 6}, {'id': 'finding', 'label': 'Finding things', 'icon': 'search', 'count': 3},
+            {'id': 'labels', 'label': 'Colours and labels', 'icon': 'tag'}, {'id': 'tours', 'label': 'Guided tours', 'icon': 'play', 'count': len(tours), 'new': True},
+            {'id': 'tutorials', 'label': 'Tutorials', 'icon': 'route', 'count': len(tutorials), 'new': True}, {'id': 'keyboard', 'label': 'Keyboard shortcuts', 'icon': 'a-large-small', 'count': len(keys)},
+            {'id': 'faq', 'label': 'Common questions', 'icon': 'circle-help', 'count': len(faqs)}]}]
+        return self.page('guide', 'User guide', body, drawer, crumbs=['User guide'])
+
+    def p_sitemap(self):
+        groups = [('Start here', 'house', ['index', 'dam', 'personas', 'learning', 'guide']),
+                  ('Playbooks', 'book-open', NAV_GROUPS['Playbooks']),
+                  ('Frameworks', 'grid-3x3', NAV_GROUPS['Frameworks']),
+                  ('Reference', 'library', ['library', 'knowledge', 'inclusion', 'data', 'reuse']),
+                  ('About and help', 'info', ['about', 'test', 'contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])]
+        colours = {'Start here': '#1d70b8', 'Playbooks': '#00703c', 'Frameworks': '#3949ab', 'Reference': '#455a64', 'About and help': '#505a5f'}
+        seen, out = set(), ''
+        for name, ic, keys in groups:
+            items = ''
+            for k in keys:
+                if k not in self.reg:
+                    continue
+                seen.add(k)
+                title, drawer = self.reg[k]
+                secs = [it for g in drawer for it in g['items']][:12]
+                sub = ('<ul>' + ''.join(f'<li><a href="{k}.html#{E(it["id"])}">{E(it["label"])}</a></li>' for it in secs) + '</ul>') if secs else ''
+                items += f'<li><a href="{"index" if k == "index" else k}.html"><strong>{E(title)}</strong></a><br><span class="hint">{E(PAGE_DESC.get(k, ""))}</span>{sub}</li>'
+            out += f'<li class="map-group map-{slug(name)}"><h2>{icon(ic)} {E(name)}</h2><ul>{items}</ul></li>'
+        body = self.hero('map', 'Help', 'Site map', 'Every page on the portal, grouped the way the menus are, with the main sections of each page.',
+                         meta=[('file-text', f'{len(seen)} pages')])
+        body += f'<ul class="map-tree">{out}</ul>'
+        return self.page('site-map', 'Site map', body, None, crumbs=['Site map'])
+
+    def p_reuse(self):
+        r = self.d['reuse']
+        groups = list(dict.fromkeys(a['group'] for a in r['approaches']))
+        cards = ''
+        for a in r['approaches']:
+            cards += (f'<li class="cr-card" id="{a["id"]}" data-item data-grp="{slug(a["group"])}" data-effort="{a["effort"]}"><div class="cr-head">{tile(a["icon"], "sm")}<div><p class="caption">{E(a["id"])} · {E(a["group"])}</p><h3>{E(a["title"])}</h3></div>'
+                      f'<span class="effort e-{a["effort"]}">{E(a["effort"].capitalize())} effort</span></div><p>{E(a["what"])}</p>'
+                      f'<h4>{icon("list-checks")} How</h4><ol>{"".join(f"<li>{E(x)}</li>" for x in a["how"])}</ol>'
+                      f'<p><strong>Choose this when:</strong> {E(a["when"])}</p><h4>{icon("triangle-alert")} Watch out for</h4>{ul(a["cautions"])}</li>')
+        opts = ''.join(f'<option value="{slug(g)}">{E(g)}</option>' for g in groups)
+        endpoints = [('data/catalogue.jsonld', 'DCAT catalogue of every dataset (JSON-LD)'), ('data/catalogue.ttl', 'The same catalogue in Turtle'), ('data/playbooks.json', 'All content in one file'),
+                     ('llms.txt', 'Short guide for AI tools'), ('llms-full.txt', 'Full text for AI tools'), ('sitemap.xml', 'Every page address')]
+        ep = [[f'<a href="{u}"><code>{E(u)}</code></a>', E(t)] for u, t in endpoints]
+        mcp = '''{
+  "mcpServers": {
+    "dam-playbooks": {
+      "command": "python3",
+      "args": ["integrations/mcp/server.py"],
+      "env": {"DAM_PLAYBOOKS_FILE": "/path/to/playbooks.json"}
+    }
+  }
+}'''
+        tools = [('search_portal', 'Search steps, requirements, capabilities, practices, sector supplements and glossary terms.'), ('get_capability', 'Get one capability from the capability model, with its signposts.'),
+                 ('get_requirement', 'Get one DAM Policy requirement with its source and strength.'), ('get_practice', 'Get one delivery and change practice with its actions.'),
+                 ('list_sector_rules', 'List the quality rules for a sector supplement.')]
+        body = self.hero('share-2', 'Reference', 'Use and reuse this content', E(r['intro']),
+                         brief=['Ten approaches, from a link on your intranet to your own branded copy.', 'AI options: an assistant that cites the portal, and a reference MCP server.', 'Each approach says what it takes and what to watch out for.'],
+                         meta=[('share-2', f'{len(r["approaches"])} approaches'), ('network', 'MCP server'), ('scale', 'Open licences')])
+        body += f'''<h2 id="approaches">{icon("layers")} Approaches</h2>
+<div class="filters" data-filter="reuse-list" role="group" aria-label="Filter approaches"><div><label for="r-g">Kind</label><select id="r-g" name="grp"><option value="">All</option>{opts}</select></div>
+<div><label for="r-e">Effort</label><select id="r-e" name="effort"><option value="">All</option><option value="low">Low</option><option value="medium">Medium</option></select></div><p class="count-out" aria-live="polite"></p></div>
+<ul class="approach-grid" id="reuse-list">{cards}</ul>
+<h2 id="endpoints">{icon("database")} Addresses for tools and AI</h2>{table("t-endpoints", "Machine-readable addresses", ["Address", "What it is"], ep)}
+<h2 id="ai">{icon("brain")} AI assistants and search</h2>
+<p>The built-in search finds pages, steps and terms by their words. An AI assistant can answer questions in plain language, combining several pages. This portal does not run its own chatbot: there is no server, and nothing you type is sent anywhere. Instead it publishes its content in forms that assistants your organisation already approves can use, with the page each answer comes from.</p>
+<ul class="ticks"><li><strong>llms.txt</strong> is a short, structured guide to the portal for AI tools, following a common convention; <strong>llms-full.txt</strong> holds the full text.</li>
+<li><strong>Knowledge sources</strong>: add the site address or <code>data/playbooks.json</code> to an assistant builder, such as Microsoft Copilot Studio.</li>
+<li><strong>Always check</strong> an answer against the page it cites, and against GOV.UK, which remains the authority.</li></ul>
+<h2 id="mcp">{icon("network")} Model Context Protocol (MCP) server</h2>
+<p>A reference server in the repository, <code>integrations/mcp/server.py</code>, lets an MCP-compatible assistant use the portal as a set of tools. It uses only the Python standard library, reads the published content, and returns links to the pages it draws on. It is for testing and adaptation, not a supported service.</p>
+{table("t-mcp-tools", "Tools the MCP server provides", ["Tool", "What it does"], [[f"<code>{E(a)}</code>", E(b)] for a, b in tools])}
+<p>Download the <a href="data/playbooks.json">full content file</a>, or set <code>DAM_PLAYBOOKS_URL</code> to its full address to read the live copy. Example configuration for an assistant that reads MCP servers from a JSON file:</p><pre class="code" tabindex="0" aria-label="Example MCP configuration"><code>{E(mcp)}</code></pre>
+<div class="notice-box">{icon("info")}<p>Whatever route you choose, keep the prototype status, the attribution statement and the licences with the content, and agree who in your organisation keeps your copy up to date.</p></div>'''
+        drawer = [{'label': 'Use and reuse', 'icon': 'share-2', 'items': [
+            {'id': 'approaches', 'label': 'Approaches', 'icon': 'layers', 'count': len(r['approaches']), 'new': True},
+            {'id': 'endpoints', 'label': 'Addresses for tools', 'icon': 'database', 'count': len(endpoints)},
+            {'id': 'ai', 'label': 'AI assistants', 'icon': 'brain'}, {'id': 'mcp', 'label': 'MCP server', 'icon': 'network', 'count': len(tools)}]}]
+        return self.page('reuse', 'Use and reuse', body, drawer, crumbs=['Use and reuse'])
+
+    def write_llms(self):
+        m, base, d = self.m, self.m['site_url'], self.d
+        lines = [f'# {m["title"]}', '', f'> {m["subtitle"]}. A prototype, not official GOV.UK guidance; where it repeats GOV.UK, the GOV.UK page is the authority.', '',
+                 'Content is under the Open Government Licence v3.0. Cite the page each answer comes from.', '', '## Pages', '']
+        for k, (title, _) in self.reg.items():
+            if k == '404':
+                continue
+            lines.append(f'- [{title}]({base}{"" if k == "index" else k + ".html"}): {re.sub(r"<[^>]+>", "", PAGE_DESC.get(k, m["subtitle"]))}')
+        lines += ['', '## Data', '', f'- [Open data catalogue (DCAT, JSON-LD)]({base}data/catalogue.jsonld)', f'- [Full content (JSON)]({base}data/playbooks.json)', f'- [Full text for AI tools]({base}llms-full.txt)', '']
+        (self.out / 'llms.txt').write_text('\n'.join(lines), encoding='utf-8')
+        full = ['# ' + m['title'] + ' (full text)', '', f'Version {m["version"]}, as of {m["as_of"]}. {m["status"]}', '']
+        full += ['## DAM Policy requirements', ''] + [f'- {r["id"]} ({r["strength"]}): {r["text"]} [{base}dam.html#{r["id"]}]' for r in d['requirements']]
+        for c in d['capabilities']:
+            full += ['', f'## {c["name"]}', '', c['purpose'], ''] + [f'{st["n"]}. {st["name"]}: {st["goal"]} ' + ' '.join(st['steps']) + f' [{base}{CAP_PAGE[c["id"]]}.html#{c["id"]}-{st["id"]}]' for st in c['stages']]
+        full += ['', '## Capability model', ''] + [f'- {c["id"]} {c["name"]} ({FLAGS[c["flag"]][0]}): {c["note"]} [{base}capability-model.html#{c["id"]}]' for c in d.get('capmap', [])]
+        full += ['', '## Delivery and change practices', ''] + [f'- {x["id"]} {x["title"]}: {x["why"]} Actions: ' + ' '.join(x['actions']) + f' [{base}change.html#{x["id"]}]' for x in d.get('change', {}).get('items', [])]
+        full += ['', '## Sector supplements', ''] + [f'- {x["title"]}: {x["summary"]} [{base}sectors.html#{x["id"]}]' for x in d.get('supplements', [])]
+        full += ['', '## Glossary', ''] + [f'- {c["term"]}: {c["def"]}' for c in d['concepts']]
+        (self.out / 'llms-full.txt').write_text('\n'.join(full) + '\n', encoding='utf-8')
+
+    # -- version 1.8: tools and interoperability ------------------------------------------------
+    MATURITY_TEXT = {'Established': 'Open standards exist and are widely implemented', 'Emerging': 'Open standards exist but support varies between products',
+                     'Vendor-specific': 'No common open standard; each product does it its own way'}
+
+    def p_tooling(self):
+        T, dama = self.d['tooling'], {a['id']: a for a in self.d['dama']['areas']}
+        pats = {p['id']: p for p in T['patterns']}
+        std_of = lambda ids: '; '.join(self.rb_link(r) for r in ids)
+        cards = ''
+        for c in T['categories']:
+            areas = ' '.join(f'<a class="pill" href="capability-model.html#{a.lower()}" data-tip="DAMA knowledge area">{E(dama[a]["name"])}</a>' for a in c['dama'])
+            pp = ' '.join(f'<a class="pill" href="#{p}" data-tip="{E(pats[p]["how"])}">{E(pats[p]["name"])}</a>' for p in c['patterns'])
+            cards += (f'<li class="cr-card" id="{c["id"]}" data-item data-cap="{" ".join(c["caps"])}"><div class="cr-head">{tile(c["icon"], "sm")}<div><p class="caption">{E(c["id"])}</p><h3>{E(c["name"])}</h3></div></div>'
+                      f'<p>{E(c["what"])}{prov("O")}</p><p><strong>DAMA area:</strong> {areas}</p>'
+                      f'<p><strong>Open standards:</strong> {std_of(c["standards"])}</p><p><strong>Integration patterns:</strong> {pp}</p>'
+                      f'<p class="ask">{icon("circle-help")}<strong>Ask:</strong> {E(c["ask"])}</p></li>')
+        filt = ('<div class="filters" data-filter="tool-list" role="group" aria-label="Filter tool categories"><div><label for="tl-cap">Capability</label><select id="tl-cap" name="cap"><option value="">All</option>'
+                '<option value="gov">Data governance</option><option value="cat">Data cataloguing</option><option value="dq">Data quality</option></select></div><p class="count-out" aria-live="polite"></p></div>')
+        overview = (f'<p class="lede">{E(T["intro"])}</p><h2 id="principles">{icon("compass")} Five principles</h2>'
+                    + '<ol class="principles">' + ''.join(f'<li>{E(x)}</li>' for x in T['principles']) + f'</ol><p class="hint">This portal\'s synthesis{prov("O")} of {self.rb_link("RB-OSP")}, {self.rb_link("RB-TCOP11")} and {self.rb_link("RB-LOCKIN")}.</p>'
+                    + f'<h2 id="categories">{icon("layers")} Kinds of tool</h2><p>Each kind of tool supports one or more DAMA knowledge areas. Products often cover several kinds; judge each kind separately.</p>{filt}<ul class="approach-grid" id="tool-list">{cards}</ul>')
+        stds = []
+        seen = []
+        for c in T['categories']:
+            for r in c['standards']:
+                if r not in seen:
+                    seen.append(r)
+        for r in seen:
+            used = ', '.join(c['name'] for c in T['categories'] if r in c['standards'])
+            stds.append([self.rb_link(r), E(self.rb[r]['publisher']), E(used)])
+        prow = [[f'<span id="{p["id"]}"><strong>{E(p["name"])}</strong></span>', E(p['how']), E(p['when']), f'<span class="effort e-{"low" if p["risk"] == "low" else "medium"}">{E(p["risk"].capitalize())}</span>', E(p['watch'])] for p in T['patterns']]
+        standards = (f'<h2 id="open-standards">{icon("scale")} Open standards at the boundaries</h2><p>Standards that let tools exchange catalogue records, vocabularies, quality results, lineage, contracts and API descriptions. '
+                     f'For data shared within government and published data, also follow {self.rb_link("RB-METASTD")} and the {self.src_link("SRC-MEM")}.</p>'
+                     + table('t-tool-std', 'Open standards for tool interoperability', ['Standard', 'Maintained by', 'Used between'], stds)
+                     + f'<h2 id="patterns">{icon("workflow")} Integration patterns</h2><p>How tools connect, and the lock-in risk each pattern carries{prov("O")}.</p>'
+                     + table('t-tool-pat', 'Integration patterns', ['Pattern', 'How it works', 'Use it for', 'Lock-in risk', 'Watch out for'], prow))
+        mrow = [[f'<strong>{E(x["between"])}</strong>', E(x['flows']), E(x['open']), f'<span class="mat mat-{slug(x["maturity"])}" data-tip="{E(self.MATURITY_TEXT[x["maturity"]])}">{E(x["maturity"])}</span>', E(x['fallback']), E(x['watch'])] for x in T['pairs']]
+        counts = {k: sum(1 for x in T['pairs'] if x['maturity'] == k) for k in self.MATURITY_TEXT}
+        matrix = (f'<h2 id="pairs">{icon("network")} Which tools need to work together</h2><p>The common pairings, what flows between them, the open route if there is one, and what to do where there is not{prov("O")}. '
+                  f'Of {len(T["pairs"])} pairings, {counts["Established"]} have established open standards, {counts["Emerging"]} have emerging ones and {counts["Vendor-specific"]} depend on each product.</p>'
+                  + table('t-tool-pairs', 'Interoperability between kinds of tool', ['Between', 'What flows', 'Open route', 'Maturity', 'If there is no open route', 'Watch out for'], mrow)
+                  + '<ul class="legend-swatches">' + ''.join(f'<li><span class="mat mat-{slug(k)}">{E(k)}</span> {E(v)}</li>' for k, v in self.MATURITY_TEXT.items()) + '</ul>'
+                  + '<p class="hint">Whether two named products interoperate changes with each release. Ask suppliers to show it with your data, and ask other organisations what they found.</p>')
+        B = T['bundles']
+        brow = [[f'<strong>{E(b["name"])}</strong>', E(b['detail']), E(b['mitigate'])] for b in T['barriers']]
+        bundles = (f'<h2 id="bundles">{icon("package")} One supplier or several</h2><p>A bundled suite from one supplier and a set of tools from several suppliers can both work. What matters is whether you can change one part without changing the rest{prov("O")}.</p>'
+                   f'<div class="cols"><div class="panel"><h3>{icon("circle-check")} What a bundle can offer</h3>{ul(B["pros"], cls="ticks")}</div>'
+                   f'<div class="panel"><h3>{icon("triangle-alert")} Where a bundle can lock you in</h3>{ul(B["cons"])}</div></div>'
+                   f'<h3>{icon("circle-help")} Three tests for any bundle</h3>{ul(B["tests"])}'
+                   f'<h2 id="barriers">{icon("scale")} Commercial barriers and how to avoid them</h2>'
+                   f'<p>Barriers that arise with catalogue, data quality and bundled tools{prov("O")}. The Competition and Markets Authority\'s {self.rb_link("RB-CMACLOUD")} found that data egress fees and barriers to interoperability restrict switching and multi-cloud, and raised concerns about software licensing in cloud; see the {self.rb_link("RB-CMAPKG")}.</p>'
+                   + table('t-tool-barriers', 'Commercial barriers', ['Barrier', 'What happens', 'How to avoid it'], brow)
+                   + f'<div class="notice-box">{icon("info")}<p>For services supplied into the European Union, the {self.rb_link("RB-EUDA")} phases out switching charges, including egress charges for a switch. It is not UK law, but suppliers may offer the same terms to UK buyers: ask.</p></div>')
+        qhtml, qn = '', 0
+        for g in T['questions']:
+            items = ''
+            for q in g['items']:
+                qn += 1
+                items += f'<li id="RFI-{qn:02d}"><span class="caption">RFI-{qn:02d}</span> {E(q)}</li>'
+            qhtml += f'<section class="cr-card"><h3>{icon("list-checks")} {E(g["group"])}</h3><ol class="rfi">{items}</ol></section>'
+        steps = ''.join(f'<li><strong>{E(s["name"])}.</strong> {E(s["text"])}</li>' for s in T['steps'])
+        procure = (f'<h2 id="steps">{icon("route")} Six steps to buy without lock-in</h2><ol class="tut">{steps}</ol>'
+                   f'<p>These steps support {self.rb_link("RB-TCOP11")} and {self.rb_link("RB-TCOP4")}, and the delivery and change practices on <a href="change.html#CH-06">building DAM into contracts</a>, <a href="change.html#CH-14">designing out lock-in</a> and <a href="change.html#CH-16">buying routes and contract terms</a>.</p>'
+                   f'<h2 id="rfi">{icon("circle-help")} Questions for a request for information or tender</h2><p>{qn} questions, grouped. Use them as written or adapt them{prov("O")}. '
+                   f'Download them as <a href="data/interoperability-questions.csv">CSV</a> to load into your own RFI template.</p><div class="cr-list two">{qhtml}</div>')
+        res_groups = [('Government policy and guidance', ['RB-OSP', 'RB-TCOP4', 'RB-TCOP11', 'RB-PPN0715', 'RB-LOCKIN', 'RB-API', 'RB-REFARCH', 'RB-DDATPB', 'RB-SOURCING']),
+                      ('Data standards for government', ['RB-METASTD', 'RB-DSACAT', 'RB-DSA']),
+                      ('Open standards and reference projects', ['RB-DCAT', 'RB-DQV', 'RB-SKOS', 'RB-PROVO', 'RB-CSVW', 'RB-OLINEAGE', 'RB-ODCS', 'RB-ODPS', 'RB-OAS', 'RB-EGERIA', 'RB-MCPSPEC']),
+                      ('Buying routes and market evidence', ['RB-GCLOUD', 'RB-GCSEARCH', 'RB-FTS', 'RB-PA23G', 'RB-MSC', 'RB-CMACLOUD', 'RB-CMAPKG', 'RB-EUDA'])]
+        res = f'<h2 id="resources">{icon("library")} Where to find out more</h2><p>Each link is checked automatically every week.</p>'
+        for g, ids in res_groups:
+            res += f'<h3>{E(g)}</h3><ul>' + ''.join(f'<li>{self.rb_link(r)}</li>' for r in ids) + '</ul>'
+        res += f'<p>The {self.src_link("SRC-MEM")} is the government model for recording critical data assets; ask suppliers to show they support it.</p>'
+        tabs = [('tl-overview', 'Overview', overview), ('tl-standards', 'Standards and patterns', standards), ('tl-pairs', 'Working together', matrix),
+                ('tl-bundles', 'Bundles and commercial', bundles), ('tl-procure', 'Procurement', procure), ('tl-resources', 'Resources', res)]
+        hero = self.hero('plug', 'Frameworks', 'Tools and interoperability', 'How catalogue, data quality, lineage, master data and governance tools can work together, which open standards connect them, and how to buy them without lock-in.',
+                         brief=[f'{len(T["categories"])} kinds of tool, mapped to DAMA knowledge areas, with the open standards that connect them.', f'{len(T["pairs"])} common pairings rated for how mature their open routes are.', f'{qn} questions for a request for information or tender, as CSV.'],
+                         meta=[('layers', f'{len(T["categories"])} kinds of tool'), ('scale', f'{len(seen)} open standards'), ('circle-help', f'{qn} RFI questions')])
+        drawer = [{'label': 'Tools and interoperability', 'icon': 'plug', 'items': [
+            {'id': 'principles', 'label': 'Five principles', 'icon': 'compass', 'count': len(T['principles']), 'new': True},
+            {'id': 'categories', 'label': 'Kinds of tool', 'icon': 'layers', 'count': len(T['categories']), 'new': True},
+            {'id': 'open-standards', 'label': 'Open standards', 'icon': 'scale', 'count': len(seen)},
+            {'id': 'patterns', 'label': 'Integration patterns', 'icon': 'workflow', 'count': len(T['patterns'])},
+            {'id': 'pairs', 'label': 'Which tools work together', 'icon': 'network', 'count': len(T['pairs']), 'new': True},
+            {'id': 'bundles', 'label': 'One supplier or several', 'icon': 'package'},
+            {'id': 'barriers', 'label': 'Commercial barriers', 'icon': 'scale', 'count': len(T['barriers'])},
+            {'id': 'steps', 'label': 'Six steps to buy', 'icon': 'route', 'count': len(T['steps'])},
+            {'id': 'rfi', 'label': 'RFI questions', 'icon': 'circle-help', 'count': qn, 'new': True},
+            {'id': 'resources', 'label': 'Where to find out more', 'icon': 'library'}]}]
+        return self.page('tooling', 'Tools and interoperability', hero + self.tabbed(tabs, 'Tools and interoperability'), drawer, crumbs=['Frameworks', 'Tools and interoperability'])
+
+    def rfi_rows(self):
+        n, rows = 0, []
+        for g in self.d.get('tooling', {}).get('questions', []):
+            for q in g['items']:
+                n += 1
+                rows.append([f'RFI-{n:02d}', g['group'], q])
+        return rows
 
     def p_status(self):
         st = self.status
@@ -2241,6 +2567,8 @@ class Site:
                         ' '.join(str(t) for t in c['dma']), '; '.join(c['dmbok']), '; '.join(c['dcam']), ' '.join(c['skills']), ' '.join(c['profs']), c['coverage'], c['note']] for c in d['capmap']])
             write_csv('ddat-role-skills.csv', ['role', 'role_url', 'skill', 'skill_url', 'levels_by_role_level'],
                       [[r['title'], r['url'], s[0], 'https://ddat-capability-framework.service.gov.uk/skills/#' + s[1], s[2]] for r in d['professions']['roles'] for s in r['skills']])
+            if d.get('tooling'):
+                write_csv('interoperability-questions.csv', ['id', 'group', 'question'], self.rfi_rows())
             write_csv('change-checklist.csv', ['id', 'title', 'mode', 'stage', 'action', 'roles', 'rulebook', 'capabilities'],
                       [[x['id'], x['title'], x['mode'], x['stage'], a, ' '.join(x['roles']), ' '.join(x['refs']), ' '.join(x['cr'])] for x in d['change']['items'] for a in x['actions']])
             write_csv('maturity-structure.csv', ['topic', 'topic_name', 'section_url'] + [t['name'] for t in d['maturity']['themes']],
@@ -2276,7 +2604,7 @@ class Site:
                    'dcterms:type': x['group'], 'dcterms:description': x['why']} for x in d['rulebook']]}
         (out / 'sources.jsonld').write_text(json.dumps(cat, indent=1, ensure_ascii=False), encoding='utf-8')
         self.write_catalogue(out)
-        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility', 'data', 'test'])
+        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility', 'data', 'test', 'guide', 'site-map', 'reuse'])
         (self.out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>', encoding='utf-8')
 
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.8.0 (2026-11-05)
+- Tools and interoperability page: nine kinds of data management tool (catalogue, glossary, data quality, lineage, master data, governance workflow, data contracts, records, AI assistants) mapped to DAMA knowledge areas, with the open standards and integration patterns that connect them; nine common pairings rated established, emerging or vendor-specific; one supplier or several; eight commercial barriers with how to avoid them; six steps to buy without lock-in; and 23 questions for a request for information or tender, downloadable as CSV.
+- 21 new verified rulebook entries, including the Open Standards principles, Technology Code of Practice points 4 and 11, Managing technical lock-in in the cloud, PPN 07/15, the Data Standards Authority catalogue and metadata standards, the CMA cloud services market investigation and follow-up actions, Find a Tender, OpenLineage, the Open Data Contract and Data Product Standards, PROV-O, SKOS, CSVW, OpenAPI, Egeria and the Model Context Protocol. G-Cloud 14 updated to G-Cloud 15. The EU Data Act is labelled as found by search.
+- Private feedback: a Microsoft Forms route on the contact and testing pages and in every footer, for people without a GitHub account. Shown only when a form address is set.
+- Finding your way: a share menu on every page (copy link, your device's share, email with no recipient, Microsoft Teams), a site map, a user guide with six guided tours and six tutorials, tooltips on terms, pills and sources, and a colour for each part of the portal.
+- Tables size their columns to their content, so long text gets the room.
+- Use and reuse page: ten approaches from intranet links to white-label copies; addresses for tools; llms.txt and llms-full.txt for AI assistants; and a reference MCP server (integrations/mcp/server.py) with five tools.
+- Fixed before release: search stopped working because the tour script reused the search index's name (D-024); key hints failed contrast and a code example overflowed on phones (D-025).
+- New checks C-31 (share menu, site map, llms.txt and tour targets), C-32 (MCP server answers with page links and the right version), C-33 (tools page, RFI CSV and private feedback route) and B-16 (every tour runs and the share menu works), each proved by deliberate breaks.
+
 ## 1.7.0 (2026-11-05)
 - Programme roles: seven roles found in medium and large programmes (senior responsible owner, programme or project manager, service or product owner, design authority or solution architect, data migration lead, commercial lead, programme office and assurance) now have data responsibilities, appear in the roles list and the delivery and change practices, and have a new route: "Programme or project lead".
 - Service blueprint for a programme on the Delivery and change page: five lanes across six stages, from business case to retirement.

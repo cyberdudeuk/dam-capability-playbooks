@@ -132,7 +132,8 @@ def c03_links_resolve(site, repo, pages):
     for name, p in pages.items():
         for href in p.links:
             if re.match(r'^(https?:|mailto:|tel:|data:)', href):
-                if href.startswith('mailto:'): errs.append(f'{name}: mailto link {href}')
+                # Version 1.8: a share link may open the reader's own email with no recipient; any address is still refused
+                if href.startswith('mailto:') and not href.startswith('mailto:?'): errs.append(f'{name}: mailto link {href}')
                 continue
             path, _, frag = href.partition('#')
             target = name if not path else path
@@ -141,7 +142,13 @@ def c03_links_resolve(site, repo, pages):
                 errs.append(f'{name}: missing file {href}'); continue
             if frag and f.suffix == '.html':
                 tp = pages.get(target) or parse(f)
-                if frag not in tp.ids: errs.append(f'{name}: missing anchor {href}')
+                if frag.startswith('tour='):
+                    # Version 1.8: a tour link starts a guided tour; the target page must carry that tour
+                    tid = frag[5:]
+                    src = f.read_text(encoding='utf-8')
+                    if 'id="tour-data"' not in src or not re.search(r'"id":\s?"' + re.escape(tid) + '"', src):
+                        errs.append(f'{name}: {href} starts a tour the page does not have')
+                elif frag not in tp.ids: errs.append(f'{name}: missing anchor {href}')
     return errs
 
 
@@ -600,13 +607,159 @@ def c30_testing_pack(site, repo, pages):
     return errs
 
 
+def _sel_present(sel, html, page):
+    """Match the simple selectors tours use (#id, .class, [attr] and [attr=value]) against a built page."""
+    if sel.startswith('#'):
+        return sel[1:] in page.ids
+    if sel.startswith('.'):
+        return re.search(r'class="[^"]*\b' + re.escape(sel[1:]) + r'\b', html) is not None
+    m = re.fullmatch(r'\[([\w-]+)(?:=([\w-]+))?\]', sel)
+    if m:
+        return re.search(r'\s' + re.escape(m.group(1)) + (r'="' + re.escape(m.group(2)) + '"' if m.group(2) else r'[\s=>]'), html) is not None
+    return False
+
+
+def c31_navigation_aids(site, repo, pages):
+    """Rule (version 1.8): every page can be shared, the site map lists every page, llms.txt lists every page, and every tour step points at something on its page."""
+    errs = []
+    sm = (site / 'site-map.html').read_text(encoding='utf-8') if (site / 'site-map.html').exists() else ''
+    m = re.search(r'<ul class="map-tree">.*?</main>', sm, re.S)
+    sm = m.group(0) if m else ''
+    if not m and (site / 'site-map.html').exists():
+        errs.append('site-map.html: no map of pages')
+    llms = (site / 'llms.txt').read_text(encoding='utf-8') if (site / 'llms.txt').exists() else ''
+    if not sm:
+        errs.append('site-map.html missing')
+    if not llms:
+        errs.append('llms.txt missing')
+    if not (site / 'llms-full.txt').exists():
+        errs.append('llms-full.txt missing')
+    for name in pages:
+        if name == '404.html':
+            continue
+        html = (site / name).read_text(encoding='utf-8')
+        if '<details class="share">' not in html:
+            errs.append(f'{name}: no share menu')
+        if name != 'site-map.html' and f'href="{name}"' not in sm:
+            errs.append(f'{name}: not on the site map')
+        stem = '' if name == 'index.html' else name
+        if sm and llms and not re.search(r'\]\([^)]*/' + re.escape(stem) + r'\)', llms):
+            errs.append(f'{name}: not listed in llms.txt')
+        m = re.search(r'<script type="application/json" id="tour-data">(.*?)</script>', html, re.S)
+        if m:
+            for tour in json.loads(m.group(1)):
+                if tour.get('page') and tour['page'] + '.html' != name:
+                    continue
+                for s in tour['steps']:
+                    if not _sel_present(s['sel'], html, pages[name]):
+                        errs.append(f'{name}: tour {tour["id"]} step "{s["title"]}" points at {s["sel"]}, which is not on the page')
+    return errs
+
+
+def c32_mcp_server(site, repo, pages):
+    """Rule (version 1.8): the reference MCP server starts, lists its tools, answers from the built content with page links, and reports the portal version."""
+    import subprocess
+    errs = []
+    server = repo / 'integrations' / 'mcp' / 'server.py'
+    data = site / 'data' / 'playbooks.json'
+    if not server.exists():
+        return ['integrations/mcp/server.py missing']
+    if not data.exists():
+        return ['site/data/playbooks.json missing']
+    msgs = [{'jsonrpc': '2.0', 'id': 1, 'method': 'initialize', 'params': {'protocolVersion': '2025-06-18'}},
+            {'jsonrpc': '2.0', 'method': 'notifications/initialized'},
+            {'jsonrpc': '2.0', 'id': 2, 'method': 'tools/list'},
+            {'jsonrpc': '2.0', 'id': 3, 'method': 'tools/call', 'params': {'name': 'search_portal', 'arguments': {'query': 'owner'}}},
+            {'jsonrpc': '2.0', 'id': 4, 'method': 'tools/call', 'params': {'name': 'get_requirement', 'arguments': {'id': 'NO-SUCH'}}}]
+    import os
+    env = dict(os.environ, DAM_PLAYBOOKS_FILE=str(data))
+    env.pop('DAM_PLAYBOOKS_URL', None)
+    try:
+        out = subprocess.run([sys.executable, '-I', str(server)], input='\n'.join(json.dumps(m) for m in msgs) + '\n', capture_output=True, text=True, timeout=60, env=env)
+    except subprocess.TimeoutExpired:
+        return ['MCP server did not answer within 60 seconds']
+    resp = {}
+    for line in out.stdout.splitlines():
+        try:
+            r = json.loads(line)
+            resp[r.get('id')] = r
+        except json.JSONDecodeError:
+            errs.append(f'MCP server wrote a line that is not JSON: {line[:60]}')
+    meta = json.loads(data.read_text(encoding='utf-8')).get('meta', {})
+    init = resp.get(1, {}).get('result', {})
+    if init.get('serverInfo', {}).get('version') != meta.get('version'):
+        errs.append(f'MCP server version {init.get("serverInfo", {}).get("version")} does not match portal version {meta.get("version")}')
+    names = {x['name'] for x in resp.get(2, {}).get('result', {}).get('tools', [])}
+    reuse = (site / 'reuse.html').read_text(encoding='utf-8') if (site / 'reuse.html').exists() else ''
+    for n in names:
+        if f'<code>{n}</code>' not in reuse:
+            errs.append(f'MCP tool {n} is not described on the reuse page')
+    if len(names) < 5:
+        errs.append(f'MCP server lists {len(names)} tools, expected at least 5')
+    hits = resp.get(3, {}).get('result', {}).get('structuredContent', {}).get('matches', [])
+    if not hits or not all(h.get('url', '').startswith(meta.get('site_url', 'https://')) for h in hits):
+        errs.append('MCP search returned no matches, or matches without a page link')
+    if not resp.get(4, {}).get('result', {}).get('isError'):
+        errs.append('MCP server did not report an unknown identifier as an error')
+    if 0 in resp or None in resp and 1 not in resp:
+        errs.append('MCP server answered a notification')
+    return errs
+
+
+def c33_tooling_and_feedback(site, repo, pages):
+    """Rule (version 1.8): the tools page shows every kind of tool, pairing and RFI question, the CSV matches, and the private feedback route appears where promised only when set."""
+    errs = []
+    sys.path.insert(0, str(repo / 'tools'))
+    try:
+        import importlib
+        b = importlib.import_module('build')
+        d = b.load(repo / 'content' / 'playbooks.yaml')
+    except Exception as e:
+        return [f'content does not load: {e}']
+    finally:
+        sys.path.pop(0)
+    T = d.get('tooling')
+    t = (site / 'tooling.html').read_text(encoding='utf-8') if (site / 'tooling.html').exists() else ''
+    if T:
+        if not t:
+            errs.append('tooling.html missing')
+        for c in T['categories']:
+            if f'id="{c["id"]}"' not in t:
+                errs.append(f'tooling.html: category {c["id"]} missing')
+        for x in T['pairs']:
+            if b.E(x['between']) not in t:
+                errs.append(f'tooling.html: pairing "{x["between"]}" missing')
+        qn = sum(len(g['items']) for g in T['questions'])
+        shown = len(re.findall(r'<li id="RFI-\d\d">', t))
+        if shown != qn:
+            errs.append(f'tooling.html shows {shown} RFI questions, content has {qn}')
+        f = site / 'data' / 'interoperability-questions.csv'
+        rows = list(csv.reader(f.open(encoding='utf-8'))) if f.exists() else []
+        if len(rows) - 1 != qn:
+            errs.append(f'interoperability-questions.csv has {max(len(rows) - 1, 0)} questions, content has {qn}')
+    url = (d.get('ms_form') or {}).get('url') or ''
+    for name in ('contact.html', 'test.html'):
+        html = (site / name).read_text(encoding='utf-8') if (site / name).exists() else ''
+        has = 'id="private-feedback"' in html
+        if url and not has:
+            errs.append(f'{name}: private feedback form is set but not shown')
+        if not url and has:
+            errs.append(f'{name}: private feedback block shown with no form address')
+        if url and has and b.E(url) not in html:
+            errs.append(f'{name}: private feedback block does not link to the form')
+    if url and not re.match(r'https://forms\.(office\.com|cloud\.microsoft)/', url):
+        errs.append('ms_form.url must be an https Microsoft Forms address')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
           c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance, c21_no_restricted_licence_text,
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
           c25_workflow_inventory, c26_commit_identity,
-          c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack]
+          c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
+          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback]
 
 
 def run(site, repo, only=None, quiet=False):

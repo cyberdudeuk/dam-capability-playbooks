@@ -25,6 +25,7 @@ def fresh():
         shutil.copy(ROOT / f, repo / f)
     shutil.copytree(ROOT / '.github', repo / '.github')
     shutil.copytree(ROOT / 'docs', repo / 'docs')
+    shutil.copytree(ROOT / 'integrations', repo / 'integrations')
     site = repo / 'site'
     build.Site(build.load(repo / 'content' / 'playbooks.yaml'), site).build()
     return tmp, repo, site
@@ -306,7 +307,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.7.0', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.8.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -383,6 +384,58 @@ class Vaccination(unittest.TestCase):
     def test_c30_task_without_feedback_link(self):
         edit(self.s / 'test.html', 'template=testing.yml', 'template=other.yml')
         self.fails('c30_testing_pack')
+
+    def test_c03_share_email_with_address(self):
+        edit(self.s / 'dam.html', 'href="mailto:?', 'href="mailto:someone' + chr(64) + 'example.org?')
+        self.fails('c03_links_resolve')
+
+    def test_c03_tour_link_to_missing_tour(self):
+        edit(self.s / 'guide.html', 'sectors.html#tour=sectors', 'sectors.html#tour=nosuchtour')
+        self.fails('c03_links_resolve')
+
+    def test_c31_page_without_share_menu(self):
+        edit(self.s / 'library.html', '<details class="share">', '<details class="shared">')
+        self.fails('c31_navigation_aids')
+
+    def test_c31_page_missing_from_site_map(self):
+        edit(self.s / 'site-map.html', 'href="tooling.html"', 'href="tooling-old.html"', count=99)
+        self.fails('c31_navigation_aids')
+
+    def test_c31_tour_step_points_at_nothing(self):
+        edit(self.s / 'change.html', 'id="programme-roles"', 'id="programme-roles-x"')
+        self.fails('c31_navigation_aids')
+
+    def test_c31_llms_missing(self):
+        (self.s / 'llms.txt').unlink()
+        self.fails('c31_navigation_aids')
+
+    def test_c32_mcp_version_mismatch(self):
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.0'", "'version': '0.0.1'")
+        self.fails('c32_mcp_server')
+
+    def test_c32_mcp_tool_undescribed(self):
+        edit(self.s / 'reuse.html', '<code>list_sector_rules</code>', '<code>list_rules</code>', count=99)
+        self.fails('c32_mcp_server')
+
+    def test_c33_rfi_question_dropped(self):
+        edit(self.s / 'tooling.html', '<li id="RFI-07">', '<li id="RFI-7x">')
+        self.fails('c33_tooling_and_feedback')
+
+    def test_c33_rfi_csv_short(self):
+        f = self.s / 'data' / 'interoperability-questions.csv'
+        lines = f.read_text(encoding='utf-8').splitlines()
+        f.write_text('\n'.join(lines[:-1]) + '\n', encoding='utf-8')
+        self.fails('c33_tooling_and_feedback')
+
+    def test_c33_private_feedback_missing(self):
+        edit(self.s / 'contact.html', 'id="private-feedback"', 'id="feedback-x"')
+        self.fails('c33_tooling_and_feedback')
+
+    def test_build_rejects_unknown_tool_standard(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        edit(y, '    standards: [RB-OLINEAGE, RB-PROVO]', '    standards: [RB-OLINEAGE, RB-NOPE]')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
 
     def test_build_rejects_lens_without_capability_actions(self):
         y = self.r / 'content' / 'frameworks.yaml'

@@ -7,10 +7,10 @@ Items design cannot close, and who must act. "On portal" items appear as known l
 | ID | On portal | Item | Who must act |
 |---|---|---|---|
 | OR-01 | Yes | The internal Data Cataloguing Playbook v2.6 is not public. The cataloguing stages here are a synthesis of GOV.UK guidance and need checking against it, or replacing with it once cleared. | Service owner |
-| OR-02 | Yes | Contact is the repository's issue form. Replace it with a dedicated form service that delivers privately, so people without a GitHub account can get in touch. | Service owner |
+| OR-02 | Yes | Added on 5 November 2026: a private Microsoft Forms route on the contact, testing and footer areas, so people without a GitHub account can give feedback. The contact form itself still publishes through GitHub. Decide whether the Microsoft form should accept responses from anyone, or only from signed-in colleagues, and that it does not record names. | Service owner |
 | OR-03 | Yes | Not cleared as official guidance. Clearance, and a move to an official GitHub organisation, are needed before departments are told to rely on it. | Service owner |
 | OR-04 | Yes | No research with real users yet. A research plan with questions, methods, hypotheses and falsification conditions is now published on the Service design page; it needs participants through the Working Group. | Service owner |
-| OR-05 | Yes | The policy promises minimum interoperability requirements that its body does not state. | GDS Data Frameworks and Standards |
+| OR-05 | Yes | The policy promises minimum interoperability requirements that its body does not state. The Tools and interoperability page proposes open standards for each boundary between tools; these are this portal's synthesis until GDS publishes requirements. | GDS Data Frameworks and Standards |
 | OR-06 | Yes | Four metadata properties in the guidance have no slot in the published MEM. A crosswalk to DCAT and Dublin Core terms is proposed on the cataloguing page (finding F-04) and needs agreement. | Metadata standards owner |
 | OR-07 | Yes | Dates for the rollout phases, returns and support offer come from practitioner material, not a public page. Confirm before external use. | Service owner |
 | OR-08 | Yes | The governance escalation timescales are this playbook's recommendation. Each organisation should set its own. | Each organisation's board |

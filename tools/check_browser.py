@@ -46,9 +46,11 @@ BREAKS = {
     'finder': ('b12_sector_finder', "document.querySelectorAll('input[data-q]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
     'navclip': ('b14_menus_usable', ""),
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
+    'tours': ('b16_tours_and_share', ""),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
 }
 BREAK_CSS = {
+    'tours': '.tour-box{display:none!important}',
     'navclip': '.gbar ul.top{overflow:hidden!important}',
     'overflow': '.x{white-space:nowrap;font-size:20px}',
     'contrast': '.lowc{color:#cccccc!important}',
@@ -261,6 +263,54 @@ def run(site, axe_path, brk=None, pages=None):
                 fail('b15_dama_role', 'wheel segments do not link to their area')
         except Exception as e:
             fail('b15_dama_role', f'DAMA role choice could not be used: {str(e).splitlines()[0]}')
+        # B-16 (version 1.8): every guided tour opens, shows each step next to a visible target, and closes; the share menu copies a link
+        ctx6 = b.new_context(viewport={'width': 1280, 'height': 900}, bypass_csp=bool(brk))
+        try:
+            ctx6.grant_permissions(['clipboard-read', 'clipboard-write'])
+        except Exception:
+            pass
+        pg6 = ctx6.new_page()
+        tour_pages = [n for n in pages if n != '404.html']
+        for name in tour_pages:
+            pg6.goto(f'{base}/{name}')
+            tours = pg6.evaluate("(() => { const s = document.getElementById('tour-data'); return s ? JSON.parse(s.textContent) : []; })()")
+            for tour in tours:
+                if tour.get('page') and tour['page'] + '.html' != name:
+                    continue
+                pg6.goto(f'{base}/{name}#tour={tour["id"]}')
+                pg6.reload()
+                prep(pg6)
+                try:
+                    pg6.wait_for_selector('.tour-box', state='attached', timeout=3000)
+                    for i, st in enumerate(tour['steps']):
+                        pg6.wait_for_timeout(120)
+                        vis = pg6.evaluate("""(sel) => { const box = document.querySelector('.tour-box'); const t = document.querySelector(sel);
+                            const seen = n => { if (!n) return false; const r = n.getBoundingClientRect(); const cs = getComputedStyle(n); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; };
+                            return {box: seen(box), target: seen(t), marked: !!(t && t.classList.contains('tour-target'))}; }""", st['sel'])
+                        if not (vis['box'] and vis['target'] and vis['marked']):
+                            fail('b16_tours_and_share', f'{name} tour {tour["id"]} step {i + 1} "{st["title"]}": {vis}')
+                            break
+                        pg6.locator('.tour-box [data-t="next"], .tour-box [data-t="end"].btn:not(.secondary)').first.click(timeout=2000)
+                    pg6.wait_for_timeout(120)
+                    if pg6.locator('.tour-box').count():
+                        fail('b16_tours_and_share', f'{name} tour {tour["id"]}: the tour did not close at the end')
+                except Exception as e:
+                    fail('b16_tours_and_share', f'{name} tour {tour["id"]}: could not be used: {str(e).splitlines()[0]}')
+        pg6.goto(f'{base}/tooling.html')
+        prep(pg6)
+        try:
+            pg6.click('details.share > summary', timeout=2000)
+            pg6.click('details.share [data-copy-link]', timeout=2000)
+            pg6.wait_for_timeout(200)
+            msg = pg6.inner_text('details.share .share-status')
+            if not msg.strip():
+                fail('b16_tours_and_share', 'copying the link gave no confirmation')
+            mail = pg6.get_attribute('details.share a[href^="mailto:"]', 'href') or ''
+            if not mail.startswith('mailto:?'):
+                fail('b16_tours_and_share', 'the email share link names a recipient')
+        except Exception as e:
+            fail('b16_tours_and_share', f'share menu could not be used: {str(e).splitlines()[0]}')
+        ctx6.close()
         # B-14 (D-022): every grouped menu opens, its links can actually be clicked, and they navigate, on desktop and phone
         for w in (1440, 390):
             ctx5 = b.new_context(viewport={'width': w, 'height': 900}, bypass_csp=bool(brk))
@@ -313,7 +363,7 @@ def main(argv=None):
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
     names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
-             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role']
+             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role', 'b16_tours_and_share']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:

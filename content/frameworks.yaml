@@ -1,4 +1,4 @@
-# Version 1.4 content and later: capability map, maturity model, professions and skills, delivery and change, lenses, DAMA view, join-up.
+# Version 1.4 content and later: capability map, maturity model, professions and skills, delivery and change, lenses, DAMA view, join-up, tours, reuse.
 # Loaded and merged with playbooks.yaml by tools/build.py. Edit here; never edit the generated site.
 rulebook_more:
 - id: RB-GREEN
@@ -656,9 +656,9 @@ rulebook_more:
   why: Guidance for each phase of a procurement under the Act.
 - id: RB-GCLOUD
   group: Commercial and procurement
-  title: G-Cloud 14 framework
+  title: G-Cloud 15 framework
   publisher: Crown Commercial Service
-  url: https://www.crowncommercial.gov.uk/agreements/RM1557.14
+  url: https://www.crowncommercial.gov.uk/agreements/RM1557.15
   updated: '2026-11-05'
   prov: V
   caps:
@@ -779,6 +779,195 @@ rulebook_more:
   caps:
   - dq
   why: Cross-government centre for data quality guidance, tools and support.
+- id: RB-OSP
+  group: Technology and architecture
+  title: Open Standards principles
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/open-standards-principles/open-standards-principles
+  updated: '2018-04-05'
+  prov: V
+  caps: [gov, cat, dq]
+  why: How government selects and uses open standards for software interoperability, data and document formats, including to avoid vendor lock-in.
+- id: RB-TCOP4
+  group: Technology and architecture
+  title: 'Technology Code of Practice point 4: make use of open standards'
+  publisher: GDS
+  url: https://www.gov.uk/guidance/make-use-of-open-standards
+  updated: '2021-03-31'
+  prov: V
+  caps: [gov, cat, dq]
+  why: What a plan must show about open standards and data to meet point 4, including avoiding lock-in.
+- id: RB-TCOP11
+  group: Commercial and procurement
+  title: 'Technology Code of Practice point 11: define your purchasing strategy'
+  publisher: GDS
+  url: https://www.gov.uk/guidance/define-your-purchasing-strategy
+  updated: '2026-09-03'
+  prov: V
+  caps: [gov, cat, dq]
+  why: A purchasing strategy must show commercial and technology aspects and contractual limitations have been considered; it is checked in spend control.
+- id: RB-LOCKIN
+  group: Technology and architecture
+  title: Managing technical lock-in in the cloud
+  publisher: GDS
+  url: https://www.gov.uk/guidance/managing-technical-lock-in-in-the-cloud
+  updated: '2026-09-03'
+  prov: V
+  caps: [gov, cat, dq]
+  why: Types of lock-in, weighing value against portability, and including exit cost and time in business cases.
+- id: RB-PPN0715
+  group: Commercial and procurement
+  title: 'Procurement Policy Note 07/15: open standards for technology'
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/procurement-policy-note-0715-open-standards-for-technology
+  updated: '2023-01-31'
+  prov: V
+  caps: [gov, cat, dq]
+  why: Tells buyers to specify open standards in technology procurements.
+- id: RB-METASTD
+  group: Data and AI
+  title: Metadata standards for sharing and publishing data
+  publisher: Data Standards Authority
+  url: https://www.gov.uk/government/collections/metadata-standards-for-sharing-and-publishing-data
+  updated: '2026-04-22'
+  prov: V
+  caps: [cat]
+  why: The recommended metadata standards for sharing data within government and for publishing it.
+- id: RB-DSACAT
+  group: Data and AI
+  title: 'Data Standards Authority: Standards Catalogue'
+  publisher: Data Standards Authority
+  url: https://www.gov.uk/government/publications/data-standards-authority-standards-catalogue
+  updated: '2023-10-25'
+  prov: V
+  caps: [gov, cat, dq]
+  why: The standards the Data Standards Authority has endorsed, with their status.
+- id: RB-CMACLOUD
+  group: Commercial and procurement
+  title: Cloud services market investigation
+  publisher: Competition and Markets Authority
+  url: https://www.gov.uk/cma-cases/cloud-services-market-investigation
+  updated: '2025-07-31'
+  prov: V
+  caps: [gov]
+  why: The CMA's final decision on public cloud infrastructure, covering egress fees, interoperability and software licensing.
+- id: RB-CMAPKG
+  group: Commercial and procurement
+  title: CMA announces package of actions on business software and cloud services
+  publisher: Competition and Markets Authority
+  url: https://www.gov.uk/government/news/cma-announces-package-of-actions-on-business-software-and-cloud-services
+  updated: '2026-03-31'
+  prov: V
+  caps: [gov]
+  why: Follow-up actions to the cloud investigation, including commitments on egress fees and interoperability and a planned investigation into business software licensing.
+- id: RB-EUDA
+  group: Legislation
+  title: 'EU Data Act (Regulation (EU) 2023/2854)'
+  publisher: European Union
+  url: https://eur-lex.europa.eu/eli/reg/2023/2854/oj
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Switching rules for cloud and other data processing services supplied into the EU, phasing out switching charges. Applies to services supplied into the EU, not to UK law.
+- id: RB-FTS
+  group: Commercial and procurement
+  title: Find a Tender
+  publisher: Cabinet Office
+  url: https://www.find-tender.service.gov.uk/
+  updated: '2026-11-05'
+  prov: V
+  caps: [gov, cat, dq]
+  why: Where public procurement notices are published; search it for other bodies' catalogue, data quality and data platform requirements.
+- id: RB-GCSEARCH
+  group: Commercial and procurement
+  title: 'Digital Marketplace: search G-Cloud services'
+  publisher: Crown Commercial Service
+  url: https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/search
+  updated: '2026-11-05'
+  prov: V
+  caps: [gov, cat, dq]
+  why: Service descriptions on G-Cloud include standards, APIs and how buyers can get their data out at the end of a contract.
+- id: RB-PROVO
+  group: Standards
+  title: 'PROV-O: the PROV ontology'
+  publisher: W3C
+  url: https://www.w3.org/TR/prov-o/
+  updated: null
+  prov: V
+  caps: [cat, dq]
+  why: An open vocabulary for provenance, used to describe where data came from and what was done to it.
+- id: RB-SKOS
+  group: Standards
+  title: 'SKOS: Simple Knowledge Organization System reference'
+  publisher: W3C
+  url: https://www.w3.org/TR/skos-reference/
+  updated: null
+  prov: V
+  caps: [cat, gov]
+  why: The open format for glossaries, thesauri and taxonomies, so business terms can move between tools.
+- id: RB-CSVW
+  group: Standards
+  title: CSV on the Web (CSVW) primer
+  publisher: W3C
+  url: https://www.w3.org/TR/tabular-data-primer/
+  updated: null
+  prov: V
+  caps: [cat, dq]
+  why: Describes the columns, types and constraints of CSV files, so files carry their own data dictionary.
+- id: RB-OLINEAGE
+  group: Standards
+  title: OpenLineage
+  publisher: LF AI & Data Foundation
+  url: https://openlineage.io/docs/
+  updated: '2026-11-05'
+  prov: V
+  caps: [cat, dq]
+  why: An open specification for lineage events from running jobs, so lineage can be collected once and read by several tools.
+- id: RB-ODCS
+  group: Standards
+  title: Open Data Contract Standard (ODCS)
+  publisher: Bitol (LF AI & Data Foundation)
+  url: https://bitol-io.github.io/open-data-contract-standard/
+  updated: '2026-11-05'
+  prov: V
+  caps: [cat, dq]
+  why: An open format for data contracts, including schema, quality rules and service levels, readable by more than one tool.
+- id: RB-ODPS
+  group: Standards
+  title: Open Data Product Standard (ODPS)
+  publisher: Bitol (LF AI & Data Foundation)
+  url: https://bitol-io.github.io/open-data-product-standard/
+  updated: '2026-11-05'
+  prov: V
+  caps: [cat]
+  why: An open format describing data products, designed to reference data contracts.
+- id: RB-EGERIA
+  group: Standards
+  title: Egeria open metadata and governance
+  publisher: LF AI & Data Foundation
+  url: https://egeria-project.org/
+  updated: '2026-11-05'
+  prov: V
+  caps: [cat, gov]
+  why: An open source project for exchanging metadata between tools from different vendors; useful as a reference for open metadata types and connectors.
+- id: RB-OAS
+  group: Standards
+  title: OpenAPI Specification
+  publisher: OpenAPI Initiative
+  url: https://spec.openapis.org/oas/latest.html
+  updated: null
+  prov: V
+  caps: [gov, cat, dq]
+  why: The open format for describing REST APIs; government API guidance recommends it.
+- id: RB-MCPSPEC
+  group: Standards
+  title: Model Context Protocol
+  publisher: Model Context Protocol project
+  url: https://modelcontextprotocol.io/
+  updated: '2026-11-05'
+  prov: V
+  caps: [cat]
+  why: An open protocol for connecting AI assistants to tools and data, such as a catalogue.
 capmap:
 - id: CR-01
   name: Accountable leadership and policy oversight
@@ -3986,3 +4175,539 @@ joinup:
     for_:
     - dql
     prov: V
+tours:
+- id: home
+  page: index
+  title: Getting around the portal
+  steps:
+  - sel: '#gbar'
+    title: Portal sections
+    text: The bar lists every part of the portal. Playbooks and Frameworks open menus of related pages. On narrow screens extra items fold into More sections.
+  - sel: '[data-open-search]'
+    title: Search
+    text: 'Search everything: steps, requirements, glossary terms, modules and more. Press Ctrl and K, or the forward slash key, from any page.'
+  - sel: '#display-toggle'
+    title: Display options
+    text: Make text larger, add line spacing or switch between light and dark colours. Your choices stay in this browser.
+  - sel: '#drawer'
+    title: On this page
+    text: The panel on the left lists the sections of the page you are on, with counts. Use the Page contents switch to hide or show it.
+  - sel: '#role'
+    title: Start from your role
+    text: Pick the role closest to yours for a route through learning, preparation, doing, reporting and improving.
+  - sel: '#capabilities'
+    title: The three capabilities
+    text: Data governance, data cataloguing and data quality each have a step-by-step playbook. Each section of the portal has its own colour.
+  - sel: .share
+    title: Share this page
+    text: Copy a link, email it or share it in Microsoft Teams. Every page has this button.
+- id: playbook
+  page: governance
+  title: Using a playbook
+  steps:
+  - sel: '[role=tablist]'
+    title: Tabs
+    text: 'Each playbook is split into tabs: overview, step by step, roles, templates, measures, sectors and sources.'
+  - sel: '#tab-method'
+    title: Step by step
+    text: The method, one step at a time. Each step says who does what, what you need and what you get.
+    click: '#tab-method'
+  - sel: .sbs
+    title: Track your progress
+    text: Tick each step as you finish it. Progress shows on your role route and stays in this browser only.
+  - sel: '#tab-sector-supplements'
+    title: Sector supplements
+    text: If your data is health, social care, geospatial or another specialist kind, this tab shows what each sector supplement adds.
+    click: '#tab-sector-supplements'
+  - sel: '#drawer'
+    title: Jump within the page
+    text: The panel on the left jumps straight to any step or section.
+- id: model
+  page: capability-model
+  title: The capability model
+  steps:
+  - sel: .cr-house
+    title: Capabilities in six clusters
+    text: Every capability the policy and related guidance need. Green, blue and purple edges show whether the policy states it, implies it or not at all.
+  - sel: '#tab-cm-map'
+    title: Requirements map
+    text: Filter capabilities and follow the signposts to the exact GOV.UK sections.
+    click: '#tab-cm-map'
+  - sel: .dama-wheel
+    title: DAMA wheel
+    text: Knowledge areas around data governance. Choose your role to see how each area applies to you.
+    click: '#tab-cm-dama'
+  - sel: '#sa-chart'
+    title: Self-assessment
+    text: Choose the level closest to your organisation to draw a profile you can download.
+    click: '#tab-cm-self'
+- id: sectors
+  page: sectors
+  title: Sector supplements
+  steps:
+  - sel: '#which'
+    title: Find what applies
+    text: Tick what is true of your asset to see which supplements apply.
+  - sel: '#all'
+    title: All supplements
+    text: Filter supplements by priority and capability.
+  - sel: '#rule-library'
+    title: Quality rules
+    text: Every sector quality rule, downloadable to run in the Data Quality Commons kit.
+- id: change
+  page: change
+  title: Delivery and change
+  steps:
+  - sel: '#gaps'
+    title: What the policy leaves to you
+    text: Capabilities the policy relies on but does not state, and where this page helps.
+  - sel: '#lifecycle'
+    title: Across the life cycle
+    text: Where data asset management fits at each stage of a programme.
+  - sel: '#programme-roles'
+    title: Programme roles
+    text: Data responsibilities for senior responsible owners, programme managers, architects and others.
+  - sel: '#practices'
+    title: Practices
+    text: Actions you can tick off, filtered by business as usual or change, and by stage.
+- id: tooling
+  page: tooling
+  title: Tools and interoperability
+  steps:
+  - sel: '#principles'
+    title: Five principles
+    text: The rules of thumb behind everything on this page, starting with owning your metadata.
+  - sel: '#tool-list'
+    title: Kinds of tool
+    text: Each kind of tool, the DAMA area it supports, the open standards that connect it and the question to ask a supplier.
+  - sel: '#tab-tl-pairs'
+    click: '#tab-tl-pairs'
+    title: Working together
+    text: Which tools need to exchange what, and how mature the open routes are.
+  - sel: '#tab-tl-procure'
+    click: '#tab-tl-procure'
+    title: Procurement
+    text: Six steps and the RFI questions, downloadable as CSV.
+ms_form:
+  url: https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2OgGVkJSDelPgquubNu4dJpUNjc2Ukw2N1hMTTc1WE5DQTE5QkZEMkVWSi4u
+  title: Feedback form (Microsoft Forms)
+  note: 'A private route: responses go only to the people maintaining this prototype, and no GitHub account is needed. You may be asked to sign in with a Microsoft work account; if the form does not open for you, use the contact form instead.'
+reuse:
+  intro: The portal is built to be reused. Pick the approach that fits how your organisation shares knowledge, from a simple link on your intranet to your own branded copy, an AI assistant or an integration
+    through the Model Context Protocol (MCP). Content is published under the Open Government Licence and code under the MIT licence.
+  approaches:
+  - id: U-01
+    title: Link from your intranet
+    icon: link
+    group: Link and embed
+    effort: low
+    what: Stable addresses for every page, tab, step and capability.
+    how:
+    - Link to a page, or to a section with its anchor, for example governance.html#method.
+    - Share links with the Share button on any page.
+    - Point staff to the role routes and the testing page.
+    when: You want staff to use the guidance as it is, always current.
+    cautions:
+    - Links go to a prototype that is not official guidance; say so on your intranet.
+  - id: U-02
+    title: Embed pages in your intranet or Teams
+    icon: layers
+    group: Link and embed
+    effort: low
+    what: Show portal pages inside SharePoint, an intranet page or a Microsoft Teams tab.
+    how:
+    - Add a web part or a Teams website tab pointing at a page address.
+    - Choose pages that work well on their own, such as a playbook or the self-assessment.
+    - Keep the prototype banner visible.
+    when: You want the content inside the tools people already use.
+    cautions:
+    - Progress and display choices are kept per browser, so they do not follow people between devices.
+  - id: U-03
+    title: Read-only data API
+    icon: database
+    group: Data and APIs
+    effort: low
+    what: 'Every dataset is a stable file you can fetch from code: JSON, CSV, Turtle and YAML, with cross-site access allowed.'
+    how:
+    - Start from the catalogue at data/catalogue.jsonld.
+    - Fetch data/playbooks.json for the full content, or a single CSV.
+    - Pin to a release by recording the version in the catalogue.
+    when: You want to build your own views, dashboards or tools on the content.
+    cautions:
+    - Files change with each release; check the version and the What is new page before relying on a field.
+  - id: U-04
+    title: Harvest into a data catalogue
+    icon: share-2
+    group: Data and APIs
+    effort: low
+    what: A DCAT 3 catalogue other catalogues can harvest, such as CKAN or your own metadata platform.
+    how:
+    - Point your harvester at data/catalogue.jsonld or data/catalogue.ttl.
+    - Map dataset identifiers to your own scheme.
+    when: You run a catalogue and want the playbook datasets listed alongside your own.
+    cautions:
+    - Treat harvested entries as reference material, not as your own critical assets.
+  - id: U-05
+    title: Load into enterprise content and collaboration tools
+    icon: library
+    group: Enterprise content
+    effort: medium
+    what: Bring templates, checklists and actions into SharePoint lists, Confluence, Planner or your tracker.
+    how:
+    - Import a CSV, such as change-checklist.csv or templates.csv, into a list or board.
+    - Link each item back to its page for the full guidance.
+    - Agree an owner to refresh it after each release.
+    when: You want teams to work from tasks and templates in their own tools.
+    cautions:
+    - Copies go out of date; note the version you imported.
+  - id: U-06
+    title: White-label your own copy
+    icon: pencil-line
+    group: Adapt and brand
+    effort: medium
+    what: Run your own branded copy with your organisation's name, colours, tone and extra content.
+    how:
+    - Fork the repository on GitHub.
+    - Change the title, contact form and site address in the content file, and colours in the style sheet.
+    - Edit or add content in the content files; the build checks every reference.
+    - Publish with the included workflow on your own GitHub Pages or web server.
+    when: You need the guidance in your own house style, or with local procedures added.
+    cautions:
+    - Keep the attribution statement and the licences.
+    - Your copy no longer gets updates automatically; merge new releases deliberately.
+  - id: U-07
+    title: Adapt for your audiences and language
+    icon: languages
+    group: Adapt and brand
+    effort: medium
+    what: Tailor wording, examples and depth for particular audiences, or translate, for example into Welsh.
+    how:
+    - Copy the content files and adjust text, keeping identifiers so links still work.
+    - Use the plain English and style checks in the build to keep quality up.
+    when: Your audiences need different language, tone or examples.
+    cautions:
+    - Translations need a named owner to keep them in step with releases.
+  - id: U-08
+    title: Ask an AI assistant about the portal
+    icon: brain
+    group: AI and integrations
+    effort: low
+    what: Use an AI assistant or chatbot to answer questions from the portal, alongside the built-in search.
+    how:
+    - Give the assistant the address of llms.txt, a short guide written for AI tools, or llms-full.txt with the full text.
+    - Or add the portal website, or data/playbooks.json, as a knowledge source in a tool such as Microsoft Copilot Studio.
+    - Ask it to cite the page each answer comes from.
+    when: You want people to ask questions in their own words.
+    cautions:
+    - AI answers can be wrong; check them against the page cited, and against GOV.UK, which is the authority.
+    - Do not paste personal or sensitive data into public AI tools.
+  - id: U-09
+    title: Connect through the Model Context Protocol (MCP)
+    icon: network
+    group: AI and integrations
+    effort: medium
+    what: A small reference MCP server in the repository lets AI assistants search the portal and fetch capabilities, requirements, practices and sector rules as structured data, with links to their pages.
+    how:
+    - Run integrations/mcp/server.py with Python 3; it needs no extra packages.
+    - Add it as an MCP server in an MCP-compatible assistant.
+    - Point it at the live site or at a local copy of data/playbooks.json.
+    when: You want an assistant or agent to use the portal's content as a tool, with sources.
+    cautions:
+    - It is a reference implementation for testing, not a supported service.
+    - Host it inside your own environment if you add internal content.
+  - id: U-10
+    title: Connectors, add-ons and plugins
+    icon: sliders-horizontal
+    group: AI and integrations
+    effort: medium
+    what: Use the open data and the MCP server as the basis for a connector, add-on or plugin in your organisation's platforms.
+    how:
+    - Use the catalogue and JSON files as the data source.
+    - Wrap the MCP server or the files in your platform's connector or plugin format.
+    - Register it through your organisation's approval process for integrations.
+    when: You want the content inside a business application or an AI assistant your organisation already uses.
+    cautions:
+    - Follow your organisation's rules for approving third-party integrations.
+tooling:
+  intro: Most organisations run several tools for data asset management, often from different suppliers, and many are offered a bundled suite. This page sets out the kinds of tool involved, the open standards and patterns that let them work together, where bundles and contracts create lock-in, and questions to ask in a request for information (RFI) or tender. It names no products and endorses none.
+  principles:
+  - 'Your metadata, glossary, quality rules, lineage and results are your data. Make sure you can get all of them out, in open formats, at any time and at no extra charge.'
+  - 'Prefer open standards at the boundaries between tools, even when the tools come from one supplier. That keeps the option to replace one part without replacing the rest.'
+  - 'Buy capabilities, not bundles. Price, evaluate and be able to exit each capability separately.'
+  - 'Prove interoperability before you sign. A round-trip test with your own data is worth more than a list of connectors.'
+  - 'Plan the exit at the start: cost it, time it and write it into the contract and business case.'
+  categories:
+  - id: TL-CAT
+    name: Data catalogue and metadata management
+    icon: library-big
+    dama: [DM-META]
+    caps: [cat]
+    what: Records what data assets exist, what they mean, who owns them and how they can be used; harvests technical metadata from data platforms.
+    standards: [RB-DCAT, RB-METASTD, RB-SKOS, RB-EGERIA]
+    patterns: [IP-HARVEST, IP-API, IP-FILE, IP-EVENT]
+    ask: Can every catalogue record, including custom fields, owners and classifications, be exported as DCAT and imported into another catalogue without loss?
+  - id: TL-GLOS
+    name: Business glossary and vocabularies
+    icon: book-open
+    dama: [DM-META, DM-GOV]
+    caps: [gov, cat]
+    what: Holds agreed business terms, definitions, synonyms and hierarchies, and links them to data assets.
+    standards: [RB-SKOS]
+    patterns: [IP-FILE, IP-API]
+    ask: Can the glossary be exported and imported as SKOS, keeping broader and narrower terms and links to assets?
+  - id: TL-DQ
+    name: Data quality profiling, rules and monitoring
+    icon: gauge
+    dama: [DM-DQ]
+    caps: [dq]
+    what: Profiles data, runs quality rules, scores dimensions, raises issues and tracks remediation.
+    standards: [RB-DQV, RB-ODCS, RB-CSVW]
+    patterns: [IP-API, IP-CONTRACT, IP-EVENT, IP-EMBED]
+    ask: Are rules held in a readable, exportable form, and can results be published as DQV or through an open API for a catalogue to show?
+  - id: TL-LIN
+    name: Lineage and data observability
+    icon: workflow
+    dama: [DM-META, DM-INT]
+    caps: [cat, dq]
+    what: Shows where data comes from, how it moves and changes, and whether pipelines ran as expected.
+    standards: [RB-OLINEAGE, RB-PROVO]
+    patterns: [IP-EVENT, IP-HARVEST]
+    ask: Does the tool emit and accept OpenLineage events, including from pipelines and platforms the supplier does not own?
+  - id: TL-MDM
+    name: Reference and master data management
+    icon: layers
+    dama: [DM-REF]
+    caps: [gov, dq]
+    what: Holds the golden record for entities such as organisations, people, places and products, and the reference lists that other systems share.
+    standards: [RB-SKOS, RB-UPRN, RB-API]
+    patterns: [IP-API, IP-EVENT, IP-FILE]
+    ask: Can master and reference data, with match and survivorship rules and history, be extracted in an open format and served through a documented API?
+  - id: TL-POL
+    name: Governance workflow, policy and access
+    icon: shield-check
+    dama: [DM-GOV, DM-SEC]
+    caps: [gov]
+    what: Manages stewardship tasks, approvals, data sharing requests, classification and access policies.
+    standards: [RB-OAS, RB-GSC, RB-DSGF]
+    patterns: [IP-API, IP-IDENTITY, IP-EVENT]
+    ask: Can classifications and access policies be read by other tools through an API, and does the tool use your identity provider rather than its own user store?
+  - id: TL-CONTRACT
+    name: Data contracts and data products
+    icon: file-text
+    dama: [DM-INT, DM-ARC]
+    caps: [cat, dq]
+    what: Describes what a data producer promises consumers, such as schema, quality thresholds, owners and service levels.
+    standards: [RB-ODCS, RB-ODPS]
+    patterns: [IP-CONTRACT, IP-FILE]
+    ask: Are contracts stored as ODCS files you can keep in your own repository, and can more than one tool enforce them?
+  - id: TL-REC
+    name: Records and content management
+    icon: archive
+    dama: [DM-DOC]
+    caps: [gov, cat]
+    what: Manages documents and records, retention and disposal, and transfer to an archive.
+    standards: [RB-ISO15489, RB-ISO23081, RB-TNATRANS]
+    patterns: [IP-API, IP-FILE]
+    ask: Can retention and disposal decisions and record metadata be shared with the data catalogue, so a data asset and its records follow one schedule?
+  - id: TL-AI
+    name: AI assistants and search over metadata
+    icon: brain
+    dama: [DM-META]
+    caps: [cat]
+    what: Lets people ask questions of the catalogue, glossary and quality results in plain language.
+    standards: [RB-MCPSPEC, RB-OAS]
+    patterns: [IP-AI, IP-API]
+    ask: Can an assistant your organisation already approves read the catalogue through an open protocol or documented API, respecting the same access rules?
+  patterns:
+  - id: IP-HARVEST
+    name: Scan and harvest
+    how: The catalogue or lineage tool connects to a database, warehouse, file store or business intelligence tool and reads its technical metadata on a schedule.
+    when: Building and refreshing the inventory of technical assets.
+    risk: medium
+    watch: Connectors are often licensed separately, priced per source, or maintained only for the supplier's own platform. Ask who maintains each one and how quickly it follows new versions.
+  - id: IP-API
+    name: Documented API
+    how: One tool reads or writes another's records through a published API, described in OpenAPI, with the same access controls as the user interface.
+    when: Showing quality scores in the catalogue, creating issues, syncing owners or terms.
+    risk: low
+    watch: Check rate limits, whether every object is available through the API (not only some), and whether API calls are charged.
+  - id: IP-EVENT
+    name: Events and webhooks
+    how: A tool publishes an event when something changes, such as a rule failing, a pipeline running or an asset being classified, and others subscribe.
+    when: Near real-time alerts, lineage capture and keeping several tools in step.
+    risk: low
+    watch: Prefer open event formats such as OpenLineage over supplier-specific payloads.
+  - id: IP-FILE
+    name: Open file exchange
+    how: Export and import in open formats such as DCAT (JSON-LD or Turtle), SKOS, CSV with CSVW, or ODCS YAML.
+    when: Migration, exit, bulk loading, publishing and sharing with other organisations.
+    risk: low
+    watch: Exports that drop custom fields, history or links are a form of lock-in. Test a full round trip.
+  - id: IP-CONTRACT
+    name: Contract-driven checks
+    how: Producers publish a data contract; quality and pipeline tools read the same file to check data, and the catalogue shows it.
+    when: Agreeing what consumers can rely on, and checking it automatically.
+    risk: low
+    watch: Contract formats are still maturing; keep contracts in your own repository, not only inside a tool.
+  - id: IP-EMBED
+    name: Embedded views
+    how: One tool shows another's information in place, for example quality results on a catalogue page.
+    when: Giving users one place to look without copying data.
+    risk: medium
+    watch: Embedding through a supplier's private integration can hide a dependency that breaks when either tool changes.
+  - id: IP-IDENTITY
+    name: Shared identity and access
+    how: All tools sign users in through your identity provider and take roles and groups from it.
+    when: Always. It keeps ownership and stewardship roles consistent across tools.
+    risk: low
+    watch: Some products charge more for single sign-on or automated user provisioning; ask early.
+  - id: IP-AI
+    name: AI access through an open protocol
+    how: An assistant reads the catalogue, glossary and quality results through a documented API or a Model Context Protocol server.
+    when: Plain-language questions over metadata, with answers that cite their source.
+    risk: medium
+    watch: Make sure the assistant respects access rules and that prompts and answers stay in your approved environment.
+  pairs:
+  - between: Catalogue and data quality
+    flows: Quality scores, rule results and open issues shown against each asset; asset owners and definitions used by quality rules.
+    open: DQV for results, ODCS for rules and thresholds, documented APIs.
+    maturity: Emerging
+    fallback: Scheduled export of results as CSV, matched on a shared asset identifier.
+    watch: Without a shared, persistent asset identifier the two tools drift apart.
+  - between: Catalogue and lineage
+    flows: Where data comes from, where it goes and which jobs change it.
+    open: OpenLineage events, PROV-O.
+    maturity: Established
+    fallback: Harvest lineage from the platform's own logs.
+    watch: Lineage limited to one supplier's platform hides the rest of the journey.
+  - between: Catalogue and glossary
+    flows: Business terms linked to assets and columns.
+    open: SKOS for the vocabulary; DCAT themes and keywords for links.
+    maturity: Established
+    fallback: CSV term lists with stable identifiers.
+    watch: Terms stored as free text cannot be reused elsewhere.
+  - between: Catalogue and master data
+    flows: Which assets hold the golden record and which are copies; reference lists used in metadata.
+    open: Documented APIs; SKOS for reference lists.
+    maturity: Vendor-specific
+    fallback: Record the authoritative source as catalogue metadata.
+    watch: Bundled master data and catalogue modules often share a private model that is hard to separate.
+  - between: Catalogue and records management
+    flows: Retention, disposal and record metadata for data assets that are also records.
+    open: Documented APIs; records metadata standards.
+    maturity: Vendor-specific
+    fallback: A shared retention schedule identifier recorded in both tools.
+    watch: Two retention schedules for the same information leads to unlawful keeping or early disposal.
+  - between: Data quality and pipelines
+    flows: Rules run as data moves; failed checks stop or flag a load.
+    open: ODCS contracts; OpenLineage run events.
+    maturity: Emerging
+    fallback: Rules called from the pipeline through a documented API.
+    watch: Rules written in a proprietary language cannot move with you.
+  - between: Governance workflow and identity and access
+    flows: Owners, stewards, approvals and access decisions.
+    open: Your identity provider's standard protocols; documented APIs.
+    maturity: Established
+    fallback: Scheduled sync of roles from the human resources or identity system.
+    watch: Local user stores create orphaned owners when people leave.
+  - between: Catalogue and other organisations
+    flows: Published and shared dataset descriptions, harvested by national catalogues.
+    open: DCAT, schema.org Dataset and the Metadata Exchange Model.
+    maturity: Established
+    fallback: Publish a CSV catalogue with documented columns.
+    watch: Private catalogue formats block harvesting by data.gov.uk and the National Data Library.
+  - between: Catalogue and AI assistants
+    flows: Questions answered from catalogue, glossary and quality information, with links back.
+    open: Documented APIs; Model Context Protocol.
+    maturity: Emerging
+    fallback: Publish a text export for an approved assistant to index.
+    watch: An assistant that bypasses catalogue access rules can disclose restricted metadata.
+  bundles:
+    pros:
+    - One contract, one support route and one user interface.
+    - Integrations between modules usually work on day one.
+    - Can be quicker to start for a small team.
+    cons:
+    - Modules share a private metadata model, so replacing one part means replacing all of it.
+    - Weaker modules are carried by stronger ones, and evaluated less carefully.
+    - Pricing across modules is hard to compare with separate tools.
+    - Connectors to other suppliers' tools are fewer, slower or charged extra.
+    - The exit cost grows with every module adopted.
+    tests:
+    - Could you replace the data quality module next year and keep the catalogue? What would it cost?
+    - Are the module prices shown separately, and can you drop a module at renewal without penalty?
+    - Do the modules use the same open standards between themselves that they offer to other tools?
+  barriers:
+  - name: Pricing metric that punishes growth
+    detail: Charges per asset, per scanned table, per rule run or per user can make cataloguing everything, or running quality checks often, unaffordable. The DAM Policy expects broad coverage.
+    mitigate: Model cost at three and five times today's volume; prefer prices tied to things you control; cap annual increases.
+  - name: Shared credits or consumption pools
+    detail: Credits spread across modules make it hard to see what each capability costs and easy to overspend.
+    mitigate: Ask for a price per capability and a monthly usage report you can export.
+  - name: Connectors and APIs charged extra
+    detail: Some connectors, API access, single sign-on or automated user provisioning sit in higher tiers.
+    mitigate: List every integration you need in the requirement and require them in the evaluated price.
+  - name: Export and exit charges
+    detail: Fees or effort to get data and metadata out, including cloud egress charges, make exit costly. The CMA found egress fees and interoperability barriers restrict switching in public cloud.
+    mitigate: Require complete export in open formats at any time at no extra charge, and an exit plan with supplier support in the contract.
+  - name: Ownership of rules, terms and lineage
+    detail: Contracts can leave quality rules, glossary content, classifications or derived lineage as the supplier's property or in a form only their tool can read.
+    mitigate: State that all content you or the tool create about your data is yours, and must be exportable.
+  - name: Platform and marketplace commitments
+    detail: Buying through a cloud marketplace against a spend commitment can tie a catalogue or quality tool to one cloud platform.
+    mitigate: Check the tool runs and is supported on other platforms, and that the commitment does not lengthen the term.
+  - name: Licence terms that limit where software runs
+    detail: Licensing that costs more on a rival cloud reduces choice. The CMA has raised concerns about business software licensing in cloud.
+    mitigate: Ask for licence terms that are the same wherever the software runs.
+  - name: Long terms, auto-renewal and price uplift
+    detail: Multi-year terms, automatic renewal and uncapped increases reduce your bargaining power at exactly the point you might switch.
+    mitigate: Use break points, notice periods you can meet, and capped increases; diarise renewal decisions a year ahead.
+  questions:
+  - group: Standards and export
+    items:
+    - Which open standards does the product read and write for catalogue records, glossaries, quality results, lineage and data contracts? Give versions.
+    - Can we export everything, including custom fields, history, owners, classifications, comments and links, at any time, in open formats, without supplier help or extra charge?
+    - Describe a round trip, exporting our catalogue as DCAT and re-importing it into another product. What is lost?
+    - Does the product support the government Metadata Exchange Model for critical data assets?
+  - group: APIs, connectors and plugins
+    items:
+    - Is every object and action in the user interface available through a documented API? Provide the OpenAPI description.
+    - List each connector, who builds and maintains it, its licence and price, and how quickly it follows new versions of the connected system.
+    - Which connectors exist for other suppliers' catalogues, quality tools, lineage tools and records systems?
+    - Does the product emit and accept OpenLineage events? Can it read ODCS data contracts?
+    - What rate limits, call charges or tier limits apply to APIs and events?
+  - group: Content ownership and portability
+    items:
+    - Confirm that metadata, glossary terms, quality rules, scores, lineage and any content the product derives from our data belong to us.
+    - In what form are quality rules held? Can they be read and run outside the product?
+    - Can we keep data contracts and rules in our own code repository and have the product read them from there?
+  - group: Commercial terms and exit
+    items:
+    - Give separate prices for each capability, and confirm we can stop any one at renewal without penalty.
+    - Model the price at today's volumes and at three and five times them.
+    - Which features, connectors, single sign-on or provisioning sit in higher tiers?
+    - What does exit involve, how long does it take, what support is included, and what does it cost, including any cloud egress?
+    - Are licence prices the same on any cloud or on our own infrastructure?
+  - group: Security, identity and AI
+    items:
+    - Does the product use our identity provider for sign-in and automated user provisioning, at no extra charge?
+    - Can classification and access policies be read by other tools?
+    - If the product includes AI features, where are prompts and answers processed and stored, are they used to train models, and can they be switched off?
+    - Can an assistant we already approve query the product through an open protocol, respecting the same access rules?
+  - group: Evidence
+    items:
+    - Name customers who use the product with another supplier's catalogue, quality or lineage tool, and how they connect them.
+    - Will you take part in a short proof of concept using our data and an interoperability test we define?
+  steps:
+  - name: Map what you have
+    text: List the tools in use or planned for each capability, who owns them, contract end dates and how they connect today.
+  - name: Set the boundaries
+    text: Decide which open standard sits at each boundary between capabilities, using the pairs on this page, and record it as an architecture decision.
+  - name: Run an RFI
+    text: Use the questions on this page. Search Find a Tender and G-Cloud for how other bodies specified similar tools.
+  - name: Test before you buy
+    text: In the proof of concept, run a round trip of export and import, show quality results in the catalogue through an open route, and capture lineage from a pipeline you own.
+  - name: Write it into the contract
+    text: Include export in open formats, content ownership, separate capability prices, capped increases and a costed exit plan.
+  - name: Keep checking
+    text: Repeat the export test each year before renewal, and record the result in your assurance evidence.

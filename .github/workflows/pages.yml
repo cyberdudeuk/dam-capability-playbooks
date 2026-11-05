@@ -70,7 +70,7 @@ jobs:
         run: python tools/check_browser.py
       - name: Browser check vaccinations
         run: |
-          for b in overflow contrast focusfill consoleerror search tabs filters noscript contact progress display finder selfassess navclip damarole; do
+          for b in overflow contrast focusfill consoleerror search tabs filters noscript contact progress display finder selfassess navclip damarole tours; do
             python tools/check_browser.py --break "$b"
           done
       - name: Open or update a health issue for a person to act on

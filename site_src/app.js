@@ -315,8 +315,9 @@
     tip.style.top = (window.scrollY + r.bottom + 6) + 'px';
     a.setAttribute('aria-describedby', 'tooltip');
   }
-  function hideTip() { tip.hidden = true; $$('a.term[aria-describedby]').forEach(function (a) { a.removeAttribute('aria-describedby'); }); }
-  $$('a.term[data-tip]').forEach(function (a) {
+  function hideTip() { tip.hidden = true; $$('[data-tip][aria-describedby="tooltip"]').forEach(function (a) { a.removeAttribute('aria-describedby'); }); }
+  /* version 1.8: tooltips on every element that carries data-tip, by hover and by keyboard focus */
+  $$('[data-tip]').forEach(function (a) {
     a.addEventListener('mouseenter', function () { showTip(a); }); a.addEventListener('focus', function () { showTip(a); });
     a.addEventListener('mouseleave', hideTip); a.addEventListener('blur', hideTip);
   });
@@ -409,5 +410,59 @@
     dr.value = store.get('dcp-dama-role') || '';
     dr.addEventListener('change', applyDr);
     applyDr();
+  }
+  /* share this page (version 1.8): copy link; email and Teams links work without scripts */
+  $$('[data-copy-link]').forEach(function (b) {
+    b.hidden = false;
+    b.addEventListener('click', function () {
+      var st = b.closest('.share').querySelector('.share-status'), url = location.href.split('#')[0] + (location.hash || '');
+      var done = function (ok) { st.textContent = ok ? 'Link copied.' : 'Could not copy. Select the address bar and copy it.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+      else done(false);
+    });
+  });
+  $$('[data-native-share]').forEach(function (b) {
+    if (!navigator.share) return;
+    b.hidden = false;
+    b.addEventListener('click', function () { navigator.share({ title: doc.title, url: location.href }).catch(function () {}); });
+  });
+  doc.addEventListener('click', function (e) { $$('details.share[open]').forEach(function (d) { if (!d.contains(e.target)) d.open = false; }); });
+
+  /* guided tours (version 1.8): steps come from the page; each highlights an element and explains it */
+  var tours = json('tour-data');
+  if (tours) {
+    var shade, box, cur = null, step = 0, lastFocus = null; /* not "idx": that name holds the search index in this scope (D-024) */
+    var clear = function () { $$('.tour-target').forEach(function (n) { n.classList.remove('tour-target'); }); };
+    var end = function () {
+      clear(); if (shade) shade.remove(); if (box) box.remove(); shade = box = null;
+      if (cur) store.set('dcp-tour-' + cur.id, 'done'); cur = null;
+      if (lastFocus) lastFocus.focus();
+    };
+    var show = function () {
+      var st = cur.steps[step];
+      if (st.click) { var c = $(st.click); if (c) c.click(); }
+      clear();
+      var t = $(st.sel);
+      var tp = t && t.closest('[role=tabpanel]');
+      if (tp && tp.hidden) { var tb = doc.getElementById('tab-' + tp.id); if (tb) tb.click(); }
+      if (t) { t.classList.add('tour-target'); t.scrollIntoView({ block: 'center' }); }
+      box.innerHTML = '<p class="tour-n">' + esc(cur.title) + ': step ' + (step + 1) + ' of ' + cur.steps.length + '</p><h2 id="tour-h">' + esc(st.title) + '</h2><p>' + esc(st.text) + '</p>' +
+        '<p class="tour-nav">' + (step > 0 ? '<button type="button" class="btn secondary" data-t="back">Back</button>' : '') +
+        (step < cur.steps.length - 1 ? '<button type="button" class="btn" data-t="next">Next</button>' : '<button type="button" class="btn" data-t="end">Finish</button>') +
+        '<button type="button" class="btn secondary" data-t="end">Close tour</button></p>';
+      var h2 = box.querySelector('h2'); h2.setAttribute('tabindex', '-1'); h2.focus();
+    };
+    var start = function (id) {
+      cur = tours.filter(function (x) { return x.id === id; })[0]; if (!cur) return;
+      step = 0; lastFocus = doc.activeElement;
+      shade = doc.createElement('div'); shade.className = 'tour-shade'; shade.addEventListener('click', end); doc.body.appendChild(shade);
+      box = doc.createElement('div'); box.className = 'tour-box'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'false'); box.setAttribute('aria-labelledby', 'tour-h');
+      box.addEventListener('click', function (e) { var b = e.target.closest('[data-t]'); if (!b) return; var a = b.getAttribute('data-t'); if (a === 'next') { step++; show(); } else if (a === 'back') { step--; show(); } else end(); });
+      doc.body.appendChild(box);
+      show();
+    };
+    doc.addEventListener('keydown', function (e) { if (box && e.key === 'Escape') end(); });
+    $$('[data-tour]').forEach(function (b) { b.hidden = false; b.addEventListener('click', function () { start(b.getAttribute('data-tour')); }); });
+    var m = /[#&]tour=([a-z0-9-]+)/.exec(location.hash); if (m) setTimeout(function () { start(m[1]); }, 200);
   }
 })();

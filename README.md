@@ -27,6 +27,7 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Capability model | A DAMA-DMBOK wheel view with role guidance and the records life cycle alongside; 32 capabilities the policy and adjacent guidance need, each flagged explicit, implicit or inferred with signposts to the exact section; the government data maturity model; a self-assessment; crosswalks to industry models |
 | Working together | Ten recommendations for join-up between data, records, security, digital, technology, analysis, commercial and delivery professionals; communities to join; who contributes to what |
 | Perspectives | The policy through data, digital, cyber, technology, commercial and legacy lenses, with a coverage assessment |
+| Tools and interoperability | Nine kinds of data management tool mapped to DAMA areas, the open standards and integration patterns that connect them, a maturity rating for nine common pairings, bundles and commercial barriers, and 23 RFI questions as CSV |
 | Professions and skills | Government professions, Digital and Data framework career pathways with grades and skill levels, and learning routes |
 | Your role | Routes for six roles across learn, prepare, do, report and improve |
 | Learning | Modules with outcomes, activities and checks of understanding |
@@ -35,14 +36,15 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Inclusion | Equality, inclusion and accessibility checks for each capability |
 | Status, What's new, About | Health run results, release notes, findings, open and defect registers, build standard assessment |
 | Service design | Theory of change, research plan, blueprint, requirements traceability, architecture, Service Standard self-assessment |
-| Open data, Help us test | Datasets with a DCAT catalogue for harvesting; testing tasks and feedback form |
+| Open data, Help us test | Datasets with a DCAT catalogue for harvesting; testing tasks and feedback forms |
+| User guide, Site map, Use and reuse | How to get around, guided tours and tutorials; every page at a glance; ten ways to reuse the content, including AI assistants and a reference MCP server |
 | Notices, Accessibility | Disclaimers, credits, full citations and the accessibility statement |
 
 ## How the repository supports the portal
 
 | Portal feature | GitHub feature |
 |---|---|
-| Contact form | Issue forms (`.github/ISSUE_TEMPLATE`) |
+| Contact form | Issue forms (`.github/ISSUE_TEMPLATE`), plus an optional private Microsoft Forms route set in `content/frameworks.yaml` (`ms_form.url`) |
 | Report a problem with this page | Pre-filled issue form |
 | Suggest a change, change history | Edit and commit history of `content/playbooks.yaml` |
 | Ask the community | Discussions |
@@ -51,7 +53,9 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Hosting | GitHub Pages from the `gh-pages` branch, which the workflow publishes from `main` using plain commands (no third-party actions) |
 | Security | CodeQL, Dependabot, secret scanning, private vulnerability reporting |
 
-Nothing in the portal depends on any service other than GitHub and GitHub Pages.
+Nothing in the portal depends on any service other than GitHub and GitHub Pages, except the optional private feedback form.
+
+`integrations/mcp/server.py` is a reference Model Context Protocol server: standard library only, reading the published `data/playbooks.json`. See `integrations/mcp/README.md`.
 
 ## How it is built
 
