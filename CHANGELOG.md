@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.4.0 (2026-11-05)
+- Capability model: 30 capabilities the DAM Policy, its guidance and adjacent rulebooks need, in six clusters. Each is flagged explicit, implicit or inferred, with 76 signposts to the exact GOV.UK section, maturity topics, Digital and Data framework skills, professions and industry model areas.
+- Government data maturity model shown by topic, theme and level with links to each topic, plus indicators for four DAM strands and crosswalks to CMMI, ISO 8000-61, DAMA-DMBOK and DCAM.
+- Self-assessment with a radar profile, kept in your browser only, downloadable as CSV.
+- Professions and skills: routes from each role in the policy to framework roles and professions; career pathways for 7 Digital and Data roles with grades and skill levels; learning routes from awareness to leadership with progress tracking; Government Campus prospectus strands.
+- Delivery and change: what the policy leaves to you, a life cycle overlay and 13 practices with 44 trackable actions for business as usual and change programmes, including business cases, spend control, assurance, legacy exits, contracts, risk, handover and benefits.
+- 43 new rulebook entries for delivery, investment, assurance, skills and professions, each checked live.
+- New learning module M11. Findings F-05 (maturity framework licence), F-06 (legacy guidance asks for a separate asset register) and F-07 (learning platform accessibility).
+- New checks: C-21 (no copying of text under a licence the portal cannot carry), C-22 (every signpost verified, every capability flagged), B-12 (sector finder), B-13 (self-assessment), HL-02 (signposted sections still exist) and a dqkit run of every sector rule file. Defects D-015 and D-016 recorded.
+- Fixed: the repository citation file had been published empty since 1.2.0 (D-017). New check C-23 keeps it complete and in step with the release.
+
+## 1.3.0 (2026-11-05)
+- Sector supplements for 14 themes, each with a governance overlay, risks, extra catalogue fields, a quality rule library, a worked example, a checklist and related rulebook entries.
+- A finder that shows which supplements apply to an asset, and a library of 50 sector quality rules downloadable as CSV and as YAML files the Data Quality Commons kit can run.
+- Playbooks are grouped in one menu so the top bar stays within the screen.
+
 ## 1.2.0 (2026-11-05)
 - Related policies, standards, legislation and rulebooks: 40 entries, each checked live and labelled with how it was checked.
 - Sector assessment now links to the related rulebook entries.

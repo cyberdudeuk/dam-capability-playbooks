@@ -350,6 +350,9 @@ def c19_citations(site, repo, pages):
     """Owner request (version 1.2): every source and rulebook entry is cited in full, with its address, on the notices page."""
     import yaml
     d = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    fw = repo / 'content' / 'frameworks.yaml'
+    if fw.exists():
+        d['rulebook'] = d.get('rulebook', []) + yaml.safe_load(fw.read_text(encoding='utf-8')).get('rulebook_more', [])
     t = (site / 'notices.html').read_text(encoding='utf-8') if (site / 'notices.html').exists() else ''
     errs = [] if t else ['notices.html missing']
     for x in d['sources'] + d.get('rulebook', []):
@@ -383,10 +386,76 @@ def c20_page_governance(site, repo, pages):
     return errs
 
 
+# Short, distinctive fragments of the Data Maturity Assessment level descriptions. That framework is CC BY-NC-SA 4.0,
+# which this portal's OGL content licence cannot carry, so its descriptions must be linked, never copied (version 1.4).
+DMA_FRAGMENTS = ['only to a single specialist person or team', 'Discourages sharing data internally', 'Seen as an exemplar',
+                 'Insular approach and siloed working', 'Futureproofing and prediction of future needs']
+
+
+def c21_no_restricted_licence_text(site, repo, pages):
+    """Rule (version 1.4): text published under a licence the portal cannot carry (Data Maturity Assessment, CC BY-NC-SA) is linked, not copied."""
+    errs = []
+    for f in sorted(site.rglob('*')):
+        if f.is_file() and f.suffix in ('.html', '.js', '.json', '.csv', '.ttl', '.jsonld', '.yaml'):
+            t = f.read_text(encoding='utf-8', errors='ignore').lower()
+            errs += [f'{f.relative_to(site)}: contains framework text "{x}"' for x in DMA_FRAGMENTS if x.lower() in t]
+    return errs
+
+
+def c22_signposts_verified(site, repo, pages):
+    """Rule (version 1.4): every deep link into GOV.UK guidance points to a section recorded as verified, and every capability shows its flag."""
+    import json as _json
+    import yaml
+    errs = []
+    af = repo / 'content' / 'source-anchors.json'
+    if not af.exists():
+        return ['content/source-anchors.json missing']
+    anchors = _json.loads(af.read_text())['anchors']
+    d = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    fw = repo / 'content' / 'frameworks.yaml'
+    rb = yaml.safe_load(fw.read_text(encoding='utf-8')).get('rulebook_more', []) if fw.exists() else []
+    url_to_id = {x['url']: x['id'] for x in d['sources'] + d.get('rulebook', []) + rb}
+    for name in ('capability-model.html', 'change.html', 'professions.html'):
+        if not (site / name).exists():
+            errs.append(f'{name} missing'); continue
+        t = (site / name).read_text(encoding='utf-8')
+        for href in set(re.findall(r'href="(https://www\.gov\.uk/[^"#]+)#([^"]+)"', t)):
+            doc = url_to_id.get(href[0].replace('&amp;', '&'))
+            if doc in anchors and href[1] not in anchors[doc]:
+                errs.append(f'{name}: {doc} has no verified section #{href[1]}')
+        if name == 'capability-model.html':
+            cards = re.findall(r'<li class="cr-card" id="(CR-\d+)"(.*?)</li>\s*(?=<li class="cr-card"|</ul>)', t, re.S)
+            if not cards: errs.append('capability-model.html: no capability cards')
+            for cid, body in cards:
+                # D-016: signpost badges also use the flag style, so look only in the card heading
+                head = body.split('\n<p>', 1)[0]
+                if 'class="flag-badge' not in head: errs.append(f'{cid}: no explicit, implicit or inferred flag in the heading')
+    return errs
+
+
+def c23_repository_metadata(site, repo, pages):
+    """Rule (D-017): CITATION.cff is complete and names the same version as the portal, so the repository's citation is never blank."""
+    import yaml
+    errs = []
+    f = repo / 'CITATION.cff'
+    if not f.exists():
+        return ['CITATION.cff missing']
+    try:
+        c = yaml.safe_load(f.read_text(encoding='utf-8')) or {}
+    except yaml.YAMLError as e:
+        return [f'CITATION.cff does not parse: {str(e).splitlines()[0]}']
+    for k in ('cff-version', 'title', 'authors', 'version', 'license', 'repository-code', 'url'):
+        if not c.get(k): errs.append(f'CITATION.cff has no {k}')
+    meta = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))['meta']
+    if c.get('version') and str(c['version']) != str(meta['version']): errs.append(f'CITATION.cff version {c["version"]} differs from portal version {meta["version"]}')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
-          c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance]
+          c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance, c21_no_restricted_licence_text,
+          c22_signposts_verified, c23_repository_metadata]
 
 
 def run(site, repo, only=None, quiet=False):

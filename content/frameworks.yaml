@@ -1,0 +1,2561 @@
+# Version 1.4 content: capability requirements map, maturity model, professions and skills, delivery and change.
+# Loaded and merged with playbooks.yaml by tools/build.py. Edit here; never edit the generated site.
+# Data maturity topic and theme counts and the Digital and Data framework roles were read from the live pages on 2026-11-05.
+rulebook_more:
+- id: RB-GREEN
+  group: Delivery, change and investment
+  title: The Green Book and accompanying guidance
+  publisher: HM Treasury
+  url: https://www.gov.uk/government/collections/the-green-book-and-accompanying-guidance-and-documents
+  updated: '2026-10-06'
+  prov: V
+  caps:
+  - gov
+  - dq
+  why: Appraisal and the five case business case model; where the cost of owning, cataloguing and improving data assets belongs in a programme business case.
+- id: RB-GOVS002
+  group: Delivery, change and investment
+  title: 'Government Functional Standard GovS 002: Project Delivery'
+  publisher: Government Project Delivery function
+  url: https://www.gov.uk/government/publications/project-delivery-functional-standard
+  updated: '2025-09-17'
+  prov: V
+  caps:
+  - gov
+  why: The life cycle, governance and roles every portfolio, programme and project must follow; data deliverables and data owners fit into it.
+- id: RB-GOVS005
+  group: Delivery, change and investment
+  title: 'Government Functional Standard GovS 005: Digital'
+  publisher: Government Digital Service
+  url: https://www.gov.uk/government/publications/government-functional-standard-govs-005-digital
+  updated: '2026-10-01'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: The digital and data functional standard that the Data Maturity Assessment and data management practice sit under.
+- id: RB-IAAP
+  group: Delivery, change and investment
+  title: Implementing integrated assurance for major projects
+  publisher: National Infrastructure and Service Transformation Authority
+  url: https://www.gov.uk/government/publications/implementing-integrated-assurance-for-major-projects
+  updated: '2026-08-20'
+  prov: V
+  caps:
+  - gov
+  why: How major projects plan assurance; DAM checks can be written into the integrated assurance and approval plan.
+- id: RB-NISTA
+  group: Delivery, change and investment
+  title: National Infrastructure and Service Transformation Authority
+  publisher: HM Treasury and Cabinet Office
+  url: https://www.gov.uk/government/organisations/national-infrastructure-and-service-transformation-authority
+  updated: '2026-08-20'
+  prov: V
+  caps:
+  - gov
+  why: The centre of expertise for major projects and service transformation, including the Government Major Projects Portfolio.
+- id: RB-GMPP
+  group: Delivery, change and investment
+  title: Government Major Projects Portfolio
+  publisher: National Infrastructure and Service Transformation Authority
+  url: https://www.gov.uk/government/publications/government-major-projects-portfolio
+  updated: '2026-03-31'
+  prov: V
+  caps:
+  - gov
+  why: The largest and riskiest projects; many create or replace critical data assets.
+- id: RB-SPEND
+  group: Delivery, change and investment
+  title: Set up a commercial or digital and technology spend controls pipeline
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/set-up-a-commercial-or-digital-and-technology-spend-controls-pipeline
+  updated: '2025-02-18'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: Spend control is the point at which central teams see new digital and technology spend, and so a natural checkpoint for DAM evidence.
+- id: RB-SVCASSESS
+  group: Delivery, change and investment
+  title: Service assessments and applying the Service Standard
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/service-assessments
+  updated: '2025-03-10'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: Alpha, beta and live assessments; teams can show their critical data assets are catalogued, owned and quality-planned.
+- id: RB-RETIRE
+  group: Delivery, change and investment
+  title: Retiring your service
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/agile-delivery/retiring-your-service
+  updated: '2025-08-26'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: What to do with users and their data when a service closes, including passing data to a new owner.
+- id: RB-LEGACY
+  group: Delivery, change and investment
+  title: Managing legacy technology
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/managing-legacy-technology
+  updated: '2026-10-15'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: Its second principle asks organisations to build a complete and accurate register of their data assets before migrating.
+- id: RB-TECHDEBT
+  group: Delivery, change and investment
+  title: Prevent technical debt and legacy
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/prevent-technical-debt-and-legacy
+  updated: '2024-10-23'
+  prov: V
+  caps:
+  - gov
+  - dq
+  why: Stops new systems becoming the next concentration of hard-to-use data.
+- id: RB-ORANGE
+  group: Delivery, change and investment
+  title: 'The Orange Book: management of risk'
+  publisher: HM Treasury
+  url: https://www.gov.uk/government/publications/orange-book
+  updated: '2026-07-29'
+  prov: V
+  caps:
+  - gov
+  - dq
+  why: Principles for managing risk; data asset risks belong on the same registers as other risks.
+- id: RB-MAGENTA
+  group: Delivery, change and investment
+  title: The Magenta Book
+  publisher: HM Treasury
+  url: https://www.gov.uk/government/publications/the-magenta-book
+  updated: '2026-05-15'
+  prov: V
+  caps:
+  - gov
+  - dq
+  why: Evaluation in government; how to show whether DAM work delivered its intended benefits.
+- id: RB-AQUA
+  group: Delivery, change and investment
+  title: The AQuA Book
+  publisher: HM Treasury and the Analysis Function
+  url: https://www.gov.uk/guidance/the-aqua-book
+  updated: '2025-07-30'
+  prov: V
+  caps:
+  - dq
+  why: Quality assurance of analysis and models; analysis is only as reliable as the data quality plans behind it.
+- id: RB-SOURCING
+  group: Delivery, change and investment
+  title: The Sourcing Playbook
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/the-sourcing-and-consultancy-playbooks
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: Outsourcing decisions; contracts should say who owns the data, how metadata is delivered and how data comes back at exit.
+- id: RB-DDATPB
+  group: Delivery, change and investment
+  title: The Digital, Data and Technology Playbook
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/the-digital-data-and-technology-playbook
+  updated: '2023-06-20'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: Commercial guidance for buying digital, data and technology products and services.
+- id: RB-PPN020
+  group: Delivery, change and investment
+  title: 'PPN 020: Guidance on data protection legislation'
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/ppn-020-guidance-on-data-protection-legislation
+  updated: '2025-04-24'
+  prov: V
+  caps:
+  - gov
+  why: Data protection terms in public contracts.
+- id: RB-DSGF
+  group: Data and AI
+  title: Data Sharing Governance Framework
+  publisher: Central Digital and Data Office
+  url: https://www.gov.uk/government/publications/data-sharing-governance-framework
+  updated: '2022-05-23'
+  prov: V
+  caps:
+  - gov
+  why: Cross-government principles for sharing data; the DAM Policy does not force sharing but expects safe reuse.
+- id: RB-BLUEPRINT
+  group: Delivery, change and investment
+  title: A blueprint for modern digital government
+  publisher: Department for Science, Innovation and Technology
+  url: https://www.gov.uk/government/publications/a-blueprint-for-modern-digital-government
+  updated: '2025-01-21'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: The wider programme of digital reform that the DAM Policy supports.
+- id: RB-NDLPUB
+  group: Data and AI
+  title: National Data Library
+  publisher: Department for Science, Innovation and Technology
+  url: https://www.gov.uk/government/publications/national-data-library
+  updated: '2025-07-29'
+  prov: V
+  caps:
+  - cat
+  why: Plans for making public sector data easier to find and use; catalogued critical assets are a natural input.
+- id: RB-DMAF
+  group: Data and AI
+  title: 'Data Maturity Assessment for Government: Framework'
+  publisher: Central Digital and Data Office (developed with the ONS Data Quality Hub)
+  url: https://www.gov.uk/government/publications/data-maturity-assessment-for-government-framework
+  updated: '2026-07-23'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: 10 topics, 6 themes and 5 levels for assessing data maturity. Licensed CC BY-NC-SA 4.0, so this portal links to it and does not copy its descriptions.
+- id: RB-DMAHUB
+  group: Data and AI
+  title: Government data maturity hub
+  publisher: Central Digital and Data Office
+  url: https://www.gov.uk/government/collections/data-maturity-assessment-for-government
+  updated: '2026-07-23'
+  prov: V
+  caps:
+  - gov
+  why: The framework plus guidance on delivering an assessment.
+- id: RB-PROFS
+  group: Skills and professions
+  title: Government professions
+  publisher: Government Skills
+  url: https://www.gov.uk/government/publications/government-professions/government-professions
+  updated: '2026-09-30'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: The list of functional and specialist professions every civil servant can join.
+- id: RB-GSKILLS
+  group: Skills and professions
+  title: Government Skills
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/organisations/government-skills
+  updated: '2024-07-09'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: Runs the Government Campus, the recommended curriculum and the Government Skills Campus learning platform.
+- id: RB-CURRIC
+  group: Skills and professions
+  title: The Civil Service recommended curriculum
+  publisher: Government Skills
+  url: https://www.gov.uk/government/collections/the-civil-service-recommended-curriculum
+  updated: '2025-05-29'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: Recommended learning for all civil servants, searchable by subject.
+- id: RB-DSFA
+  group: Skills and professions
+  title: Data skills for all
+  publisher: Government Skills
+  url: https://www.gov.uk/guidance/data-skills-for-all
+  updated: '2026-03-31'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: Free data learning at awareness, working and practitioner levels.
+- id: RB-SPECIALIST
+  group: Skills and professions
+  title: Specialist skills from government professions
+  publisher: Government Skills
+  url: https://www.gov.uk/guidance/specialist-skills
+  updated: '2024-08-23'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: 'Strand 4 of the curriculum: how professions develop specialist skills.'
+- id: RB-PROSPECTUS
+  group: Skills and professions
+  title: Government Campus prospectus
+  publisher: Government Skills
+  url: https://prospectus.governmentcampus.co.uk/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: The online prospectus of courses by strand and subject, including data and analytics.
+- id: RB-NSG
+  group: Skills and professions
+  title: National School of Government
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/organisations/national-school-of-government
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: Opened in October 2026 to train civil servants and public sector leaders, including in AI.
+- id: RB-AFCAREER
+  group: Skills and professions
+  title: Analysis Function career framework
+  publisher: Analysis Function
+  url: https://analysisfunction.civilservice.gov.uk/careers/career-framework/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - dq
+  why: Career framework and learning pathways for the analytical professions, including statistics.
+- id: RB-AFROLES
+  group: Skills and professions
+  title: Analysis Function role profiles and career pathways
+  publisher: Analysis Function
+  url: https://analysisfunction.civilservice.gov.uk/careers/role-profiles-and-career-pathways/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - dq
+  why: Role profiles for analysts, statisticians, economists, social researchers, operational researchers and geographers.
+- id: RB-GSS
+  group: Skills and professions
+  title: Government Statistical Service and Statistician Group
+  publisher: Analysis Function
+  url: https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - dq
+  why: The statistics profession, closest to data quality work on official statistics.
+- id: RB-KIM
+  group: Skills and professions
+  title: Government Knowledge and Information Management Profession
+  publisher: Government KIM Profession
+  url: https://www.gov.uk/government/organisations/civil-service-government-knowledge-information-management-profession/about
+  updated: '2025-06-20'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: Information, records and knowledge management; publishes a skills framework and runs communities for records officers.
+- id: RB-SECPROF
+  group: Skills and professions
+  title: Government Security Profession
+  publisher: Government Security Group
+  url: https://www.gov.uk/government/organisations/government-security-profession
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: Security roles that work alongside data owners and the senior information risk owner.
+- id: RB-CYBERPROF
+  group: Skills and professions
+  title: Government Cyber Profession
+  publisher: Government Cyber Profession
+  url: https://www.gov.uk/government/organisations/government-cyber-profession
+  updated: '2026-03-26'
+  prov: V
+  caps:
+  - gov
+  why: Cyber security careers aligned to the digital function.
+- id: RB-SUCCESS
+  group: Skills and professions
+  title: Success Profiles
+  publisher: Civil Service HR
+  url: https://www.gov.uk/government/publications/success-profiles
+  updated: '2025-01-29'
+  prov: V
+  caps:
+  - gov
+  why: The recruitment framework; data responsibilities can be written into role descriptions and behaviours.
+- id: RB-SFIA
+  group: Skills and professions
+  title: 'SFIA 9: the global skills and competency framework for a digital world'
+  publisher: SFIA Foundation
+  url: https://sfia-online.org/en/sfia-9
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: Industry skills framework with data management and governance skills; widely used alongside the government framework.
+- id: RB-PKSB
+  group: Skills and professions
+  title: Professional Knowledge and Skills Base (PKSB)
+  publisher: CILIP
+  url: https://www.cilip.org.uk/page/PKSB
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - cat
+  why: Knowledge and skills for information professionals, including metadata, taxonomy and records.
+- id: RB-RSS
+  group: Skills and professions
+  title: Royal Statistical Society professional development
+  publisher: Royal Statistical Society
+  url: https://www.rss.org.uk/membership/professional-development/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - dq
+  why: Professional accreditation for statisticians and data scientists.
+- id: RB-APPDA
+  group: Skills and professions
+  title: Data analyst apprenticeship standard
+  publisher: Skills England
+  url: https://www.instituteforapprenticeships.org/apprenticeship-standards/data-analyst-v1-1
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - dq
+  why: An entry route into data roles that public bodies can fund through the apprenticeship levy.
+- id: RB-DAMA
+  group: Skills and professions
+  title: 'DAMA-DMBOK: Data Management Body of Knowledge'
+  publisher: DAMA International
+  url: https://www.dama.org/cpages/body-of-knowledge
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: The most widely used body of knowledge for data management, with a professional certification (CDMP).
+- id: RB-DCAM
+  group: Skills and professions
+  title: 'DCAM: Data Management Capability Assessment Model'
+  publisher: EDM Council
+  url: https://edmcouncil.org/frameworks/dcam/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  - dq
+  why: An industry capability assessment model for data management, used here only to cross-check coverage.
+- id: RB-CMMI
+  group: Skills and professions
+  title: Capability Maturity Model Integration (CMMI)
+  publisher: ISACA (CMMI Institute)
+  url: https://cmmiinstitute.com/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: The origin of the five-level maturity pattern most data maturity models use.
+capmap:
+- id: CR-01
+  name: Accountable leadership and policy oversight
+  cluster: Direction and oversight
+  icon: building-2
+  flag: E
+  dam: oversight-and-implementation-of-the-policy
+  signposts:
+  - doc: SRC-OWN
+    a: chief-data-officer
+    label: Chief data officer role
+    flag: E
+  - doc: SRC-OWN
+    a: executive-leadership-roles
+    label: Executive leadership roles
+    flag: E
+  playbook: governance.html
+  dma:
+  - 9
+  - 10
+  dmbok:
+  - Data governance
+  dcam:
+  - Data management strategy and business case
+  - Data governance
+  skills:
+  - data-governance-leadership
+  - strategic-data-planning
+  profs:
+  - PR-DD
+  coverage: Covered
+  note: Each organisation's chief data officer is responsible for implementing the policy; the Chief Data Officer Council oversees it.
+  prov: O
+- id: CR-02
+  name: Data strategy and prioritisation by reuse value
+  cluster: Direction and oversight
+  icon: target
+  flag: I
+  dam: oversight-and-implementation-of-the-policy
+  signposts:
+  - doc: SRC-DQAP
+    a: prioritise-your-dqaps
+    label: Prioritise your DQAPs
+    flag: E
+  - doc: SRC-DAM
+    a: realising-our-data-ambitions
+    label: Realising our data ambitions
+    flag: I
+  playbook: dam.html
+  dma:
+  - 9
+  dmbok:
+  - Data governance
+  dcam:
+  - Data management strategy and business case
+  skills:
+  - strategic-data-planning
+  - strategic-thinking
+  profs:
+  - PR-DD
+  coverage: Partial
+  note: The policy expects organisations to start with assets of proven reuse value, which needs a way to rank assets that the policy does not spell out.
+  prov: O
+- id: CR-03
+  name: Central reporting, assurance and arm's length body coordination
+  cluster: Direction and oversight
+  icon: send
+  flag: E
+  dam: identifying-and-reporting-data-assets
+  signposts:
+  - doc: SRC-DAM
+    a: organisational-and-administrative-scope
+    label: Organisational and administrative scope
+    flag: E
+  - doc: SRC-IDC
+    a: record-your-critical-data-assets
+    label: Record your critical data assets
+    flag: E
+  playbook: cataloguing.html
+  dma:
+  - 10
+  dmbok:
+  - Metadata management
+  - Data governance
+  dcam:
+  - Data governance
+  - Data control environment
+  skills:
+  - data-governance
+  - metadata-management
+  profs:
+  - PR-DD
+  - PR-KIM
+  coverage: Covered
+  note: Departments report their assets to GDS and coordinate and assure the returns of their arm's length bodies.
+  prov: O
+- id: CR-04
+  name: Performance measurement and annual review
+  cluster: Direction and oversight
+  icon: chart-column
+  flag: E
+  dam: identifying-and-reporting-data-assets
+  signposts:
+  - doc: SRC-OWN
+    a: measuring-the-success-of-data-ownership-initiatives
+    label: Measuring the success of data ownership initiatives
+    flag: E
+  - doc: SRC-DQAP
+    a: create-a-data-quality-dashboard
+    label: Create a data quality dashboard
+    flag: E
+  playbook: together.html
+  dma:
+  - 5
+  - 10
+  dmbok:
+  - Data governance
+  - Data quality
+  dcam:
+  - Data governance
+  - Data quality management
+  skills:
+  - performance-measurement
+  - data-maturity
+  profs:
+  - PR-DD
+  - PR-AF
+  coverage: Partial
+  note: Returns must be maintained and reviewed every year; the guidance adds measures for ownership and quality.
+  prov: O
+- id: CR-05
+  name: Identify and scope critical data assets
+  cluster: Core DAM capabilities
+  icon: crosshair
+  flag: E
+  dam: data-assets-in-scope
+  signposts:
+  - doc: SRC-IDC
+    a: identify-your-critical-data-assets
+    label: Identify your critical data assets
+    flag: E
+  - doc: SRC-IDC
+    a: purposes-that-critical-data-assets-support
+    label: Purposes that critical data assets support
+    flag: E
+  - doc: SRC-DAM
+    a: defining-a-data-asset
+    label: Defining a data asset
+    flag: E
+  playbook: cataloguing.html
+  dma:
+  - 4
+  dmbok:
+  - Metadata management
+  - Data governance
+  dcam:
+  - Business and data architecture
+  skills:
+  - data-management
+  - data-governance
+  profs:
+  - PR-DD
+  - PR-KIM
+  coverage: Covered
+  note: Only assets classified OFFICIAL are in scope, and the critical-asset guidance defines which assets count.
+  prov: O
+- id: CR-06
+  name: Data cataloguing and metadata management
+  cluster: Core DAM capabilities
+  icon: library-big
+  flag: E
+  dam: identifying-and-reporting-data-assets
+  signposts:
+  - doc: SRC-MD
+    a: where-to-record-and-store-your-metadata
+    label: Where to record and store your metadata
+    flag: E
+  - doc: SRC-MD
+    a: metadata-you-should-record
+    label: Metadata you should record
+    flag: E
+  - doc: SRC-MD
+    a: making-your-metadata-machine-readable-and-accessible
+    label: Making your metadata machine-readable
+    flag: E
+  - doc: SRC-DQAP
+    a: build-a-data-catalogue
+    label: Build a data catalogue (inside the quality guide)
+    flag: I
+  playbook: cataloguing.html
+  dma:
+  - 4
+  - 7
+  dmbok:
+  - Metadata management
+  dcam:
+  - Business and data architecture
+  - Data and technology architecture
+  skills:
+  - metadata-management
+  - data-standards
+  profs:
+  - PR-KIM
+  - PR-DD
+  coverage: Covered
+  note: Metadata about in-scope assets must be held in a data catalogue; the quality guide also assumes a catalogue exists.
+  prov: O
+- id: CR-07
+  name: Data ownership and stewardship
+  cluster: Core DAM capabilities
+  icon: key-round
+  flag: E
+  dam: data-ownership
+  signposts:
+  - doc: SRC-OWN
+    a: data-ownership-roles-and-responsibilities
+    label: Data ownership roles and responsibilities
+    flag: E
+  - doc: SRC-OWN
+    a: a-checklist-for-your-organisation
+    label: A checklist for your organisation
+    flag: E
+  - doc: SRC-OWN
+    a: the-relationship-between-data-ownership-and-information-asset-ownership
+    label: Data owners and information asset owners
+    flag: E
+  playbook: governance.html
+  dma:
+  - 10
+  dmbok:
+  - Data governance
+  dcam:
+  - Data governance
+  skills:
+  - data-governance
+  - stakeholder-relationship-management
+  profs:
+  - PR-DD
+  - PR-KIM
+  coverage: Covered
+  note: Every identified asset must have a named data owner, as set out in the data ownership model.
+  prov: O
+- id: CR-08
+  name: Data quality management through action plans
+  cluster: Core DAM capabilities
+  icon: gauge
+  flag: E
+  dam: data-quality-action-plans
+  signposts:
+  - doc: SRC-DQAP
+    a: step-1-identify-critical-data
+    label: The 7 DQAP steps
+    flag: E
+  - doc: SRC-GDQF
+    a: Data-Quality-Principles
+    label: Data quality principles
+    flag: E
+  - doc: SRC-DQIF
+    a: set-a-data-quality-target
+    label: Set a data quality target
+    flag: E
+  playbook: quality.html
+  dma:
+  - 7
+  dmbok:
+  - Data quality
+  dcam:
+  - Data quality management
+  skills:
+  - quality-assurance-of-data-and-analysis
+  - data-management
+  profs:
+  - PR-AF
+  - PR-DD
+  coverage: Covered
+  note: Every identified asset must have a data quality action plan or an equivalent that covers all 7 steps.
+  prov: O
+- id: CR-09
+  name: Data quality issue management
+  cluster: Core DAM capabilities
+  icon: triangle-alert
+  flag: I
+  dam: data-quality-action-plans
+  signposts:
+  - doc: SRC-DQIF
+    a: assign-a-priority-to-a-data-quality-issue
+    label: Assign a priority to an issue
+    flag: E
+  - doc: SRC-DQIF
+    a: allocate-time-and-resources
+    label: Allocate time and resources
+    flag: E
+  - doc: SRC-DQAP
+    a: identify-and-log-data-quality-issues
+    label: Identify and log issues
+    flag: E
+  playbook: quality.html
+  dma:
+  - 7
+  dmbok:
+  - Data quality
+  dcam:
+  - Data quality management
+  skills:
+  - problem-management
+  - quality-assurance-of-data-and-analysis
+  profs:
+  - PR-AF
+  coverage: Covered
+  note: The policy points to the issues framework to support resource decisions; logging and prioritising issues is how plans turn into action.
+  prov: O
+- id: CR-10
+  name: Data life cycle management
+  cluster: Data management enablers
+  icon: refresh-cw
+  flag: E
+  dam: realising-our-data-ambitions
+  signposts:
+  - doc: SRC-OWN
+    a: data-is-managed-throughout-its-life-cycle
+    label: Data is managed throughout its life cycle
+    flag: E
+  - doc: SRC-GDQF
+    a: Assess-quality-throughout-the-data-lifecycle
+    label: Assess quality throughout the life cycle
+    flag: E
+  - doc: SRC-DQAP
+    a: the-data-life-cycle
+    label: The data life cycle
+    flag: E
+  playbook: together.html
+  dma:
+  - 7
+  dmbok:
+  - Data governance
+  - Data storage and operations
+  dcam:
+  - Data control environment
+  skills:
+  - data-life-cycle
+  profs:
+  - PR-DD
+  - PR-KIM
+  coverage: Partial
+  note: The policy sets out life cycle controls; the ownership model makes life cycle management a principle.
+  prov: O
+- id: CR-11
+  name: Interoperability, data standards and identifiers
+  cluster: Data management enablers
+  icon: ruler
+  flag: E
+  dam: realising-our-data-ambitions
+  signposts:
+  - doc: SRC-OWN
+    a: data-is-standardised
+    label: Data is standardised
+    flag: E
+  - doc: SRC-MD
+    a: using-identifier
+    label: Using 'identifier'
+    flag: E
+  - doc: RB-OPEN
+    a: null
+    label: Open standards for government
+    flag: E
+  playbook: sectors.html
+  dma:
+  - 7
+  - 3
+  dmbok:
+  - Data integration and interoperability
+  - Reference and master data
+  dcam:
+  - Data and technology architecture
+  skills:
+  - data-standards
+  - data-integration-design
+  profs:
+  - PR-DD
+  coverage: Partial
+  note: The policy sets minimum requirements for interoperability; standards and shared identifiers are how they are met.
+  prov: O
+- id: CR-12
+  name: Data architecture and data services
+  cluster: Data management enablers
+  icon: server
+  flag: I
+  dam: defining-a-data-asset
+  signposts:
+  - doc: SRC-OWN
+    a: data-platforms-and-services
+    label: Data platforms and services
+    flag: E
+  - doc: SRC-OWN
+    a: merged-data-sets-and-data-services
+    label: Merged data sets and data services
+    flag: E
+  playbook: capability-model.html
+  dma:
+  - 3
+  dmbok:
+  - Data architecture
+  - Data modelling and design
+  dcam:
+  - Business and data architecture
+  - Data and technology architecture
+  skills:
+  - data-architecture
+  - data-modelling
+  profs:
+  - PR-DD
+  coverage: New
+  note: A data asset includes the data services (such as APIs) used to reach it, so someone must design and run those services.
+  prov: O
+- id: CR-13
+  name: Catalogue and quality tooling
+  cluster: Data management enablers
+  icon: wrench
+  flag: I
+  dam: identifying-and-reporting-data-assets
+  signposts:
+  - doc: SRC-DQAP
+    a: automate-assessments
+    label: Automate assessments
+    flag: E
+  - doc: RB-TCOP
+    a: null
+    label: Technology Code of Practice
+    flag: E
+  playbook: library.html
+  dma:
+  - 3
+  dmbok:
+  - Metadata management
+  - Data quality
+  dcam:
+  - Data and technology architecture
+  skills:
+  - programming-and-build-data-and-analytics-engineering
+  - metadata-management
+  profs:
+  - PR-DD
+  coverage: Partial
+  note: Catalogues and automated quality checks need platforms; GDS will build a central discovery service.
+  prov: O
+- id: CR-14
+  name: Reference data, master data and authoritative sources
+  cluster: Data management enablers
+  icon: badge-check
+  flag: I
+  dam: null
+  signposts:
+  - doc: SRC-OWN
+    a: data-is-authoritative
+    label: Data is authoritative
+    flag: E
+  - doc: SRC-OWN
+    a: process-owners-and-enterprise-data-owners
+    label: Process owners and enterprise data owners
+    flag: E
+  playbook: sectors.html
+  dma:
+  - 7
+  dmbok:
+  - Reference and master data
+  dcam:
+  - Business and data architecture
+  skills:
+  - data-management
+  - data-modelling
+  profs:
+  - PR-DD
+  coverage: Partial
+  note: Reducing duplicate collection depends on agreeing which source is authoritative; the policy states the aim, the ownership model the principle.
+  prov: O
+- id: CR-15
+  name: Records, retention and disposal
+  cluster: Data management enablers
+  icon: archive
+  flag: N
+  dam: null
+  signposts:
+  - doc: RB-TNA
+    a: null
+    label: The National Archives information management guidance
+    flag: E
+  - doc: RB-RETIRE
+    a: protecting-information
+    label: 'Retiring your service: protecting information'
+    flag: E
+  - doc: SRC-OWN
+    a: data-ownership-in-context
+    label: Data ownership in context
+    flag: I
+  playbook: change.html
+  dma:
+  - 7
+  - 8
+  dmbok:
+  - Document and content management
+  - Data storage and operations
+  dcam:
+  - Data control environment
+  skills:
+  - data-life-cycle
+  - data-compliance-and-security
+  profs:
+  - PR-KIM
+  coverage: New
+  note: Not mentioned in the policy, but an asset's life cycle ends in retention, transfer or disposal, which records law governs.
+  prov: O
+- id: CR-16
+  name: Security classification and protective controls
+  cluster: Protection, ethics and trust
+  icon: lock-keyhole
+  flag: E
+  dam: data-assets-in-scope
+  signposts:
+  - doc: SRC-OWN
+    a: data-is-secure
+    label: Data is secure
+    flag: E
+  - doc: RB-GSC
+    a: null
+    label: Government Security Classifications
+    flag: E
+  playbook: sectors.html
+  dma:
+  - 8
+  dmbok:
+  - Data security
+  dcam:
+  - Data control environment
+  skills:
+  - data-compliance-and-security
+  - data-risk-management
+  profs:
+  - PR-SEC
+  - PR-CYB
+  coverage: Partial
+  note: Scope depends on classification (OFFICIAL only), so classification must be right before an asset is recorded.
+  prov: O
+- id: CR-17
+  name: Data protection and lawful sharing
+  cluster: Protection, ethics and trust
+  icon: scale
+  flag: E
+  dam: data-assets-in-scope
+  signposts:
+  - doc: SRC-OWN
+    a: data-protection-roles
+    label: Data protection roles
+    flag: E
+  - doc: RB-DSGF
+    a: null
+    label: Data Sharing Governance Framework
+    flag: E
+  - doc: RB-ICOSHARE
+    a: null
+    label: ICO data sharing code
+    flag: E
+  playbook: sectors.html
+  dma:
+  - 8
+  - 1
+  dmbok:
+  - Data security
+  - Data governance
+  dcam:
+  - Data control environment
+  skills:
+  - data-ethics-and-privacy
+  - data-compliance-and-security
+  profs:
+  - PR-DD
+  - PR-KIM
+  coverage: Partial
+  note: The policy keeps every legal and data protection obligation in place and does not force sharing.
+  prov: O
+- id: CR-18
+  name: AI readiness and data and AI ethics
+  cluster: Protection, ethics and trust
+  icon: brain
+  flag: E
+  dam: data-quality-action-plans
+  signposts:
+  - doc: RB-AIREADY
+    a: null
+    label: Making government datasets ready for AI
+    flag: E
+  - doc: RB-ETH
+    a: null
+    label: Data and AI Ethics Framework
+    flag: E
+  - doc: RB-ATRS
+    a: null
+    label: Algorithmic Transparency Recording Standard
+    flag: E
+  playbook: sectors.html
+  dma:
+  - 6
+  dmbok:
+  - Data governance
+  - Data quality
+  dcam:
+  - Analytics management
+  skills:
+  - data-ethics-and-privacy
+  - analysis-and-synthesis-data-ethics
+  profs:
+  - PR-DD
+  coverage: Covered
+  note: The policy names AI readiness as a reason for quality plans; ethics is not named, so it is inferred from the AI guidance.
+  prov: O
+- id: CR-19
+  name: Data risk management
+  cluster: Protection, ethics and trust
+  icon: shield-check
+  flag: E
+  dam: realising-our-data-ambitions
+  signposts:
+  - doc: SRC-OWN
+    a: board-level-executive-or-senior-information-risk-owner-siro
+    label: Senior information risk owner
+    flag: E
+  - doc: RB-ORANGE
+    a: null
+    label: The Orange Book
+    flag: E
+  playbook: change.html
+  dma:
+  - 8
+  - 10
+  dmbok:
+  - Data governance
+  - Data security
+  dcam:
+  - Data control environment
+  skills:
+  - data-risk-management
+  - enabling-and-informing-risk-based-decisions
+  profs:
+  - PR-SEC
+  - PR-DD
+  coverage: New
+  note: The policy cites risk controls and understanding cross-public sector dependencies to manage risk; how is left to each organisation.
+  prov: O
+- id: CR-20
+  name: Third-party and supplier data
+  cluster: Protection, ethics and trust
+  icon: handshake
+  flag: I
+  dam: null
+  signposts:
+  - doc: SRC-OWN
+    a: data-from-a-third-party
+    label: Data from a third party
+    flag: E
+  - doc: SRC-OWN
+    a: data-licensing-impact-on-data-owners
+    label: Data licensing impact on data owners
+    flag: E
+  - doc: RB-SOURCING
+    a: null
+    label: The Sourcing Playbook
+    flag: E
+  playbook: change.html
+  dma:
+  - 1
+  dmbok:
+  - Data governance
+  dcam:
+  - Data governance
+  skills:
+  - stakeholder-relationship-management
+  - data-compliance-and-security
+  profs:
+  - PR-DD
+  coverage: New
+  note: Many critical assets are held or processed by suppliers; ownership, metadata and quality duties must reach into contracts.
+  prov: O
+- id: CR-21
+  name: Data skills, capability and literacy
+  cluster: People and culture
+  icon: graduation-cap
+  flag: I
+  dam: null
+  signposts:
+  - doc: SRC-OWN
+    a: skills-that-data-owners-need
+    label: Skills that data owners need
+    flag: E
+  - doc: SRC-DQAP
+    a: relevant-training-modules
+    label: Relevant training modules
+    flag: E
+  - doc: SRC-GDQF
+    a: build-data-quality-capability
+    label: Build data quality capability
+    flag: E
+  playbook: professions.html
+  dma:
+  - 2
+  dmbok:
+  - Data governance
+  dcam:
+  - Data management program and funding
+  skills:
+  - data-literacy-improvement
+  - capability-building-for-digital-data-and-technology
+  profs:
+  - PR-DD
+  - PR-AF
+  - PR-KIM
+  coverage: New
+  note: The policy assigns new responsibilities; the guidance lists the skills and training those people need.
+  prov: O
+- id: CR-22
+  name: Data culture and engagement with users
+  cluster: People and culture
+  icon: heart-handshake
+  flag: I
+  dam: null
+  signposts:
+  - doc: SRC-OWN
+    a: promoting-and-ensuring-a-culture-of-data-ownership-within-the-organisation
+    label: Promoting a culture of data ownership
+    flag: E
+  - doc: SRC-GDQF
+    a: Know-your-users-and-their-needs
+    label: Know your users and their needs
+    flag: E
+  playbook: inclusion.html
+  dma:
+  - 1
+  dmbok:
+  - Data governance
+  dcam:
+  - Data governance
+  skills:
+  - stakeholder-relationship-management
+  - communicating-between-the-technical-and-non-technical
+  profs:
+  - PR-DD
+  coverage: Partial
+  note: Ownership and quality only last where people value data and know who uses it.
+  prov: O
+- id: CR-23
+  name: Maturity assessment and continuous improvement
+  cluster: People and culture
+  icon: radar
+  flag: I
+  dam: oversight-and-implementation-of-the-policy
+  signposts:
+  - doc: RB-DMAF
+    a: null
+    label: Data Maturity Assessment for Government
+    flag: E
+  - doc: SRC-GDQF
+    a: focus-on-continuous-improvement
+    label: Focus on continuous improvement
+    flag: E
+  playbook: capability-model.html
+  dma:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  dmbok:
+  - Data governance
+  dcam:
+  - Data management strategy and business case
+  skills:
+  - data-maturity
+  profs:
+  - PR-DD
+  coverage: New
+  note: The policy recognises different levels of data maturity; the government maturity framework is the shared way to measure them.
+  prov: O
+- id: CR-24
+  name: Investment, business cases and value
+  cluster: Delivery, change and value
+  icon: banknote
+  flag: E
+  dam: realising-our-data-ambitions
+  signposts:
+  - doc: RB-GREEN
+    a: null
+    label: The Green Book and the five case model
+    flag: E
+  - doc: SRC-DQAP
+    a: evaluate-costs-and-benefits
+    label: Evaluate costs and benefits
+    flag: E
+  playbook: change.html
+  dma:
+  - 9
+  dmbok:
+  - Data governance
+  dcam:
+  - Data management program and funding
+  - Data management strategy and business case
+  skills:
+  - delivering-business-impact-through-data
+  - strategic-data-planning
+  profs:
+  - PR-DD
+  - PR-AF
+  coverage: New
+  note: The policy says data must be properly valued and invested in; funding comes through business cases.
+  prov: O
+- id: CR-25
+  name: Integration with programmes, spend control and assurance
+  cluster: Delivery, change and value
+  icon: workflow
+  flag: N
+  dam: null
+  signposts:
+  - doc: RB-GOVS002
+    a: null
+    label: 'GovS 002: Project Delivery'
+    flag: E
+  - doc: RB-IAAP
+    a: null
+    label: Integrated assurance for major projects
+    flag: E
+  - doc: RB-SVCASSESS
+    a: null
+    label: Service assessments
+    flag: E
+  - doc: SRC-DQAP
+    a: plan-for-and-manage-changes
+    label: Plan for and manage changes
+    flag: E
+  playbook: change.html
+  dma:
+  - 3
+  - 9
+  dmbok:
+  - Data governance
+  dcam:
+  - Data management program and funding
+  skills:
+  - managing-a-data-project
+  - stakeholder-relationship-management
+  profs:
+  - PR-PD
+  - PR-DD
+  coverage: New
+  note: Not in the policy text. Most new and replacement data assets arrive through change programmes, so the controls must be built into them.
+  prov: O
+- id: CR-26
+  name: Legacy migration and decommissioning
+  cluster: Delivery, change and value
+  icon: construction
+  flag: N
+  dam: null
+  signposts:
+  - doc: RB-LEGACY
+    a: build-a-complete-and-accurate-register-of-your-data-assets
+    label: Build a register of your data assets
+    flag: E
+  - doc: RB-LEGACY
+    a: issues-that-stop-legacy-technology-migration
+    label: Issues that stop legacy migration
+    flag: E
+  - doc: RB-RETIRE
+    a: protecting-information
+    label: Protecting information when retiring a service
+    flag: E
+  playbook: change.html
+  dma:
+  - 3
+  - 7
+  dmbok:
+  - Data integration and interoperability
+  - Data storage and operations
+  dcam:
+  - Data and technology architecture
+  skills:
+  - data-integration-design
+  - data-preparation-and-linkage
+  profs:
+  - PR-DD
+  - PR-KIM
+  coverage: New
+  note: Not in the policy. The legacy guidance makes a data asset register its second principle; migrations are where quality is most at risk.
+  prov: O
+- id: CR-27
+  name: Ownership transition and handover to business as usual
+  cluster: Delivery, change and value
+  icon: arrow-right-left
+  flag: I
+  dam: data-ownership
+  signposts:
+  - doc: SRC-OWN
+    a: steps-to-transition-data-ownership-when-someone-leaves-the-organisation
+    label: Steps to transition ownership
+    flag: E
+  - doc: SRC-OWN
+    a: how-often-data-ownership-should-be-reviewed-or-updated
+    label: How often ownership should be reviewed
+    flag: E
+  playbook: change.html
+  dma:
+  - 10
+  dmbok:
+  - Data governance
+  dcam:
+  - Data governance
+  skills:
+  - data-governance
+  - stakeholder-relationship-management
+  profs:
+  - PR-PD
+  - PR-DD
+  coverage: New
+  note: A named owner must survive staff moves and the end of the project that created the asset.
+  prov: O
+- id: CR-28
+  name: Cross-boundary collaboration
+  cluster: Delivery, change and value
+  icon: share-2
+  flag: E
+  dam: organisational-and-administrative-scope
+  signposts:
+  - doc: SRC-DQAP
+    a: devolved-administrations
+    label: Devolved administrations
+    flag: E
+  - doc: SRC-OWN
+    a: example-of-handling-data-ownership-for-shared-data-sets-across-multiple-organisations
+    label: Shared data sets across organisations
+    flag: E
+  playbook: sectors.html
+  dma:
+  - 1
+  dmbok:
+  - Data governance
+  dcam:
+  - Data governance
+  skills:
+  - stakeholder-relationship-management
+  profs:
+  - PR-DD
+  coverage: Covered
+  note: Departments coordinate with their arm's length bodies, and data passed to devolved administrations can stay in scope.
+  prov: O
+- id: CR-29
+  name: Benefits realisation and evaluation
+  cluster: Delivery, change and value
+  icon: trending-up
+  flag: N
+  dam: null
+  signposts:
+  - doc: RB-MAGENTA
+    a: null
+    label: The Magenta Book
+    flag: E
+  - doc: SRC-OWN
+    a: measuring-the-success-of-data-ownership-initiatives
+    label: Measuring success of ownership
+    flag: I
+  playbook: change.html
+  dma:
+  - 5
+  dmbok:
+  - Data governance
+  dcam:
+  - Data management program and funding
+  skills:
+  - performance-measurement
+  - delivering-business-impact-through-data
+  profs:
+  - PR-AF
+  coverage: New
+  note: The policy lists benefits such as less duplication and cleansing; showing they happened needs an evaluation plan.
+  prov: O
+- id: CR-30
+  name: Equality and inclusion in data
+  cluster: Protection, ethics and trust
+  icon: accessibility
+  flag: N
+  dam: null
+  signposts:
+  - doc: RB-PSED
+    a: null
+    label: Public sector equality duty
+    flag: E
+  - doc: RB-EQA
+    a: null
+    label: Equality Act 2010
+    flag: E
+  playbook: inclusion.html
+  dma:
+  - 6
+  dmbok:
+  - Data governance
+  - Data quality
+  dcam:
+  - Data governance
+  skills:
+  - applied-empathy-and-inclusivity
+  - data-ethics-and-privacy
+  profs:
+  - PR-AF
+  - PR-DD
+  coverage: Covered
+  note: Not in the policy, but the equality duty applies to decisions about which assets to fix first, and poor data about some groups widens inequality.
+  prov: O
+maturity:
+  verified: '2026-11-05'
+  licence: CC BY-NC-SA 4.0
+  url: https://www.gov.uk/government/publications/data-maturity-assessment-for-government-framework/data-maturity-assessment-for-government-framework-html
+  topics:
+  - n: 1
+    name: Engaging with others
+    anchor: topic-1-engaging-with-others
+    icon: share-2
+    rows:
+      Uses: 0
+      Data: 0
+      Leadership: 0
+      Culture: 7
+      Tools: 0
+      Skills: 1
+  - n: 2
+    name: Having the right data skills and knowledge
+    anchor: topic-2-having-the-right-data-skills-and-knowledge
+    icon: graduation-cap
+    rows:
+      Uses: 1
+      Data: 1
+      Leadership: 4
+      Culture: 1
+      Tools: 0
+      Skills: 7
+  - n: 3
+    name: Having the right systems
+    anchor: topic-3-having-the-right-systems
+    icon: server
+    rows:
+      Uses: 0
+      Data: 0
+      Leadership: 1
+      Culture: 0
+      Tools: 9
+      Skills: 0
+  - n: 4
+    name: Knowing the data you have
+    anchor: topic-4-knowing-the-data-you-have
+    icon: library-big
+    rows:
+      Uses: 0
+      Data: 4
+      Leadership: 0
+      Culture: 0
+      Tools: 0
+      Skills: 0
+  - n: 5
+    name: Making decisions with data
+    anchor: topic-5-making-decisions-with-data
+    icon: chart-line
+    rows:
+      Uses: 7
+      Data: 0
+      Leadership: 3
+      Culture: 0
+      Tools: 0
+      Skills: 0
+  - n: 6
+    name: Managing and using data ethically
+    anchor: topic-6-managing-and-using-data-ethically
+    icon: scale
+    rows:
+      Uses: 0
+      Data: 2
+      Leadership: 2
+      Culture: 5
+      Tools: 1
+      Skills: 1
+  - n: 7
+    name: Managing your data
+    anchor: topic-7-managing-your-data
+    icon: database
+    rows:
+      Uses: 0
+      Data: 11
+      Leadership: 1
+      Culture: 3
+      Tools: 0
+      Skills: 0
+  - n: 8
+    name: Protecting your data
+    anchor: topic-8-protecting-your-data
+    icon: lock-keyhole
+    rows:
+      Uses: 0
+      Data: 2
+      Leadership: 0
+      Culture: 4
+      Tools: 2
+      Skills: 2
+  - n: 9
+    name: Setting your data direction
+    anchor: topic-9-setting-your-data-direction
+    icon: compass
+    rows:
+      Uses: 1
+      Data: 1
+      Leadership: 4
+      Culture: 1
+      Tools: 0
+      Skills: 0
+  - n: 10
+    name: Taking responsibility for data
+    anchor: topic-10-taking-responsibility-for-data
+    icon: key-round
+    rows:
+      Uses: 0
+      Data: 1
+      Leadership: 2
+      Culture: 3
+      Tools: 1
+      Skills: 1
+  themes:
+  - name: Uses
+    gloss: 'Getting value from data: decisions, evidence of impact, better services.'
+  - name: Data
+    gloss: 'The technical side of managing data: assets, collection, quality, interoperability.'
+  - name: Leadership
+    gloss: 'How senior and business leaders engage with data: strategy, responsibility, oversight, investment.'
+  - name: Culture
+    gloss: 'Attitudes to data across the organisation: awareness, openness, security.'
+  - name: Tools
+    gloss: The systems and tools used to store, share and work with data.
+  - name: Skills
+    gloss: The data skills and knowledge of staff at every level.
+  levels:
+  - Beginning
+  - Emerging
+  - Learning
+  - Developing
+  - Mastering
+  level_anchors:
+  - level-1-beginning
+  - level-2-emerging
+  - level-3-learning
+  - level-4-developing
+  - level-5-mastering
+  strands:
+  - id: own
+    name: Ownership and governance
+    icon: key-round
+    cr:
+    - CR-01
+    - CR-07
+    dma:
+    - 10
+    - 9
+    levels:
+    - Few assets have a named owner; decisions about data are made by whoever holds it.
+    - Owners named for some critical assets, often by job title only; no regular review.
+    - Every reported critical asset has a named owner who knows the role; a board meets and records decisions.
+    - Owners review their assets each year, escalate risks and are covered when people move; ownership is in objectives.
+    - Ownership is routine across the organisation and its bodies; owners shape investment and sharing decisions.
+  - id: cat
+    name: Cataloguing and reporting
+    icon: library-big
+    cr:
+    - CR-05
+    - CR-06
+    - CR-03
+    dma:
+    - 4
+    levels:
+    - No list of critical assets; knowledge sits with individuals.
+    - A spreadsheet of assets exists, with gaps in the core metadata.
+    - All in-scope assets are in a catalogue with the core metadata and reported to GDS on time.
+    - Metadata is machine-readable, checked automatically and updated when assets change; arm's length body returns are assured.
+    - The catalogue is the first place people look; metadata flows to central discovery services without rework.
+  - id: dq
+    name: Quality management
+    icon: gauge
+    cr:
+    - CR-08
+    - CR-09
+    dma:
+    - 7
+    levels:
+    - Quality problems are found by users and fixed one by one.
+    - Some rules exist for some assets; quality is measured occasionally.
+    - Every critical asset has a DQAP covering all 7 steps, with targets and an issue log.
+    - Checks run automatically, root causes are fixed upstream and results are published to users.
+    - Quality is designed in at collection; trends drive investment and prevent new issues.
+  - id: chg
+    name: Change and investment
+    icon: workflow
+    cr:
+    - CR-24
+    - CR-25
+    - CR-26
+    dma:
+    - 3
+    - 9
+    levels:
+    - Projects create and retire data without telling anyone responsible for it.
+    - Some programmes ask about data at business case stage, inconsistently.
+    - Business cases, spend control and service assessments ask for DAM evidence; migrations reconcile data.
+    - Assurance plans include DAM checkpoints; benefits are tracked; legacy exits start from the asset register.
+    - Portfolio choices are driven by data asset risk and value, including effects on outcomes for different groups.
+  crosswalk:
+  - level: Beginning
+    cmmi: Initial
+    iso8000: Processes performed ad hoc
+    note: Little defined practice.
+  - level: Emerging
+    cmmi: Managed
+    iso8000: Processes performed and managed in places
+    note: Practice depends on individuals.
+  - level: Learning
+    cmmi: Defined
+    iso8000: Processes defined and repeatable
+    note: The DAM Policy minimum sits around here for critical assets.
+  - level: Developing
+    cmmi: Quantitatively managed
+    iso8000: Processes measured
+    note: Measures drive decisions.
+  - level: Mastering
+    cmmi: Optimising
+    iso8000: Processes continually improved
+    note: Improvement is systematic.
+professions:
+  verified: '2026-11-05'
+  roles:
+  - id: data-governance-manager
+    title: Data governance manager
+    url: https://ddat-capability-framework.service.gov.uk/role/data-governance-manager/
+    levels:
+    - name: Data governance manager
+      anchor: data-governance-manager
+      grades:
+      - HEO
+      - SEO
+      - G7
+    - name: Lead data governance manager
+      anchor: lead-data-governance-manager
+      grades:
+      - G7
+      - G6
+    - name: Head of data governance
+      anchor: head-of-data-governance
+      grades:
+      - G6
+    skills:
+    - - Communicating analysis and insight
+      - communicating-analysis-and-insight
+      - W P E
+    - - Communicating between the technical and non-technical
+      - communicating-between-the-technical-and-non-technical
+      - W P E
+    - - Data ethics and privacy
+      - data-ethics-and-privacy
+      - W P E
+    - - Data governance
+      - data-governance
+      - W P E
+    - - Data innovation
+      - data-innovation
+      - W P E
+    - - Data life cycle
+      - data-life-cycle
+      - W P E
+    - - Data literacy improvement
+      - data-literacy-improvement
+      - W P E
+    - - Data management
+      - data-management
+      - W P E
+    - - Data maturity
+      - data-maturity
+      - W P E
+    - - Data standards
+      - data-standards
+      - W P E
+    - - Enabling and informing risk-based decisions
+      - enabling-and-informing-risk-based-decisions
+      - W P E
+    - - Stakeholder relationship management
+      - stakeholder-relationship-management
+      - W P E
+    - - Strategic thinking
+      - strategic-thinking
+      - W P E
+  - id: chief-data-officer
+    title: Chief data officer
+    url: https://ddat-capability-framework.service.gov.uk/role/chief-data-officer/
+    grades: Senior Civil Service 1 and 2
+    levels: []
+    skills:
+    - - Capability building for digital, data and technology
+      - capability-building-for-digital-data-and-technology
+      - ''
+    - - Data architecture
+      - data-architecture
+      - ''
+    - - Data governance leadership
+      - data-governance-leadership
+      - ''
+    - - Data risk management
+      - data-risk-management
+      - ''
+    - - Innovation in digital, data and technology
+      - innovation-in-digital-data-and-technology
+      - ''
+    - - Strategic data planning
+      - strategic-data-planning
+      - ''
+  - id: data-architect
+    title: Data architect
+    url: https://ddat-capability-framework.service.gov.uk/role/data-architect/
+    levels:
+    - name: Data architect
+      anchor: data-architect
+      grades:
+      - SEO
+      - G7
+    - name: Senior data architect
+      anchor: senior-data-architect
+      grades:
+      - G7
+      - G6
+    - name: Chief data architect
+      anchor: chief-data-architect
+      grades:
+      - G6
+    skills:
+    - - Communicating between the technical and non-technical
+      - communicating-between-the-technical-and-non-technical
+      - W P P
+    - - Communicating data
+      - communicating-data
+      - A W P
+    - - Data analysis and synthesis
+      - data-analysis-and-synthesis
+      - W W W
+    - - Data governance (data architect)
+      - data-governance-data-architect
+      - W P E
+    - - Data innovation
+      - data-innovation
+      - A W P
+    - - Data modelling
+      - data-modelling
+      - W P E
+    - - Data standards
+      - data-standards
+      - W P E
+    - - Metadata management
+      - metadata-management
+      - W P E
+    - - Problem management
+      - problem-management
+      - W P E
+    - - Strategic thinking
+      - strategic-thinking
+      - A W P
+    - - Turning business problems into data design
+      - turning-business-problems-into-data-design
+      - W P E
+  - id: data-analyst
+    title: Data analyst
+    url: https://ddat-capability-framework.service.gov.uk/role/data-analyst/
+    levels:
+    - name: Associate data analyst
+      anchor: associate-data-analyst
+      grades:
+      - EO
+      - HEO
+    - name: Data analyst
+      anchor: data-analyst
+      grades:
+      - HEO
+      - SEO
+    - name: Senior data analyst
+      anchor: senior-data-analyst
+      grades:
+      - SEO
+      - G7
+    - name: Principal data analyst
+      anchor: principal-data-analyst
+      grades:
+      - G7
+      - G6
+    skills:
+    - - Applying statistical and analytical tools and techniques
+      - applying-statistical-and-analytical-tools-and-techniques
+      - A W P E
+    - - Communicating between the technical and non-technical
+      - communicating-between-the-technical-and-non-technical
+      - A W P E
+    - - Data ethics and privacy
+      - data-ethics-and-privacy
+      - A W P P
+    - - Data management
+      - data-management
+      - A W P E
+    - - Data preparation and linkage
+      - data-preparation-and-linkage
+      - A W P E
+    - - Data visualisation
+      - data-visualisation
+      - A W P E
+    - - Delivering business impact through data
+      - delivering-business-impact-through-data
+      - A W P E
+    - - Developing code for analysis
+      - developing-code-for-analysis
+      - A W P E
+    - - Managing a data project
+      - managing-a-data-project
+      - A W P E
+  - id: data-engineer
+    title: Data engineer
+    url: https://ddat-capability-framework.service.gov.uk/role/data-engineer/
+    levels:
+    - name: Data engineer
+      anchor: data-engineer
+      grades:
+      - HEO
+      - SEO
+    - name: Senior data engineer
+      anchor: senior-data-engineer
+      grades:
+      - SEO
+      - G7
+    - name: Lead data engineer
+      anchor: lead-data-engineer
+      grades:
+      - G7
+    - name: Head of data engineering
+      anchor: head-of-data-engineering
+      grades:
+      - G7
+      - G6
+    skills:
+    - - Communicating between the technical and non-technical
+      - communicating-between-the-technical-and-non-technical
+      - A W P E
+    - - Data analysis and synthesis
+      - data-analysis-and-synthesis
+      - W W P P
+    - - Data compliance and security
+      - data-compliance-and-security
+      - W P E E
+    - - Data development process
+      - data-development-process
+      - W P E E
+    - - Data innovation
+      - data-innovation
+      - A W P E
+    - - Data integration design
+      - data-integration-design
+      - W P E E
+    - - Data modelling
+      - data-modelling
+      - W P E W
+    - - Metadata management
+      - metadata-management
+      - W P P E
+    - - Problem management
+      - problem-management
+      - A W P E
+    - - Programming and build (data and analytics engineering)
+      - programming-and-build-data-and-analytics-engineering
+      - W P P E
+  - id: data-and-ai-ethicist
+    title: Data and artificial intelligence (AI) ethicist
+    url: https://ddat-capability-framework.service.gov.uk/role/data-and-ai-ethicist/
+    levels:
+    - name: Data and AI ethicist
+      anchor: data-and-ai-ethicist
+      grades: []
+    - name: Senior data and AI ethicist
+      anchor: senior-data-and-ai-ethicist
+      grades: []
+    - name: Lead data and AI ethicist
+      anchor: lead-data-and-ai-ethicist
+      grades:
+      - SEO
+      - G7
+    - name: Head of data and AI ethics
+      anchor: head-of-data-and-ai-ethics
+      grades:
+      - G6
+    skills:
+    - - Analysis and synthesis for data and AI ethics
+      - analysis-and-synthesis-data-ethics
+      - W W P E
+    - - Applied empathy and inclusivity
+      - applied-empathy-and-inclusivity
+      - P P E E
+    - - Applied social sciences
+      - applied-social-sciences
+      - A W P E
+    - - Communicating between the technical and non-technical
+      - communicating-between-the-technical-and-non-technical
+      - W P P E
+    - - Data and AI ethics communication
+      - data-ai-ethics-communication
+      - W P E E
+    - - Data and AI ethics product management
+      - data-and-ai-ethics-product-management
+      - A W P E
+    - - Data ethics and privacy
+      - data-ethics-and-privacy
+      - W P P E
+    - - Managing decisions and risks
+      - managing-decisions-and-risks
+      - W W P P
+    - - Problem management
+      - problem-management
+      - A W P P
+    - - Stakeholder relationship management
+      - stakeholder-relationship-management
+      - A W P E
+  - id: performance-analyst
+    title: Performance analyst
+    url: https://ddat-capability-framework.service.gov.uk/role/performance-analyst/
+    levels:
+    - name: Associate performance analyst
+      anchor: associate-performance-analyst
+      grades:
+      - AO
+      - EO
+    - name: Performance analyst
+      anchor: performance-analyst
+      grades:
+      - HEO
+      - SEO
+    - name: Senior performance analyst
+      anchor: senior-performance-analyst
+      grades:
+      - SEO
+      - G7
+    - name: Lead performance analyst
+      anchor: lead-performance-analyst
+      grades:
+      - G7
+    - name: Head of performance analysis
+      anchor: head-of-performance-analysis
+      grades:
+      - G7
+      - G6
+    skills:
+    - - Analysis and insight
+      - analysis-and-insight
+      - W P P E P
+    - - Communicating analysis and insight
+      - communicating-analysis-and-insight
+      - W W P E E
+    - - Performance measurement
+      - performance-measurement
+      - A W P E E
+    - - Quality assurance of data and analysis
+      - quality-assurance-of-data-and-analysis
+      - A W P E E
+    - - Technical understanding (performance analyst)
+      - technical-understanding-performance-analyst
+      - A W P E E
+    - - Understanding analysis across the product life cycle
+      - understanding-analysis-across-the-product-life-cycle
+      - A W P E E
+    - - User-centred analysis
+      - user-centred-analysis
+      - A W P E E
+    - - Working within constraints (performance analyst)
+      - working-within-constraints-performance-analyst
+      - A W P E E
+  persona_map:
+  - persona: cdo
+    roles:
+    - chief-data-officer
+    profs:
+    - PR-DD
+    learn:
+    - RB-NSG
+    - RB-PROSPECTUS
+    - RB-DMAF
+  - persona: coo
+    roles:
+    - data-governance-manager
+    profs:
+    - PR-DD
+    - PR-PD
+    - PR-KIM
+    learn:
+    - RB-DSFA
+    - RB-PROSPECTUS
+    - RB-DAMA
+  - persona: own
+    roles: []
+    profs:
+    - PR-OWNPROF
+    learn:
+    - RB-DSFA
+    - RB-CURRIC
+  - persona: stw
+    roles:
+    - data-governance-manager
+    - data-analyst
+    profs:
+    - PR-KIM
+    - PR-AF
+    - PR-DD
+    learn:
+    - RB-DSFA
+    - RB-PKSB
+    - RB-DAMA
+  - persona: cat
+    roles:
+    - data-governance-manager
+    - data-architect
+    profs:
+    - PR-KIM
+    - PR-DD
+    learn:
+    - RB-PKSB
+    - RB-SFIA
+    - RB-DSFA
+  - persona: dql
+    roles:
+    - data-analyst
+    - data-engineer
+    - performance-analyst
+    profs:
+    - PR-AF
+    - PR-DD
+    learn:
+    - RB-AFCAREER
+    - RB-RSS
+    - RB-APPDA
+  profs:
+  - id: PR-DD
+    name: Government Digital and Data Profession
+    icon: database
+    rb: RB-DDAT
+    aligned: Digital and data function
+    why: Home of the data governance manager, data architect, analyst, engineer and chief data officer roles.
+  - id: PR-AF
+    name: Analysis Function (statistics, economics, social and operational research, geography, actuaries)
+    icon: chart-line
+    rb: RB-AFROLES
+    aligned: Analysis function
+    why: Analysts who own and assure data for statistics, evidence and evaluation.
+  - id: PR-KIM
+    name: Knowledge and Information Management
+    icon: book-marked
+    rb: RB-KIM
+    aligned: Specialist profession
+    why: Records, information assets, metadata and information asset owner support.
+  - id: PR-SEC
+    name: Government Security Profession
+    icon: lock-keyhole
+    rb: RB-SECPROF
+    aligned: Security function
+    why: Classification, protective controls and support to the senior information risk owner.
+  - id: PR-CYB
+    name: Government Cyber Profession
+    icon: shield-check
+    rb: RB-CYBERPROF
+    aligned: Digital function
+    why: Technical security of the systems that hold critical assets.
+  - id: PR-PD
+    name: Project Delivery
+    icon: workflow
+    rb: RB-GOVS002
+    aligned: Project delivery function
+    why: Senior responsible owners and programme teams who create, migrate and retire data assets.
+  - id: PR-OWNPROF
+    name: The data owner's own profession (for example policy, operational delivery or finance)
+    icon: users-round
+    rb: RB-PROFS
+    aligned: Any
+    why: Data owners are usually business leaders, not data specialists; the ownership model lists the skills they need.
+  learning:
+  - stage: 'Awareness: everyone'
+    icon: lightbulb
+    items:
+    - RB-DSFA
+    - RB-CURRIC
+    note: Free courses at awareness level, then the subject-based recommended curriculum.
+  - stage: 'Working: owners, stewards and coordinators'
+    icon: pencil-line
+    items:
+    - RB-DSFA
+    - RB-PROSPECTUS
+    - RB-SPECIALIST
+    note: Working-level data courses and Strand 4 specialist learning from the professions.
+  - stage: 'Practitioner: specialists'
+    icon: wrench
+    items:
+    - RB-DDAT
+    - RB-AFCAREER
+    - RB-PKSB
+    - RB-SFIA
+    note: Use your profession's framework to plan the next role level and the skills it needs.
+  - stage: Expert and leader
+    icon: building-2
+    items:
+    - RB-NSG
+    - RB-DAMA
+    - RB-DMAF
+    note: Leadership programmes, external certification and leading a maturity assessment.
+  campus:
+  - name: 'Data and Analytics: Strand 1, foundations'
+    url: https://prospectus.governmentcampus.co.uk/01-data-and-analytics/
+  - name: 'Digital: Strand 3'
+    url: https://prospectus.governmentcampus.co.uk/03-digital/
+  - name: 'Data and Analytics: Strand 4, specialist'
+    url: https://prospectus.governmentcampus.co.uk/04-data-and-analytics/
+  - name: 'Artificial Intelligence: Strand 4'
+    url: https://prospectus.governmentcampus.co.uk/04-artificial-intelligence/
+  - name: 'Security: Strand 4'
+    url: https://prospectus.governmentcampus.co.uk/04-security/
+  - name: 'Risk Management: Strand 4'
+    url: https://prospectus.governmentcampus.co.uk/04-risk-management/
+  - name: 'Domain knowledge: Strand 5'
+    url: https://prospectus.governmentcampus.co.uk/find-out-more/05-domain-knowledge/
+change:
+  stages:
+  - id: plan
+    name: Strategy and business case
+    icon: banknote
+  - id: discover
+    name: Discovery
+    icon: search
+  - id: alpha
+    name: Alpha
+    icon: pencil-line
+  - id: beta
+    name: Beta and build
+    icon: wrench
+  - id: live
+    name: Live and business as usual
+    icon: activity
+  - id: retire
+    name: Migrate or retire
+    icon: archive
+  touchpoints:
+    plan:
+    - List the critical data assets the change will create, change, depend on or retire.
+    - Cost ownership, cataloguing and quality work in the economic and financial cases.
+    - Add data asset risks to the programme risk register.
+    discover:
+    - Check the catalogue for assets that already meet the need before collecting new data.
+    - Agree who will own each new or changed asset.
+    alpha:
+    - Design metadata and quality rules alongside the data model.
+    - Run a data protection impact assessment where personal data is involved.
+    beta:
+    - Catalogue new assets before go-live, with the core metadata.
+    - Write and test the DQAP; reconcile migrated data against the source.
+    live:
+    - Hand ownership, the DQAP and the runbook to named people in business as usual.
+    - Report the asset in the next annual return.
+    retire:
+    - Start from the asset register; decide to migrate, archive or dispose of each asset.
+    - Update or close catalogue entries and transfer ownership formally.
+  items:
+  - id: CH-01
+    title: Put data assets in the business case
+    icon: banknote
+    mode: Change
+    stage: plan
+    why: The policy says data must be valued and invested in; business cases are where that money is decided.
+    actions:
+    - Name each critical data asset in scope of the change in the strategic case.
+    - Cost owner, steward and catalogue effort and DQAP remediation in the financial case.
+    - Count avoided duplicate collection and cleansing as benefits in the economic case.
+    - Name the data owner in the management case.
+    evidence:
+    - Asset list in the business case
+    - Costed DAM activities
+    - Named owners
+    roles:
+    - CDO
+    - OWN
+    - COO
+    refs:
+    - RB-GREEN
+    - RB-AQUA
+    cr:
+    - CR-24
+    prov: O
+  - id: CH-02
+    title: Use spend control and service assessments as checkpoints
+    icon: stamp
+    mode: Change
+    stage: alpha
+    why: Spend control and service assessments already stop work that is not ready; adding DAM evidence costs little.
+    actions:
+    - 'Add three questions to internal spend control: which assets, who owns them, are they catalogued.'
+    - At alpha, show the planned metadata and quality rules; at beta, the catalogue entry and DQAP.
+    - Record the answers so the next return reuses them.
+    evidence:
+    - Spend control submission notes
+    - Assessment evidence pack
+    roles:
+    - COO
+    - CAT
+    - DQL
+    refs:
+    - RB-SPEND
+    - RB-SVCASSESS
+    - RB-TCOP
+    - RB-SVC
+    cr:
+    - CR-25
+    prov: O
+  - id: CH-03
+    title: Write DAM into programme assurance
+    icon: clipboard-check
+    mode: Change
+    stage: plan
+    why: Large programmes have integrated assurance plans; DAM checks in them are reviewed with everything else.
+    actions:
+    - Add DAM checkpoints to the integrated assurance and approval plan.
+    - Ask reviewers to check asset ownership, catalogue entries and quality plans at each gate.
+    - Give the senior responsible owner a single line on data asset readiness in highlight reports.
+    evidence:
+    - Assurance plan entries
+    - Gate review findings
+    roles:
+    - CDO
+    - BRD
+    refs:
+    - RB-IAAP
+    - RB-NISTA
+    - RB-GMPP
+    - RB-GOVS002
+    cr:
+    - CR-25
+    - CR-03
+    prov: O
+  - id: CH-04
+    title: Plan legacy exits from the asset register
+    icon: construction
+    mode: Change
+    stage: retire
+    why: Legacy systems hold large concentrations of hard-to-reach data; the legacy guidance asks for an asset register first.
+    actions:
+    - Build or update the register of data assets held in the legacy system.
+    - Profile quality before migration and set reconciliation rules for counts, totals and keys.
+    - 'Decide for each asset: migrate, archive under records rules, or dispose.'
+    - Keep the catalogue and ownership in step as each asset moves.
+    evidence:
+    - Asset register for the system
+    - Profiling and reconciliation results
+    - Disposition decisions
+    roles:
+    - OWN
+    - CUS
+    - DQL
+    - CAT
+    refs:
+    - RB-LEGACY
+    - RB-TECHDEBT
+    - RB-RETIRE
+    - RB-TNA
+    cr:
+    - CR-26
+    - CR-15
+    prov: O
+  - id: CH-05
+    title: Target legacy where it blocks outcomes and widens inequalities
+    icon: target
+    mode: Both
+    stage: plan
+    why: Where poor or locked-in data delays access to services, the people most affected are often those already disadvantaged.
+    actions:
+    - Score each critical asset on legacy risk, quality, reuse value and impact on outcomes.
+    - Check whether gaps or errors fall harder on some groups, using the equality duty.
+    - Fund fixes first where risk, value and inequality overlap.
+    - Report the choice and its reasons to the data governance board.
+    evidence:
+    - Prioritised asset heatmap
+    - Equality analysis
+    roles:
+    - CDO
+    - BRD
+    - OWN
+    refs:
+    - RB-PSED
+    - RB-LEGACY
+    - RB-DMAF
+    cr:
+    - CR-02
+    - CR-30
+    - CR-26
+    prov: O
+  - id: CH-06
+    title: Build DAM into contracts
+    icon: handshake
+    mode: Both
+    stage: discover
+    why: Suppliers often hold or process critical assets; without contract terms the owner cannot meet the policy.
+    actions:
+    - State who owns the data and its metadata.
+    - Require metadata in an agreed format and quality reporting against the DQAP.
+    - Set data return, format and deletion terms for exit.
+    - Include data protection terms from the procurement policy note.
+    evidence:
+    - Contract schedule for data
+    - Exit plan
+    roles:
+    - OWN
+    - COO
+    refs:
+    - RB-SOURCING
+    - RB-DDATPB
+    - RB-PPN020
+    cr:
+    - CR-20
+    prov: O
+  - id: CH-07
+    title: Manage data asset risk on the same registers
+    icon: shield-check
+    mode: Both
+    stage: live
+    why: The policy relies on risk controls; separate data risk lists are easy to ignore.
+    actions:
+    - Record risks to critical assets on the corporate or programme register.
+    - Link each to the asset, its owner and the senior information risk owner.
+    - Review alongside DQAP results each quarter.
+    evidence:
+    - Risk register entries
+    - Quarterly review notes
+    roles:
+    - OWN
+    - BRD
+    refs:
+    - RB-ORANGE
+    - RB-GSC
+    cr:
+    - CR-19
+    prov: O
+  - id: CH-08
+    title: Hand over to business as usual
+    icon: arrow-right-left
+    mode: Change
+    stage: live
+    why: Assets created by projects lose their owner when the project closes unless handover is planned.
+    actions:
+    - Confirm a named business-as-usual owner and steward before the project closes.
+    - Hand over the DQAP, quality rules, runbook and open issues.
+    - Use the ownership model's transition steps and set the next review date.
+    evidence:
+    - Signed handover note
+    - Updated catalogue entry
+    roles:
+    - OWN
+    - STW
+    - COO
+    refs:
+    - RB-GOVS002
+    cr:
+    - CR-27
+    prov: O
+  - id: CH-09
+    title: Plan people change, not just process change
+    icon: users-round
+    mode: Both
+    stage: plan
+    why: New duties fail when people are not told, trained, given time or recognised for them.
+    actions:
+    - 'Assess who is affected: owners, stewards, custodians, analysts, suppliers.'
+    - Put data duties into role descriptions and objectives.
+    - Train each role at the right level and give stewards protected time.
+    - Communicate why the policy matters in terms of services and people, not compliance.
+    evidence:
+    - Change impact assessment
+    - Training plan
+    - Communications plan
+    roles:
+    - CDO
+    - COO
+    refs:
+    - RB-SUCCESS
+    - RB-DSFA
+    - RB-DDAT
+    cr:
+    - CR-21
+    - CR-22
+    prov: O
+  - id: CH-10
+    title: Show the benefits
+    icon: trending-up
+    mode: Both
+    stage: live
+    why: Continued funding depends on evidence that the work changed something.
+    actions:
+    - Agree a few measures before starting, such as reuse requests met, duplicate collections stopped or time spent cleansing.
+    - Take a baseline, then measure each year with the return.
+    - Use proportionate evaluation methods.
+    evidence:
+    - Benefits map
+    - Baseline and annual measures
+    roles:
+    - COO
+    - DQL
+    refs:
+    - RB-MAGENTA
+    cr:
+    - CR-29
+    - CR-04
+    prov: O
+  - id: CH-11
+    title: Keep the yearly cycle running in business as usual
+    icon: refresh-cw
+    mode: BAU
+    stage: live
+    why: The policy is annual; without a calendar it becomes a scramble before each return.
+    actions:
+    - Set fixed dates for asset review, metadata updates, DQAP review and the board.
+    - Track each owner's actions between returns.
+    - Feed lessons into the next year's priorities.
+    evidence:
+    - Annual calendar
+    - Action log
+    roles:
+    - COO
+    - BRD
+    refs: []
+    cr:
+    - CR-04
+    - CR-03
+    prov: O
+  - id: CH-12
+    title: Assess maturity and set a target
+    icon: radar
+    mode: BAU
+    stage: plan
+    why: A shared maturity measure turns the policy into a plan that can be resourced and tracked.
+    actions:
+    - Run the government data maturity assessment or use the self-assessment here as a first pass.
+    - Set a target level for each DAM strand with dates.
+    - Repeat every one to two years.
+    evidence:
+    - Assessment results
+    - Target levels
+    roles:
+    - CDO
+    - COO
+    refs:
+    - RB-DMAF
+    - RB-DMAHUB
+    cr:
+    - CR-23
+    prov: O
+  - id: CH-13
+    title: Share and reuse safely across organisations
+    icon: share-2
+    mode: Both
+    stage: discover
+    why: Reuse is the point of the policy, but it never removes legal duties or forces sharing.
+    actions:
+    - Check the catalogue for reusable assets before collecting new data.
+    - Use the sharing framework and code for agreements.
+    - Record sharing arrangements against the asset in the catalogue.
+    evidence:
+    - Data sharing agreements
+    - Catalogue links
+    roles:
+    - OWN
+    - DPO
+    refs:
+    - RB-DSGF
+    - RB-ICOSHARE
+    - RB-DEA
+    cr:
+    - CR-17
+    - CR-28
+    prov: O

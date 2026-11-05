@@ -21,7 +21,11 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 |---|---|
 | The policy | Every requirement, its strength and source, and the step that meets it |
 | Governance, Cataloguing, Quality | Step-by-step methods with progress tracking, roles, templates, measures, escalation and sector depth |
+| Sectors | Supplements for health, social care, geospatial, statistics, sharing, AI and more, with a finder and quality rules the Data Quality Commons kit can run |
+| Delivery and change | Embedding the policy in business as usual and in programmes: business cases, spend control, assurance, legacy exits, contracts, handover and benefits |
 | Joined up | Hand-offs between the three, one set of roles, one yearly cycle |
+| Capability model | 30 capabilities the policy and adjacent guidance need, each flagged explicit, implicit or inferred with signposts to the exact section; the government data maturity model; a self-assessment; crosswalks to industry models |
+| Professions and skills | Government professions, Digital and Data framework career pathways with grades and skill levels, and learning routes |
 | Your role | Routes for six roles across learn, prepare, do, report and improve |
 | Learning | Modules with outcomes, activities and checks of understanding |
 | Library | All material, templates, an assessment of where sector-specific content is needed, and open data |
@@ -48,14 +52,14 @@ Nothing in the portal depends on any service other than GitHub and GitHub Pages.
 
 ## How it is built
 
-- `content/playbooks.yaml` is the single source of truth; `tools/build.py` generates `site/` from it and refuses to build on a broken reference.
+- `content/playbooks.yaml` and `content/frameworks.yaml` are the single source of truth; `tools/build.py` generates `site/` from them and refuses to build on a broken reference, including a signpost to a GOV.UK section not recorded in `content/source-anchors.json`.
 - `tools/check_site.py` (static checks) and `tools/check_browser.py` (real-browser checks) run on every change. `tests/` proves each check fails on a deliberate break.
-- `tools/health.py` checks sources, the review date and page weight. It never changes content.
+- `tools/health.py` checks sources, signposted GOV.UK sections, external links, the review date and page weight. It never changes content.
 
 ```
 pip install -r requirements.txt && npm ci && python -m playwright install chromium
 python tools/build.py
-python -m unittest discover -s tests
+DQKIT_PATH=../dq-commons python -m unittest discover -s tests   # DQKIT_PATH is optional; without it the sector rule run is skipped
 python tools/check_site.py
 python tools/check_browser.py
 python tools/health.py

@@ -43,6 +43,8 @@ BREAKS = {
     'contact': ('b09_contact_form', "var f=document.getElementById('contact-form');if(f){f.replaceWith(f.cloneNode(true));}"),
     'progress': ('b10_progress', "Storage.prototype.setItem=function(){};"),
     'display': ('b11_display', "var d=document.getElementById('display-panel');if(d){d.replaceWith(d.cloneNode(true));}"),
+    'finder': ('b12_sector_finder', "document.querySelectorAll('input[data-q]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
+    'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
 }
 BREAK_CSS = {
     'overflow': '.x{white-space:nowrap;font-size:20px}',
@@ -211,6 +213,36 @@ def run(site, axe_path, brk=None, pages=None):
                 fail('b11_display', 'largest text size was not applied and remembered')
         except Exception as e:  # a control that cannot be used is a failure, not a crash
             fail('b11_display', f'display options could not be used: {str(e).splitlines()[0]}')
+        # B-12 sector finder: ticking a statement lists the supplements that apply, as links that resolve
+        pg.goto(f'{base}/sectors.html')
+        prep(pg)
+        pg.check('input[data-q] >> nth=0')
+        links = pg.evaluate("Array.from(document.querySelectorAll('#wizard-out a')).map(a => a.getAttribute('href'))")
+        if not links:
+            fail('b12_sector_finder', 'ticking a statement listed no supplements')
+        elif pg.evaluate("(l) => l.some(h => !document.getElementById(h.slice(1)))", links):
+            fail('b12_sector_finder', 'a listed supplement does not exist on the page')
+        # B-13 self-assessment: answers draw the profile, survive a reload and can be cleared
+        ctx4 = b.new_context(bypass_csp=bool(brk))
+        pg4 = ctx4.new_page()
+        pg4.goto(f'{base}/capability-model.html#cm-self')
+        prep(pg4)
+        try:
+            pg4.check('input[name="sa-own"][value="3"]', timeout=3000)
+            pg4.select_option('#sa-t1', '4', timeout=3000)
+            if pg4.locator('#sa-chart polygon.area').count() != 1:
+                fail('b13_self_assessment', 'choosing a level did not draw the profile')
+            pg4.reload()
+            if not pg4.is_checked('input[name="sa-own"][value="3"]') or pg4.input_value('#sa-t1') != '4':
+                fail('b13_self_assessment', 'answers were not remembered after a reload')
+            if 'data:text/csv' not in (pg4.get_attribute('#sa-csv', 'href') or ''):
+                fail('b13_self_assessment', 'the CSV download was not prepared')
+            pg4.click('#sa-clear')
+            if pg4.locator('#sa-chart polygon.area').count() != 0:
+                fail('b13_self_assessment', 'clearing answers left the profile drawn')
+        except Exception as e:
+            fail('b13_self_assessment', f'self-assessment could not be used: {str(e).splitlines()[0]}')
+        ctx4.close()
         b.close()
     httpd.shutdown()
     return failed
@@ -229,7 +261,7 @@ def main(argv=None):
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
     names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
-             'b09_contact_form', 'b10_progress', 'b11_display']
+             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:

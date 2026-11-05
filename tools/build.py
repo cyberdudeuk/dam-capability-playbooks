@@ -33,7 +33,15 @@ class ContentError(Exception):
 # Load and validate: refuse to build on any broken reference
 # ---------------------------------------------------------------------------
 def load(path):
-    d = yaml.safe_load(Path(path).read_text(encoding='utf-8'))
+    path = Path(path)
+    d = yaml.safe_load(path.read_text(encoding='utf-8'))
+    extra = path.parent / 'frameworks.yaml'
+    if extra.exists():
+        f = yaml.safe_load(extra.read_text(encoding='utf-8'))
+        d['rulebook'] = list(d.get('rulebook', [])) + list(f.pop('rulebook_more', []))
+        d.update(f)
+    anchors = path.parent / 'source-anchors.json'
+    d['_anchors'] = json.loads(anchors.read_text())['anchors'] if anchors.exists() else {}
     validate(d)
     return d
 
@@ -146,6 +154,26 @@ def validate(d):
         if k not in dd: errs.append(f"depth_refs: unknown theme {k}")
         for r in refs:
             if r not in rb: errs.append(f"depth_refs {k}: unknown rulebook entry {r}")
+    sups = {x['id'] for x in d.get('supplements', [])}
+    rule_ids = []
+    for x in d.get('supplements', []):
+        if x['dd'] not in dd: errs.append(f"{x['id']}: unknown theme {x['dd']}")
+        if x['icon'] not in ICON_SET: errs.append(f"{x['id']}: unknown icon {x['icon']}")
+        for r in x['refs']:
+            if r not in rb: errs.append(f"{x['id']}: unknown rulebook entry {r}")
+        for r in x['rules']:
+            rule_ids.append(r['id'])
+            if r['check'] not in DQKIT_CHECKS: errs.append(f"{r['id']}: check {r['check']} is not a dqkit check")
+            if r['check'] == 'identifier' and r['params'].get('scheme') not in DQKIT_SCHEMES: errs.append(f"{r['id']}: unknown identifier scheme")
+            if r['dimension'] not in ('completeness', 'uniqueness', 'consistency', 'timeliness', 'validity', 'accuracy'): errs.append(f"{r['id']}: dimension not one of the six")
+        if not x['example'].startswith('Illustrative, synthetic'): errs.append(f"{x['id']}: example must be labelled illustrative and synthetic")
+    if len(rule_ids) != len(set(rule_ids)): errs.append('duplicate sector rule ids')
+    for q in d.get('applicability', []):
+        for sp in q['sups']:
+            if sp not in sups: errs.append(f"{q['id']}: unknown supplement {sp}")
+    covered = {x['dd'] for x in d.get('supplements', [])}
+    for x in d.get('domain_depth', []):
+        if x['moscow'] == 'Must' and x['id'] not in covered: errs.append(f"{x['id']}: a Must-have theme has no supplement")
     pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all'}
     for r in d.get('design', {}).get('requirements', []):
         for c in r['checks']:
@@ -154,14 +182,88 @@ def validate(d):
             if f not in pages_known: errs.append(f"{r['id']}: unknown feature page {f}")
     for x in d.get('standards', []):
         if x['status'] not in ('Met', 'Partly', 'Not yet'): errs.append(f"{x['id']}: bad status")
+    validate_frameworks(d, errs, src, roles)
     if errs:
         raise ContentError('\n'.join(errs))
+
+
+def validate_frameworks(d, errs, src, roles):
+    """Version 1.4: capability requirements map, maturity, professions and change content."""
+    if 'capmap' not in d:
+        return
+    rb = {x['id'] for x in d['rulebook']}
+    anchors = d.get('_anchors', {})
+    profs = {p['id'] for p in d['professions']['profs']}
+    ddat = {r['id'] for r in d['professions']['roles']}
+    skills = {s[1] for r in d['professions']['roles'] for s in r['skills']}
+    personas = {p['id'] for p in d['personas']}
+    crs = [c['id'] for c in d['capmap']]
+    if len(crs) != len(set(crs)): errs.append('duplicate capability map ids')
+    for c in d['capmap']:
+        if c['flag'] not in FLAGS: errs.append(f"{c['id']}: flag must be E, I or N")
+        if c['coverage'] not in ('Covered', 'Partial', 'New'): errs.append(f"{c['id']}: bad coverage")
+        if c['cluster'] not in CLUSTERS: errs.append(f"{c['id']}: unknown cluster {c['cluster']}")
+        if c['icon'] not in ICON_SET: errs.append(f"{c['id']}: unknown icon {c['icon']}")
+        if c['flag'] in ('E', 'I') and not c['dam'] and not any(sg['flag'] == 'E' for sg in c['signposts']):
+            errs.append(f"{c['id']}: an explicit or implicit capability needs a clause to point to")
+        if c['flag'] == 'E' and not c['dam']: errs.append(f"{c['id']}: 'explicit' must point to the DAM Policy clause that states it")
+        if c['dam'] and c['dam'] not in anchors.get('SRC-DAM', []): errs.append(f"{c['id']}: DAM Policy has no section #{c['dam']}")
+        if not c['signposts']: errs.append(f"{c['id']}: needs at least one signpost")
+        for sg in c['signposts']:
+            if sg['doc'] not in src and sg['doc'] not in rb: errs.append(f"{c['id']}: unknown signpost document {sg['doc']}")
+            if sg['flag'] not in FLAGS: errs.append(f"{c['id']}: bad signpost flag")
+            if sg['a'] and sg['a'] not in anchors.get(sg['doc'], []): errs.append(f"{c['id']}: {sg['doc']} has no verified section #{sg['a']}")
+        for t in c['dma']:
+            if not 1 <= t <= 10: errs.append(f"{c['id']}: maturity topic {t} out of range")
+        for k in c['skills']:
+            if k not in skills: errs.append(f"{c['id']}: unknown skill {k}")
+        for p in c['profs']:
+            if p not in profs: errs.append(f"{c['id']}: unknown profession {p}")
+    for p in d['professions']['profs']:
+        if p['rb'] not in rb: errs.append(f"{p['id']}: unknown rulebook entry {p['rb']}")
+    for m in d['professions']['persona_map']:
+        if m['persona'] not in personas: errs.append(f"persona map: unknown persona {m['persona']}")
+        for r in m['roles']:
+            if r not in ddat: errs.append(f"persona map {m['persona']}: unknown role {r}")
+        for x in m['learn'] + m['profs']:
+            if x not in rb and x not in profs: errs.append(f"persona map {m['persona']}: unknown reference {x}")
+    for st in d['professions']['learning']:
+        for x in st['items']:
+            if x not in rb: errs.append(f"learning route: unknown rulebook entry {x}")
+    stages = {x['id'] for x in d['change']['stages']}
+    if set(d['change']['touchpoints']) != stages: errs.append('change: every stage needs touchpoints')
+    for x in d['change']['items']:
+        if x['mode'] not in ('BAU', 'Change', 'Both'): errs.append(f"{x['id']}: bad mode")
+        if x['stage'] not in stages: errs.append(f"{x['id']}: unknown stage")
+        for r in x['roles']:
+            if r not in roles: errs.append(f"{x['id']}: unknown role {r}")
+        for r in x['refs']:
+            if r not in rb: errs.append(f"{x['id']}: unknown rulebook entry {r}")
+        for r in x['cr']:
+            if r not in crs: errs.append(f"{x['id']}: unknown capability {r}")
+    mt = d['maturity']
+    if len(mt['topics']) != 10 or len(mt['levels']) != 5: errs.append('maturity: expected 10 topics and 5 levels')
+    for st in mt['strands']:
+        if len(st['levels']) != 5: errs.append(f"maturity strand {st['id']}: needs 5 level indicators")
+        for r in st['cr']:
+            if r not in crs: errs.append(f"maturity strand {st['id']}: unknown capability {r}")
+
+
+FLAGS = {'E': ('Explicit', 'The text names this as a requirement or responsibility.'),
+         'I': ('Implicit', 'The text depends on it to meet an explicit requirement but does not name it as one.'),
+         'N': ('Inferred', 'Not in the text. This portal\'s judgement from good practice and adjacent rulebooks.')}
+CLUSTERS = ['Direction and oversight', 'Core DAM capabilities', 'Data management enablers', 'Protection, ethics and trust', 'People and culture', 'Delivery, change and value']
+CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-check', 'users-round', 'workflow']))
 
 
 # ---------------------------------------------------------------------------
 # Icons (Lucide, ISC, vendored by tools/vendor_icons.py)
 # ---------------------------------------------------------------------------
-KNOWN_CHECKS = {f'C-{i:02d}' for i in range(1, 21)} | {f'B-{i:02d}' for i in range(1, 12)} | {'HL-01', 'T-VAL'}
+# Checks and identifier schemes supported by dqkit (Public Sector Data Quality Commons, dqkit/rules.py), so sector rules run as written
+DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
+                'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
+DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 25)} | {f'B-{i:02d}' for i in range(1, 14)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -292,10 +394,16 @@ def barcode_svg(text, label):
 # ---------------------------------------------------------------------------
 NAV = [
     ('index', 'Home', 'house'), ('dam', 'The policy', 'landmark'), ('governance', 'Governance', 'shield-check'),
-    ('cataloguing', 'Cataloguing', 'library-big'), ('quality', 'Quality', 'gauge'), ('together', 'Joined up', 'workflow'),
+    ('cataloguing', 'Cataloguing', 'library-big'), ('quality', 'Quality', 'gauge'), ('sectors', 'Sectors', 'layers'), ('together', 'Joined up', 'workflow'),
+    ('change', 'Delivery and change', 'construction'),
+    ('capability-model', 'Capability model', 'radar'), ('professions', 'Professions and skills', 'briefcase'),
     ('personas', 'Your role', 'users-round'), ('learning', 'Learning', 'graduation-cap'), ('library', 'Library', 'library'),
     ('knowledge', 'Knowledge', 'network'), ('inclusion', 'Inclusion', 'heart-handshake'), ('about', 'About', 'info'),
 ]
+# Grouped menus keep the global bar to about ten top-level destinations (build standard: use hubs before adding more)
+NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', 'together', 'change'],
+              'Frameworks': ['capability-model', 'professions']}
+NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3'}
 CAP_PAGE = {'gov': 'governance', 'cat': 'cataloguing', 'dq': 'quality'}
 PAGE_DESC = {
     'together': 'How data governance, data cataloguing and data quality hand off to each other, with one set of roles and one yearly cycle.',
@@ -307,6 +415,10 @@ PAGE_DESC = {
     'about': 'Purpose, sources, open register, defect register, accessibility statement and build standard assessment for the DAM capability playbooks.',
     'contact': 'Ask a question, report a problem or suggest an improvement to the DAM capability playbooks using the contact form.',
     'status': 'Latest automated health check of the DAM capability playbooks: source currency, review date and page weight.',
+    'sectors': 'Sector supplements for health, social care, geospatial, statistics, data sharing, AI and more: governance overlays, catalogue fields and quality rule libraries.',
+    'capability-model': 'Every capability the DAM Policy and related guidance need, flagged explicit, implicit or inferred, with a data maturity model and self-assessment.',
+    'professions': 'Government professions, Digital and Data capability framework roles, career pathways, skills and learning routes for data asset management.',
+    'change': 'Embedding the DAM Policy in business as usual and in change programmes: business cases, assurance, legacy exits, contracts and handover.',
     'design': 'Theory of change, research plan, service blueprint, requirements traceability, architecture and Service Standard self-assessment for the portal.',
     'notices': 'Disclaimers, transparency notices, credits and full citations for every source used by the DAM capability playbooks.',
     'accessibility': 'Accessibility statement for the DAM capability playbooks, following the GOV.UK model statement for public sector websites.',
@@ -326,6 +438,8 @@ class Site:
         self.mods = {m['id']: m for m in d['modules']}
         self.stage = {f"{c['id']}.{st['id']}": (c, st) for c in d['capabilities'] for st in c['stages']}
         self.rb = {x['id']: x for x in d.get('rulebook', [])}
+        self.cr = {c['id']: c for c in d.get('capmap', [])}
+        self.prof = {p['id']: p for p in d['professions']['profs']} if 'professions' in d else {}
         self.search, self.build_id = [], None
         sp = ROOT / 'build' / 'status.json'
         self.status = json.loads(sp.read_text()) if sp.exists() else None
@@ -406,7 +520,20 @@ class Site:
             seo_desc = seo_desc[:155].rsplit(' ', 1)[0] + '...'
         if key == 'index':
             title = m['short_title'] + ': governance, cataloguing and quality'
-        nav = ''.join(f'<li><a href="{k}.html"{" aria-current=" + chr(34) + "page" + chr(34) if k == key else ""}>{icon(ic)}<span>{E(lbl)}</span></a></li>' for k, lbl, ic in NAV)
+        nav, done = '', set()
+        for k, lbl, ic in NAV:
+            grp = next((g for g, members in NAV_GROUPS.items() if k in members), None)
+            if grp and grp in done:
+                continue
+            if grp:
+                done.add(grp)
+                members = [x for x in NAV if x[0] in NAV_GROUPS[grp]]
+                cur = key in NAV_GROUPS[grp]
+                sub = ''.join(f'<li><a href="{mk}.html"{" aria-current=" + chr(34) + "page" + chr(34) if mk == key else ""}>{icon(mic)}<span>{E(ml)}</span></a></li>' for mk, ml, mic in members)
+                nav += (f'<li class="group{" current" if cur else ""}"><button type="button" aria-expanded="false">{icon(NAV_GROUP_ICONS[grp])}<span>{E(grp)}</span>{icon("chevron-down")}</button>'
+                        f'<ul aria-label="{E(grp)}">{sub}</ul></li>')
+            else:
+                nav += f'<li><a href="{k}.html"{" aria-current=" + chr(34) + "page" + chr(34) if k == key else ""}>{icon(ic)}<span>{E(lbl)}</span></a></li>'
         drawer_html, toggle = '', ''
         if drawer:
             groups = []
@@ -575,7 +702,8 @@ class Site:
         pages = {'index': self.p_index, 'dam': self.p_dam, 'governance': lambda: self.p_cap('gov'),
                  'cataloguing': lambda: self.p_cap('cat'), 'quality': lambda: self.p_cap('dq'), 'together': self.p_together,
                  'personas': self.p_personas, 'learning': self.p_learning, 'library': self.p_library, 'knowledge': self.p_knowledge,
-                 'inclusion': self.p_inclusion, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
+                 'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
+                 'professions': self.p_professions, 'change': self.p_change, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
                  'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices,
                  'accessibility': self.p_accessibility, '404': self.p_404}
         for k, fn in pages.items():
@@ -610,6 +738,10 @@ class Site:
             self.add_search(p['title'], 'Your role: route and learning journey', f'personas.html#persona-{p["id"]}', p['summary'])
         for mm in self.d['modules']:
             self.add_search(f'{mm["id"]} {mm["title"]}', f'Learning module ({mm["level"]})', f'learning.html#{mm["id"]}', ' '.join(mm['outcomes']))
+        for x in self.d['supplements']:
+            self.add_search(x['title'], 'Sector supplement', f'sectors.html#{x["id"]}', x['summary'])
+            for r in x['rules']:
+                self.add_search(f'{r["id"]} {r["rule"]}', f'{x["title"]} quality rule', f'sectors.html#{r["id"]}', r['element'])
         for x in self.d['rulebook']:
             self.add_search(x['title'], f'Rulebook: {x["group"]}', f'dam.html#{x["id"]}', x['why'])
         for x in self.d['findings']:
@@ -618,6 +750,16 @@ class Site:
             self.add_search(f'{x["id"]} {x["text"]}', 'Portal requirement', f'design.html#{x["id"]}', '')
         for o in self.d['open_register']:
             self.add_search(o['id'], 'Open register', f'about.html#{o["id"]}', o['item'])
+        for c in self.d.get('capmap', []):
+            self.add_search(f'{c["id"]} {c["name"]}', f'Capability ({FLAGS[c["flag"]][0].lower()})', f'capability-model.html#{c["id"]}', c['note'])
+        for t in self.d.get('maturity', {}).get('topics', []):
+            self.add_search(f'Maturity topic {t["n"]}: {t["name"]}', 'Data maturity model', 'capability-model.html#cm-maturity', '')
+        for r in self.d.get('professions', {}).get('roles', []):
+            self.add_search(r['title'], 'Career pathway', f'professions.html#role-{r["id"]}', ' '.join(s[0] for s in r['skills']))
+        for p in self.d.get('professions', {}).get('profs', []):
+            self.add_search(p['name'], 'Profession', f'professions.html#{p["id"]}', p['why'])
+        for x in self.d.get('change', {}).get('items', []):
+            self.add_search(f'{x["id"]} {x["title"]}', f'Delivery and change ({x["mode"]})', f'change.html#{x["id"]}', x['why'])
 
     def counts(self):
         d = self.d
@@ -662,6 +804,9 @@ class Site:
 <div class="cards">
 <div class="card">{tile("landmark")}<h3><a href="dam.html">What the policy requires</a></h3><p>{n["reqs"]} requirements traced to GOV.UK guidance, {n["must"]} of them 'must', each linked to the step that meets it.</p></div>
 <div class="card">{tile("workflow")}<h3><a href="together.html">How the three join up</a></h3><p>One set of roles, {len(d["interlocks"])} hand-offs and one yearly cycle, so each fact is recorded once.</p></div>
+<div class="card">{tile("radar")}<h3><a href="capability-model.html">Capability model</a></h3><p>Every capability the policy and related guidance need, flagged explicit, implicit or inferred, with a maturity self-assessment.</p></div>
+<div class="card">{tile("construction")}<h3><a href="change.html">Delivery and change</a></h3><p>Build the policy into business cases, assurance, legacy exits, contracts and handover to business as usual.</p></div>
+<div class="card">{tile("briefcase")}<h3><a href="professions.html">Professions and skills</a></h3><p>Career pathways, skills and learning routes for each role in the policy.</p></div>
 <div class="card">{tile("heart-handshake")}<h3><a href="inclusion.html">Inclusive data practice</a></h3><p>Equality, inclusion and accessibility checks for each capability.</p></div>
 <div class="card">{tile("search")}<h3>Search everything</h3><p>Press Ctrl and K, or the forward slash key, to search steps, requirements, terms and modules.</p></div></div>
 <div class="js-only progress-reset"><h2 id="your-progress">{icon("activity")} Your progress</h2><p>Progress is kept in this browser only. Nothing is sent anywhere.</p>
@@ -859,10 +1004,12 @@ class Site:
         out = ''
         for x in items:
             caps = ' '.join(f'<span class="pill {c}">{E(self.caps[c]["short"])}</span>' for c in x['caps'])
+            sup = next((sp for sp in self.d.get('supplements', []) if sp['dd'] == x['id']), None)
             out += (f'<section class="depth" id="{x["id"]}" data-item data-cap="{" ".join(x["caps"])}" data-moscow="{slug(x["moscow"])}">'
                     f'<div class="depth-head"><h3>{E(x["theme"])}</h3><strong class="moscow m-{slug(x["moscow"])}">{E(x["moscow"])} have</strong></div>'
                     f'<p class="hint">{E(x["id"])} · For: {E("; ".join(x["sectors"]))}</p>{caps}<p>{E(x["why"])}</p>'
                     f'<h4>{icon("list-checks")} Content needed</h4>{ul(x["needed"], cls="checks")}'
+                    + (f'<p><a class="btn-link" href="sectors.html#{sup["id"]}">{icon("arrow-right")}Open the {E(sup["title"].lower())} supplement</a></p>' if sup else '')
                     + (f'<p class="leads"><strong>Related rulebook:</strong> {"; ".join(self.rb_link(r) for r in (self.d.get("depth_refs") or {}).get(x["id"], []))}</p>' if (self.d.get("depth_refs") or {}).get(x["id"]) else '')
                     + f'<p class="leads"><strong>Leads to verify:</strong> {E("; ".join(x["leads"]))}{prov("K")}</p></section>')
         return out
@@ -1224,7 +1371,7 @@ class Site:
 <h2 id="provenance">{icon("tag")} How sources are labelled</h2><ul>{provs}</ul>
 <p>Requirement strength follows the wording of the source. Step sequences are labelled as synthesis or practitioner material; they are not GOV.UK requirements.</p>
 <h2 id="findings">{icon("search")} Verification findings</h2>
-{"".join(f'<section class="finding" id="{x["id"]}"><h3>{E(x["id"])}: {E(x["title"])}</h3><p>{E(x["detail"])}</p><p><strong>Action:</strong> {E(x["action"])} <span class="hint">Verified {E(x["verified"])}{(" against " + E(self.src[x["src"]]["title"])) if x.get("src") else ""}</span></p></section>' for x in d["findings"])}
+{"".join(f'<section class="finding" id="{x["id"]}"><h3>{E(x["id"])}: {E(x["title"])}</h3><p>{E(x["detail"])}</p><p><strong>Action:</strong> {E(x["action"])} <span class="hint">Verified {E(x["verified"])} against {self.finding_src(x)}</span></p></section>' for x in d["findings"])}
 <h2 id="standards">{icon("badge-check")} Assessment against the build standard</h2>
 <p>How this portal meets the self-routines and practices of the reusable build standard, rated MoSCoW for a shared portal. Status is what is in place in this release.</p>
 {table("t-std", "Build standard assessment", ["ID", "Routine or practice", "MoSCoW", "Status", "How"], [[E(x["id"]), E(x["name"]), E(x["moscow"]), f'<strong class="status s-{slug(x["status"]).replace("met", "completed").replace("partly", "in-progress").replace("not-yet", "not-started")}">{E(x["status"])}</strong>', E(x["how"])] for x in d["standards"]])}
@@ -1256,6 +1403,337 @@ class Site:
             {'id': 'privacy', 'label': 'Privacy', 'icon': 'lock-keyhole'}, {'id': 'build', 'label': 'Build and checks', 'icon': 'badge-check'}]}]
         return self.page('about', 'About', body, drawer, crumbs=['About'])
 
+    def p_sectors(self):
+        d = self.d
+        dd = {x['id']: x for x in d['domain_depth']}
+        qs = ''.join(f'<li><label class="check"><input type="checkbox" data-q="{E(q["id"])}" data-sups="{E(" ".join(q["sups"]))}"> {E(q["text"])}</label></li>' for q in d['applicability'])
+        title_of = {x['id']: x['title'] for x in d['supplements']}
+        nojs = [[E(q['text']), ' '.join(f'<a class="pill" href="#{sp}">{E(title_of[sp])}</a>' for sp in q['sups'])] for q in d['applicability']]
+        cards, detail, all_rules = '', '', []
+        for x in d['supplements']:
+            t = dd[x['dd']]
+            caps = ' '.join(f'<span class="pill {c}">{E(self.caps[c]["short"])}</span>' for c in t['caps'])
+            cl_ids = [x['id'] + '.c' + str(i) for i in range(len(x['checklist']))]
+            cards += (f'<li class="mod-card" data-item data-moscow="{slug(t["moscow"])}" data-cap="{" ".join(t["caps"])}" data-sup="{x["id"]}"><a href="#{x["id"]}">{tile(x["icon"], "sm")}'
+                      f'<span><strong>{E(x["title"])}</strong><span class="hint">{E(x["summary"])}</span></span></a>'
+                      f'<span><strong class="moscow m-{slug(t["moscow"])}">{E(t["moscow"])} have</strong> {caps}</span>'
+                      f'{progress_widget(cl_ids, "Checklist")}</li>')
+            catrows = [[f'<code>{E(c["prop"])}</code>', f'<code>{E(c["term"])}</code>', E(c['rule'])] for c in x['cat']]
+            rrows = []
+            for r in x['rules']:
+                pr = {k: v for k, v in r['params'].items() if k != 'inner'}
+                params = ', '.join(f'{k}={v}' for k, v in pr.items()) + (f', inner={r["params"]["inner"]["check"]}({r["params"]["inner"]["column"]})' if 'inner' in r['params'] else '')
+                row = [f'<span class="nowrap" id="{r["id"]}">{E(r["id"])}</span>', E(r['element']), E(r['rule']), E(r['dimension']), f'<code>{E(r["check"])}</code>', f'<code>{E(params)}</code>']
+                rrows.append(row)
+                all_rules.append(([f'<a href="#{r["id"]}">{E(r["id"])}</a>', E(x['title'])] + row[1:5], x['id'], r['dimension']))
+            ids = ''.join(f'<li><strong>{E(i["name"])}</strong>: {E(i["format"])}{prov(i["prov"])}</li>' for i in x.get('identifiers', []))
+            extra = ''
+            if x.get('checks_from_guidance'):
+                extra += (f'<h4>{icon("list-checks")} Self-assessment areas from the GOV.UK AI-ready data guidance{prov("V", self.m["verified_on"])}</h4>'
+                          + ''.join(f'<details class="kc-answer"><summary>{E(a["area"])} ({len(a["items"])})</summary>{ul(a["items"], cls="checks")}</details>' for a in x['checks_from_guidance'])
+                          + f'<p class="hint">Summarised from {self.rb_link("RB-AIREADY")}.</p>')
+            if x.get('four_nations'):
+                extra += (f'<h4>{icon("map")} Four nations view</h4>' + table(f't-4n-{x["id"]}', 'Who the policy applies to, by nation and tier', ['Who', 'Position'],
+                          [[E(n['nation']), E(n['position']) + prov(n['prov'], self.m['verified_on'])] for n in x['four_nations']]) + f'<p class="hint">Source: {self.src_link("SRC-IDC")}</p>')
+            checklist = ''.join(f'<li>{mark_done(cid, "Done")}<span>{E(c)}</span></li>' for cid, c in zip(cl_ids, x['checklist']))
+            ids_html = f'<h4>{icon("tag")} Identifiers</h4><ul>{ids}</ul>' if ids else ''
+            detail += f'''<section class="module supplement" id="{x["id"]}" aria-labelledby="h-{x["id"]}">
+<div class="mod-head">{tile(x["icon"], "lg")}<div><p class="caption">{E(x["id"])} · from assessment <a href="library.html#{t["id"]}">{E(t["id"])}</a> · <strong class="moscow m-{slug(t["moscow"])}">{E(t["moscow"])} have</strong></p><h3 id="h-{x["id"]}">{E(x["title"])}</h3>{caps}</div></div>
+<p class="lede">{E(x["summary"])}</p><p class="hint">For: {E("; ".join(t["sectors"]))}. A synthesis of the sources below{prov("O")}.</p>
+<div class="cols"><div class="panel"><h4>{icon("shield-check")} Governance overlay</h4>{ul(x["gov"], cls="ticks")}</div>
+<div class="panel"><h4>{icon("triangle-alert")} Risks to check</h4>{ul(x["risks"])}</div></div>
+<h4>{icon("library-big")} Extra catalogue fields</h4>{table(f"t-cat-{x['id']}", f"Catalogue fields to add for {x['title'].lower()}", ["Field", "Suggested term", "How to record it"], catrows)}
+<p class="hint">"Local extension" means no agreed cross-government term exists yet; record it in your catalogue's own field.{prov("K")}</p>
+<h4>{icon("gauge")} Quality rule library</h4>{table(f"t-rules-{x['id']}", f"Starter quality rules for {x['title'].lower()}", ["ID", "Data element", "Rule", "Dimension", "Check", "Parameters"], rrows)}
+<p><a href="data/rules/{x["id"].lower()}.yaml">{icon("download")}Download these rules for the Data Quality Commons kit (YAML)</a>. Column names are examples; map them to your data.</p>
+{ids_html}{extra}
+<div class="tip">{icon("lightbulb")}<p><strong>Worked example.</strong> {E(x["example"])}</p></div>
+<h4>{icon("list-checks")} Checklist</h4>{progress_widget(cl_ids, "Checklist done")}<ol class="questions">{checklist}</ol>
+<h4>{icon("scale")} Related rulebook</h4><ul>{"".join(f"<li>{self.rb_link(r)}</li>" for r in x["refs"])}</ul></section>'''
+        rule_tbl = table('t-allrules', 'Every sector quality rule', ['ID', 'Supplement', 'Data element', 'Rule', 'Dimension', 'Check'],
+                         [r[0] for r in all_rules], row_attrs=[f' data-item data-sup="{r[1]}" data-dim="{r[2]}"' for r in all_rules], tbody_id='rule-table')
+        sup_opts = ''.join(f'<option value="{x["id"]}">{E(x["title"])}</option>' for x in d['supplements'])
+        dims = ''.join(f'<option>{v}</option>' for v in ['completeness', 'uniqueness', 'consistency', 'timeliness', 'validity', 'accuracy'])
+        body = self.hero('layers', 'Sector and domain supplements', 'Sector supplements', 'Extra governance, catalogue fields and quality rules for kinds of data the core playbooks treat only in general terms.',
+                         brief=['Answer a few questions to see which supplements apply to your asset.', 'Each supplement adds to the three capabilities; it never replaces the core method.', 'Quality rules download in a format the Data Quality Commons kit can run.'],
+                         meta=[('layers', f'{len(d["supplements"])} supplements'), ('gauge', f'{len(all_rules)} quality rules'), ('scale', 'Linked to the rulebook')])
+        body += f'''<h2 id="which">{icon("compass")} Which supplements apply to your asset?</h2>
+<div class="wizard js-only"><fieldset><legend>Tick everything that is true of the critical data asset</legend><ul class="plain">{qs}</ul></fieldset>
+<div class="wizard-result"><h3>Supplements that apply</h3><div id="wizard-out" aria-live="polite">Tick a statement to see which supplements apply.</div></div></div>
+<div class="no-js-only">{table("t-which", "Which supplements apply", ["If this is true of the asset", "Use these supplements"], nojs)}</div>
+<h2 id="all">{icon("layers")} All supplements</h2>
+<div class="filters" data-filter="sup-list" role="group" aria-label="Filter supplements"><div><label for="s-m">Priority</label><select id="s-m" name="moscow"><option value="">All</option><option value="must">Must have</option><option value="should">Should have</option><option value="could">Could have</option></select></div>
+<div><label for="s-cap">Capability</label><select id="s-cap" name="cap"><option value="">All</option><option value="gov">Data governance</option><option value="cat">Data cataloguing</option><option value="dq">Data quality</option></select></div><p class="count-out" aria-live="polite"></p></div>
+<ul class="mod-grid" id="sup-list">{cards}</ul>
+<h2 id="rule-library">{icon("gauge")} Sector rule library</h2>
+<p>Every rule across the supplements. Download them all as <a href="data/sector-rules.csv">CSV</a>, or each supplement's rules as YAML.</p>
+<div class="filters" data-filter="rule-table" role="group" aria-label="Filter rules"><div><label for="ru-s">Supplement</label><select id="ru-s" name="sup"><option value="">All</option>{sup_opts}</select></div>
+<div><label for="ru-d">Dimension</label><select id="ru-d" name="dim"><option value="">All</option>{dims}</select></div><div><label for="ru-q">Contains</label><input id="ru-q" type="search" name="q"></div><p class="count-out" aria-live="polite"></p></div>
+{rule_tbl}
+<h2 id="detail">{icon("book-open")} Supplements in full</h2>{detail}'''
+        drawer = [{'label': 'Sectors', 'icon': 'layers', 'items': [
+            {'id': 'which', 'label': 'Which apply to you', 'icon': 'compass', 'count': len(d['applicability'])},
+            {'id': 'all', 'label': 'All supplements', 'icon': 'layers', 'count': len(d['supplements'])},
+            {'id': 'rule-library', 'label': 'Sector rule library', 'icon': 'gauge', 'count': len(all_rules), 'new': True}]},
+                  {'label': 'Supplements', 'icon': 'book-open', 'items': [{'id': x['id'], 'label': x['title'], 'icon': x['icon']} for x in d['supplements']]}]
+        return self.page('sectors', 'Sector supplements', body, drawer, crumbs=['Sectors'])
+
+    # -- version 1.4: frameworks ------------------------------------------------------
+    def finding_src(self, x):
+        if x.get('src'):
+            return f'<a href="{E(self.src[x["src"]]["url"])}">{E(self.src[x["src"]]["title"])}</a>'
+        if x.get('rb'):
+            return f'<a href="{E(self.rb[x["rb"]]["url"])}">{E(self.rb[x["rb"]]["title"])}</a>'
+        if x.get('url'):
+            return f'<a href="{E(x["url"])}">{E(x["url_title"])}</a>'
+        return 'the live page named above'
+
+    def doc_url(self, doc, a=None):
+        base = self.src[doc]['url'] if doc in self.src else self.rb[doc]['url']
+        return base + (f'#{a}' if a else '')
+
+    def doc_title(self, doc):
+        return self.src[doc]['title'] if doc in self.src else self.rb[doc]['title']
+
+    def flag(self, f, short=False):
+        name, meaning = FLAGS[f]
+        return f'<abbr class="flag-badge f-{f}" title="{E(meaning)}">{E(f if short else name)}<span class="visually-hidden">: {E(meaning)}</span></abbr>'
+
+    def cr_pill(self, cid):
+        c = self.cr[cid]
+        return f'<a class="pill" href="capability-model.html#{cid}">{E(cid)} {E(c["name"])}</a>'
+
+    def role_pills(self, codes):
+        return ' '.join(f'<a class="pill" href="together.html#role-{c}">{E(self.roles[c]["name"])}</a>' for c in codes)
+
+    def skill_link(self, anchor, name=None):
+        nm = name or next((s[0] for r in self.d['professions']['roles'] for s in r['skills'] if s[1] == anchor), anchor)
+        return f'<a href="https://ddat-capability-framework.service.gov.uk/skills/#{E(anchor)}">{E(nm)}</a>'
+
+    @staticmethod
+    def stage_pills(ch, sid):
+        return ' '.join(f'<a class="pill" href="#{x["id"]}">{E(x["id"])}</a>' for x in ch['items'] if x['stage'] == sid)
+
+    @staticmethod
+    def cr_ids(ids):
+        return ' '.join(f'<a class="pill" href="capability-model.html#{c}">{E(c)}</a>' for c in ids) or 'all capabilities'
+
+    def p_model(self):
+        d, mt, v = self.d, self.d['maturity'], self.m['verified_on']
+        cm = d['capmap']
+        fc = {f: sum(1 for c in cm if c['flag'] == f) for f in FLAGS}
+        new = [c for c in cm if c['coverage'] == 'New']
+        legend = ''.join(f'<li>{self.flag(f)} <span>{E(FLAGS[f][1])} ({fc[f]})</span></li>' for f in FLAGS)
+        # overview: capability house
+        bands = ''
+        for cl in CLUSTERS:
+            items = [c for c in cm if c['cluster'] == cl]
+            tiles = ''.join(f'<li class="cr-tile f-{c["flag"]}"><a href="#{c["id"]}">{icon(c["icon"])}<span class="cr-id">{E(c["id"])}</span><span class="cr-name">{E(c["name"])}</span>{self.flag(c["flag"], True)}</a></li>' for c in items)
+            bands += f'<section class="cr-band" aria-labelledby="band-{slug(cl)}"><h3 id="band-{slug(cl)}">{icon(CLUSTER_ICONS[cl])} {E(cl)} <span class="count">{len(items)}</span></h3><ul class="cr-tiles">{tiles}</ul></section>'
+        overview = f'''<p>The DAM Policy names three core capabilities, but meeting it depends on more. This model sets out <strong>{len(cm)} capabilities</strong> the policy, its guidance and adjacent rulebooks need, grouped in six clusters. Each is flagged by how the DAM Policy itself treats it.</p>
+<ul class="flag-legend">{legend}</ul>
+<div class="cr-house">{bands}</div>
+<div class="tip">{icon("lightbulb")}<p><strong>Not yet accounted for elsewhere.</strong> {len(new)} capabilities are new in this release and are covered on the <a href="change.html">delivery and change</a>, <a href="professions.html">professions and skills</a> and this page: {E(", ".join(c["name"].lower() for c in new))}.</p></div>
+<p class="hint">Grouping and flags are this portal's own analysis{prov("O")}; every clause they point to was checked on {E(v)}{prov("V", v)}.</p>'''
+        # requirements map
+        cards = ''
+        for c in cm:
+            dam = (f'<a href="{E(self.doc_url("SRC-DAM", c["dam"]))}">DAM Policy: {E(c["dam"].replace("-", " ").capitalize())}</a>' if c['dam'] else '<span>Not stated in the DAM Policy</span>')
+            sgs = ''.join(f'<li>{self.flag(sg["flag"], True)} <a href="{E(self.doc_url(sg["doc"], sg["a"]))}">{E(sg["label"])}</a> <span class="hint">({E(self.doc_title(sg["doc"]))})</span></li>' for sg in c['signposts'])
+            dma = ' '.join(f'<a class="pill" href="{E(mt["url"])}#{E(mt["topics"][t - 1]["anchor"])}">{t}. {E(mt["topics"][t - 1]["name"])}</a>' for t in c['dma'])
+            sk = ', '.join(self.skill_link(k) for k in c['skills'])
+            pr = ' '.join(f'<a class="pill" href="professions.html#{p}">{E(self.prof[p]["name"].split(" (")[0])}</a>' for p in c['profs'])
+            cov = {'Covered': 'circle-check', 'Partial': 'circle', 'New': 'flag'}[c['coverage']]
+            cards += f'''<li class="cr-card" id="{c["id"]}" data-item data-cluster="{slug(c["cluster"])}" data-flag="{c["flag"]}" data-cov="{c["coverage"].lower()}">
+<div class="cr-head">{tile(c["icon"], "sm")}<div><p class="caption">{E(c["id"])} · {E(c["cluster"])}</p><h3>{E(c["name"])}</h3></div>{self.flag(c["flag"])}</div>
+<p>{E(c["note"])}{prov(c["prov"])}</p>
+<dl class="cr-dl"><dt>{icon("landmark")} Policy clause</dt><dd>{dam}</dd>
+<dt>{icon("signpost")} Signposts</dt><dd><ul class="plain">{sgs}</ul></dd>
+<dt>{icon("radar")} Maturity topics</dt><dd>{dma}</dd>
+<dt>{icon("briefcase")} Skills</dt><dd>{sk} <span class="hint">(Digital and Data capability framework)</span></dd>
+<dt>{icon("users-round")} Professions</dt><dd>{pr}</dd>
+<dt>{icon("book-open")} Industry models</dt><dd>DAMA-DMBOK: {E("; ".join(c["dmbok"]))}. DCAM: {E("; ".join(c["dcam"]))}.{prov("K")}</dd>
+<dt>{icon(cov)} In this portal</dt><dd><strong>{E(c["coverage"])}</strong>: <a href="{E(c["playbook"])}">{E({k: l for k, l, _ in NAV}.get(c["playbook"][:-5], c["playbook"]))}</a></dd></dl></li>'''
+        cl_opts = ''.join(f'<option value="{slug(x)}">{E(x)}</option>' for x in CLUSTERS)
+        reqmap = f'''<p>Filter by cluster, by how the policy treats the capability, or by how far this portal covers it. Download the map as <a href="data/capability-map.csv">CSV</a>.</p>
+<div class="filters" data-filter="cr-list" role="group" aria-label="Filter capabilities"><div><label for="f-cl">Cluster</label><select id="f-cl" name="cluster"><option value="">All</option>{cl_opts}</select></div>
+<div><label for="f-fl">In the DAM Policy</label><select id="f-fl" name="flag"><option value="">All</option><option value="E">Explicit</option><option value="I">Implicit</option><option value="N">Inferred</option></select></div>
+<div><label for="f-cv">In this portal</label><select id="f-cv" name="cov"><option value="">All</option><option value="covered">Covered</option><option value="partial">Partial</option><option value="new">New in 1.4</option></select></div>
+<div><label for="f-q">Contains</label><input id="f-q" type="search" name="q"></div><p class="count-out" aria-live="polite"></p></div>
+<ul class="cr-list" id="cr-list">{cards}</ul>'''
+        # maturity
+        th = ''.join(f'<th scope="col">{E(t["name"])}</th>' for t in mt['themes'])
+        mx = max(n for t in mt['topics'] for n in t['rows'].values())
+        rows = ''
+        for t in mt['topics']:
+            cells = ''.join(f'<td class="heat h{0 if not t["rows"][x["name"]] else min(4, 1 + (t["rows"][x["name"]] * 4) // (mx + 1))}">{t["rows"][x["name"]] or ""}<span class="visually-hidden">{" rows" if t["rows"][x["name"]] else "none"}</span></td>' for x in mt['themes'])
+            rows += f'<tr><th scope="row"><a href="{E(mt["url"])}#{E(t["anchor"])}">{icon(t["icon"])} {t["n"]}. {E(t["name"])}</a></th>{cells}<td>{sum(t["rows"].values())}</td></tr>'
+        total = sum(sum(t['rows'].values()) for t in mt['topics'])
+        heat = (f'<div class="table-wrap" role="region" aria-labelledby="t-heat" tabindex="0"><table class="heatmap"><caption id="t-heat">Rows in the Data Maturity Assessment for Government, by topic and theme ({total} rows)</caption>'
+                f'<thead><tr><th scope="col">Topic</th>{th}<th scope="col">Rows</th></tr></thead><tbody>{rows}</tbody></table></div>')
+        ladder = ''.join(f'<li class="lv lv{i + 1}"><a href="{E(mt["url"])}#{E(mt["level_anchors"][i])}"><span class="lv-n">{i + 1}</span><span>{E(n)}</span></a></li>' for i, n in enumerate(mt['levels']))
+        themes = ''.join(f'<li><strong>{E(t["name"])}</strong>: {E(t["gloss"])}</li>' for t in mt['themes'])
+        srows = [[f'{icon(st["icon"])} {E(st["name"])}'] + [E(x) for x in st['levels']] for st in mt['strands']]
+        maturity = f'''<p>Government's shared model is the <a href="{E(self.rb["RB-DMAF"]["url"])}">Data Maturity Assessment for Government</a>{prov("V", v)}: <strong>10 topics</strong>, each split into rows that belong to one of <strong>6 themes</strong>, and every row described at <strong>5 levels</strong>. Select a topic to read its rows on GOV.UK.</p>
+<ol class="ladder" aria-label="Maturity levels">{ladder}</ol>
+{heat}
+<h3>{icon("layers")} The six themes</h3><ul>{themes}</ul><p class="hint">Themes summarised in this portal's words{prov("O")}.</p>
+<div class="notice-box">{icon("scale")}<p><strong>Licence.</strong> The framework is published under {E(mt["licence"])}, which does not allow commercial reuse and requires adaptations to be shared alike. This portal therefore links to it and records only its structure (names and row counts). It does not copy the level descriptions. For use inside government, the framework asks organisations to contact the Central Digital and Data Office.</p></div>
+<h3 id="strands">{icon("radar")} What each level looks like for the DAM Policy</h3>
+<p>Indicators for four DAM strands, written for this portal{prov("O")} to sit alongside the government framework. They are not part of it.</p>
+{table("t-strands", "DAM strand indicators by maturity level", ["Strand"] + [f"{i + 1}. {n}" for i, n in enumerate(mt["levels"])], srows)}'''
+        # self-assessment
+        sf = ''
+        for st in mt['strands']:
+            opts = ''.join(f'<label class="sa-opt"><input type="radio" name="sa-{st["id"]}" value="{i + 1}" data-sa="{st["id"]}"> <span><strong>{i + 1}. {E(mt["levels"][i])}</strong> {E(x)}</span></label>' for i, x in enumerate(st['levels']))
+            sf += f'<fieldset class="sa"><legend>{icon(st["icon"])} {E(st["name"])}</legend>{opts}</fieldset>'
+        tf = ''.join(f'<li><label for="sa-t{t["n"]}">{t["n"]}. {E(t["name"])}</label><select id="sa-t{t["n"]}" data-sa="t{t["n"]}"><option value="">Not assessed</option>'
+                     + ''.join(f'<option value="{i + 1}">{i + 1}. {E(n)}</option>' for i, n in enumerate(mt['levels'])) + '</select></li>' for t in mt['topics'])
+        selfa = f'''<p>A quick first pass, not a substitute for a full assessment. Choose the description closest to your organisation today. Answers are kept in this browser only and nothing is sent anywhere.</p>
+<div class="sa-wrap"><div class="sa-forms"><h3>{icon("key-round")} DAM strands</h3>{sf}
+<h3>{icon("radar")} Government maturity topics</h3><p class="hint">Read each topic's rows on GOV.UK first, then choose the level most rows match.</p><ul class="plain sa-topics">{tf}</ul></div>
+<div class="sa-out js-only"><h3>{icon("chart-column")} Your profile</h3><div id="sa-chart" role="img" aria-label="Radar chart of your self-assessment">Choose levels to draw your profile.</div>
+<div id="sa-summary" aria-live="polite"></div>
+<p class="sa-actions"><a class="btn secondary" id="sa-csv" href="#" download="dam-self-assessment.csv">{icon("download")}Download as CSV</a> <button type="button" class="btn secondary" id="sa-print">{icon("printer")}Print</button> <button type="button" class="btn secondary" id="sa-clear">{icon("rotate-ccw")}Clear answers</button></p></div></div>'''
+        # crosswalk
+        cw = [[E(x['level']), E(x['cmmi']), E(x['iso8000']), E(x['note'])] for x in mt['crosswalk']]
+        dmb = sorted({k for c in cm for k in c['dmbok']})
+        dmb_rows = [[E(k), ' '.join(f'<a class="pill" href="#{c["id"]}">{E(c["id"])}</a>' for c in cm if k in c['dmbok'])] for k in dmb]
+        dcm = sorted({k for c in cm for k in c['dcam']})
+        dcm_rows = [[E(k), ' '.join(f'<a class="pill" href="#{c["id"]}">{E(c["id"])}</a>' for c in cm if k in c['dcam'])] for k in dcm]
+        cross = f'''<p>How the government model lines up with widely used industry models. These are approximate alignments made for this portal{prov("O")}, using general knowledge of the industry models{prov("K")}; the owners of those models have not checked them.</p>
+{table("t-cw", "Maturity levels compared", ["Government level", "CMMI level", "ISO 8000-61 process view", "Note"], cw)}
+{table("t-dmbok", "DAMA-DMBOK knowledge areas and the capabilities that use them", ["Knowledge area", "Capabilities"], dmb_rows)}
+{table("t-dcam", "DCAM components and the capabilities that use them", ["Component", "Capabilities"], dcm_rows)}
+<p>Model owners: {self.rb_link("RB-DAMA")}; {self.rb_link("RB-DCAM")}; {self.rb_link("RB-CMMI")}.</p>'''
+        tabs = [('cm-overview', 'Overview', overview), ('cm-map', 'Requirements map', reqmap), ('cm-maturity', 'Maturity model', maturity),
+                ('cm-self', 'Self-assessment', selfa), ('cm-cross', 'Crosswalk', cross)]
+        body = self.hero('radar', 'Frameworks', 'Capability model',
+                         'Everything the DAM Policy and its related guidance need an organisation to be able to do, how each need is stated, and how mature you are.',
+                         brief=[f'{fc["E"]} capabilities are explicit in the policy, {fc["I"]} implicit and {fc["N"]} inferred.', 'Every flag points to the section of GOV.UK guidance it comes from.', 'Assess yourself against the government maturity model and four DAM strands.'],
+                         meta=[('radar', f'{len(cm)} capabilities'), ('signpost', f'{sum(len(c["signposts"]) for c in cm)} signposts'), ('layers', '10 topics, 6 themes, 5 levels')])
+        body += self.tabbed(tabs, 'Capability model views')
+        drawer = [{'label': 'Views', 'icon': 'radar', 'items': [{'id': k, 'label': l, 'icon': ic} for (k, l, _), ic in zip(tabs, ['grid-3x3', 'signpost', 'layers', 'chart-column', 'arrow-right-left'])]},
+                  {'label': 'Clusters', 'icon': 'layers', 'items': [{'id': f'band-{slug(cl)}', 'label': cl, 'icon': CLUSTER_ICONS[cl], 'count': sum(1 for c in cm if c['cluster'] == cl)} for cl in CLUSTERS]}]
+        return self.page('capability-model', 'Capability model', body, drawer, crumbs=['Frameworks', 'Capability model'], extra_json={'sa-data': {
+            'levels': mt['levels'], 'strands': [{'id': s['id'], 'name': s['name']} for s in mt['strands']], 'topics': [{'id': f't{t["n"]}', 'name': t['name']} for t in mt['topics']]}})
+
+    def p_professions(self):
+        d, pf, v = self.d, self.d['professions'], self.m['verified_on']
+        roles = {r['id']: r for r in pf['roles']}
+        pers = {p['id']: p for p in d['personas']}
+        LV = {'A': 'Awareness', 'W': 'Working', 'P': 'Practitioner', 'E': 'Expert', '-': 'Not listed'}
+
+        def ref(x):
+            return f'<a class="pill" href="#{x}">{E(self.prof[x]["name"].split(" (")[0])}</a>' if x in self.prof else self.rb_link(x)
+        cards = ''
+        for m in pf['persona_map']:
+            p = pers[m['persona']]
+            rl = ''.join(f'<li><a href="#role-{r}">{E(roles[r]["title"])}</a></li>' for r in m['roles']) or '<li>No single data role: see the skills data owners need below</li>'
+            cards += (f'<li class="route-card"><div class="cr-head">{tile(p["icon"], "sm")}<h3><a href="personas.html#persona-{p["id"]}">{E(p["title"])}</a></h3></div>'
+                      f'<h4>Framework roles</h4><ul class="plain">{rl}</ul><h4>Professions</h4><p>{" ".join(ref(x) for x in m["profs"])}</p>'
+                      f'<h4>Start learning with</h4><ul class="plain">{"".join(f"<li>{self.rb_link(x)}</li>" for x in m["learn"])}</ul></li>')
+        own_note = f'<p class="hint">Data owners: the data ownership model lists <a href="{E(self.doc_url("SRC-OWN", "skills-that-data-owners-need"))}">the skills data owners need</a>{prov("V", v)}.</p>'
+        route = f'<p>Start from your role in the policy. Each card shows the closest roles in the Government Digital and Data capability framework, the professions to join, and where to start learning.</p><ul class="route-grid">{cards}</ul>{own_note}'
+        # career pathways
+        paths = ''
+        for r in pf['roles']:
+            if r['levels']:
+                ladder = ''.join(f'<li class="lv lv{min(5, i + 2)}"><a href="{E(r["url"])}#{E(L["anchor"])}"><span class="lv-n">{i + 1}</span><span>{E(L["name"])}<span class="hint">{E(", ".join(L["grades"]))}</span></span></a></li>' for i, L in enumerate(r['levels']))
+                hdr = ['Skill'] + [L['name'] for L in r['levels']]
+                srows = [[self.skill_link(s[1], s[0])] + [f'<span class="sk sk-{x}" title="{LV[x]}">{LV[x]}</span>' for x in s[2].split()] for s in r['skills']]
+                grid = table(f't-sk-{r["id"]}', f'Skills and levels for {r["title"].lower()} roles', hdr, srows)
+            else:
+                ladder = f'<li class="lv lv5"><a href="{E(r["url"])}"><span class="lv-n">SCS</span><span>{E(r["title"])}<span class="hint">{E(r.get("grades", ""))}</span></span></a></li>'
+                grid = '<p>Skills for this role:</p>' + ul([self.skill_link(s[1], s[0]) for s in r['skills']], raw=True)
+            paths += (f'<section class="pathway" id="role-{r["id"]}" aria-labelledby="h-role-{r["id"]}"><h3 id="h-role-{r["id"]}">{icon("route")} <a href="{E(r["url"])}">{E(r["title"])}</a></h3>'
+                      f'<ol class="ladder" aria-label="Role levels for {E(r["title"].lower())}">{ladder}</ol>{grid}</section>')
+        pathways = (f'<p>Roles from the <a href="{E(self.rb["RB-DDAT"]["url"])}">Government Digital and Data capability framework</a>{prov("V", v)} that carry DAM responsibilities. '
+                    'Each shows its levels, the Civil Service grades they are most often done at, and the skill level needed at each step: awareness, working, practitioner or expert. Grades are typical, not mandatory.</p>'
+                    + paths + f'<p>Download every role and skill as <a href="data/ddat-role-skills.csv">CSV</a>. Framework content is Crown copyright under the Open Government Licence.</p>')
+        # professions
+        pcards = ''
+        for p in pf['profs']:
+            used = [c['id'] for c in d['capmap'] if p['id'] in c['profs']]
+            pcards += (f'<li class="cr-card" id="{p["id"]}"><div class="cr-head">{tile(p["icon"], "sm")}<div><p class="caption">{E(p["aligned"])}</p><h3>{E(p["name"])}</h3></div></div>'
+                       f'<p>{E(p["why"])}</p><p>{self.rb_link(p["rb"])}</p><p class="hint">Supports: {self.cr_ids(used)}</p></li>')
+        profs = (f'<p>Every civil servant should belong to at least one government profession. These are the ones most involved in data asset management. See the full list of {self.rb_link("RB-PROFS")}.</p>'
+                 f'<ul class="cr-list two">{pcards}</ul>')
+        # learning routes
+        steps = ''
+        for i, st in enumerate(pf['learning']):
+            ids = [f'learn:{x}' for x in st['items']]
+            items = ''.join(f'<li>{mark_done(f"learn:{x}", "Done")}<span>{self.rb_link(x)}</span></li>' for x in st['items'])
+            steps += (f'<li class="lr-step"><div class="lr-head"><span class="lv-n">{i + 1}</span>{icon(st["icon"])}<h3>{E(st["stage"])}</h3>{status_tag(ids)}</div>'
+                      f'<p>{E(st["note"])}</p><ul class="plain">{items}</ul></li>')
+        allids = [f'learn:{x}' for st in pf['learning'] for x in st['items']]
+        campus = ''.join(f'<li><a href="{E(c["url"])}">{E(c["name"])}</a></li>' for c in pf['campus'])
+        learn = f'''<p>Four stages from awareness to leadership. Tick what you have done; progress is kept in this browser only.</p>
+{progress_widget(sorted(set(allids)), "Learning route")}
+<ol class="lr">{steps}</ol>
+<h3>{icon("school")} Government Campus prospectus: data-related strands</h3><ul>{campus}</ul>
+<div class="notice-box">{icon("info")}<p><strong>Signing in.</strong> Courses are booked through Civil Service Learning and the Government Skills Campus platform, which need a government account. This portal does not link to sign-in pages; your learning team can confirm which platform your organisation uses. Start from {self.rb_link("RB-GSKILLS")}.</p></div>'''
+        # other frameworks
+        sk_rows = [[f'<a href="capability-model.html#{c["id"]}">{E(c["id"])} {E(c["name"])}</a>', ', '.join(self.skill_link(k) for k in c['skills'])] for c in d['capmap']]
+        others = ''.join(f'<li>{self.rb_link(x)}: {E(self.rb[x]["why"])}</li>' for x in ['RB-SFIA', 'RB-PKSB', 'RB-RSS', 'RB-DAMA', 'RB-APPDA', 'RB-SUCCESS', 'RB-AFCAREER', 'RB-GSS'])
+        frame = f'''<h3>{icon("book-marked")} Other recognised frameworks</h3><ul>{others}</ul>
+<h3>{icon("grid-3x3")} Skills each capability needs</h3>{table("t-crskills", "Digital and Data framework skills for each capability", ["Capability", "Skills"], sk_rows)}'''
+        tabs = [('pf-route', 'By role in the policy', route), ('pf-paths', 'Career pathways', pathways), ('pf-profs', 'Professions', profs),
+                ('pf-learn', 'Learning routes', learn), ('pf-frameworks', 'Skills frameworks', frame)]
+        body = self.hero('briefcase', 'Frameworks', 'Professions and skills',
+                         'The government professions, framework roles, skills and learning that sit behind each role in the DAM Policy.',
+                         brief=['Find the framework roles and professions closest to your role in the policy.', 'See each career pathway with grades and skill levels.', 'Follow a learning route and track your progress.'],
+                         meta=[('briefcase', f'{len(pf["roles"])} framework roles'), ('users-round', f'{len(pf["profs"])} professions'), ('graduation-cap', f'{len(set(allids))} learning resources')])
+        body += self.tabbed(tabs, 'Professions and skills views')
+        drawer = [{'label': 'Views', 'icon': 'briefcase', 'items': [{'id': k, 'label': l, 'icon': ic} for (k, l, _), ic in zip(tabs, ['users-round', 'route', 'building-2', 'graduation-cap', 'book-marked'])]},
+                  {'label': 'Career pathways', 'icon': 'route', 'items': [{'id': f'role-{r["id"]}', 'label': r['title'], 'icon': 'route'} for r in pf['roles']]}]
+        return self.page('professions', 'Professions and skills', body, drawer, crumbs=['Frameworks', 'Professions and skills'])
+
+    def p_change(self):
+        d, ch = self.d, self.d['change']
+        stg = {s['id']: s for s in ch['stages']}
+        strip = ''.join(f'<li class="lc-stage" id="stage-{s["id"]}"><div class="lc-head">{icon(s["icon"])}<h3>{E(s["name"])}</h3></div>{ul(ch["touchpoints"][s["id"]])}'
+                        f'<p class="hint">{self.stage_pills(ch, s["id"])}</p></li>' for s in ch['stages'])
+        cards, all_ids = '', []
+        for x in ch['items']:
+            ids = [f'{x["id"]}.a{i}' for i in range(len(x['actions']))]
+            all_ids += ids
+            acts = ''.join(f'<li>{mark_done(i, "Done")}<span>{E(a)}</span></li>' for i, a in zip(ids, x['actions']))
+            refs = ''.join(f'<li>{self.rb_link(r)}</li>' for r in x['refs'])
+            cards += f'''<li class="cr-card ch-card" id="{x["id"]}" data-item data-mode="{x["mode"].lower()} {"bau change" if x["mode"] == "Both" else ""}" data-stage="{x["stage"]}">
+<div class="cr-head">{tile(x["icon"], "sm")}<div><p class="caption">{E(x["id"])} · {E({"BAU": "Business as usual", "Change": "Change programmes", "Both": "Business as usual and change"}[x["mode"]])} · {E(stg[x["stage"]]["name"])}</p><h3>{E(x["title"])}</h3></div>{status_tag(ids)}</div>
+<p>{E(x["why"])}{prov(x["prov"])}</p>{progress_widget(ids, "Actions done")}
+<h4>{icon("list-checks")} Actions</h4><ol class="questions">{acts}</ol>
+<div class="cols"><div><h4>{icon("file-text")} Evidence</h4>{ul(x["evidence"])}</div><div><h4>{icon("users-round")} Roles</h4><p>{self.role_pills(x["roles"])}</p>
+<h4>{icon("radar")} Capabilities</h4><p>{" ".join(self.cr_pill(c) for c in x["cr"])}</p></div></div>
+{f'<h4>{icon("scale")} Rulebook</h4><ul>{refs}</ul>' if refs else ''}</li>'''
+        gaps = [c for c in d['capmap'] if c['flag'] in ('I', 'N')]
+        gap_rows = [[f'<a href="capability-model.html#{c["id"]}">{E(c["id"])}</a>', E(c['name']), self.flag(c['flag']), E(c['coverage']),
+                     ' '.join(f'<a class="pill" href="#{x["id"]}">{E(x["id"])}</a>' for x in ch['items'] if c['id'] in x['cr']) or 'See the capability model'] for c in gaps]
+        st_opts = ''.join(f'<option value="{s["id"]}">{E(s["name"])}</option>' for s in ch['stages'])
+        body = self.hero('construction', 'Playbooks', 'Delivery and change',
+                         'How to make the DAM Policy stick: in the yearly business-as-usual cycle, and inside the programmes and projects that create, change and retire data assets.',
+                         brief=['Most critical data assets are created or replaced by change programmes, so controls belong in them.', 'Each item lists actions, evidence, roles and the rules behind it.', 'Tick actions as you go; progress stays in your browser.'],
+                         meta=[('construction', f'{len(ch["items"])} practices'), ('list-checks', f'{len(all_ids)} actions'), ('workflow', f'{len(ch["stages"])} life cycle stages')])
+        body += f'''<h2 id="gaps">{icon("flag")} What the policy leaves to you</h2>
+<p>The policy states its requirements briefly. These capabilities are needed to meet it but are only implied, or not stated at all. They are where organisations most often need help.</p>
+{table("t-gaps", "Implicit and inferred capabilities, and where this page helps", ["ID", "Capability", "In the policy", "Portal coverage", "Practices"], gap_rows)}
+<h2 id="lifecycle">{icon("route")} DAM across the delivery life cycle</h2>
+<p>Stages follow the GOV.UK Service Manual phases and the project delivery standard. Use it as an overlay on your own programme plan.</p>
+<ol class="lc-strip">{strip}</ol>
+<h2 id="practices">{icon("list-checks")} Practices</h2>{progress_widget(all_ids, "All practices")}
+<div class="filters" data-filter="ch-list" role="group" aria-label="Filter practices"><div><label for="c-m">Setting</label><select id="c-m" name="mode"><option value="">All</option><option value="bau">Business as usual</option><option value="change">Change programmes</option></select></div>
+<div><label for="c-s">Stage</label><select id="c-s" name="stage"><option value="">All</option>{st_opts}</select></div><div><label for="c-q">Contains</label><input id="c-q" type="search" name="q"></div><p class="count-out" aria-live="polite"></p></div>
+<ul class="cr-list" id="ch-list">{cards}</ul>
+<p>Download every action as <a href="data/change-checklist.csv">CSV</a> to load into your own plan or tracker.</p>
+<div class="notice-box">{icon("info")}<p>These practices are this portal's synthesis{prov("O")} of the rulebook entries listed with each one. They add no new requirements; where they differ from your department's own delivery or assurance rules, follow your department.</p></div>'''
+        drawer = [{'label': 'Delivery and change', 'icon': 'construction', 'items': [
+            {'id': 'gaps', 'label': 'What the policy leaves to you', 'icon': 'flag', 'count': len(gaps)},
+            {'id': 'lifecycle', 'label': 'Across the life cycle', 'icon': 'route', 'count': len(ch['stages'])},
+            {'id': 'practices', 'label': 'Practices', 'icon': 'list-checks', 'count': len(ch['items'])}]},
+                  {'label': 'Practices', 'icon': 'list-checks', 'items': [{'id': x['id'], 'label': x['title'], 'icon': x['icon']} for x in ch['items']]}]
+        return self.page('change', 'Delivery and change', body, drawer, crumbs=['Playbooks', 'Delivery and change'])
+
     def p_status(self):
         st = self.status
         if not st:
@@ -1272,6 +1750,7 @@ class Site:
 <h2 id="sources">{icon("library")} Sources</h2>{table("t-src-health", "Source checks", ["Source", "State", "Last updated (GOV.UK)", "Detail"], srows)}
 <h2 id="weight">{icon("gauge")} Page weight</h2><p>Envelope: {st["envelope_bytes"] // 1000} kB per page including shared files.</p>{table("t-weight", "Page weight", ["Page", "Weight", "Result"], prow)}
 <h2 id="links">{icon("link")} External links</h2><p>{st.get("links_checked", 0)} links checked; {st.get("links_blocked", 0)} sites refused automated checking (not counted as broken); {sum(1 for l in st.get("links", []) if l["state"] == "broken")} broken.</p>
+<h2 id="signposts">{icon("signpost")} Signposted sections</h2><p>{sum(x["checked"] for x in st.get("anchors", []))} GOV.UK sections linked from the capability model checked across {len(st.get("anchors", []))} pages; {sum(len(x["missing"]) for x in st.get("anchors", []))} no longer found.</p>
 <p>Machine-readable: <a href="data/status.json">status.json</a>.</p>'''
         drawer = [{'label': 'Status', 'icon': 'activity', 'items': [{'id': 'problems', 'label': 'Problems', 'icon': 'triangle-alert', 'count': len(st['problems'])},
                                                                      {'id': 'sources', 'label': 'Sources', 'icon': 'library', 'count': len(srows)},
@@ -1403,7 +1882,7 @@ class Site:
         d, m, out = self.d, self.m, self.out / 'data'
         if self.status:
             (out / 'status.json').write_text(json.dumps(self.status, indent=1), encoding='utf-8')
-        (out / 'playbooks.json').write_text(json.dumps(d, indent=1, ensure_ascii=False, default=str), encoding='utf-8')
+        (out / 'playbooks.json').write_text(json.dumps({k: v for k, v in d.items() if not k.startswith('_')}, indent=1, ensure_ascii=False, default=str), encoding='utf-8')
 
         def write_csv(name, header, rows):
             buf = io.StringIO()
@@ -1418,8 +1897,28 @@ class Site:
                   [[c['id'], c['term'], '; '.join(c.get('alt') or []), c['broader'] or '', c['def'], ' '.join(c['caps']), c['prov']] for c in d['concepts']])
         write_csv('traceability.csv', ['requirement', 'kind', 'moscow', 'text', 'features', 'checks'],
                   [[r['id'], r['kind'], r['moscow'], r['text'], ' '.join(r['features']), ' '.join(r['checks'])] for r in d['design']['requirements']])
+        write_csv('sector-rules.csv', ['supplement', 'rule_id', 'element', 'rule', 'dimension', 'check', 'params'],
+                  [[x['id'], r['id'], r['element'], r['rule'], r['dimension'], r['check'], json.dumps(r['params'], sort_keys=True)] for x in d['supplements'] for r in x['rules']])
+        (out / 'rules').mkdir(exist_ok=True)
+        for x in d['supplements']:
+            doc = {'asset': {'id': f'example-{slug(x["title"])}', 'title': f'Starter rules: {x["title"]} (adapt column names to your data)', 'owner': 'Your organisation', 'importance': 3},
+                   'rules': [dict({'id': r['id'], 'check': r['check'], 'description': r['rule'], 'dimension': r['dimension']}, **r['params']) for r in x['rules']]}
+            (out / 'rules' / f'{x["id"].lower()}.yaml').write_text(
+                f'# {x["title"]}: starter quality rules in the Data Quality Commons (dqkit) format.\n# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.\n'
+                + yaml.safe_dump(doc, sort_keys=False, allow_unicode=True), encoding='utf-8')
         write_csv('rulebook.csv', ['id', 'group', 'title', 'publisher', 'url', 'updated', 'provenance', 'capabilities'],
                   [[x['id'], x['group'], x['title'], x['publisher'], x['url'], x.get('updated') or '', x['prov'], ' '.join(x['caps'])] for x in d['rulebook']])
+        if 'capmap' in d:
+            write_csv('capability-map.csv', ['id', 'capability', 'cluster', 'flag', 'flag_meaning', 'dam_policy_section', 'signposts', 'dma_topics', 'dmbok', 'dcam', 'ddat_skills', 'professions', 'portal_coverage', 'note'],
+                      [[c['id'], c['name'], c['cluster'], FLAGS[c['flag']][0], FLAGS[c['flag']][1], (self.src['SRC-DAM']['url'] + '#' + c['dam']) if c['dam'] else '',
+                        ' | '.join(f"{sg['label']} ({FLAGS[sg['flag']][0]}): {self.doc_url(sg['doc'], sg['a'])}" for sg in c['signposts']),
+                        ' '.join(str(t) for t in c['dma']), '; '.join(c['dmbok']), '; '.join(c['dcam']), ' '.join(c['skills']), ' '.join(c['profs']), c['coverage'], c['note']] for c in d['capmap']])
+            write_csv('ddat-role-skills.csv', ['role', 'role_url', 'skill', 'skill_url', 'levels_by_role_level'],
+                      [[r['title'], r['url'], s[0], 'https://ddat-capability-framework.service.gov.uk/skills/#' + s[1], s[2]] for r in d['professions']['roles'] for s in r['skills']])
+            write_csv('change-checklist.csv', ['id', 'title', 'mode', 'stage', 'action', 'roles', 'rulebook', 'capabilities'],
+                      [[x['id'], x['title'], x['mode'], x['stage'], a, ' '.join(x['roles']), ' '.join(x['refs']), ' '.join(x['cr'])] for x in d['change']['items'] for a in x['actions']])
+            write_csv('maturity-structure.csv', ['topic', 'topic_name', 'section_url'] + [t['name'] for t in d['maturity']['themes']],
+                      [[t['n'], t['name'], d['maturity']['url'] + '#' + t['anchor']] + [t['rows'][th['name']] for th in d['maturity']['themes']] for t in d['maturity']['topics']])
         write_csv('metadata-dictionary.csv', ['property', 'mem_slot', 'obligation', 'rule'],
                   [[x['prop'], x['mem'], x['obligation'], x['rule']] for x in self.caps['cat']['metadata']])
         base = m['site_url'] + 'vocab#'

@@ -16,7 +16,8 @@ clipboard-list key-round user-cog database chart-line users gavel lock-keyhole s
 book-marked user-check settings-2 clipboard-check stamp pencil-line share-2 send calendar-clock crosshair ruler chart-column
 list-ordered wrench presentation activity calendar-check accessibility heart-handshake target lightbulb circle-help book-open
 route map arrow-right download printer type award timer layers circle chevron-down chevron-right x rotate-ccw panel-left
-compass milestone badge-check signpost hand-helping languages eye brain a-large-small sliders-horizontal play link""".split()
+compass milestone badge-check signpost hand-helping languages eye brain a-large-small sliders-horizontal play link
+banknote construction handshake arrow-right-left trending-up radar archive briefcase grid-3x3 school""".split()
 
 
 def main():

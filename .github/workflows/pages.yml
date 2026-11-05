@@ -42,7 +42,17 @@ jobs:
           cat build/health.txt
       - name: Build (with the health report)
         run: python tools/build.py
+      - name: Data Quality Commons kit, pinned, for the sector rule run (T-VAL)
+        run: |
+          if git clone --quiet https://github.com/cyberdudeuk/dq-commons.git "$RUNNER_TEMP/dq-commons" \
+             && git -C "$RUNNER_TEMP/dq-commons" checkout --quiet f0f47424bb30dce5e7cece166d4d1c2d71fe1cef; then
+            pip install -r "$RUNNER_TEMP/dq-commons/requirements.txt"
+          else
+            echo "::warning::Data Quality Commons kit not reachable; the sector rule run (T-VAL) will be skipped"
+          fi
       - name: Vaccination tests (every static check must fail on a deliberate break)
+        env:
+          DQKIT_PATH: ${{ runner.temp }}/dq-commons
         run: python -m unittest discover -s tests -v
       - name: Static checks
         run: python tools/check_site.py
@@ -50,7 +60,7 @@ jobs:
         run: python tools/check_browser.py
       - name: Browser check vaccinations
         run: |
-          for b in overflow contrast focusfill consoleerror search tabs filters noscript contact progress display; do
+          for b in overflow contrast focusfill consoleerror search tabs filters noscript contact progress display finder selfassess; do
             python tools/check_browser.py --break "$b"
           done
       - name: Open or update a health issue for a person to act on

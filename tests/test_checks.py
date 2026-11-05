@@ -19,7 +19,8 @@ def fresh():
     tmp = Path(tempfile.mkdtemp(prefix='dcp-'))
     repo = tmp / 'repo'
     (repo / 'content').mkdir(parents=True)
-    shutil.copy(ROOT / 'content' / 'playbooks.yaml', repo / 'content' / 'playbooks.yaml')
+    for f in ('playbooks.yaml', 'frameworks.yaml', 'source-anchors.json'):
+        shutil.copy(ROOT / 'content' / f, repo / 'content' / f)
     for f in ('README.md', 'LICENSE', 'CITATION.cff'):
         shutil.copy(ROOT / f, repo / f)
     site = repo / 'site'
@@ -54,6 +55,20 @@ class HealthRun(unittest.TestCase):
         finally:
             health.urllib.request.urlopen = orig
         self.assertTrue(seen['accept'].startswith('text/html'), 'page checks must ask for HTML first (D-013)')
+
+
+    def test_hl02_missing_anchor_is_reported(self):
+        import json as _json
+        import health
+        import yaml
+        d = yaml.safe_load((ROOT / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+        orig = health.fetch
+        health.fetch = lambda url, timeout=20, accept=None: (200, _json.dumps({'details': {'body': '<h2 id="something-else">x</h2>'}}).encode())
+        try:
+            rows = health.check_anchors(d)
+        finally:
+            health.fetch = orig
+        self.assertTrue(rows and all(r['missing'] for r in rows), 'a page without the signposted sections must be reported (HL-02)')
 
 
 class Vaccination(unittest.TestCase):
@@ -232,6 +247,73 @@ class Vaccination(unittest.TestCase):
         edit(y, 'reqs: [DAM-R08, DAM-R14]', 'reqs: [DAM-R08, DAM-R99]')
         with self.assertRaises(build.ContentError):
             build.load(y)
+
+    # version 1.4
+    def test_c21_framework_text_copied(self):
+        edit(self.s / 'capability-model.html', '</main>', '<p>Makes data available by default only to a single specialist person or team.</p></main>')
+        self.fails('c21_no_restricted_licence_text')
+
+    def test_c22_unverified_anchor(self):
+        edit(self.s / 'capability-model.html', '#data-ownership"', '#data-owners-old-section"')
+        self.fails('c22_signposts_verified')
+
+    def test_c22_missing_flag(self):
+        t = (self.s / 'capability-model.html').read_text(encoding='utf-8')
+        i = t.index('<li class="cr-card" id="CR-05"')
+        j = t.index('class="flag-badge', i)
+        (self.s / 'capability-model.html').write_text(t[:j] + 'class="no-badge' + t[j + len('class="flag-badge'):], encoding='utf-8')
+        self.fails('c22_signposts_verified')
+
+    def test_c23_blank_citation(self):
+        (self.r / 'CITATION.cff').write_text('', encoding='utf-8')
+        self.fails('c23_repository_metadata')
+
+    def test_c23_citation_version_drift(self):
+        edit(self.r / 'CITATION.cff', 'version: 1.4.0', 'version: 1.3.9')
+        self.fails('c23_repository_metadata')
+
+    def test_build_rejects_unverified_signpost(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        edit(y, 'a: identify-your-critical-data-assets', 'a: identify-your-critical-data-assets-v2')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_explicit_without_clause(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        edit(y, "  flag: E\n  dam: data-ownership", "  flag: E\n  dam: null")
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_unknown_skill(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        edit(y, '  - data-maturity\n', '  - data-wizardry\n')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+
+class SectorRulesRun(unittest.TestCase):
+    """T-VAL: every generated sector rule file is valid for, and runs in, the Data Quality Commons kit (dqkit)."""
+    def test_rule_files_validate_and_run(self):
+        import os
+        extra = os.environ.get('DQKIT_PATH')
+        if extra:
+            sys.path.insert(0, extra)
+        try:
+            import pandas as pd
+            from dqkit import rules as dq
+        except ImportError:
+            self.skipTest('dqkit not available; CI installs it from a pinned commit')
+        import yaml
+        files = sorted((ROOT / 'site' / 'data' / 'rules').glob('*.yaml'))
+        self.assertTrue(files, 'no generated rule files; run tools/build.py first')
+        for f in files:
+            spec = yaml.safe_load(f.read_text(encoding='utf-8'))
+            dq.validate_spec(spec)
+        spec = yaml.safe_load((ROOT / 'site' / 'data' / 'rules' / 'sup-hlt.yaml').read_text(encoding='utf-8'))
+        cols = {r['column'] for r in spec['rules'] if 'column' in r}
+        df = pd.DataFrame({c: ['x'] for c in cols})
+        res = dq.run(df, spec)
+        self.assertTrue(res, 'dqkit returned no result')
 
 
 if __name__ == '__main__':

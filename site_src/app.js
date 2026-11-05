@@ -75,12 +75,20 @@
       var items = $$(':scope > li:not(.more)', list);
       if (items.length < 2) break;
       var last = items[items.length - 1];
-      if (last.querySelector('[aria-current]') && items.length > 2) last = items[items.length - 2];
+      if ((last.querySelector('[aria-current]') || last.classList.contains('current')) && items.length > 2) last = items[items.length - 2];
       mlist.insertBefore(last, mlist.firstChild);
     }
     if (!mlist.children.length) more.hidden = true;
   }
   if (bar) {
+    $$('li.group > button', bar).forEach(function (gb) {
+      gb.addEventListener('click', function () {
+        var li = gb.parentNode, open = !li.classList.contains('open');
+        $$('li.group.open', bar).forEach(function (o) { if (o !== li) { o.classList.remove('open'); o.querySelector('button').setAttribute('aria-expanded', 'false'); } });
+        li.classList.toggle('open', open); gb.setAttribute('aria-expanded', String(open));
+      });
+    });
+    doc.addEventListener('click', function (e) { if (!e.target.closest('#gbar')) $$('li.group.open,li.more.open', bar).forEach(function (o) { o.classList.remove('open'); o.querySelector('button').setAttribute('aria-expanded', 'false'); }); });
     var mb = bar.querySelector('li.more > button');
     if (mb) mb.addEventListener('click', function () {
       var li = mb.parentNode, open = !li.classList.contains('open');
@@ -214,6 +222,20 @@
     run();
   });
 
+  /* sector supplement finder */
+  var wiz = $('.wizard');
+  if (wiz) {
+    var outp = $('#wizard-out'), names = {};
+    $$('#sup-list [data-sup]').forEach(function (li) { names[li.getAttribute('data-sup')] = li.querySelector('strong').textContent; });
+    var showW = function () {
+      var want = {};
+      $$('input[data-q]', wiz).forEach(function (c) { if (c.checked) c.getAttribute('data-sups').split(' ').forEach(function (s) { want[s] = 1; }); });
+      var ids = Object.keys(want);
+      outp.innerHTML = ids.length ? '<ul>' + ids.map(function (s) { return '<li><a href="#' + esc(s) + '">' + esc(names[s] || s) + '</a></li>'; }).join('') + '</ul>' : 'Tick a statement to see which supplements apply.';
+    };
+    $$('input[data-q]', wiz).forEach(function (c) { c.addEventListener('change', showW); });
+  }
+
   /* contact form: builds a pre-filled GitHub issue; nothing is stored here */
   var cf = $('#contact-form');
   if (cf) cf.addEventListener('submit', function (e) {
@@ -279,7 +301,7 @@
     if (e.key === 'Escape') {
       if (drawer && narrow.matches && !drawer.hidden) { setDrawer(false, false); if (dsw) dsw.focus(); }
       if (dpPanel && !dpPanel.hidden) { dpPanel.hidden = true; dpBtn.setAttribute('aria-expanded', 'false'); dpBtn.focus(); }
-      $$('.gbar li.more.open').forEach(function (li) { li.classList.remove('open'); li.querySelector('button').setAttribute('aria-expanded', 'false'); });
+      $$('.gbar li.more.open, .gbar li.group.open').forEach(function (li) { li.classList.remove('open'); li.querySelector('button').setAttribute('aria-expanded', 'false'); });
       hideTip();
     }
   });
@@ -318,5 +340,57 @@
     gw.addEventListener('click', function (e) { var n = e.target.closest('.node'); if (n) pick(n.getAttribute('data-id')); });
     gw.addEventListener('keydown', function (e) { var n = e.target.closest('.node'); if (n && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); pick(n.getAttribute('data-id')); } });
     var clr = $('#graph-clear'); if (clr) clr.addEventListener('click', function () { gw.classList.remove('dim'); detail.textContent = 'Select a shape to see what it connects to.'; });
+  }
+  /* self-assessment: answers kept in this browser only; draws a radar and bars with SVG built through the DOM */
+  var saData = json('sa-data'), saChart = $('#sa-chart');
+  if (saData && saChart) {
+    var SAK = 'dcp-selfassess-v1', NS = 'http://www.w3.org/2000/svg', sa = {};
+    try { sa = JSON.parse(store.get(SAK) || '{}') || {}; } catch (e) { sa = {}; }
+    var el = function (n, a) { var x = doc.createElementNS(NS, n); for (var k in a) x.setAttribute(k, a[k]); return x; };
+    var lvl = function (v) { return v ? v + '. ' + saData.levels[v - 1] : 'Not assessed'; };
+    var drawSA = function () {
+      var ts = saData.topics, n = ts.length, cx = 170, cy = 150, R = 105, done = 0;
+      var svg = el('svg', { viewBox: '0 0 340 300', 'aria-hidden': 'true', focusable: 'false' });
+      for (var r = 1; r <= 5; r++) {
+        var ring = [];
+        for (var i = 0; i < n; i++) { var a = -Math.PI / 2 + i * 2 * Math.PI / n; ring.push((cx + Math.cos(a) * R * r / 5).toFixed(1) + ',' + (cy + Math.sin(a) * R * r / 5).toFixed(1)); }
+        svg.appendChild(el('polygon', { 'class': 'grid', points: ring.join(' ') }));
+      }
+      var pts = [];
+      ts.forEach(function (t, i) {
+        var a = -Math.PI / 2 + i * 2 * Math.PI / n, v = +sa[t.id] || 0; if (v) done++;
+        svg.appendChild(el('line', { 'class': 'grid', x1: cx, y1: cy, x2: (cx + Math.cos(a) * R).toFixed(1), y2: (cy + Math.sin(a) * R).toFixed(1) }));
+        var lx = cx + Math.cos(a) * (R + 22), ly = cy + Math.sin(a) * (R + 16);
+        var tx = el('text', { 'class': 'lbl', x: lx.toFixed(1), y: (ly + 4).toFixed(1), 'text-anchor': Math.abs(Math.cos(a)) < 0.3 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end') });
+        tx.textContent = String(i + 1); svg.appendChild(tx);
+        pts.push([(cx + Math.cos(a) * R * v / 5), (cy + Math.sin(a) * R * v / 5)]);
+      });
+      if (done) {
+        svg.appendChild(el('polygon', { 'class': 'area', points: pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') }));
+        pts.forEach(function (p) { svg.appendChild(el('circle', { 'class': 'dot', cx: p[0].toFixed(1), cy: p[1].toFixed(1), r: 3.5 })); });
+      }
+      saChart.textContent = '';
+      saChart.appendChild(svg);
+      saChart.setAttribute('aria-label', 'Radar chart of maturity topics: ' + ts.map(function (t, i) { return (i + 1) + ' ' + t.name + ' ' + lvl(+sa[t.id] || 0); }).join('; '));
+      var bars = '<h4>DAM strands</h4><ul class="sa-bars">' + saData.strands.map(function (s) {
+        var v = +sa[s.id] || 0;
+        return '<li><span>' + esc(s.name) + ': <strong>' + esc(lvl(v)) + '</strong></span><span class="sa-bar" aria-hidden="true"><span data-w="' + (v * 20) + '"></span></span></li>';
+      }).join('') + '</ul><p>' + done + ' of ' + n + ' topics assessed. Numbers on the chart are topic numbers; the outer ring is level 5.</p>';
+      $('#sa-summary').innerHTML = bars;
+      $$('#sa-summary [data-w]').forEach(function (b) { b.style.width = b.getAttribute('data-w') + '%'; });
+      var rows = [['area', 'item', 'level', 'level_name']];
+      saData.strands.forEach(function (s) { var v = +sa[s.id] || ''; rows.push(['DAM strand', s.name, v, v ? saData.levels[v - 1] : '']); });
+      ts.forEach(function (t, i) { var v = +sa[t.id] || ''; rows.push(['Maturity topic ' + (i + 1), t.name, v, v ? saData.levels[v - 1] : '']); });
+      var csv = rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
+      $('#sa-csv').setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+    };
+    $$('[data-sa]').forEach(function (c) {
+      var k = c.getAttribute('data-sa');
+      if (c.type === 'radio') c.checked = String(sa[k] || '') === c.value; else c.value = sa[k] || '';
+      c.addEventListener('change', function () { if (c.value) sa[k] = +c.value; else delete sa[k]; store.set(SAK, JSON.stringify(sa)); drawSA(); });
+    });
+    $('#sa-print').addEventListener('click', function () { window.print(); });
+    $('#sa-clear').addEventListener('click', function () { sa = {}; store.del(SAK); $$('[data-sa]').forEach(function (c) { if (c.type === 'radio') c.checked = false; else c.value = ''; }); drawSA(); });
+    drawSA();
   }
 })();

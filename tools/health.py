@@ -5,6 +5,7 @@ Checks, without changing any content:
   - the review date has not passed
   - every source can still be reached, and GOV.UK sources have not been updated since they were last verified
   - every page stays inside the page-weight envelope
+  - every GOV.UK section the capability map signposts still exists (HL-02)
 
 Writes a machine-readable report (status.json) that tools/build.py renders as the Status page.
 Exit code 0 when healthy, 2 when something needs a person's attention.
@@ -70,6 +71,40 @@ def check_sources(d, state):
     return out
 
 
+def check_anchors(d):
+    """HL-02 (version 1.4): every section the capability map signposts still exists on the live GOV.UK page."""
+    fw = ROOT / 'content' / 'frameworks.yaml'
+    if not fw.exists():
+        return []
+    f = yaml.safe_load(fw.read_text(encoding='utf-8'))
+    urls = {s['id']: s['url'] for s in d['sources']}
+    urls.update({x['id']: x['url'] for x in d.get('rulebook', []) + f.get('rulebook_more', [])})
+    want = {}
+    for c in f.get('capmap', []):
+        if c.get('dam'):
+            want.setdefault('SRC-DAM', set()).add(c['dam'])
+        for sg in c['signposts']:
+            if sg.get('a'):
+                want.setdefault(sg['doc'], set()).add(sg['a'])
+    out = []
+    for doc, anchors in sorted(want.items()):
+        url = urls[doc]
+        row = {'doc': doc, 'url': url, 'checked': len(anchors), 'missing': [], 'state': 'ok'}
+        try:
+            path = urllib.parse.urlparse(url).path
+            _, body = fetch('https://www.gov.uk/api/content' + path, accept='application/json')
+            j = json.loads(body)
+            det = j.get('details', {})
+            html_body = det.get('body', '') or ''.join(x.get('body', '') for x in det.get('parts', []))
+            row['missing'] = sorted(a for a in anchors if f'id="{a}"' not in html_body)
+            if row['missing']:
+                row['state'] = 'changed'
+        except (urllib.error.URLError, TimeoutError, ValueError, OSError) as e:
+            row['state'], row['detail'] = 'unreachable', str(e)[:160]
+        out.append(row)
+    return out
+
+
 def external_links(site):
     import re
     urls = set()
@@ -124,19 +159,21 @@ def main(argv=None):
         STATE.write_text(json.dumps(new, indent=1, sort_keys=True) + '\n')
         print(f'Recorded {len(new)} GOV.UK source dates. Commit content/source-state.json in a reviewed pull request.')
         return 0
+    anchors = check_anchors(d) if not a.no_links else []
     weights = page_weights(Path(a.site))
     links = external_links(Path(a.site)) if not a.no_links else []
     problems = []
     if today > review:
         problems.append(f'Review date {review} has passed')
     problems += [f'{r["id"]}: {r["state"]} - {r["detail"]}' for r in sources if r['state'] in ('changed', 'unreachable')]
+    problems += [f'{r["doc"]}: signposted sections no longer on the page: {", ".join(r["missing"])}' for r in anchors if r['missing']]
     problems += [f'Broken link: {l["url"]} ({l.get("code") or l.get("detail")})' for l in links if l['state'] == 'broken']
     problems += [f'{w["page"]} weighs {w["bytes"]} bytes, over the {PAGE_ENVELOPE} byte envelope' for w in weights if not w['ok']]
     report = {
         'generated': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
         'today': today.isoformat(), 'review_date': review.isoformat(), 'review_due': today > review,
         'healthy': not problems, 'problems': problems, 'sources': sources, 'pages': weights,
-        'envelope_bytes': PAGE_ENVELOPE, 'links': links,
+        'envelope_bytes': PAGE_ENVELOPE, 'links': links, 'anchors': anchors,
         'links_checked': len(links), 'links_blocked': sum(1 for l in links if l['state'] == 'blocked'),
     }
     out = Path(a.out)

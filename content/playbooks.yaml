@@ -16,7 +16,7 @@ meta:
   short_title: DAM capability playbooks
   subtitle: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
   keywords: [data asset management, DAM policy, critical data assets, data governance, data catalogue, metadata, data quality, DQAP, data ownership, UK government]
-  version: 1.2.0
+  version: 1.4.0
   as_of: '2026-11-05'
   review: '2027-02-05'
   verified_on: '2026-11-05'
@@ -863,6 +863,8 @@ open_register:
 - {id: OR-10, item: "Data owner versus information asset owner is resolved by the GOV.UK data ownership model (three options). The two maturity models and the remaining glossary conflicts are not resolved here.", who: Service owner}
 - {id: OR-12, item: "The sector-depth assessment (DD-01 to DD-14) needs subject experts from each sector. Its source leads now link to the related rulebook entries, each labelled with how it was checked; leads with no entry are marked for checking.", who: Service owner, with sector data leads}
 - {id: OR-13, item: "GitHub Pages is on. Branch protection on main, Discussions, private vulnerability reporting and the repository description and topics must be set in the repository settings.", who: Repository owner}
+- {id: OR-14, item: "The Data Maturity Assessment framework is CC BY-NC-SA 4.0 and asks government users to contact CDDO. Confirm whether its level descriptions may be shown inside this portal; until then it is linked, not copied (F-05).", who: Service owner}
+- {id: OR-15, item: "The explicit, implicit and inferred flags on the capability model are this portal's reading of the policy. Ask the GDS data policy team to confirm them, especially the inferred ones.", who: Service owner, with GDS Data Frameworks and Standards}
 - {id: OR-11, item: "Verified on GOV.UK: Table 4 of the issues framework contradicts its own rule for a 97.5% target (finding F-01). Raise with the GDS data quality team; tracked as a repository issue.", who: Service owner}
 
 defects:
@@ -881,6 +883,9 @@ defects:
 - {id: D-012, found: First CI run on GitHub (version 1.1), defect: "The health step failed before running because its output folder did not exist on a fresh runner.", cause: "The build folder is ignored by git, so it exists locally but not in CI.", check: "The workflow creates the folder first; the CI run itself is the check and blocks publishing when it fails."}
 - {id: D-013, found: First external link check (version 1.2), defect: "The health run reported a working GOV.UK organisation page as broken (HTTP 406).", cause: "Page checks asked for JSON before HTML, which some GOV.UK pages refuse.", check: "A unit test proves page checks ask for HTML first; it fails when the old header is restored."}
 - {id: D-014, found: Browser checks (version 1.2), defect: "Stopping all table row headings from wrapping made the library, knowledge and policy pages scroll sideways on phones, and placed feature links too close together.", cause: "A global no-wrap rule applied to long titles as well as short identifiers.", check: "B-02 (sideways scrolling at six widths) and B-01 (target size) caught it; no-wrap now applies only to identifiers. A second cause was screen-reader-only labels inside wide tables escaping their scroll region; scroll regions are now positioned so they contain them."}
+- {id: D-015, found: Browser checks (version 1.3), defect: "On the sectors page at 320 pixels, a filter drop-down sized itself to its longest option and pushed the page sideways.", cause: "Flex items in the filter bar kept their minimum content width.", check: "B-02 caught it before release; filter controls may now shrink to the screen width."}
+- {id: D-016, found: Vaccination tests (version 1.4), defect: "The new check that every capability shows its explicit, implicit or inferred flag passed even when the flag was removed.", cause: "Signpost badges inside the card use the same style, so the check found those instead.", check: "C-22 now looks only in the card heading; the vaccination test that exposed it stays in the suite."}
+- {id: D-017, found: Self-review before release 1.4, defect: "The repository's CITATION.cff was published empty in release 1.2.0, so GitHub showed no citation.", cause: "A version bump rewrote the file with a pattern that matched nothing and wrote back an empty result; no check looked at the file.", check: "C-23 now checks the citation file is complete and names the portal's version; two vaccination tests prove it fails on a blank file and on version drift."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1171,6 +1176,22 @@ modules:
   check:
   - {q: "Which duty asks public bodies to consider equality in their work?", options: [The public sector equality duty, The Freedom of Information Act, The Statistics and Registration Service Act], answer: 0, why: "The public sector equality duty in the Equality Act 2010 applies to public authorities in their functions."}
 
+- id: M11
+  title: Embedding the policy in delivery and change
+  level: Practitioner
+  minutes: 30
+  icon: construction
+  caps: [gov, cat, dq]
+  outcomes: [Name the capabilities the policy relies on but does not state, Build DAM checkpoints into a business case and an assurance plan, Plan a legacy exit and a handover to business as usual]
+  activities:
+  - {id: a1, type: Read, text: "Read what the policy leaves to you and the life cycle overlay.", link: change.html#gaps}
+  - {id: a2, type: Do, text: "Take one programme you know and tick the actions that already happen, then list the gaps.", link: change.html#practices}
+  - {id: a3, type: Do, text: "Run the self-assessment for your organisation and download the result.", link: capability-model.html#cm-self}
+  - {id: a4, type: Reflect, text: "Which critical asset would be left without an owner if its project closed tomorrow?"}
+  check:
+  - {q: "Which guidance makes a register of data assets its second principle?", options: [Managing legacy technology, The Magenta Book, The Service Standard], answer: 0, why: "The GOV.UK guidance on managing legacy technology asks organisations to build a complete and accurate register of their data assets."}
+  - {q: "How does the capability model flag a need the DAM Policy text does not state at all?", options: [Inferred, Implicit, Explicit], answer: 0, why: "Inferred means the need is not in the text and comes from good practice and adjacent rulebooks."}
+
 # ---------------------------------------------------------------------------
 # Inclusion (diversity, equity, equality, inclusion and accessibility)
 # ---------------------------------------------------------------------------
@@ -1434,6 +1455,25 @@ findings:
   src: null
   verified: '2026-11-05'
   action: "Link to the new address."
+- id: F-05
+  title: The government data maturity framework uses a licence this portal cannot carry
+  detail: "The Data Maturity Assessment for Government framework is published under CC BY-NC-SA 4.0, not the Open Government Licence, and asks government users to contact CDDO. Its level descriptions cannot be copied into OGL content."
+  src: SRC-DMA
+  verified: '2026-11-05'
+  action: "The capability model links to each topic and level and records only names and row counts. Check C-21 stops its text being copied (OR-14)."
+- id: F-06
+  title: Legacy technology guidance asks for a data asset register but does not mention the DAM Policy
+  detail: "The second principle of 'Managing legacy technology' (updated 15 October 2026) is to build a complete and accurate register of your data assets. The DAM Policy and its guidance do not refer to it, so legacy programmes may build a second, separate register."
+  rb: RB-LEGACY
+  verified: '2026-11-05'
+  action: "Delivery and change practice CH-04 starts legacy exits from the DAM catalogue. Suggest GDS cross-refers the two."
+- id: F-07
+  title: The government learning platform is not yet fully accessible
+  detail: "The Government Skills Campus accessibility statement (last updated 14 April 2026) says some parts do not meet WCAG 2.2 AA, with compliance aimed for by the end of 2026."
+  url: https://www.gov.uk/government/publications/accessibility-statement-for-the-government-skills-campus-gsc
+  url_title: Accessibility statement for the Government Skills Campus
+  verified: '2026-11-05'
+  action: "The learning routes point to public GOV.UK pages first; organisations should check that learners with access needs can use the platform or have an alternative."
 - id: F-04
   title: Four metadata properties have no slot in the Metadata Exchange Model
   detail: "temporalCoverage, conformsTo, expires and supersededBy appear in the GOV.UK metadata guidance but not in the published MEM classes."
@@ -1488,6 +1528,11 @@ design:
   - {id: NFR-04, kind: Non-functional, moscow: Must, text: "Name roles, never people, and hold no personal data.", features: [all], checks: [C-04, C-17]}
   - {id: NFR-05, kind: Non-functional, moscow: Should, text: "Be findable by search engines with accurate descriptions.", features: [all], checks: [C-16]}
   - {id: TR-01, kind: Technical, moscow: Must, text: "Generate every page from one content file and refuse to build on a broken reference.", features: [all], checks: [T-VAL]}
+  - {id: FR-07, kind: Functional, moscow: Must, text: "Show every capability the policy and adjacent guidance need, flagged explicit, implicit or inferred, with a signpost to the section it comes from.", features: [capability-model], checks: [C-22, HL-02]}
+  - {id: FR-08, kind: Functional, moscow: Should, text: "Let organisations assess their maturity against the government model and DAM strands, keep the answers privately and download them.", features: [capability-model], checks: [B-13, C-21]}
+  - {id: FR-09, kind: Functional, moscow: Should, text: "Link each role in the policy to government professions, framework roles, skills and learning routes.", features: [professions], checks: [C-03, HL-01]}
+  - {id: FR-10, kind: Functional, moscow: Must, text: "Help organisations embed the policy in business as usual and in change programmes, with actions they can track.", features: [change], checks: [B-08, B-10]}
+  - {id: FR-11, kind: Functional, moscow: Should, text: "Help readers find which sector supplements apply to an asset.", features: [sectors], checks: [B-12, T-VAL]}
   - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services: Pages, issue forms, Discussions, Actions and releases.", features: [contact, status, whats-new], checks: [C-05, HL-01]}
   architecture:
     components:
@@ -1540,3 +1585,428 @@ credits:
 - {who: Deque Systems (axe-core), what: "Accessibility testing in the build, not shipped", licence: "MPL 2.0"}
 - {who: Microsoft (Playwright), what: "Browser testing in the build, not shipped", licence: "Apache 2.0"}
 - {who: segno, python-barcode, Pillow and PyYAML maintainers, what: "QR code, barcode, image generation and content parsing at build time", licence: "BSD (segno), MIT (python-barcode, PyYAML), MIT-CMU (Pillow)"}
+
+# ---------------------------------------------------------------------------
+# Sector and domain supplements (version 1.3)
+# Built from the sector assessment (domain_depth). Each supplement adds a governance overlay, extra catalogue fields,
+# a quality rule library in the Data Quality Commons rule format (runnable with dqkit), identifiers, a worked example
+# (illustrative, synthetic), risks to check and a checklist. Provenance: O (this playbook's synthesis) unless marked.
+# Rule checks and identifier schemes are those supported by dqkit (cyberdudeuk/dq-commons, dqkit/rules.py).
+# ---------------------------------------------------------------------------
+applicability:
+- {id: Q-PEOPLE, text: "It holds records about individual people", sups: [SUP-PER, SUP-SHR]}
+- {id: Q-HEALTH, text: "It holds health or care records", sups: [SUP-HLT, SUP-SOC]}
+- {id: Q-PLACE, text: "It holds addresses, locations or map geometry", sups: [SUP-GEO]}
+- {id: Q-STATS, text: "It is used to produce official statistics", sups: [SUP-STA]}
+- {id: Q-AI, text: "It is used, or may be used, for AI, machine learning or automated decision support", sups: [SUP-AI]}
+- {id: Q-SHARE, text: "Personal data in it is shared with, or acquired from, another organisation", sups: [SUP-SHR]}
+- {id: Q-FRAUD, text: "It is used to detect fraud or error", sups: [SUP-FRD]}
+- {id: Q-JUSTICE, text: "It supports law enforcement, justice, defence or security", sups: [SUP-JUS]}
+- {id: Q-LOCAL, text: "It flows to or from councils or the devolved governments", sups: [SUP-DEV, SUP-SOC]}
+- {id: Q-CODES, text: "It relies on code lists or identifiers maintained by other organisations", sups: [SUP-REF]}
+- {id: Q-RECORDS, text: "It must be kept, archived or destroyed on a schedule", sups: [SUP-REC]}
+- {id: Q-SENSOR, text: "It is time-series or sensor data, such as environmental monitoring", sups: [SUP-ENV]}
+- {id: Q-LEARNERS, text: "It holds records about pupils or learners", sups: [SUP-EDU]}
+
+supplements:
+- id: SUP-HLT
+  dd: DD-01
+  title: Health and care data
+  icon: heart-handshake
+  summary: For critical data assets that hold patient-level or care records. Adds the health roles, duties and coding standards the core playbooks do not cover.
+  gov:
+  - "Map the data owner and steward to the Caldicott Guardian, the SIRO and, for health IT, the clinical safety officer. Record who holds each role for every asset."
+  - "Record the legal basis for each use, the common law duty of confidentiality position and whether the national data opt-out applies."
+  - "Check the organisation's latest Data Security and Protection Toolkit assessment covers the systems that hold the asset."
+  - "Apply the Caldicott principles when deciding what each user of the asset needs: the minimum necessary, justified for each purpose."
+  cat:
+  - {prop: legalBasis, term: "dpv:hasLegalBasis", rule: "The lawful basis and, for health data, the special category condition"}
+  - {prop: optOutApplied, term: "local extension", rule: "Whether the national data opt-out has been applied to this distribution (yes, no or not applicable)"}
+  - {prop: deidentification, term: "local extension", rule: "Identifiable, pseudonymised or anonymised, and the method used"}
+  - {prop: conformsTo, term: "dcterms:conformsTo", rule: "The NHS data set or Data Dictionary standard the data follows"}
+  rules:
+  - {id: HLT-01, element: NHS number, rule: "NHS number is recorded", dimension: completeness, check: not_null, params: {column: nhs_number}}
+  - {id: HLT-02, element: NHS number, rule: "NHS number is 10 digits with a valid modulus 11 check digit", dimension: validity, check: identifier, params: {column: nhs_number, scheme: nhs_number}}
+  - {id: HLT-03, element: Date of birth, rule: "Date of birth is not in the future", dimension: validity, check: not_future, params: {column: date_of_birth}}
+  - {id: HLT-04, element: Organisation code, rule: "Provider organisation code is in ODS format", dimension: validity, check: identifier, params: {column: provider_code, scheme: ods_code}}
+  - {id: HLT-05, element: Diagnosis, rule: "Primary diagnosis is in ICD-10 code format", dimension: validity, check: regex, params: {column: primary_diagnosis, pattern: "[A-Z][0-9]{2}(\\.?[0-9X])?"}}
+  - {id: HLT-06, element: Ethnicity, rule: "Ethnic category is not unknown or not stated", dimension: completeness, check: not_unknown, params: {column: ethnic_category}}
+  - {id: HLT-07, element: NHS number by group, rule: "NHS number completeness does not differ by more than 5 points between ethnic groups", dimension: completeness, check: group_disparity, params: {group: ethnic_category, tolerance: 5, inner: {check: not_null, column: nhs_number}}}
+  identifiers:
+  - {name: NHS number, format: "10 digits; the last is a modulus 11 check digit", prov: K}
+  - {name: ODS code, format: "3 to 6 letters and digits identifying an NHS or care organisation", prov: K}
+  example: "Illustrative, synthetic: an outpatient activity extract shared with a central department. Critical data elements are NHS number, provider code, attendance date and primary diagnosis. Baseline shows NHS number completeness of 97% overall but 91% for one ethnic group; HLT-07 records that as its own issue so it is not averaged away."
+  risks:
+  - "Pseudonymised data is still personal data; access controls and agreements still apply."
+  - "Opt-outs and local suppression can bias coverage for some groups; check coverage against an independent count."
+  - "Clinical codes can be valid in format but wrong in meaning; format checks do not replace clinical coding audit."
+  checklist:
+  - "Caldicott Guardian, SIRO and clinical safety officer roles are recorded for the asset"
+  - "Legal basis, confidentiality position and opt-out status are recorded on the catalogue record"
+  - "NHS number validity and completeness rules are in the DQAP"
+  - "Quality is broken down by ethnic group where lawful"
+  refs: [RB-CALD, RB-DSPT, RB-DPA]
+- id: SUP-SOC
+  dd: DD-02
+  title: Adult and children's social care data
+  icon: users
+  summary: For assets built from council returns, such as adult social care client level data and children's social care census returns, where the source systems sit outside the policy's scope.
+  gov:
+  - "Record which councils supply the data and that they are not bound by the DAM Policy; agree quality expectations through the collection's own guidance."
+  - "Name the owner for the national asset and a contact route for suppliers, not individuals."
+  - "Record changes to collection specifications as decisions, because they change what the asset means."
+  cat:
+  - {prop: spatial, term: "dcterms:spatial", rule: "The councils and nations covered, using GSS codes"}
+  - {prop: accrualPeriodicity, term: "dcterms:accrualPeriodicity", rule: "The submission cycle, for example quarterly"}
+  - {prop: conformsTo, term: "dcterms:conformsTo", rule: "The collection specification and its version"}
+  rules:
+  - {id: SOC-01, element: Council code, rule: "Supplying council is a valid GSS code", dimension: validity, check: identifier, params: {column: la_code, scheme: gss_code}}
+  - {id: SOC-02, element: NHS number, rule: "NHS number is valid where present, so care and health records can be linked", dimension: validity, check: identifier, params: {column: nhs_number, scheme: nhs_number}}
+  - {id: SOC-03, element: Event date, rule: "Event dates are not in the future", dimension: validity, check: not_future, params: {column: event_start_date}}
+  - {id: SOC-04, element: Submission, rule: "Each council's latest submission is no more than one quarter and 30 days old", dimension: timeliness, check: freshness, params: {column: submission_date, expected: P3M, lag: P30D}}
+  - {id: SOC-05, element: Person and event, rule: "Each event is recorded once for each person", dimension: uniqueness, check: unique, params: {columns: [person_id, event_id]}}
+  identifiers:
+  - {name: GSS code, format: "One letter (E, K, L, M, N, S or W) followed by 8 digits", prov: K}
+  example: "Illustrative, synthetic: a quarterly client level data asset. SOC-04 shows two councils have not submitted for two quarters; the owner records the gap in the quality statement rather than imputing it."
+  risks:
+  - "Councils use different case management systems, so the same field can be captured differently."
+  - "Late or missing submissions make national figures look better or worse than they are."
+  - "Linking to health data depends on NHS number quality in council systems."
+  checklist:
+  - "Supplying organisations and the collection specification are recorded"
+  - "Timeliness by supplier is measured and reported"
+  - "NHS number validity is checked where linkage is planned"
+  refs: [RB-CLD, RB-ASCOF, RB-CDM, RB-CIN]
+- id: SUP-GEO
+  dd: DD-03
+  title: Geospatial and address data
+  icon: map
+  summary: For assets that hold addresses, coordinates or map geometry. Adds geospatial metadata, open identifiers and positional quality.
+  gov:
+  - "Record the licence for any third-party geospatial data the asset depends on, and who may use derived data."
+  - "Use the open identifiers for property and street (UPRN and USRN) as the join between assets."
+  - "Apply the Geospatial Commission's guidance on ethical use of location data when location could identify people."
+  cat:
+  - {prop: spatial, term: "dcterms:spatial", rule: "The area covered, by GSS code or bounding box"}
+  - {prop: crs, term: "local extension (GEMINI spatial reference system)", rule: "The coordinate reference system, for example British National Grid (EPSG:27700)"}
+  - {prop: lineage, term: "dcterms:provenance", rule: "How the geometry was captured and processed"}
+  - {prop: conformsTo, term: "dcterms:conformsTo", rule: "UK GEMINI where the asset is geospatial"}
+  rules:
+  - {id: GEO-01, element: UPRN, rule: "UPRN is recorded", dimension: completeness, check: not_null, params: {column: uprn}}
+  - {id: GEO-02, element: UPRN, rule: "UPRN is 1 to 12 digits", dimension: validity, check: identifier, params: {column: uprn, scheme: uprn}}
+  - {id: GEO-03, element: Postcode, rule: "Postcode is in Royal Mail format", dimension: validity, check: identifier, params: {column: postcode, scheme: uk_postcode}}
+  - {id: GEO-04, element: Easting, rule: "Easting is within the British National Grid range", dimension: validity, check: range, params: {column: easting, min: 0, max: 700000}}
+  - {id: GEO-05, element: Northing, rule: "Northing is within the British National Grid range", dimension: validity, check: range, params: {column: northing, min: 0, max: 1300000}}
+  - {id: GEO-06, element: Area code, rule: "Area code is a GSS code", dimension: validity, check: identifier, params: {column: area_code, scheme: gss_code}}
+  identifiers:
+  - {name: UPRN, format: "Unique property reference number, up to 12 digits", prov: K}
+  - {name: USRN, format: "Unique street reference number, up to 8 digits", prov: K}
+  - {name: GSS code, format: "One letter followed by 8 digits", prov: K}
+  example: "Illustrative, synthetic: a register of public buildings. GEO-02 passes but 6% of UPRNs do not match the address base used by the receiving department; the owner logs a consistency issue and agrees a match-rate target."
+  risks:
+  - "A valid UPRN format does not prove the property exists or is the right one; check match rates against the authoritative address base."
+  - "Coordinates in mixed reference systems silently misplace features."
+  - "Small-area location data can identify people even when names are removed."
+  checklist:
+  - "UPRN and USRN are used as join keys where they exist"
+  - "The coordinate reference system and lineage are on the catalogue record"
+  - "Positional checks and match rates are in the DQAP"
+  - "Licences for third-party geospatial inputs are recorded"
+  refs: [RB-UPRN, RB-GEMINI, RB-QFAIR, RB-GEOBP]
+- id: SUP-STA
+  dd: DD-04
+  title: Official statistics and administrative sources
+  icon: chart-column
+  summary: For assets used to produce official statistics. Joins the DQAP to quality assurance of administrative data, so quality is reported once for both purposes.
+  gov:
+  - "Record the statistics produced from the asset and the producer responsible for them."
+  - "Agree with the statistics producer how supplier changes are communicated before they happen."
+  - "Use the DQAP as evidence for the assurance level set under quality assurance of administrative data."
+  cat:
+  - {prop: isReferencedBy, term: "dcterms:isReferencedBy", rule: "The official statistics that use the asset"}
+  - {prop: conformsTo, term: "dcterms:conformsTo", rule: "SDMX structure or statistical classification used, where one applies"}
+  rules:
+  - {id: STA-01, element: Reference period, rule: "Reference period is complete with no missing months", dimension: completeness, check: no_gaps, params: {column: period}}
+  - {id: STA-02, element: Counts, rule: "Monthly totals are not implausible outliers", dimension: accuracy, check: outlier, params: {column: total, method: iqr, k: 3}}
+  - {id: STA-03, element: Geography, rule: "Area codes are valid GSS codes", dimension: validity, check: identifier, params: {column: area_code, scheme: gss_code}}
+  - {id: STA-04, element: Units, rule: "Every measure column names its unit", dimension: consistency, check: header_has_unit, params: {}}
+  identifiers:
+  - {name: GSS code, format: "One letter followed by 8 digits", prov: K}
+  example: "Illustrative, synthetic: an administrative benefits extract used for quarterly statistics. STA-02 flags a sudden fall in one month that turns out to be a supplier system change; it is logged as a known issue in both the DQAP and the statistical release."
+  risks:
+  - "Operational changes in the supplier's system can look like real-world change."
+  - "Two quality reports for the same data drift apart unless one feeds the other."
+  checklist:
+  - "Statistics that depend on the asset are recorded on the catalogue record"
+  - "A supplier change notice process is agreed"
+  - "DQAP results are used as evidence for administrative data quality assurance"
+  refs: [RB-COP, RB-QAAD, RB-SDMX]
+- id: SUP-SHR
+  dd: DD-05
+  title: Data sharing and legal gateways
+  icon: share-2
+  summary: For every critical data asset that includes personal data, because critical data assets are defined by being shared. Adds a legal gateway record to the governance and catalogue records.
+  gov:
+  - "Keep a sharing decision record for each flow: purpose, lawful basis, any special category condition, legal power or gateway, DPIA reference, agreement reference and review date."
+  - "Check each flow against the Data (Use and Access) Act 2025 changes to UK GDPR at the next review."
+  - "Use a data sharing agreement for routine sharing, as the ICO code recommends, even where it is not mandatory."
+  - "Name the owner on both sides of every flow, by role."
+  cat:
+  - {prop: accessRights, term: "dcterms:accessRights", rule: "Restricted, with the agreement reference"}
+  - {prop: legalGateway, term: "local extension", rule: "The statutory power or legal basis for the flow"}
+  - {prop: rights, term: "dcterms:rights", rule: "Conditions on onward sharing and use"}
+  rules:
+  - {id: SHR-01, element: Agreement reference, rule: "Every shared extract carries the agreement reference", dimension: completeness, check: not_null, params: {column: agreement_ref}}
+  - {id: SHR-02, element: Extract date, rule: "Extracts arrive on the agreed schedule", dimension: timeliness, check: freshness, params: {column: extract_date, expected: P1M, lag: P7D}}
+  - {id: SHR-03, element: Columns, rule: "Only the columns in the agreement are present", dimension: validity, check: required_columns, params: {columns: [person_id, agreement_ref, extract_date]}}
+  identifiers: []
+  example: "Illustrative, synthetic: a monthly flow of eligibility data between two departments. The sharing decision record names the gateway, the DPIA and the agreement; SHR-03 fails when an extra free-text column appears, which is fixed at source before the next transfer."
+  risks:
+  - "Extra fields creep into extracts over time, beyond what the agreement allows."
+  - "Lawful basis recorded once at the start of a flow can go out of date when the law or the purpose changes."
+  checklist:
+  - "A sharing decision record exists for each flow, with a review date"
+  - "Agreement references appear on the catalogue record and in each extract"
+  - "Flows were reviewed against the Data (Use and Access) Act 2025 changes"
+  refs: [RB-DUAA, RB-DEA, RB-ICOSHARE, RB-DPA]
+- id: SUP-AI
+  dd: DD-06
+  title: AI-ready data
+  icon: brain
+  summary: For assets used, or likely to be used, for AI or automated decision support. Turns the GOV.UK AI-ready data guidance into checks at the annual review.
+  gov:
+  - "Record the AI task the data supports, whether outputs affect individuals, and which uses are out of scope, such as automated decisions."
+  - "Name the owner who approves AI uses, and decide what happens if a use changes."
+  - "Publish an algorithmic transparency record where a tool supports decisions about people."
+  - "Use the Data and AI Ethics Framework for new or higher-risk uses."
+  cat:
+  - {prop: aiPermittedUses, term: "local extension", rule: "Training, fine-tuning, inference or evaluation: which are allowed"}
+  - {prop: sensitiveFields, term: "local extension", rule: "Fields that are personal, confidential or special category"}
+  - {prop: provenance, term: "dcterms:provenance", rule: "Where the data comes from and how it is produced"}
+  - {prop: version, term: "dcat:version", rule: "Version, so a training set can be reconstructed exactly"}
+  rules:
+  - {id: AI-01, element: Label, rule: "Training labels are complete", dimension: completeness, check: not_null, params: {column: label}}
+  - {id: AI-02, element: Label by group, rule: "Label completeness does not differ by more than 5 points between groups", dimension: completeness, check: group_disparity, params: {group: group, tolerance: 5, inner: {check: not_null, column: label}}}
+  - {id: AI-03, element: Record, rule: "Each record appears once, so training and test sets do not overlap", dimension: uniqueness, check: unique, params: {columns: [record_id]}}
+  - {id: AI-04, element: Features, rule: "Numeric features have no implausible outliers", dimension: accuracy, check: outlier, params: {column: feature_value, method: zscore, threshold: 4}}
+  identifiers: []
+  checks_from_guidance:
+  - {area: Purpose and legitimacy, items: ["The task the data supports is known", "It is known whether outputs affect individuals", "Out-of-scope uses are stated", "A named owner approves AI uses"]}
+  - {area: Legal, rights and governance, items: ["Permitted uses (training, fine-tuning, inference, evaluation) are known", "Sensitive fields are flagged", "Permitted working environments are known", "There is a plan if the use case changes"]}
+  - {area: Metadata fitness, items: ["Tables and fields are understood", "Event time, update frequency and history are clear", "Schema changes and versions are tracked", "Provenance is known", "Known issues and biases are documented", "Stable identifiers exist or their absence is stated"]}
+  - {area: Unstructured data pipelines, items: ["Data is machine readable or has an extraction pipeline", "Rights, redaction and sensitivity travel with extracted content", "Outputs can be traced back to source files", "Humans review training data and outputs"]}
+  - {area: Operating model and sustainability, items: ["Someone owns quality, drift and bias monitoring", "Breaks, drift and anomalies are detected", "Fixes are re-approved", "Training sets can be reconstructed exactly", "There is a process if AI causes service, cost or trust issues"]}
+  example: "Illustrative, synthetic: a casework text archive proposed for a summarisation tool. The review finds redaction does not travel with extracted text, so the asset is marked not yet AI-ready and a pipeline fix is added to the DQAP."
+  risks:
+  - "Open or available data is not the same as AI-ready data."
+  - "Bias in labels or coverage becomes bias in outputs."
+  - "Without exact versioning, a model cannot be retrained or audited."
+  checklist:
+  - "AI permitted uses and sensitive fields are on the catalogue record"
+  - "The five areas of the GOV.UK self-assessment are reviewed at the annual review"
+  - "Group disparity rules are in the DQAP"
+  - "A transparency record is published where a tool supports decisions about people"
+  refs: [RB-AIREADY, RB-ATRS, RB-AIPLAY, RB-ETH]
+- id: SUP-FRD
+  dd: DD-07
+  title: Fraud and error
+  icon: crosshair
+  summary: For assets used to detect fraud or error, where identity matching quality decides who is flagged.
+  gov:
+  - "Require a person to review every automated flag before action is taken against someone."
+  - "Record the legal power used for each fraud data flow."
+  - "Measure and report false positives, not only detections."
+  cat:
+  - {prop: purpose, term: "local extension (one of the seven purposes)", rule: "Fraud and error"}
+  - {prop: matchingMethod, term: "local extension", rule: "How records are matched, and the known match error rate"}
+  rules:
+  - {id: FRD-01, element: National Insurance number, rule: "National Insurance number is in a valid format", dimension: validity, check: identifier, params: {column: nino, scheme: nino}}
+  - {id: FRD-02, element: Person, rule: "Each person appears once in the matching base", dimension: uniqueness, check: unique, params: {columns: [person_id]}}
+  - {id: FRD-03, element: Date of birth, rule: "Date of birth is recorded, so matches are not made on name alone", dimension: completeness, check: not_null, params: {column: date_of_birth}}
+  identifiers:
+  - {name: National Insurance number, format: "Two letters, six digits and a letter A to D, with some prefixes not used", prov: K}
+  example: "Illustrative, synthetic: a matching exercise between benefit and payroll data. FRD-03 shows date of birth missing for 4% of records; those records are excluded from automated matching and routed to manual review."
+  risks:
+  - "Poor identity data produces false positives that fall on real people."
+  - "Names transliterated differently can be missed or mismatched, affecting some communities more than others."
+  checklist:
+  - "Human review of flags is required and recorded"
+  - "False positive rates are measured"
+  - "Identity field validity rules are in the DQAP"
+  refs: [RB-PSFA, RB-DEA]
+- id: SUP-JUS
+  dd: DD-08
+  title: Justice, policing and national security
+  icon: lock-keyhole
+  summary: For assets in law enforcement, justice, defence or security settings, where only OFFICIAL assets are in scope and metadata itself may be sensitive.
+  gov:
+  - "Confirm the classification of the asset and of its metadata; only OFFICIAL assets are in scope of the policy."
+  - "Record whether processing falls under Part 3 of the Data Protection Act 2018 (law enforcement processing)."
+  - "Restrict catalogue record visibility where the description itself is sensitive, and record the handling marking."
+  cat:
+  - {prop: securityClassification, term: "local extension (MEM securityClassification)", rule: "OFFICIAL, with any handling marking such as OFFICIAL-SENSITIVE"}
+  - {prop: accessRights, term: "dcterms:accessRights", rule: "Internal, with the vetting level needed to access the data"}
+  rules:
+  - {id: JUS-01, element: Classification, rule: "Every record carries a classification marking from the allowed list", dimension: validity, check: in_set, params: {column: classification, values: [OFFICIAL, OFFICIAL-SENSITIVE]}}
+  - {id: JUS-02, element: Event date, rule: "Event dates are not in the future", dimension: validity, check: not_future, params: {column: event_date}}
+  identifiers: []
+  example: "Illustrative, synthetic: a court listings data asset. The catalogue record is visible across government, but the distribution is restricted, and JUS-01 confirms no records carry a higher marking."
+  risks:
+  - "Describing an asset in detail can reveal sensitive capabilities."
+  - "Assets above OFFICIAL must not be described in this portal or reported through it."
+  checklist:
+  - "Classification of the asset and its metadata is confirmed"
+  - "Part 3 processing is identified where it applies"
+  - "Catalogue record visibility matches the sensitivity of the description"
+  refs: [RB-DPA, RB-GSC]
+- id: SUP-PER
+  dd: DD-09
+  title: Data about people
+  icon: users-round
+  summary: For any asset that holds records about individual people. Makes sure forms and rules let people describe themselves accurately.
+  gov:
+  - "Collect only the personal fields the purpose needs, and record why each is needed."
+  - "Follow current statistical guidance for questions about sex and gender, ethnicity and disability, and offer 'prefer not to say'."
+  - "Watch for the cross-government person data and vulnerability data standards and adopt them when published."
+  cat:
+  - {prop: personalData, term: "local extension", rule: "Whether the asset holds personal or special category data"}
+  - {prop: population, term: "local extension", rule: "Who the records describe, and known gaps in coverage"}
+  rules:
+  - {id: PER-01, element: Name, rule: "Family name is recorded", dimension: completeness, check: not_null, params: {column: family_name}}
+  - {id: PER-02, element: Date of birth, rule: "Date of birth is not in the future", dimension: validity, check: not_future, params: {column: date_of_birth}}
+  - {id: PER-03, element: Person, rule: "Each person is recorded once", dimension: uniqueness, check: unique, params: {columns: [person_id]}}
+  - {id: PER-04, element: Ethnicity, rule: "Ethnicity is not unknown, where it is lawfully collected", dimension: completeness, check: not_unknown, params: {column: ethnicity}}
+  identifiers: []
+  example: "Illustrative, synthetic: a customer contact data set. PER-01 fails for records from a form that forced a single name field; the fix is to change the form, not to clean the data."
+  risks:
+  - "Forms that cannot record names, addresses or identities accurately create bias at source."
+  - "Completeness that looks good overall can hide gaps for some groups."
+  checklist:
+  - "Each personal field has a recorded purpose"
+  - "Forms allow 'prefer not to say' and names in full"
+  - "Completeness is broken down by group where lawful"
+  refs: [RB-PSED, RB-EQA, RB-DPA]
+- id: SUP-REF
+  dd: DD-10
+  title: Reference data and identifiers
+  icon: tag
+  summary: For assets that depend on code lists and identifiers maintained by other organisations, such as area codes, organisation codes and company numbers.
+  gov:
+  - "Name the authoritative source and owner of each code list the asset uses."
+  - "Record the version of each code list and how changes are picked up."
+  - "Prefer recommended open standards for identifiers."
+  cat:
+  - {prop: conformsTo, term: "dcterms:conformsTo", rule: "Each code list and its version"}
+  rules:
+  - {id: REF-01, element: Area code, rule: "Area code is a GSS code", dimension: validity, check: identifier, params: {column: area_code, scheme: gss_code}}
+  - {id: REF-02, element: Company number, rule: "Company number is in Companies House format", dimension: validity, check: identifier, params: {column: company_number, scheme: company_number}}
+  - {id: REF-03, element: Legal entity identifier, rule: "LEI is valid, including its check digits", dimension: validity, check: identifier, params: {column: lei, scheme: lei}}
+  - {id: REF-04, element: Charity number, rule: "Charity number is in a valid format", dimension: validity, check: identifier, params: {column: charity_number, scheme: charity_number}}
+  identifiers:
+  - {name: Company number, format: "8 digits, or 2 letters and 6 digits", prov: K}
+  - {name: LEI, format: "20 characters with 2 check digits (ISO 17442)", prov: K}
+  example: "Illustrative, synthetic: a grants register. REF-01 fails after a boundary change because the code list was not updated; the fix is to subscribe to the code list's change notices."
+  risks:
+  - "Code lists change; stale codes pass format checks but point to retired areas or organisations."
+  checklist:
+  - "Every code list has a named source and version"
+  - "Changes to code lists are picked up on a schedule"
+  refs: [RB-OPEN, RB-UPRN]
+- id: SUP-REC
+  dd: DD-11
+  title: Records, retention and disposal
+  icon: calendar-clock
+  summary: For every critical data asset that must be kept, archived or destroyed on a schedule. Joins data asset management to records management.
+  gov:
+  - "Record the retention schedule and disposal action for each asset in the ownership register."
+  - "Agree with the records manager when an asset is retired, archived or transferred."
+  - "Keep catalogue records for retired assets, marked as retired, so dependants can see what changed."
+  cat:
+  - {prop: retention, term: "local extension", rule: "Retention period and disposal action"}
+  - {prop: isReplacedBy, term: "dcterms:isReplacedBy", rule: "What replaces a retired asset"}
+  rules:
+  - {id: REC-01, element: Record date, rule: "Records are not older than the retention period (example: 7 years)", dimension: timeliness, check: freshness, params: {column: created_date, expected: P7Y, lag: P30D}}
+  identifiers: []
+  example: "Illustrative, synthetic: a case management extract kept for seven years. REC-01 flags records past retention, which the owner agrees to dispose of through the records management process."
+  risks:
+  - "Data kept past its retention period is a data protection risk; data destroyed early is a records risk."
+  checklist:
+  - "Retention and disposal are on the ownership register"
+  - "Retired assets keep a marked catalogue record"
+  refs: [RB-TNA]
+- id: SUP-DEV
+  dd: DD-12
+  title: Devolved governments and local government
+  icon: landmark
+  summary: For assets that flow to or from the devolved governments or councils, which are not bound by the policy but often depend on it.
+  gov:
+  - "Record which nations the asset covers and which bodies supply or receive it."
+  - "Where a devolved government or council supplies data, agree quality expectations in the sharing agreement, because the policy does not bind them."
+  - "Offer councils the playbooks as a voluntary route to adoption."
+  cat:
+  - {prop: spatial, term: "dcterms:spatial", rule: "Nations covered, using GSS codes (England E, Scotland S, Wales W, Northern Ireland N)"}
+  - {prop: language, term: "dcterms:language", rule: "Languages of the data and documentation, including Welsh where it applies"}
+  rules:
+  - {id: DEV-01, element: Nation, rule: "Nation is recorded from the allowed list", dimension: validity, check: in_set, params: {column: nation, values: [England, Scotland, Wales, Northern Ireland]}}
+  - {id: DEV-02, element: Area code, rule: "Area code is a GSS code", dimension: validity, check: identifier, params: {column: area_code, scheme: gss_code}}
+  identifiers: []
+  four_nations:
+  - {nation: UK government departments and ALBs, position: "Mandatory under the DAM Policy", prov: V}
+  - {nation: Scotland, position: "Not bound by the policy; own approach to data sharing governance", prov: V}
+  - {nation: Wales, position: "Not bound by the policy; own approach to data sharing governance", prov: V}
+  - {nation: Northern Ireland, position: "Not bound by the policy; own approach to data sharing governance", prov: V}
+  - {nation: Councils, position: "Not required; may adopt voluntarily", prov: V}
+  example: "Illustrative, synthetic: a UK-wide dataset assembled from four national returns. DEV-01 shows records from one nation coded inconsistently; the fix is agreed with that nation's data team."
+  risks:
+  - "Presenting England-only rules as UK-wide misleads users in other nations."
+  - "Differences in definitions between nations break comparability."
+  checklist:
+  - "Nations covered are on the catalogue record"
+  - "Quality expectations for devolved or council suppliers are in the agreement"
+  refs: [RB-LDD]
+- id: SUP-ENV
+  dd: DD-13
+  title: Environmental, sensor and time-series data
+  icon: activity
+  summary: For monitoring and sensor data where readings arrive continuously and gaps, units and drift matter more than missing fields.
+  gov:
+  - "Name who owns calibration of instruments as well as who owns the data."
+  - "Record how gaps and suspect readings are flagged and whether they are corrected."
+  cat:
+  - {prop: temporalResolution, term: "dcat:temporalResolution", rule: "The interval between readings"}
+  - {prop: spatial, term: "dcterms:spatial", rule: "Monitoring sites and their locations"}
+  rules:
+  - {id: ENV-01, element: Timestamp, rule: "No gaps in the expected reading interval", dimension: completeness, check: no_gaps, params: {column: reading_time}}
+  - {id: ENV-02, element: Units, rule: "Every measure column names its unit", dimension: consistency, check: header_has_unit, params: {}}
+  - {id: ENV-03, element: Reading, rule: "Readings have no implausible outliers", dimension: accuracy, check: outlier, params: {column: value, method: iqr, k: 3}}
+  identifiers: []
+  example: "Illustrative, synthetic: river level readings every 15 minutes. ENV-01 finds a six-hour gap from a failed sensor; the gap is flagged, not filled, in the published data."
+  risks:
+  - "Filling gaps silently makes data look complete when it is not."
+  - "Sensor drift passes format checks; it needs calibration records."
+  checklist:
+  - "Reading interval and units are on the catalogue record"
+  - "Gaps and outliers are flagged, not silently corrected"
+  refs: [RB-GEOBP, RB-DCAT]
+- id: SUP-EDU
+  dd: DD-14
+  title: Pupil and learner data
+  icon: graduation-cap
+  summary: For assets about pupils and learners, which are long-lived and linked across schools, colleges and nations.
+  gov:
+  - "Record the collection the data comes from and its specification version."
+  - "Treat records about children with the extra care data protection law expects."
+  cat:
+  - {prop: conformsTo, term: "dcterms:conformsTo", rule: "The census or collection specification and version"}
+  rules:
+  - {id: EDU-01, element: School, rule: "School unique reference number is 6 digits", dimension: validity, check: identifier, params: {column: school_urn, scheme: school_urn}}
+  - {id: EDU-02, element: Pupil, rule: "Each pupil appears once per census", dimension: uniqueness, check: unique, params: {columns: [pupil_id, census_date]}}
+  identifiers:
+  - {name: School URN, format: "6 digits", prov: K}
+  example: "Illustrative, synthetic: a termly pupil census extract. EDU-02 finds duplicate pupils for dual-registered learners; the rule is refined to count the main registration only."
+  risks:
+  - "Dual registration and moves between schools create apparent duplicates."
+  checklist:
+  - "The collection specification and version are recorded"
+  - "Duplicate and dual registration rules are agreed"
+  refs: [RB-DPA]
