@@ -306,7 +306,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.5.1', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.6.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -383,6 +383,15 @@ class Vaccination(unittest.TestCase):
     def test_c30_task_without_feedback_link(self):
         edit(self.s / 'test.html', 'template=testing.yml', 'template=other.yml')
         self.fails('c30_testing_pack')
+
+    def test_build_rejects_lens_without_capability_actions(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        t = y.read_text(encoding='utf-8')
+        i = t.index('id: L-CYBER')
+        j = t.index('      dq:', i)
+        y.write_text(t[:j] + '      dx:' + t[j + len('      dq:'):], encoding='utf-8')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
 
     def test_build_rejects_unverified_signpost(self):
         y = self.r / 'content' / 'frameworks.yaml'

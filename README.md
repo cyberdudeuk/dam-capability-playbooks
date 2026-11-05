@@ -24,7 +24,8 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Sectors | Supplements for health, social care, geospatial, statistics, sharing, AI and more, with a finder and quality rules the Data Quality Commons kit can run |
 | Delivery and change | Embedding the policy in business as usual and in programmes: business cases, spend control, assurance, legacy exits, contracts, handover and benefits |
 | Joined up | Hand-offs between the three, one set of roles, one yearly cycle |
-| Capability model | 30 capabilities the policy and adjacent guidance need, each flagged explicit, implicit or inferred with signposts to the exact section; the government data maturity model; a self-assessment; crosswalks to industry models |
+| Capability model | 32 capabilities the policy and adjacent guidance need, each flagged explicit, implicit or inferred with signposts to the exact section; the government data maturity model; a self-assessment; crosswalks to industry models |
+| Perspectives | The policy through data, digital, cyber, technology, commercial and legacy lenses, with a coverage assessment |
 | Professions and skills | Government professions, Digital and Data framework career pathways with grades and skill levels, and learning routes |
 | Your role | Routes for six roles across learn, prepare, do, report and improve |
 | Learning | Modules with outcomes, activities and checks of understanding |
@@ -33,6 +34,7 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Inclusion | Equality, inclusion and accessibility checks for each capability |
 | Status, What's new, About | Health run results, release notes, findings, open and defect registers, build standard assessment |
 | Service design | Theory of change, research plan, blueprint, requirements traceability, architecture, Service Standard self-assessment |
+| Open data, Help us test | Datasets with a DCAT catalogue for harvesting; testing tasks and feedback form |
 | Notices, Accessibility | Disclaimers, credits, full citations and the accessibility statement |
 
 ## How the repository supports the portal

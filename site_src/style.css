@@ -495,3 +495,4 @@ html:not(.no-js) .no-js-only{display:none}
 .sector-callout{display:flex;gap:.75rem;align-items:flex-start;border:1px solid var(--border);border-left:5px solid var(--brand);background:var(--panel);padding:.6rem .9rem;margin:1rem 0;max-width:52em}
 .sector-callout p{margin:.2rem 0}.sector-callout .chips{display:flex;flex-wrap:wrap;gap:.35rem}
 .sector-callout .pill svg.i{width:1rem;height:1rem;margin-right:.25rem;vertical-align:-.15em}
+.cov{display:inline-block;font-weight:700;padding:.05rem .45rem;font-size:.9rem}.cov-strong{background:#cce2d8;color:#005a30}.cov-partial{background:#fff7bf;color:#594d00}.cov-gap{background:#f4cdc6;color:#942514}

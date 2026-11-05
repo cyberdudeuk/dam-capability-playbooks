@@ -241,6 +241,19 @@ def validate_frameworks(d, errs, src, roles):
             if r not in rb: errs.append(f"{x['id']}: unknown rulebook entry {r}")
         for r in x['cr']:
             if r not in crs: errs.append(f"{x['id']}: unknown capability {r}")
+    for x in d.get('lenses', {}).get('items', []):
+        for r in x['refs']:
+            if r not in rb: errs.append(f"{x['id']}: unknown rulebook entry {r}")
+        for r in x['cr']:
+            if r not in crs: errs.append(f"{x['id']}: unknown capability {r}")
+        for r in x['ch']:
+            if r not in {c['id'] for c in d['change']['items']}: errs.append(f"{x['id']}: unknown practice {r}")
+        for p in x['profs']:
+            if p not in profs: errs.append(f"{x['id']}: unknown profession {p}")
+        for k in ('cover_before', 'cover_now', 'actions'):
+            if set(x[k]) != set(d['lenses']['caps_order']): errs.append(f"{x['id']}: {k} must cover every capability")
+        for v in list(x['cover_before'].values()) + list(x['cover_now'].values()):
+            if v not in ('Strong', 'Partial', 'Gap'): errs.append(f"{x['id']}: bad coverage {v}")
     if 'testing' in d:
         tids = [x['id'] for x in d['testing']['tasks']]
         if len(tids) != len(set(tids)): errs.append('duplicate testing task ids')
@@ -404,13 +417,13 @@ NAV = [
     ('index', 'Home', 'house'), ('dam', 'The policy', 'landmark'), ('governance', 'Governance', 'shield-check'),
     ('cataloguing', 'Cataloguing', 'library-big'), ('quality', 'Quality', 'gauge'), ('sectors', 'Sectors', 'layers'), ('together', 'Joined up', 'workflow'),
     ('change', 'Delivery and change', 'construction'),
-    ('capability-model', 'Capability model', 'radar'), ('professions', 'Professions and skills', 'briefcase'),
+    ('capability-model', 'Capability model', 'radar'), ('perspectives', 'Perspectives', 'eye'), ('professions', 'Professions and skills', 'briefcase'),
     ('personas', 'Your role', 'users-round'), ('learning', 'Learning', 'graduation-cap'), ('library', 'Library', 'library'),
     ('knowledge', 'Knowledge', 'network'), ('inclusion', 'Inclusion', 'heart-handshake'), ('about', 'About', 'info'),
 ]
 # Grouped menus keep the global bar to about ten top-level destinations (build standard: use hubs before adding more)
 NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', 'together', 'change'],
-              'Frameworks': ['capability-model', 'professions']}
+              'Frameworks': ['capability-model', 'perspectives', 'professions']}
 NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3'}
 CAP_PAGE = {'gov': 'governance', 'cat': 'cataloguing', 'dq': 'quality'}
 PAGE_DESC = {
@@ -428,6 +441,7 @@ PAGE_DESC = {
     'professions': 'Government professions, Digital and Data capability framework roles, career pathways, skills and learning routes for data asset management.',
     'change': 'Embedding the DAM Policy in business as usual and in change programmes: business cases, assurance, legacy exits, contracts and handover.',
     'data': 'Open data from the DAM capability playbooks: requirements, vocabulary, capability map, quality rules and more, with a DCAT catalogue for harvesting.',
+    'perspectives': 'The DAM Policy through data, digital, cyber, technology, commercial and legacy lenses: questions, actions by capability, pitfalls and verified sources.',
     'test': 'Help test the Data Asset Management (DAM) capability playbooks: short tasks for each role and a feedback form.',
     'design': 'Theory of change, research plan, service blueprint, requirements traceability, architecture and Service Standard self-assessment for the portal.',
     'notices': 'Disclaimers, transparency notices, credits and full citations for every source used by the DAM capability playbooks.',
@@ -715,7 +729,7 @@ class Site:
                  'cataloguing': lambda: self.p_cap('cat'), 'quality': lambda: self.p_cap('dq'), 'together': self.p_together,
                  'personas': self.p_personas, 'learning': self.p_learning, 'library': self.p_library, 'knowledge': self.p_knowledge,
                  'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
-                 'professions': self.p_professions, 'change': self.p_change, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
+                 'professions': self.p_professions, 'change': self.p_change, 'perspectives': self.p_lenses, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
                  'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices, 'data': self.p_data, 'test': self.p_test,
                  'accessibility': self.p_accessibility, '404': self.p_404}
         for k, fn in pages.items():
@@ -770,6 +784,8 @@ class Site:
             self.add_search(r['title'], 'Career pathway', f'professions.html#role-{r["id"]}', ' '.join(s[0] for s in r['skills']))
         for p in self.d.get('professions', {}).get('profs', []):
             self.add_search(p['name'], 'Profession', f'professions.html#{p["id"]}', p['why'])
+        for x in self.d.get('lenses', {}).get('items', []):
+            self.add_search(f'{x["name"]} perspective', 'Perspective', f'perspectives.html#{x["id"]}', x['means'])
         for x in self.d.get('change', {}).get('items', []):
             self.add_search(f'{x["id"]} {x["title"]}', f'Delivery and change ({x["mode"]})', f'change.html#{x["id"]}', x['why'])
 
@@ -1869,6 +1885,45 @@ class Site:
                                                                   {'id': 'after', 'label': 'What happens next', 'icon': 'message-square-text'},
                                                                   {'id': 'other', 'label': 'Anything else', 'icon': 'circle-help'}]}]
         return self.page('test', 'Help us test', body, drawer, crumbs=['Help us test'])
+
+    # -- version 1.6: perspectives (lenses) ----------------------------------------------------
+    def ch_pills(self, ids):
+        t = {x['id']: x['title'] for x in self.d['change']['items']}
+        return ' '.join(f'<a class="pill" href="change.html#{c}">{E(c)} {E(t[c])}</a>' for c in ids)
+
+    def p_lenses(self):
+        d, L = self.d, self.d['lenses']
+        caps = L['caps_order']
+        lvl = {'Strong': 3, 'Partial': 2, 'Gap': 1}
+        def cell(v, before=None):
+            arrow = f' <span class="hint">(was {E(before)})</span>' if before and before != v else ''
+            return f'<span class="cov cov-{v.lower()}">{E(v)}</span>{arrow}'
+        rows = [[f'<a href="#{x["id"]}">{icon(x["icon"])} {E(x["name"])}</a>'] + [cell(x['cover_now'][c], x['cover_before'][c]) for c in caps] for x in L['items']]
+        assess = (f'<p>How well this portal covers each capability through each lens, judged against the questions and actions each community needs{prov("O")}. '
+                  'Where a rating changed in this release, the earlier rating is shown.</p>'
+                  + table('t-lens-cov', 'Coverage of each capability through each lens', ['Lens'] + [self.caps[c]['name'] for c in caps], rows)
+                  + '<p class="hint">Strong: questions, actions and verified sources for every capability. Partial: covered in general terms or for some capabilities. Gap: not covered.</p>')
+        tabs = [('lens-overview', 'Overview', f'<p>{E(L["intro"])}</p><h2 id="coverage">{icon("grid-3x3")} Coverage assessment</h2>{assess}')]
+        for x in L['items']:
+            acts = ''.join(f'<div class="panel"><h4>{icon(CAP_ICONS[c])} {E(self.caps[c]["name"])}</h4>{ul(x["actions"][c], cls="ticks")}</div>' for c in caps)
+            prof = ' '.join(f'<a class="pill" href="professions.html#{p}">{E(self.prof[p]["name"].split(" (")[0])}</a>' for p in x['profs'])
+            body = (f'<section id="{x["id"]}" aria-labelledby="h-{x["id"]}"><div class="cr-head">{tile(x["icon"], "lg")}<div><p class="caption">Lens</p><h2 id="h-{x["id"]}">{E(x["name"])}</h2></div></div>'
+                    f'<p class="lede">{E(x["means"])}{prov("O")}</p>'
+                    f'<h3>{icon("circle-help")} Questions to ask</h3>{ul(x["questions"])}'
+                    f'<h3>{icon("list-checks")} What to do, by capability</h3><div class="cols">{acts}</div>'
+                    f'<h3>{icon("triangle-alert")} Pitfalls</h3>{ul(x["pitfalls"])}'
+                    f'<h3>{icon("signpost")} Where to go next</h3><p><strong>Capabilities:</strong> {" ".join(self.cr_pill(c) for c in x["cr"])}</p>'
+                    f'<p><strong>Practices:</strong> {self.ch_pills(x["ch"])}</p>'
+                    f'<p><strong>Professions:</strong> {prof}</p>'
+                    f'<h3>{icon("scale")} Rulebook</h3><ul>{"".join(f"<li>{self.rb_link(r)}</li>" for r in x["refs"])}</ul>'
+                    f'<p class="hint"><strong>Coverage:</strong> {E(x["gap"])}</p></section>')
+            tabs.append((f'tab-{x["id"].lower()}', x['name'], body))
+        hero = self.hero('eye', 'Frameworks', 'Perspectives', 'What the DAM Policy means for data, digital, cyber, technology and commercial teams, and for tackling legacy, with what each should ask and do.',
+                         brief=['Find your own community\'s lens.', 'Each lens gives questions, actions for each capability, pitfalls and verified sources.', 'A coverage assessment shows where the portal is strong and where it is still thin.'],
+                         meta=[('eye', f'{len(L["items"])} lenses'), ('scale', f'{len({r for x in L["items"] for r in x["refs"]})} sources')])
+        drawer = [{'label': 'Lenses', 'icon': 'eye', 'items': [{'id': 'coverage', 'label': 'Coverage assessment', 'icon': 'grid-3x3', 'count': len(L['items'])}]
+                   + [{'id': x['id'], 'label': x['name'], 'icon': x['icon'], 'new': True} for x in L['items']]}]
+        return self.page('perspectives', 'Perspectives', hero + self.tabbed(tabs, 'Perspectives'), drawer, crumbs=['Frameworks', 'Perspectives'])
 
     def p_status(self):
         st = self.status

@@ -16,7 +16,7 @@ meta:
   short_title: DAM capability playbooks
   subtitle: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
   keywords: [data asset management, DAM policy, critical data assets, data governance, data catalogue, metadata, data quality, DQAP, data ownership, UK government]
-  version: 1.5.1
+  version: 1.6.0
   as_of: '2026-11-05'
   review: '2027-02-05'
   verified_on: '2026-11-05'

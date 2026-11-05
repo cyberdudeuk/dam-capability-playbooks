@@ -1,6 +1,5 @@
-# Version 1.4 content: capability requirements map, maturity model, professions and skills, delivery and change.
+# Version 1.4 content and later: capability map, maturity model, professions and skills, delivery and change, lenses.
 # Loaded and merged with playbooks.yaml by tools/build.py. Edit here; never edit the generated site.
-# Data maturity topic and theme counts and the Digital and Data framework roles were read from the live pages on 2026-11-05.
 rulebook_more:
 - id: RB-GREEN
   group: Delivery, change and investment
@@ -469,6 +468,213 @@ rulebook_more:
   caps:
   - gov
   why: The origin of the five-level maturity pattern most data maturity models use.
+- id: RB-CAF
+  group: Cyber and security
+  title: Cyber Assessment Framework (CAF)
+  publisher: National Cyber Security Centre
+  url: https://www.ncsc.gov.uk/collection/cyber-assessment-framework
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: Outcome-based framework government uses to assess the cyber resilience of essential functions and the systems holding critical data.
+- id: RB-GCSS
+  group: Cyber and security
+  title: 'Government Cyber Security Strategy: 2022 to 2030'
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/government-cyber-security-strategy-2022-to-2030
+  updated: '2026-01-06'
+  prov: V
+  caps:
+  - gov
+  why: Sets the aim for government organisations to be resilient to known vulnerabilities and attack methods, using the CAF.
+- id: RB-GOVS007
+  group: Cyber and security
+  title: 'Government Functional Standard GovS 007: Security'
+  publisher: Government Security Group
+  url: https://www.gov.uk/government/publications/government-functional-standard-govs-007-security
+  updated: '2021-09-13'
+  prov: V
+  caps:
+  - gov
+  why: The security functional standard, including information and cyber security, that data owners and the SIRO work within.
+- id: RB-SBD
+  group: Cyber and security
+  title: Secure by design
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/collections/secure-by-design
+  updated: '2024-12-05'
+  prov: V
+  caps:
+  - gov
+  - dq
+  why: Building security into digital services from the start, including the systems that create and hold critical data assets.
+- id: RB-NCSC10
+  group: Cyber and security
+  title: 10 Steps to Cyber Security
+  publisher: National Cyber Security Centre
+  url: https://www.ncsc.gov.uk/collection/10-steps
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: Practical cyber risk management areas, including asset management and incident management.
+- id: RB-NCSCIR
+  group: Cyber and security
+  title: Incident management
+  publisher: National Cyber Security Centre
+  url: https://www.ncsc.gov.uk/collection/incident-management
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - dq
+  why: Planning and handling cyber incidents, including those that corrupt or expose critical data.
+- id: RB-NCSCCLOUD
+  group: Cyber and security
+  title: Cloud security guidance
+  publisher: National Cyber Security Centre
+  url: https://www.ncsc.gov.uk/collection/cloud
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: How to choose and configure cloud services securely when critical data moves to them.
+- id: RB-SECINFO
+  group: Cyber and security
+  title: Securing information in your service
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/technology/securing-your-information
+  updated: '2024-10-17'
+  prov: V
+  caps:
+  - gov
+  why: How service teams protect the information their service holds.
+- id: RB-AICODE
+  group: Cyber and security
+  title: AI, open code and vulnerability risk in the public sector
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/ai-open-code-and-vulnerability-risk-in-the-public-sector
+  updated: '2026-05-14'
+  prov: V
+  caps:
+  - gov
+  why: Risks when AI tools are used on open code, relevant to data pipelines and quality tooling.
+- id: RB-CLOUD
+  group: Technology and architecture
+  title: Government Cloud First policy
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/government-cloud-first-policy
+  updated: '2023-06-19'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: Public cloud first for new or migrating services; data assets move with them.
+- id: RB-API
+  group: Technology and architecture
+  title: API technical and data standards
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/gds-api-technical-and-data-standards
+  updated: '2026-09-30'
+  prov: V
+  caps:
+  - cat
+  - dq
+  why: How to build and document APIs, the data services through which many critical data assets are reached.
+- id: RB-REFARCH
+  group: Technology and architecture
+  title: Develop your data and APIs using a reference architecture
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/develop-your-data-and-apis-using-a-reference-architecture
+  updated: '2021-03-22'
+  prov: V
+  caps:
+  - cat
+  - dq
+  why: Reference architecture for data and APIs in government.
+- id: RB-CHOOSE
+  group: Technology and architecture
+  title: 'Choosing technology: an introduction'
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/technology/choosing-technology-an-introduction
+  updated: '2024-10-15'
+  prov: V
+  caps:
+  - gov
+  why: How to choose technology that avoids lock-in and stays maintainable.
+- id: RB-OPENSRC
+  group: Technology and architecture
+  title: Be open and use open source
+  publisher: Government Digital Service
+  url: https://www.gov.uk/guidance/be-open-and-use-open-source
+  updated: '2021-03-31'
+  prov: V
+  caps:
+  - gov
+  why: Point 3 of the Technology Code of Practice; open code and open formats reduce future legacy.
+- id: RB-MSC
+  group: Commercial and procurement
+  title: Model Services Contract
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/model-services-contract
+  updated: '2025-11-24'
+  prov: V
+  caps:
+  - gov
+  why: The model contract for complex services, including schedules on data, security and exit.
+- id: RB-MTC20
+  group: Commercial and procurement
+  title: 'The Mid-Tier Contract: Schedule 20 (Processing Data)'
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/publications/the-mid-tier-contract-schedule-20-processing-data
+  updated: '2025-02-21'
+  prov: V
+  caps:
+  - gov
+  why: Standard data processing terms for mid-tier contracts.
+- id: RB-PA23
+  group: Commercial and procurement
+  title: Procurement Act 2023
+  publisher: legislation.gov.uk
+  url: https://www.legislation.gov.uk/ukpga/2023/54/contents
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: The law governing public procurement, including transparency notices that suppliers and buyers publish.
+- id: RB-PA23G
+  group: Commercial and procurement
+  title: 'Procurement Act 2023: guidance documents'
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/collections/procurement-act-2023-guidance-documents
+  updated: '2026-02-04'
+  prov: V
+  caps:
+  - gov
+  why: Guidance for each phase of a procurement under the Act.
+- id: RB-GCLOUD
+  group: Commercial and procurement
+  title: G-Cloud 14 framework
+  publisher: Crown Commercial Service
+  url: https://www.crowncommercial.gov.uk/agreements/RM1557.14
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: The main route for buying cloud hosting, software and support, including catalogue and data quality tools.
+- id: RB-COMMFN
+  group: Skills and professions
+  title: Government Commercial Function
+  publisher: Cabinet Office
+  url: https://www.gov.uk/government/organisations/government-commercial-function
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: The commercial profession, which buys the services and tools that hold critical data assets.
 capmap:
 - id: CR-01
   name: Accountable leadership and policy oversight
@@ -1146,6 +1352,7 @@ capmap:
   - stakeholder-relationship-management
   - data-compliance-and-security
   profs:
+  - PR-COM
   - PR-DD
   coverage: New
   note: Many critical assets are held or processed by suppliers; ownership, metadata and quality duties must reach into contracts.
@@ -1484,6 +1691,86 @@ capmap:
   - PR-DD
   coverage: Covered
   note: Not in the policy, but the equality duty applies to decisions about which assets to fix first, and poor data about some groups widens inequality.
+  prov: O
+- id: CR-31
+  name: Cyber resilience and incident response for data assets
+  cluster: Protection, ethics and trust
+  icon: shield-check
+  flag: I
+  dam: data-assets-in-scope
+  signposts:
+  - doc: SRC-OWN
+    a: data-is-secure
+    label: Data is secure
+    flag: E
+  - doc: RB-CAF
+    a: null
+    label: Cyber Assessment Framework
+    flag: E
+  - doc: RB-NCSCIR
+    a: null
+    label: NCSC incident management
+    flag: E
+  - doc: RB-GOVS007
+    a: null
+    label: 'GovS 007: Security'
+    flag: E
+  playbook: perspectives.html
+  dma:
+  - 8
+  dmbok:
+  - Data security
+  dcam:
+  - Data control environment
+  skills:
+  - data-compliance-and-security
+  - data-risk-management
+  profs:
+  - PR-CYB
+  - PR-SEC
+  coverage: New
+  note: The policy scopes assets by classification and the ownership model makes security a principle, but neither says how to protect a critical asset from, or recover it after, a cyber incident.
+  prov: O
+- id: CR-32
+  name: 'Avoiding future legacy: open standards, portability and exit'
+  cluster: Delivery, change and value
+  icon: arrow-right-left
+  flag: N
+  dam: null
+  signposts:
+  - doc: RB-OPEN
+    a: null
+    label: Open standards for government
+    flag: E
+  - doc: RB-TECHDEBT
+    a: null
+    label: Prevent technical debt and legacy
+    flag: E
+  - doc: RB-CHOOSE
+    a: null
+    label: Choosing technology
+    flag: E
+  - doc: RB-MSC
+    a: null
+    label: Model Services Contract
+    flag: E
+  playbook: perspectives.html
+  dma:
+  - 3
+  - 7
+  dmbok:
+  - Data architecture
+  - Data integration and interoperability
+  dcam:
+  - Data and technology architecture
+  skills:
+  - data-standards
+  - data-architecture
+  profs:
+  - PR-DD
+  - PR-PD
+  coverage: New
+  note: Not in the policy. Without open formats, documented schemas and exit terms, every new system becomes the next concentration of hard-to-reach data.
   prov: O
 maturity:
   verified: '2026-11-05'
@@ -2160,6 +2447,12 @@ professions:
     rb: RB-PROFS
     aligned: Any
     why: Data owners are usually business leaders, not data specialists; the ownership model lists the skills they need.
+  - id: PR-COM
+    name: Government Commercial Function
+    icon: handshake
+    rb: RB-COMMFN
+    aligned: Commercial and grants function
+    why: Commercial specialists who set the contract terms for data ownership, metadata, quality and exit.
   learning:
   - stage: 'Awareness: everyone'
     icon: lightbulb
@@ -2559,17 +2852,451 @@ change:
     - CR-17
     - CR-28
     prov: O
+  - id: CH-14
+    title: Design out future legacy and lock-in
+    icon: arrow-right-left
+    mode: Change
+    stage: alpha
+    why: Systems bought or built today become tomorrow's legacy unless their data can be moved out without loss or delay.
+    actions:
+    - Require data in open, documented formats with a published schema.
+    - Ask suppliers to show how a full export with metadata works before you sign.
+    - Prefer open standards and APIs that follow the government API standards.
+    - Record each system's exit route against its assets in the catalogue.
+    evidence:
+    - Exit and portability test results
+    - Schema and API documentation
+    roles:
+    - CUS
+    - CAT
+    - OWN
+    refs:
+    - RB-OPEN
+    - RB-API
+    - RB-CHOOSE
+    - RB-TECHDEBT
+    cr:
+    - CR-32
+    - CR-26
+    prov: O
+  - id: CH-15
+    title: Prepare for a cyber incident affecting a critical asset
+    icon: shield-check
+    mode: BAU
+    stage: live
+    why: A ransomware attack or breach can corrupt or expose a critical asset; quality plans and owners must be ready.
+    actions:
+    - Mark critical data assets in the incident response plan and asset inventory.
+    - Agree recovery point and recovery time with each data owner.
+    - Test restoring an asset and check its quality afterwards against the DQAP rules.
+    - Agree who tells data users when an asset may be affected.
+    evidence:
+    - Incident plan entries
+    - Restore test and post-restore quality results
+    roles:
+    - OWN
+    - CUS
+    - DPO
+    refs:
+    - RB-NCSCIR
+    - RB-CAF
+    - RB-NCSC10
+    - RB-GOVS007
+    cr:
+    - CR-31
+    - CR-19
+    prov: O
+  - id: CH-16
+    title: Use the buying routes and contract terms that protect data
+    icon: handshake
+    mode: Change
+    stage: discover
+    why: Most catalogue, quality and platform tools are bought; the route and terms decide who controls the data.
+    actions:
+    - Buy through an established framework where one fits, such as G-Cloud.
+    - Use the model contract schedules for data, security and exit rather than supplier terms.
+    - Make metadata delivery, quality reporting and data return measurable obligations with service credits.
+    - Publish transparency information as the Procurement Act requires.
+    evidence:
+    - Procurement route decision
+    - Contract data, security and exit schedules
+    roles:
+    - COO
+    - OWN
+    refs:
+    - RB-GCLOUD
+    - RB-MSC
+    - RB-MTC20
+    - RB-PA23
+    - RB-PA23G
+    - RB-SOURCING
+    cr:
+    - CR-20
+    - CR-32
+    prov: O
 testing:
-  intro: "This portal is ready for early testing with people who will use it. We want to know whether you can find what you need, understand it and act on it. It takes about 20 minutes. Choose the tasks closest to your role; you do not need to do them all."
+  intro: This portal is ready for early testing with people who will use it. We want to know whether you can find what you need, understand it and act on it. It takes about 20 minutes. Choose the tasks
+    closest to your role; you do not need to do them all.
   feedback_form: testing.yml
   tasks:
-  - {id: T-01, roles: [all], title: "Find what the DAM Policy requires of your organisation", start: dam.html, done: "You can name two 'must' requirements and the step that meets each one."}
-  - {id: T-02, roles: [cdo, coo], title: "Assess your organisation's maturity and download the result", start: capability-model.html#cm-self, done: "You have a radar profile and a downloaded CSV file."}
-  - {id: T-03, roles: [cdo, coo], title: "Find what to build into a programme business case and its assurance plan", start: change.html#practices, done: "You can list the actions for business cases and for assurance."}
-  - {id: T-04, roles: [own], title: "Find what a data owner is accountable for and what happens when you move role", start: personas.html#persona-own, done: "You know your duties and the steps to hand over ownership."}
-  - {id: T-05, roles: [stw, dql], title: "Find which sector supplements apply to an adult social care asset and download its quality rules", start: sectors.html#which, done: "You have the social care supplement open and its rules file downloaded."}
-  - {id: T-06, roles: [cat], title: "Find the metadata you must record, and the extra fields for geospatial data", start: cataloguing.html#metadata, done: "You can list the 'must' properties and two extra geospatial fields."}
-  - {id: T-07, roles: [dql, stw], title: "Set a target and performance bands for a data quality rule", start: quality.html#method, done: "You can say what target and bands you would set, and why."}
-  - {id: T-08, roles: [all], title: "Find a learning route and the career pathway closest to your job", start: professions.html#pf-route, done: "You have marked at least one learning resource as done."}
-  - {id: T-09, roles: [all], title: "Look up what 'data steward' means and where stewards appear in the methods", start: knowledge.html, done: "You found the definition and one step that names the steward."}
-  - {id: T-10, roles: [all], title: "Change the text size and colours, then move around using only the keyboard", start: index.html, done: "You reached a playbook step without a mouse, with your display settings kept."}
+  - id: T-01
+    roles:
+    - all
+    title: Find what the DAM Policy requires of your organisation
+    start: dam.html
+    done: You can name two 'must' requirements and the step that meets each one.
+  - id: T-02
+    roles:
+    - cdo
+    - coo
+    title: Assess your organisation's maturity and download the result
+    start: capability-model.html#cm-self
+    done: You have a radar profile and a downloaded CSV file.
+  - id: T-03
+    roles:
+    - cdo
+    - coo
+    title: Find what to build into a programme business case and its assurance plan
+    start: change.html#practices
+    done: You can list the actions for business cases and for assurance.
+  - id: T-04
+    roles:
+    - own
+    title: Find what a data owner is accountable for and what happens when you move role
+    start: personas.html#persona-own
+    done: You know your duties and the steps to hand over ownership.
+  - id: T-05
+    roles:
+    - stw
+    - dql
+    title: Find which sector supplements apply to an adult social care asset and download its quality rules
+    start: sectors.html#which
+    done: You have the social care supplement open and its rules file downloaded.
+  - id: T-06
+    roles:
+    - cat
+    title: Find the metadata you must record, and the extra fields for geospatial data
+    start: cataloguing.html#metadata
+    done: You can list the 'must' properties and two extra geospatial fields.
+  - id: T-07
+    roles:
+    - dql
+    - stw
+    title: Set a target and performance bands for a data quality rule
+    start: quality.html#method
+    done: You can say what target and bands you would set, and why.
+  - id: T-08
+    roles:
+    - all
+    title: Find a learning route and the career pathway closest to your job
+    start: professions.html#pf-route
+    done: You have marked at least one learning resource as done.
+  - id: T-09
+    roles:
+    - all
+    title: Look up what 'data steward' means and where stewards appear in the methods
+    start: knowledge.html
+    done: You found the definition and one step that names the steward.
+  - id: T-11
+    roles:
+    - all
+    title: Find what your own team, such as digital, cyber, technology or commercial, should ask and do
+    start: perspectives.html
+    done: You can name two questions and one action for your team's lens.
+  - id: T-10
+    roles:
+    - all
+    title: Change the text size and colours, then move around using only the keyboard
+    start: index.html
+    done: You reached a playbook step without a mouse, with your display settings kept.
+lenses:
+  intro: The DAM Policy is written from a data point of view, but delivering it depends on digital, cyber, technology and commercial teams. Each lens below says what the policy means for that community,
+    what they should ask and do for each capability, and where this portal and the rulebook help.
+  caps_order:
+  - gov
+  - cat
+  - dq
+  items:
+  - id: L-DATA
+    name: Data
+    icon: database
+    profs:
+    - PR-DD
+    - PR-AF
+    - PR-KIM
+    cover_before:
+      gov: Strong
+      cat: Strong
+      dq: Strong
+    cover_now:
+      gov: Strong
+      cat: Strong
+      dq: Strong
+    means: 'The policy''s home lens: identify, describe, own and improve critical data assets, and report them.'
+    questions:
+    - Which of our assets are critical, and do we agree why?
+    - Can someone outside our team find, understand and trust each asset from its catalogue entry?
+    - Who decides what good enough means for each asset?
+    actions:
+      gov:
+      - Name an owner and steward for every critical asset.
+      - Run a data governance board that records decisions.
+      cat:
+      - Record the core metadata in a catalogue and report it to GDS.
+      - Use the cross-government Metadata Exchange Model terms.
+      dq:
+      - Write a DQAP for every asset and log issues with priorities.
+      - Publish quality statements users can read.
+    pitfalls:
+    - Treating the return as the goal rather than better-managed data.
+    - Describing assets nobody owns.
+    cr:
+    - CR-05
+    - CR-06
+    - CR-07
+    - CR-08
+    ch:
+    - CH-11
+    - CH-12
+    refs:
+    - RB-DMAF
+    - RB-AIREADY
+    gap: Covered across the three playbooks, the capability model and the sector supplements.
+  - id: L-DIGI
+    name: Digital and service
+    icon: layers
+    profs:
+    - PR-DD
+    cover_before:
+      gov: Partial
+      cat: Partial
+      dq: Partial
+    cover_now:
+      gov: Strong
+      cat: Strong
+      dq: Strong
+    means: Services create, change and consume critical data. Service teams decide what is collected, how it is validated and what users see.
+    questions:
+    - Which critical assets does our service create or depend on?
+    - Do our forms and validation stop bad data at the point of collection?
+    - Are data services such as APIs documented, catalogued and owned like the data behind them?
+    actions:
+      gov:
+      - Name the data owner as a stakeholder of the service from discovery.
+      - Show DAM evidence at service assessments.
+      cat:
+      - Catalogue data services and APIs alongside the data sets they expose.
+      - Publish API documentation that follows the government API standards.
+      dq:
+      - Turn quality rules into form validation and API contract tests.
+      - Design forms so people can describe themselves accurately.
+    pitfalls:
+    - Collecting data the catalogue shows another service already holds.
+    - Treating an API as technical plumbing with no owner.
+    cr:
+    - CR-12
+    - CR-22
+    - CR-25
+    ch:
+    - CH-02
+    - CH-13
+    refs:
+    - RB-SVC
+    - RB-SVCASSESS
+    - RB-API
+    - RB-RETIRE
+    gap: Strengthened in 1.6 with data service and API actions; user research with service teams is still to do (OR-04).
+  - id: L-CYBER
+    name: Cyber and security
+    icon: shield-check
+    profs:
+    - PR-CYB
+    - PR-SEC
+    cover_before:
+      gov: Partial
+      cat: Gap
+      dq: Gap
+    cover_now:
+      gov: Strong
+      cat: Partial
+      dq: Partial
+    means: Critical data assets are among the things most worth protecting. Security teams need to know which they are, and data teams need to know an asset can be recovered and trusted after an incident.
+    questions:
+    - Do our asset inventory and incident plans include every critical data asset?
+    - What is the recovery point and recovery time for each one, and who agreed it?
+    - After a restore, how do we know the data is complete and correct?
+    actions:
+      gov:
+      - Link each critical asset to its CAF outcomes and to the SIRO's risk register.
+      - Agree recovery objectives with each data owner.
+      cat:
+      - Record classification, handling caveats and access rights accurately; scope depends on them.
+      - Keep the catalogue itself access-controlled where entries reveal sensitive holdings.
+      dq:
+      - After any restore or suspected tampering, rerun the DQAP rules before the asset is used again.
+      - Treat unexplained quality drops as a possible security signal.
+    pitfalls:
+    - Assuming OFFICIAL means low risk; aggregation can raise sensitivity.
+    - A catalogue that becomes a map for attackers.
+    cr:
+    - CR-16
+    - CR-19
+    - CR-31
+    ch:
+    - CH-07
+    - CH-15
+    refs:
+    - RB-CAF
+    - RB-GCSS
+    - RB-GOVS007
+    - RB-SBD
+    - RB-NCSC10
+    - RB-NCSCIR
+    - RB-GSC
+    gap: Was the thinnest lens. 1.6 adds a cyber resilience capability, an incident practice and seven verified security sources. Needs review by a security professional.
+  - id: L-TECH
+    name: Technology and architecture
+    icon: server
+    profs:
+    - PR-DD
+    cover_before:
+      gov: Partial
+      cat: Partial
+      dq: Partial
+    cover_now:
+      gov: Strong
+      cat: Strong
+      dq: Strong
+    means: Platforms, integration and tooling decide whether critical data can be found, joined, checked and moved. Architecture choices made now set the cost of the next migration.
+    questions:
+    - Which systems and platforms hold each critical asset?
+    - Can metadata be harvested automatically rather than typed in?
+    - Are quality checks automated in the pipeline, or done by hand?
+    actions:
+      gov:
+      - Record the system of record and data platform for each asset.
+      - Apply the Technology Code of Practice and Cloud First when assets move.
+      cat:
+      - Harvest metadata from platforms into the catalogue using DCAT and the Metadata Exchange Model.
+      - Expose catalogue entries through an API so central discovery services can collect them.
+      dq:
+      - Run quality rules automatically in data pipelines and publish results.
+      - Version schemas and test changes against the DQAP rules before release.
+    pitfalls:
+    - Buying a catalogue tool before agreeing ownership and metadata.
+    - Bespoke integrations that only one supplier understands.
+    cr:
+    - CR-11
+    - CR-12
+    - CR-13
+    - CR-14
+    ch:
+    - CH-04
+    - CH-14
+    refs:
+    - RB-TCOP
+    - RB-CLOUD
+    - RB-API
+    - RB-REFARCH
+    - RB-OPEN
+    - RB-NCSCCLOUD
+    gap: Strengthened in 1.6 with architecture, platform and automation actions and verified sources.
+  - id: L-COMM
+    name: Commercial and suppliers
+    icon: handshake
+    profs:
+    - PR-COM
+    - PR-PD
+    cover_before:
+      gov: Partial
+      cat: Gap
+      dq: Gap
+    cover_now:
+      gov: Strong
+      cat: Partial
+      dq: Partial
+    means: Many critical assets are held or processed by suppliers, and most tools are bought. Contracts decide who owns the data, what metadata and quality evidence the supplier must provide, and whether
+      the data can leave.
+    questions:
+    - Which critical assets are held or processed by a supplier?
+    - Does each contract name the data owner and require metadata, quality reporting and full data return?
+    - When does each contract end, and is the exit plan tested?
+    actions:
+      gov:
+      - Map contracts to the critical assets they touch, with end dates.
+      - Use model contract schedules for data, security and exit.
+      cat:
+      - Make catalogue-ready metadata a contract deliverable, in the government's terms.
+      - Require suppliers to keep catalogue entries current when they change the data.
+      dq:
+      - Turn DQAP targets into service levels with credits.
+      - Require suppliers to report quality against the agreed rules.
+    pitfalls:
+    - Supplier terms that treat government data as the supplier's product.
+    - Exit plans that are never tested until the contract ends.
+    cr:
+    - CR-20
+    - CR-24
+    - CR-32
+    ch:
+    - CH-06
+    - CH-16
+    - CH-01
+    refs:
+    - RB-SOURCING
+    - RB-DDATPB
+    - RB-MSC
+    - RB-MTC20
+    - RB-PPN020
+    - RB-PA23
+    - RB-PA23G
+    - RB-GCLOUD
+    - RB-SPEND
+    gap: Was thin, with one practice. 1.6 adds a buying-routes practice and verified commercial sources. Needs review by a commercial professional.
+  - id: L-LEGACY
+    name: Legacy and technical debt
+    icon: construction
+    profs:
+    - PR-DD
+    - PR-PD
+    cover_before:
+      gov: Partial
+      cat: Partial
+      dq: Partial
+    cover_now:
+      gov: Strong
+      cat: Strong
+      dq: Strong
+    means: Legacy systems concentrate critical data that is hard to find, understand or trust, and that blocks better services. Getting data out safely, and not creating the next legacy, are both DAM work.
+    questions:
+    - Where are our largest concentrations of critical data in legacy systems?
+    - Which of them block outcomes for the people who most need services?
+    - What will stop the replacement becoming legacy in its turn?
+    actions:
+      gov:
+      - Prioritise exits where legacy risk, value and inequality overlap.
+      - Keep ownership in step as assets migrate.
+      cat:
+      - Start every exit from the data asset register, as the legacy guidance asks.
+      - Record schemas and lineage before the old system goes.
+      dq:
+      - Profile quality before migration and reconcile counts, totals and keys after.
+      - Use migration as the moment to fix root causes, not copy them.
+    pitfalls:
+    - Migrating data without its meaning or quality history.
+    - Replacing one closed system with another.
+    cr:
+    - CR-26
+    - CR-32
+    - CR-15
+    ch:
+    - CH-04
+    - CH-05
+    - CH-14
+    refs:
+    - RB-LEGACY
+    - RB-TECHDEBT
+    - RB-RETIRE
+    - RB-TNA
+    - RB-OPEN
+    gap: Covered by the delivery and change practices; 1.6 adds future-legacy prevention.

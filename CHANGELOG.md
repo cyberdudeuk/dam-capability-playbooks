@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.0 (2026-11-05)
+- Perspectives: the DAM Policy through six lenses (data, digital and service, cyber and security, technology and architecture, commercial and suppliers, legacy and technical debt). Each gives questions to ask, actions for each capability, pitfalls, related capabilities, practices and professions, and verified sources, with a coverage assessment of every lens against every capability.
+- Coverage gaps closed: cyber and commercial were the thinnest lenses. New capabilities CR-31 (cyber resilience and incident response for data assets) and CR-32 (avoiding future legacy: open standards, portability and exit); new practices CH-14 (design out lock-in), CH-15 (prepare for a cyber incident) and CH-16 (buying routes and contract terms that protect data).
+- 20 new verified rulebook entries, including the NCSC Cyber Assessment Framework, the Government Cyber Security Strategy, GovS 007, Secure by design, Cloud First, the API technical and data standards, the Model Services Contract, the Procurement Act 2023 and G-Cloud 14. Government Commercial Function added to the professions.
+- New test task T-11 for each team's lens.
+
 ## 1.5.1 (2026-11-05)
 - Ready for user testing: a "Help us test" page with 10 tasks filtered by role, each with a start link and a pre-filled feedback form asking whether it was completed, how easy it was (1 to 7) and what got in the way. Linked from the prototype banner and every page footer.
 - Open data page listing 13 datasets and 30 files, and a DCAT 3 catalogue of the portal's own datasets in JSON-LD and Turtle with licence, publisher, contact point, version and media types. Every page links to the catalogue in its header; the Open data page carries schema.org Dataset markup for dataset search. Sources move to their own catalogue, sources.jsonld.
