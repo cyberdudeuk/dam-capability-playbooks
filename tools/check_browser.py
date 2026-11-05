@@ -36,7 +36,7 @@ BREAKS = {
     'contrast': ('b01_axe', "document.querySelector('h1').setAttribute('class','lowc');document.querySelectorAll('main p').forEach(function(p){p.classList.add('lowc')});"),
     'focusfill': ('b03_container_focus', "document.documentElement.classList.add('break-focus');"),
     'consoleerror': ('b04_no_console_errors', "console.error('deliberate break');"),
-    'search': ('b05_keyboard', "window.DCP_INDEX.length = 0;"),
+    'search': ('b05_keyboard', "if (window.DCP_INDEX) window.DCP_INDEX.length = 0;"),
     'tabs': ('b06_tabs', "document.querySelectorAll('[role=tablist]').forEach(function(l){l.replaceWith(l.cloneNode(true))});"),
     'filters': ('b08_filters', "document.querySelectorAll('.filters select').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
     'noscript': ('b07_no_script', ""),

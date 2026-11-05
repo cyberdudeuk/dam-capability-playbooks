@@ -308,7 +308,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.8.2', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.8.3', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -419,7 +419,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c31_navigation_aids')
 
     def test_c32_mcp_version_mismatch(self):
-        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.2'", "'version': '0.0.1'")
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.3'", "'version': '0.0.1'")
         self.fails('c32_mcp_server')
 
     def test_c32_mcp_tool_undescribed(self):

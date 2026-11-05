@@ -4733,21 +4733,26 @@ related:
     - {portal: dqc, title: Data quality management playbook, path: playbook.html, why: The community's eight-stage practice guide, for more depth than the policy steps here.}
     cataloguing:
     - {portal: cat, title: Data catalogues and standards, path: '#standards', why: Which public bodies' code shows a catalogue platform or applies DCAT, SKOS or the Metadata Exchange Model.}
-    - {portal: dqc, title: Metadata weaver, path: weaver.html, why: Describe a dataset once and output it in several metadata standards.}
+    - {portal: dqc, title: Metadata weaver, path: weaver.html, why: Describe a dataset once and output it in several metadata standards, with its metadata quality as DQV.}
+    - {portal: dqc, title: Standards catalogue, path: 'interop.html#catalogue', why: 'Open standards for data, digital, cyber and technology with their GOV.UK status, including DCAT, the Metadata Exchange Model and DQV.'}
     tooling:
     - {portal: dqc, title: Catalogues and data quality tools, path: catalogues.html, why: Named products and how they connect, a lock-in risk checker, an RFI and RFP question builder and a proof-of-concept test script.}
     - {portal: dqc, title: Commercial clause builder, path: commercial.html, why: Contract clauses that make suppliers responsible for data quality and exit.}
     - {portal: cat, title: Data tools and suppliers, path: '#suppliers', why: Which data tools appear in public bodies' code, and where.}
     - {portal: cat, title: Data catalogues and standards, path: '#standards', why: Catalogue platforms and metadata standards found in public code.}
+    - {portal: dqc, title: Standards catalogue, path: 'interop.html#catalogue', why: 'The open standards that connect tools, with their GOV.UK status and the concepts each one carries.'}
     perspectives:
     - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: Legacy and debt signals in each organisation's public code, with the evidence.}
     - {portal: dqc, title: Data debt and migration, path: legacy.html, why: A data debt self-assessment and quality gates for a migration.}
     change:
     - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: Evidence of legacy in an organisation's public code, to plan exits from.}
     - {portal: dqc, title: Data debt and migration, path: legacy.html, why: Data quality gates to carry through a modernisation programme.}
+    - {portal: dqc, title: Data quality in change programmes, path: 'roles.html#change', why: 'Gate questions, a RACI and a service blueprint for data quality during delivery.'}
     capability-model:
     - {portal: cat, title: Data management wheel, path: '#dama', why: Public code projects with evidence of each DAMA knowledge area.}
     - {portal: dqc, title: Data quality capability model, path: models.html, why: The data quality capability in more detail, with workflows and downloads.}
+    - {portal: dqc, title: Data management wheel (Commons), path: wheel.html, why: 'The same eleven areas from a data quality angle, shaded by your own maturity answers.'}
+    - {portal: dqc, title: Three portals, one journey, path: ecosystem.html, why: 'Trace a DAMA area, role or standard through all three portals.'}
     reuse:
     - {portal: dqc, title: Use the Commons your way, path: reuse.html, why: The Commons' own API, embed mode and MCP tools.}
     - {portal: cat, title: Search all code projects, path: '#search', why: Download catalogue records as DCAT or CSV.}
