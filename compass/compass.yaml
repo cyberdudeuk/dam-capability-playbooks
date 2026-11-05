@@ -1,0 +1,251 @@
+# Estate compass: one neutral page that orients people across three distinct portals.
+# Source for compass/index.html, built by tools/compass.py with the DAM playbooks build. Edit here, never the built page.
+# Every fact about a portal is that portal's own (README, theory of change or personas, read 5 November 2026). Links only; no copied text.
+meta:
+  title: Estate compass
+  subtitle: Find your bearing across three portals for data in the public sector
+  version: 1.0.0
+  as_of: '2026-11-05'
+  url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
+  host_note: Hosted in the DAM capability playbooks repository for now, but it belongs to none of the three portals and favours none.
+  contact: https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html
+
+portals:
+- id: dam
+  bearing: N
+  bearing_name: North
+  metaphor: True north
+  metaphor_line: The obligation. It sets the direction and says who is accountable.
+  icon: landmark
+  name: DAM capability playbooks
+  short: DAM playbooks
+  data_as_of: '2026-11-05'
+  url: https://cyberdudeuk.github.io/dam-capability-playbooks/
+  question: What must we do, and who does it?
+  purpose: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government, built around the Data Asset Management (DAM) Policy.
+  mission: Critical data assets are owned, findable and fit for use across government.
+  outcomes:
+  - Owners, records and data quality action plans are set up once and reused
+  - Returns are built from catalogue records, not retyped
+  - Practitioners know which requirement each step meets
+  for_whom: Chief data officers, policy coordinators, data owners, stewards, catalogue managers, data quality leads, programme leads
+  owner_model: Central ownership, tied to rolling out a government policy
+  binding: The DAM Policy is mandatory for UK government departments and arm's-length bodies, optional for public corporations, and does not apply to councils
+  licence: Content Open Government Licence v3.0; code MIT
+  needs: A web browser. No account or sign-in.
+  layout: Start from your role, then follow a playbook through five stages
+  stages: [Learn, Prepare, Do, Report, Improve]
+  gets:
+  - What the policy requires, its strength and its source
+  - A route for your role, with learning modules
+  - Methods, templates and roles for governance, cataloguing and quality
+  - How to build the policy into programmes, contracts and legacy exits
+  start: {title: Your role, path: personas.html}
+- id: dqc
+  bearing: E
+  bearing_name: East
+  metaphor: Rising practice
+  metaphor_line: The craft. Where the work of improving data gets done, together.
+  icon: wrench
+  name: Public Sector Data Quality Commons
+  short: Data Quality Commons
+  data_as_of: '2026-11-05'
+  url: https://cyberdudeuk.github.io/dq-commons/
+  question: How do I do it well?
+  purpose: A free, open hub and toolkit for everything about data quality in the public sector, to check data, find the frameworks and standards that apply, learn, use AI safely and share what works.
+  mission: People and services can rely on government data because its quality is known, published and improving, and gaps that affect particular groups are visible and fixed.
+  outcomes:
+  - Comparable data quality baselines
+  - A shared language for issues and how to fix them
+  - Inclusion checks routine for personal data
+  - Fewer duplicated tools
+  for_whom: Data quality practitioners, stewards, owners, engineers and analysts across the public sector, the devolved governments and partners; a mature, active community
+  owner_model: Open, crowdsourced and voluntary; built with and for its community
+  binding: Voluntary good practice
+  licence: Content Open Government Licence v3.0; code MIT
+  needs: A web browser. Optionally Python, to run the toolkit on your own computer. A free GitHub account to contribute.
+  layout: A six-step journey, with every page marked Beginner, Intermediate or Advanced
+  stages: [Start, Learn, Check, Improve, Apply, Contribute]
+  gets:
+  - Check a file against quality rules in your browser, with nothing uploaded
+  - Score issues with the government data quality issues framework
+  - Frameworks and standards for your nation or sector
+  - Compare catalogue and data quality tools, and buy without lock-in
+  start: {title: Get started, path: index.html}
+- id: cat
+  bearing: W
+  bearing_name: West
+  metaphor: The lie of the land
+  metaphor_line: The terrain. What already exists, and who built it.
+  icon: map
+  name: GitHub Repos Asset Catalogue
+  short: Repos Asset Catalogue
+  data_as_of: '2026-10-08'
+  url: https://cyberdudeuk.github.io/github-repos-asset-catalogue/
+  question: What already exists?
+  purpose: Every UK public sector code project on GitHub in one place, explained in plain English. Before you build it, look for it.
+  mission: Find work that already exists, see what any public body publishes, and decide whether you can reuse it.
+  outcomes:
+  - Less paying to build the same thing twice
+  - Who already works on a policy area, found before commissioning
+  - Legacy and technical debt made visible, organisation by organisation
+  for_whom: Technical specialists such as engineers, architects and security leads, and, in plain English, policy leads, service owners and data leaders
+  owner_model: Maintainers; evidence measured from public code, with accuracy checked on samples
+  binding: Evidence, not guidance
+  licence: Content and data Open Government Licence v3.0; code MIT
+  needs: A web browser. No GitHub knowledge needed. It can be downloaded and used offline.
+  layout: Hubs in the order people need them, with guided tours for each kind of user
+  stages: [Start here, Find code, Topics, Organisations, Insights, Good practice, Ask, About]
+  gets:
+  - Search 25,981 public code projects in everyday words (data as of 8 October 2026)
+  - Any public body's profile, family tree, and legacy and debt signals
+  - Which data tools and standards public bodies use in their code
+  - Reusable APIs and components, with who looks after them
+  start: {title: Welcome, path: '#home'}
+
+# The order of precedence when a journey crosses portals
+precedence:
+- {icon: landmark, title: Obligation before practice, text: "If your organisation is covered by the DAM Policy, read what it asks first. It sets the bar, the deadline and who is accountable, so the work you do next counts towards it."}
+- {icon: search, title: Look before you build, text: "Before commissioning, buying or building, check what already exists in public code. Someone may have built it, bought it or hit the same problem."}
+- {icon: wrench, title: Practice to deliver, text: "Use the Commons' tools and methods to do the work: check data, score issues, compare tools and learn from peers."}
+- {icon: refresh-cw, title: Back to the policy to report and sustain, text: "Close the loop in the DAM playbooks: record what changed, report it and keep it going through the yearly cycle."}
+- {icon: info, title: The exception, text: "Purely technical or discovery questions (who builds what, which API exists) start in the catalogue, and may never need the other two."}
+
+questions:
+- id: why
+  icon: compass
+  ask: What brings you here today?
+  help: Choose the closest. The compass suggests a route; you can change it at any time.
+  options:
+  - {id: policy, label: "We need to meet the DAM Policy, or prepare a return"}
+  - {id: quality, label: "Data we rely on isn't good enough, or we have to show it is"}
+  - {id: buy, label: "We're buying, renewing or replacing a catalogue or data quality tool"}
+  - {id: reuse, label: "We're about to build something and want to reuse what exists"}
+  - {id: legacy, label: "We're modernising a system or leaving legacy behind"}
+  - {id: estate, label: "I need to understand an organisation's data or code estate"}
+  - {id: learn, label: "I want to learn, or build my team's skills"}
+- id: role
+  icon: users-round
+  ask: Which is closest to your role?
+  help: This picks the best way in to each portal for you.
+  options:
+  - {id: leader, label: "Chief data officer or head of data", dam: personas.html#persona-cdo}
+  - {id: coordinator, label: "Policy coordinator or programme lead", dam: personas.html#persona-prg}
+  - {id: owner, label: "Data owner or steward", dam: personas.html#persona-stw}
+  - {id: dq, label: "Data quality lead or analyst", dam: personas.html#persona-dql}
+  - {id: tech, label: "Catalogue manager, engineer or architect", dam: personas.html#persona-cat}
+  - {id: commercial, label: "Commercial, finance or procurement", dam: change.html#CH-16}
+  - {id: service, label: "Service or product owner", dam: cataloguing.html#method}
+  - {id: other, label: "Something else, or just exploring", dam: personas.html}
+- id: scope
+  icon: scale
+  ask: Is your organisation covered by the DAM Policy?
+  help: The policy is mandatory for some organisations and good practice for others.
+  options:
+  - {id: mandatory, label: "Yes: a UK government department or arm's-length body"}
+  - {id: optional, label: "It's optional for us: a public corporation"}
+  - {id: none, label: "No, or not sure: a council, devolved body, charity, supplier or other"}
+- id: skill
+  icon: code-xml
+  ask: How comfortable are you with GitHub and code?
+  help: Some portals live on GitHub. None needs you to code.
+  options:
+  - {id: new, label: "New to it"}
+  - {id: some, label: "I use it sometimes"}
+  - {id: daily, label: "I work in it every day"}
+
+# Routes by situation. Each step: portal, page, the question to ask yourself, why, what you get.
+routes:
+  policy:
+    title: Meet the DAM Policy
+    outcome: A plan for the return that builds on what your organisation already runs
+    steps:
+    - {p: dam, title: What the DAM Policy requires, path: dam.html#requirements, ask: "Do you know which requirements are must and which are should?", why: "The policy sets the bar and the dates.", gets: "The requirements, their strength and who is accountable."}
+    - {p: dam, title: Your role's route, path: role, ask: "What is your part in this?", why: "Each role has different duties.", gets: "Your steps and learning modules, in order."}
+    - {p: dam, title: "Cataloguing: find and record critical assets", path: cataloguing.html#method, ask: "Do you know which of your data assets are critical?", why: "The return is built from catalogue records.", gets: "A method to find, designate and describe them."}
+    - {p: cat, title: Your organisation's profile, path: '#orgs', ask: "What does your organisation already run?", why: "Catalogue platforms and data tools may already be in your code.", gets: "Evidence to build on, not start from scratch."}
+    - {p: dqc, title: Size a quality baseline, path: baseline.html, ask: "How much quality work can you do by the deadline?", why: "A proportionate baseline beats an impossible one.", gets: "A baseline sized to your assets and dates."}
+    - {p: dam, title: The yearly cycle, path: together.html#cycle, ask: "How will you keep it going after the first return?", why: "The policy expects an annual review.", gets: "One cycle for governance, cataloguing and quality."}
+  quality:
+    title: Fix or prove data quality
+    outcome: A scored action plan, tied to the policy step it meets where the policy applies
+    steps:
+    - {p: dam, title: "Data quality: the policy steps", path: quality.html#method, ask: "Is this a critical data asset under the policy?", why: "If it is, the policy says what the action plan must cover.", gets: "The steps, roles and escalation the policy expects.", scope: policy}
+    - {p: dam, title: Sector supplements, path: sectors.html#which, ask: "Does your data belong to a sector with its own rules, such as health?", why: "Sector rules catch problems general rules miss.", gets: "Sector quality rules you can run."}
+    - {p: dqc, title: Check a file, path: check.html, ask: "What is actually wrong with the data?", why: "Measure before you fix.", gets: "Rules met and issues found, in your browser, with nothing uploaded."}
+    - {p: dqc, title: Score the issues, path: guidance.html, ask: "Which issue do you fix first?", why: "Not every issue matters equally.", gets: "A priority and a time to fix for each issue."}
+    - {p: dqc, title: The data quality playbook, path: playbook.html, ask: "How do you fix the causes, not just the symptoms?", why: "Lasting fixes need a method.", gets: "Eight stages of practice from the community."}
+    - {p: dam, title: Escalate what's overdue, path: quality.html#escalation, ask: "Who must act when a fix slips?", why: "Accountability sits with the data owner.", gets: "An escalation route through owners and boards.", scope: policy}
+  buy:
+    title: Buy a tool without lock-in
+    outcome: A tender pack with peer evidence and exit terms
+    steps:
+    - {p: dam, title: Tools and interoperability, path: tooling.html#principles, ask: "What must any tool let you do with your own metadata?", why: "Principles stop a bundle locking you in.", gets: "Five principles and the open standard for each boundary."}
+    - {p: dqc, title: Catalogues and data quality tools, path: catalogues.html, ask: "Which products fit, and how locked in would you be?", why: "Compare before you shortlist.", gets: "Products, a lock-in checker, an RFI builder and a test script."}
+    - {p: cat, title: Data tools and suppliers, path: '#suppliers', ask: "Who in government already uses this tool?", why: "Peers are the best reference.", gets: "Which public bodies use it in their code."}
+    - {p: dqc, title: Contract clauses, path: commercial.html, ask: "What must the contract say about data quality and exit?", why: "What isn't in the contract isn't owed.", gets: "Clauses for quality, ownership and exit."}
+    - {p: dam, title: Buying routes and contract terms, path: change.html#CH-16, ask: "Which route, and how do you record the decision?", why: "Spend control and assurance will ask.", gets: "Routes and terms that protect your data."}
+  reuse:
+    title: Reuse before you build
+    outcome: Reuse what exists, with the data recorded and described once
+    steps:
+    - {p: cat, title: Explore code projects, path: '#discover', ask: "Has someone already built what you need?", why: "Reuse is cheaper than building.", gets: "Projects found in everyday words, with who looks after them."}
+    - {p: cat, title: API catalogue, path: '#apis', ask: "Is there an API you can call instead?", why: "An API keeps one source of truth.", gets: "Government APIs you can reuse."}
+    - {p: dam, title: "Is it a critical data asset?", path: cataloguing.html#method, ask: "Will your service hold data the policy covers?", why: "Critical assets need an owner and a record.", gets: "A quick test of scope.", scope: policy}
+    - {p: dqc, title: Describe the data once, path: weaver.html, ask: "How do you describe it for every catalogue that needs it?", why: "Describe once, publish everywhere.", gets: "One record, output in several metadata standards."}
+  legacy:
+    title: Leave legacy behind
+    outcome: A costed exit plan with data quality gates
+    steps:
+    - {p: cat, title: Legacy and technical debt, path: '#legacy', ask: "Where is the legacy, and how bad is it?", why: "You can't plan what you can't see.", gets: "Legacy and debt signals in your organisation's code, with evidence."}
+    - {p: dam, title: The legacy lens, path: perspectives.html#L-LEGACY, ask: "What does legacy mean for your critical data?", why: "Exits put critical data at risk.", gets: "Questions, actions and pitfalls by capability."}
+    - {p: dam, title: Plan exits from the asset register, path: change.html#CH-04, ask: "Which critical assets does each system hold?", why: "Exit plans start from the data.", gets: "Exits tied to the assets they hold."}
+    - {p: dqc, title: Data debt and migration gates, path: legacy.html, ask: "How do you stop carrying bad data into the new system?", why: "Migration is the cheapest moment to fix data.", gets: "A data debt self-assessment and quality gates."}
+    - {p: dam, title: The programme blueprint, path: change.html#blueprint, ask: "Where do the gates sit in the programme?", why: "Gates need owners and dates.", gets: "Data responsibilities at every stage."}
+  estate:
+    title: Understand an estate
+    outcome: A picture of strengths and gaps, with where to improve first
+    steps:
+    - {p: cat, title: Organisation profile, path: '#orgs', ask: "What does this organisation publish and run?", why: "Start from evidence.", gets: "Projects, live work and catalogue signals."}
+    - {p: cat, title: Data management wheel, path: '#dama', ask: "Which data management areas show up in its code?", why: "The DAMA wheel is a shared map.", gets: "Code projects by knowledge area."}
+    - {p: dam, title: Assess maturity, path: capability-model.html#cm-self, ask: "How mature is it against the policy's capabilities?", why: "Evidence plus self-assessment gives a fuller picture.", gets: "A maturity profile you can download."}
+    - {p: dqc, title: Data quality maturity, path: maturity.html, ask: "How mature is its data quality practice?", why: "Quality needs a closer look.", gets: "Results compared with other organisations."}
+  learn:
+    title: Learn and build skills
+    outcome: A learning route for you or your team
+    steps:
+    - {p: dam, title: Learning modules, path: learning.html, ask: "What do you need to know about the DAM Policy?", why: "Short modules, each with a check.", gets: "Modules by role, with outcomes."}
+    - {p: dam, title: Professions and skills, path: professions.html, ask: "Where does this sit in your profession?", why: "Skills frameworks show the next step.", gets: "Roles, skill levels and learning routes."}
+    - {p: dqc, title: Learning pathways, path: learn.html, ask: "How deep do you want to go on data quality?", why: "The community shares what works.", gets: "A data quality pathway for your role."}
+    - {p: cat, title: GitHub in two minutes, path: '#home', ask: "Is GitHub new to you?", why: "Much public sector work lives there.", gets: "The four words you need, in plain English."}
+
+# Worked examples: common situations, where to start and why
+scenarios:
+- {icon: flag, who: Policy coordinator in a department, situation: "The first critical data asset return is due and nobody knows where to start.", start: dam, then: [cat, dqc], route: policy, why: "The policy sets what the return needs. The catalogue shows what your department already runs. The Commons sizes a realistic quality baseline."}
+- {icon: triangle-alert, who: Data steward at an arm's-length body, situation: "Analysts found duplicate and missing NHS numbers in a dataset the board relies on.", start: dqc, then: [dam], route: quality, why: "Measure and score the issues in the Commons first. Then use the DAM playbooks to record the plan and escalate through the data owner, because the asset is covered by the policy."}
+- {icon: building-2, who: Data lead at a council, situation: "We want better data quality but we're not covered by the DAM Policy.", start: dqc, then: [cat], route: quality, why: "The Commons is voluntary good practice for everyone. The DAM playbooks are still useful reference, but not binding on you."}
+- {icon: briefcase, who: Commercial lead, situation: "Our catalogue contract ends next year and a supplier is offering a bundle.", start: dam, then: [dqc, cat], route: buy, why: "Agree principles first, compare products and lock-in in the Commons, then check which peers use the tool."}
+- {icon: search, who: Service owner, situation: "We're about to commission an appointment booking service.", start: cat, then: [dam, dqc], route: reuse, why: "Someone may have built it already. If your service will hold critical data, the DAM playbooks say what to record."}
+- {icon: construction, who: Programme lead, situation: "We're replacing a 20-year-old case management system.", start: cat, then: [dam, dqc], route: legacy, why: "See the legacy first, plan the exit from the critical assets it holds, then set data quality gates for the migration."}
+- {icon: target, who: Chief data officer, situation: "The board wants to know how good our data management is compared with peers.", start: cat, then: [dam, dqc], route: estate, why: "Evidence from code, then the policy's capability model, then data quality maturity in depth."}
+- {icon: graduation-cap, who: New data steward, situation: "I've just been given responsibility for three datasets.", start: dam, then: [dqc, cat], route: learn, why: "Learn what the role means under the policy, then build data quality skills, then get comfortable with GitHub."}
+
+# When you need each portal, and when you don't
+when:
+  dam:
+    use: [Your organisation is covered by the DAM Policy, You are preparing or assuring a critical data asset return, You need to know who is accountable for a data asset, You are building data duties into a programme or contract]
+    skip: [You only need to check a file or fix a data quality issue, You are looking for existing code]
+  dqc:
+    use: [You need to measure or improve the quality of a dataset, You are choosing or buying a catalogue or data quality tool, You want frameworks for your nation or sector, You want to share what works or contribute]
+    skip: [You need to know what the policy makes mandatory, You are researching what an organisation builds in code]
+  cat:
+    use: [You are about to build or commission something, You want to see what any public body publishes, You need evidence of tools, standards or legacy in use, You are new to GitHub and want plain English]
+    skip: [You need guidance on what to do, You need to run checks on your data]
+
+links_today:
+- [dam, dqc, "About 6 links in the text, plus Related elsewhere on 7 pages (from 1.8.1)"]
+- [dam, cat, "Related elsewhere on 6 pages (from 1.8.1)"]
+- [dqc, cat, "2 links to the repository; a proposed change links to the live catalogue"]
+- [dqc, dam, "None yet; a proposed change adds Related elsewhere to the Catalogues page"]
+- [cat, dam, "README Related portals section (merged 5 November 2026); links inside the page are roadmap item RM-27"]
+- [cat, dqc, "README Related portals section (merged 5 November 2026); links inside the page are roadmap item RM-27"]

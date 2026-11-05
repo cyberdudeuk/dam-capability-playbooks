@@ -26,6 +26,7 @@ def fresh():
     shutil.copytree(ROOT / '.github', repo / '.github')
     shutil.copytree(ROOT / 'docs', repo / 'docs')
     shutil.copytree(ROOT / 'integrations', repo / 'integrations')
+    shutil.copytree(ROOT / 'compass', repo / 'compass')
     site = repo / 'site'
     build.Site(build.load(repo / 'content' / 'playbooks.yaml'), site).build()
     return tmp, repo, site
@@ -307,11 +308,19 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.8.1', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.8.2', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
-        edit(self.r / '.github' / 'workflows' / 'codeql.yml', '    steps:\n', '    steps:\n      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1\n')
+        edit(self.r / '.github' / 'workflows' / 'codeql.yml', '    steps:\n', '    steps:\n      - uses: someone/some-action@3d3c42e5aac5ba805825da76410c181273ba90b1\n')
+        self.fails('c24_actions_pinned')
+
+    def test_c24_reviewed_action_at_another_commit(self):
+        edit(self.r / '.github' / 'workflows' / 'scorecard.yml', 'ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e', 'ossf/scorecard-action@0000000000000000000000000000000000000000')
+        self.fails('c24_actions_pinned')
+
+    def test_c24_reviewed_action_by_tag(self):
+        edit(self.r / '.github' / 'workflows' / 'dependency-review.yml', 'actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294', 'actions/dependency-review-action@v5')
         self.fails('c24_actions_pinned')
 
     def test_c24_unpinned_own_action(self):
@@ -410,7 +419,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c31_navigation_aids')
 
     def test_c32_mcp_version_mismatch(self):
-        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.1'", "'version': '0.0.1'")
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.2'", "'version': '0.0.1'")
         self.fails('c32_mcp_server')
 
     def test_c32_mcp_tool_undescribed(self):
@@ -460,6 +469,37 @@ class Vaccination(unittest.TestCase):
         edit(y, '  placements:\n    quality:', '  placements:\n    qualityx:')
         with self.assertRaises(build.ContentError):
             build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_c35_compass_can_call_network(self):
+        edit(self.s / 'compass' / 'index.html', "default-src 'none';", "default-src 'none'; connect-src https:;")
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_link_outside_portals(self):
+        edit(self.s / 'compass' / 'index.html', '"https://cyberdudeuk.github.io/dq-commons/check.html"', '"https://example.org/check.html"', count=99)
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_link_to_missing_anchor(self):
+        edit(self.s / 'compass' / 'index.html', 'dam.html#requirements', 'dam.html#requirementz', count=99)
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_without_colophon(self):
+        edit(self.s / 'compass' / 'index.html', 'aria-label="QR code linking to', 'aria-label="Picture of')
+        self.fails('c35_estate_compass')
+
+    def test_build_rejects_compass_route_in_one_portal(self):
+        y = self.r / 'compass' / 'compass.yaml'
+        t = y.read_text(encoding='utf-8')
+        i = t.index('  estate:')
+        j = t.index('  learn:', i)
+        y.write_text(t[:i] + t[i:j].replace('{p: dam,', '{p: cat,').replace('{p: dqc,', '{p: cat,') + t[j:], encoding='utf-8')
+        sys.path.insert(0, str(self.r / 'tools'))
+        import importlib, compass
+        compass.SRC = self.r / 'compass'
+        try:
+            errs = compass.validate(compass.load(), build.load(self.r / 'content' / 'playbooks.yaml'))
+        finally:
+            compass.SRC = ROOT / 'compass'
+        self.assertTrue(any('stays in one portal' in e for e in errs), errs)
 
     def test_build_rejects_unknown_tool_standard(self):
         y = self.r / 'content' / 'frameworks.yaml'

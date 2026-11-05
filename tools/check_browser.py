@@ -47,6 +47,7 @@ BREAKS = {
     'navclip': ('b14_menus_usable', ""),
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'tours': ('b16_tours_and_share', ""),
+    'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
 }
 BREAK_CSS = {
@@ -60,7 +61,7 @@ BREAK_CSS = {
 
 def run(site, axe_path, brk=None, pages=None):
     site = Path(site)
-    pages = pages or sorted(p.name for p in site.glob('*.html'))
+    pages = pages or sorted(p.name for p in site.glob('*.html')) + (['compass/index.html'] if (site / 'compass' / 'index.html').exists() else [])
     axe = Path(axe_path).read_text(encoding='utf-8')
     httpd, base = serve(site)
     failed = {}
@@ -311,6 +312,38 @@ def run(site, axe_path, brk=None, pages=None):
         except Exception as e:
             fail('b16_tours_and_share', f'share menu could not be used: {str(e).splitlines()[0]}')
         ctx6.close()
+        # B-17 (version 1.8.2): the estate compass gives a route for every situation, turns its needle to the starting portal,
+        # keeps the answers in the address, and restores the route from a shared link
+        if (site / 'compass' / 'index.html').exists():
+            ctx7 = b.new_context(viewport={'width': 1280, 'height': 900}, bypass_csp=bool(brk))
+            pg7 = ctx7.new_page()
+            pg7.goto(f'{base}/compass/index.html')
+            prep(pg7)
+            try:
+                data = pg7.evaluate("JSON.parse(document.getElementById('data').textContent)")
+                for o in data['questions'][0]['options']:
+                    pg7.check(f'input[name=why][value={o["id"]}]', timeout=2000)
+                    pg7.wait_for_timeout(100)
+                    want = len(data['routes'][o['id']]['steps'])
+                    got = pg7.locator('#route ol.steps > li').count()
+                    if got != want:
+                        fail('b17_compass', f'situation {o["id"]}: {got} steps shown, route has {want}')
+                    first = data['routes'][o['id']]['steps'][0]['p']
+                    name = next(p['short'] for p in data['portals'] if p['id'] == first)
+                    if name not in pg7.inner_text('#bearing-now'):
+                        fail('b17_compass', f'situation {o["id"]}: the compass does not point to {name}')
+                pg7.check('input[name=role][value=owner]'); pg7.check('input[name=scope][value=none]'); pg7.check('input[name=skill][value=new]')
+                h = pg7.evaluate('location.hash')
+                if '/' not in h or 'owner' not in h:
+                    fail('b17_compass', f'answers are not kept in the address: {h}')
+                pg7.goto(f'{base}/compass/index.html#bearing/quality,owner,none,new')
+                pg7.reload()
+                pg7.wait_for_timeout(200)
+                if pg7.locator('#route ol.steps > li').count() == 0 or pg7.locator('.flagnote').count() == 0:
+                    fail('b17_compass', 'a shared link does not restore the route, or optional policy steps are not marked for an organisation outside the policy')
+            except Exception as e:
+                fail('b17_compass', f'compass could not be used: {str(e).splitlines()[0]}')
+            ctx7.close()
         # B-14 (D-022): every grouped menu opens, its links can actually be clicked, and they navigate, on desktop and phone
         for w in (1440, 390):
             ctx5 = b.new_context(viewport={'width': w, 'height': 900}, bypass_csp=bool(brk))
@@ -363,7 +396,7 @@ def main(argv=None):
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
     names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
-             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role', 'b16_tours_and_share']
+             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role', 'b16_tours_and_share', 'b17_compass']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:

@@ -458,8 +458,19 @@ def c23_repository_metadata(site, repo, pages):
     return errs
 
 
+# ADR 0005: the only actions not owned by the repository owner, each pinned to a commit checked against its release tag
+# with git ls-remote on 5 November 2026. Update a commit only after checking the new one the same way.
+REVIEWED_ACTIONS = {
+    'actions/dependency-review-action': 'a1d282b36b6f3519aa1f3fc636f609c47dddb294',   # v5.0.0
+    'actions/checkout': '3d3c42e5aac5ba805825da76410c181273ba90b1',                   # v7.0.1
+    'actions/upload-artifact': 'cf430e030ddbb5b0abf93d22962f4752f3646cd9',            # v7.0.2
+    'github/codeql-action/upload-sarif': '1fc58d04a4d4374f921bdac573c3811c240f9c26',  # v4.39.2
+    'ossf/scorecard-action': 'fa7117db83c52d787ae5a89f350999701505d78e',              # v2.5.0
+}
+
+
 def c24_actions_pinned(site, repo, pages):
-    """Rule (supply chain, D-018): workflows use only actions owned by the repository owner and pinned to a full commit SHA, matching the repository's Actions policy."""
+    """Rule (supply chain, D-018, ADR 0005): workflows use only the owner's actions or the reviewed actions, each pinned to a full commit SHA."""
     import yaml
     errs = []
     wf = repo / '.github' / 'workflows'
@@ -472,18 +483,22 @@ def c24_actions_pinned(site, repo, pages):
             if not m or m.group(1).startswith('./'):
                 continue
             ref = m.group(1)
+            name, _, sha = ref.partition('@')
             if ref.split('/')[0].lower() != owner:
-                errs.append(f'{f.name}:{n}: {ref} is not owned by {owner}; the repository policy will refuse to start the run')
+                if name not in REVIEWED_ACTIONS:
+                    errs.append(f'{f.name}:{n}: {ref} is not owned by {owner} and is not a reviewed action (ADR 0005); the repository policy will refuse to start the run')
+                elif sha != REVIEWED_ACTIONS[name]:
+                    errs.append(f'{f.name}:{n}: {name} is pinned to {sha or "a tag"}, not the reviewed commit {REVIEWED_ACTIONS[name]}; check the new commit against its release tag, then update REVIEWED_ACTIONS')
             elif not re.search(r'@[0-9a-f]{40}$', ref):
                 errs.append(f'{f.name}:{n}: {ref} is not pinned to a commit SHA')
     return errs
 
 
-EXPECTED_WORKFLOWS = {'pages.yml', 'codeql.yml', 'release.yml'}
+EXPECTED_WORKFLOWS = {'pages.yml', 'codeql.yml', 'release.yml', 'dependency-review.yml', 'scorecard.yml'}  # last two: ADR 0005
 
 
 def c25_workflow_inventory(site, repo, pages):
-    """Rule (D-020): only the three reviewed workflows exist, and none publishes the raw repository instead of the built site."""
+    """Rule (D-020, ADR 0005): only the reviewed workflows exist, and none publishes the raw repository instead of the built site."""
     wf = repo / '.github' / 'workflows'
     found = {f.name for f in wf.glob('*.y*ml')} if wf.exists() else set()
     errs = [f'unexpected workflow {n}: review it, then add it to EXPECTED_WORKFLOWS with the defect or decision that justifies it' for n in sorted(found - EXPECTED_WORKFLOWS)]
@@ -801,6 +816,51 @@ def c34_sister_portals(site, repo, pages):
     return errs
 
 
+def c35_estate_compass(site, repo, pages):
+    """Rule (version 1.8.2): the estate compass is self-contained and cannot call the network, links only to the three portals, every link into this portal lands on a page and anchor that exist, every situation has a route across at least two portals, and it carries the usual footer."""
+    import yaml
+    errs = []
+    f = site / 'compass' / 'index.html'
+    if not f.exists():
+        return ['compass/index.html missing']
+    html = f.read_text(encoding='utf-8')
+    c = yaml.safe_load((repo / 'compass' / 'compass.yaml').read_text(encoding='utf-8'))
+    bases = {p['id']: p['url'] for p in c['portals']}
+    csp = re.search(r'<meta http-equiv="Content-Security-Policy" content="([^"]*)"', html)
+    if not csp or "default-src 'none'" not in csp.group(1) or 'connect-src' in csp.group(1):
+        errs.append('compass: Content Security Policy must forbid network requests')
+    for need, what in (('<html lang="en-GB">', 'language'), ('class="skip"', 'skip link'), ('<h1>', 'heading'), ('id="sc-sum"', 'self-check'),
+                       ('aria-label="Barcode of build identifier', 'barcode colophon'), ('aria-label="QR code linking to', 'QR colophon'), ('contact form', 'contact form')):
+        if need not in html:
+            errs.append(f'compass: no {what}')
+    m = re.search(r'<script type="application/json" id="data">(.*?)</script>', html, re.S)
+    if not m:
+        return errs + ['compass: no data']
+    d = json.loads(m.group(1).replace('<\\/', '</'))
+    urls = re.findall(r'href="(https?://[^"]+)"', html)
+    for r in d['routes'].values():
+        if len({s['p'] for s in r['steps']}) < 2:
+            errs.append(f'compass: route {r["title"]} stays in one portal')
+        urls += [bases[s['p']] + s['path'] for s in r['steps'] if s['path'] != 'role']
+    urls += [bases['dam'] + o['dam'] for o in d['questions'][1]['options']]
+    urls += [u for a in d['areas'] for k in ('dam', 'dq', 'cat') for _, u in a[k]]
+    urls += [bases[p['id']] + p['start']['path'] for p in d['portals']]
+    for o in d['questions'][0]['options']:
+        if o['id'] not in d['routes']:
+            errs.append(f'compass: situation {o["id"]} has no route')
+    for u in sorted(set(urls)):
+        if not any(u.startswith(b) for b in bases.values()):
+            errs.append(f'compass: link {u} goes outside the three portals'); continue
+        if u.startswith(bases['dam']):
+            page, _, frag = u[len(bases['dam']):].partition('#')
+            page = page or 'index.html'
+            if not (site / page).exists():
+                errs.append(f'compass: link to missing page {page}'); continue
+            if frag and frag not in pages.get(page, parse(site / page)).ids:
+                errs.append(f'compass: link to missing anchor {page}#{frag}')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -808,7 +868,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
-          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals]
+          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass]
 
 
 def run(site, repo, only=None, quiet=False):

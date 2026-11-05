@@ -6,3 +6,8 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule: {interval: weekly}
+  # Proposes new commits for the reviewed actions (ADR 0005). C-24 fails until a person checks the new commit against its
+  # release tag and records it in REVIEWED_ACTIONS, so no update merges unreviewed.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: {interval: weekly}

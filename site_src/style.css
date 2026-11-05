@@ -627,3 +627,4 @@ a.btn{text-decoration:none}.ms-form a.btn.secondary{background:var(--bg);border:
 .related ul{margin:0;padding-left:1.1rem}.related li{margin:.5rem 0}
 .rel-portal{font-size:.9rem;color:var(--secondary)}
 .rel-status{display:inline-block;font-size:.8rem;font-weight:700;border:1px solid var(--border);padding:0 .4rem;margin-left:.25rem;color:var(--text);background:var(--bg)}
+.compass-link{margin:.75rem 0 0;font-weight:700}.compass-link .i{margin-right:.35rem}

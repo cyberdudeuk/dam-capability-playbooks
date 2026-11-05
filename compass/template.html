@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__: __SUBTITLE__</title>
+<meta name="description" content="Not sure where to start? Answer four questions and the compass suggests a route across the DAM capability playbooks, the Data Quality Commons and the GitHub Repos Asset Catalogue, with why each step matters and what you get.">
+<link rel="canonical" href="__URL__">
+<meta name="artefact:version" content="__VERSION__">
+<meta name="artefact:as-of" content="__ASOF__">
+<style>
+:root{--ink:#0b0c0c;--quiet:#454a4f;--bg:#fbfaf7;--card:#ffffff;--panel:#f1efe9;--line:#b1b4b6;--rule:#dcd8cf;--link:#1a5f9e;--focus:#ffdd00;
+--navy:#0b2545;--gold:#f2c14e;--trail:#6b5d43;
+--dam:#1d70b8;--dam-bg:#eaf2fa;--dqc:#00703c;--dqc-bg:#e9f5ee;--cat:#6a1b9a;--cat-bg:#f5ecf9}
+@media (prefers-color-scheme:dark){:root{--ink:#f3f2f1;--quiet:#c4c6c8;--bg:#111315;--card:#1a1d20;--panel:#202428;--line:#6f777b;--rule:#33383d;--link:#8cc2f0;--trail:#c9b38a;
+--dam:#8cc2f0;--dam-bg:#14263a;--dqc:#7fd3a4;--dqc-bg:#11291e;--cat:#d7a6ee;--cat-bg:#2a1736}}
+*{box-sizing:border-box}
+body{margin:0;font:1rem/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--link);text-underline-offset:.15em}a:hover{text-decoration-thickness:3px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:0;box-shadow:0 0 0 6px #0b0c0c}
+.i{width:1.15em;height:1.15em;vertical-align:-.2em;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;background:var(--focus);color:#0b0c0c;padding:.5rem;z-index:9}
+header{background:var(--navy);color:#fff}
+.mast{max-width:78rem;margin:0 auto;padding:1.25rem;display:grid;gap:1.25rem;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+@media (max-width:52rem){.mast{grid-template-columns:1fr}.rose-wrap{justify-self:center}}
+.mast h1{margin:.2rem 0;font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.1;display:flex;gap:.6rem;align-items:center}
+.mast h1 .i{color:var(--gold);width:1.1em;height:1.1em}
+.mast p{margin:.4rem 0;max-width:44rem;color:#e6e9ee}
+.eyebrow{color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.85rem;margin:0}
+.rose-wrap{width:min(19rem,80vw)}
+.rose{width:100%;height:auto;display:block}
+.needle{transform-origin:150px 150px;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){.needle{transition:none}}
+.bearing-now{color:#fff;text-align:center;font-weight:700;margin:.4rem 0 0;min-height:1.5em}
+.banner{background:var(--panel);color:var(--ink);border-bottom:1px solid var(--line);padding:.55rem 1.25rem;font-size:.95rem}
+.banner-in{max-width:78rem;margin:0 auto}
+.tag{display:inline-block;background:var(--gold);color:#0b0c0c;font-weight:700;padding:0 .45rem;margin-right:.45rem}
+main{max-width:78rem;margin:0 auto;padding:1rem 1.25rem 3rem}
+[role=tablist]{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--line);margin:1.25rem 0 0}
+[role=tab]{font:inherit;font-weight:700;padding:.55rem .85rem;border:1px solid transparent;border-bottom:0;background:var(--panel);color:var(--link);cursor:pointer;min-height:44px;display:flex;gap:.4rem;align-items:center}
+[role=tab][aria-selected=true]{background:var(--bg);color:var(--ink);border-color:var(--line);margin-bottom:-2px;border-bottom:2px solid var(--bg)}
+[role=tabpanel]{padding-top:1.25rem}
+h2{font-size:1.5rem;margin:1.5rem 0 .5rem;display:flex;gap:.5rem;align-items:center}h2 .i{color:var(--trail)}
+h3{font-size:1.15rem;margin:1rem 0 .4rem;display:flex;gap:.45rem;align-items:center}
+.lede{font-size:1.15rem;max-width:48rem}
+.hint{color:var(--quiet);font-size:.92rem}
+/* wayfinder */
+.qgrid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(22rem,100%),1fr))}
+fieldset{border:1px solid var(--rule);background:var(--card);padding:.9rem 1rem 1rem;margin:0}
+legend{font-weight:700;font-size:1.08rem;padding:0 .3rem;display:flex;gap:.45rem;align-items:center}
+legend .num{display:inline-grid;place-items:center;width:1.7rem;height:1.7rem;border-radius:50%;background:var(--navy);color:#fff;font-size:.9rem}
+fieldset .hint{margin:.1rem 0 .6rem}
+.opts{display:grid;gap:.4rem}
+.opts label{display:flex;gap:.6rem;align-items:flex-start;border:2px solid var(--rule);padding:.5rem .65rem;cursor:pointer;min-height:44px;background:var(--bg)}
+.opts input{width:22px;height:22px;margin:.1rem 0 0;flex:none;accent-color:var(--navy)}
+.opts label:has(input:checked){border-color:var(--navy);background:var(--panel);font-weight:700}
+@media (prefers-color-scheme:dark){.opts label:has(input:checked){border-color:var(--gold)}legend .num{background:var(--gold);color:#0b0c0c}}
+.route-head{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;margin-top:1.5rem;border-top:4px solid var(--trail);padding-top:1rem}
+.route-head h2{margin:0}
+.outcome{display:flex;gap:.6rem;align-items:flex-start;background:var(--panel);border-left:6px solid var(--gold);padding:.7rem .9rem;margin:.75rem 0;max-width:52rem}
+.outcome .i{color:var(--trail);width:1.5em;height:1.5em}
+.btn{font:inherit;font-weight:700;padding:.5rem .9rem;min-height:44px;border:0;background:#00703c;color:#fff;box-shadow:0 2px 0 #002d18;cursor:pointer;display:inline-flex;gap:.4rem;align-items:center}
+.btn.secondary{background:var(--panel);color:var(--ink);box-shadow:0 2px 0 var(--line)}
+.trail-wrap{overflow-x:auto;border:1px solid var(--rule);background:var(--card);margin:.75rem 0}
+.trail text{fill:var(--ink)}
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s;position:relative}
+ol.steps::before{content:"";position:absolute;left:1.35rem;top:.5rem;bottom:.5rem;border-left:3px dotted var(--trail)}
+ol.steps>li{position:relative;padding:0 0 1rem 3.4rem}
+.wp{position:absolute;left:0;top:0;width:2.75rem;height:2.75rem;border-radius:50%;display:grid;place-items:center;background:var(--card);border:3px solid var(--c);color:var(--c);font-weight:700}
+.wp .i{width:1.3rem;height:1.3rem}
+.step{background:var(--cbg);border:1px solid var(--rule);border-left:6px solid var(--c);padding:.7rem .9rem}
+.step.dim{border-left-style:dashed}
+.step .pl{display:flex;gap:.4rem;align-items:center;font-size:.85rem;font-weight:700}
+.step h3{margin:.25rem 0}
+.ask{font-style:italic;margin:.2rem 0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:.15rem .6rem;margin:.4rem 0 0;font-size:.95rem}
+.kv dt{font-weight:700}.kv dd{margin:0}
+.cross{display:flex;gap:.35rem;align-items:center;font-size:.85rem;font-weight:700;color:var(--quiet);margin:0 0 .35rem}
+.flagnote{display:inline-block;font-size:.8rem;font-weight:700;border:1px solid var(--line);padding:0 .4rem;background:var(--bg)}
+.tips{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(min(18rem,100%),1fr));margin:.5rem 0}
+.tip{background:var(--card);border:1px solid var(--rule);border-top:4px solid var(--c,var(--trail));padding:.7rem .9rem}
+.tip h3{margin:0 0 .3rem;font-size:1rem}
+/* precedence */
+ol.prec{list-style:none;padding:0;margin:.5rem 0;display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(min(14rem,100%),1fr));counter-reset:p}
+ol.prec li{background:var(--card);border:1px solid var(--rule);padding:.7rem .85rem;position:relative}
+ol.prec li h3{margin:0 0 .25rem;font-size:1rem}
+/* portals */
+.cards{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(21rem,100%),1fr))}
+.pcard{background:var(--card);border:1px solid var(--rule);border-top:8px solid var(--c)}
+.pcard header{background:var(--cbg);color:var(--ink);padding:.8rem 1rem;display:flex;gap:.7rem;align-items:center}
+.badge{display:grid;place-items:center;width:3rem;height:3rem;flex:none;border-radius:50%;background:var(--card);border:3px solid var(--c);color:var(--c)}
+.badge .i{width:1.5rem;height:1.5rem}
+.pcard header h3{margin:0;font-size:1.15rem}
+.pcard .bear{font-size:.85rem;font-weight:700;color:var(--quiet);margin:0}
+.pcard .body{padding:.6rem 1rem 1rem}
+.pcard .q{font-size:1.1rem;font-weight:700;margin:.2rem 0 .5rem}
+.pcard dl{margin:0}.pcard dt{font-weight:700;margin-top:.55rem;display:flex;gap:.35rem;align-items:center}.pcard dd{margin:.1rem 0 0}
+.pcard ul{margin:.2rem 0;padding-left:1.15rem}
+ol.stages{list-style:none;padding:0;margin:.3rem 0;display:flex;flex-wrap:wrap;gap:.25rem}
+ol.stages li{font-size:.8rem;font-weight:700;border:1px solid var(--c);color:var(--ink);padding:.05rem .45rem;background:var(--cbg)}
+ol.stages li+li::before{content:"\2192\00a0";color:var(--quiet)}
+/* scenarios */
+.scen{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(22rem,100%),1fr))}
+.sc{background:var(--card);border:1px solid var(--rule);padding:.8rem 1rem}
+.sc h3{margin:0 0 .35rem}
+.sc .who{font-weight:700;color:var(--quiet);font-size:.9rem;margin:0}
+.path{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:.5rem 0;padding:0;list-style:none}
+.path li{display:flex;gap:.3rem;align-items:center;font-size:.85rem;font-weight:700;border:2px solid var(--c);padding:.1rem .45rem;background:var(--cbg)}
+.path li+li::before{content:"";display:inline-block;width:1rem;border-top:3px dotted var(--trail);margin-left:-.65rem;margin-right:.1rem}
+/* when */
+.when{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(min(20rem,100%),1fr))}
+.wc{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--c);padding:.7rem 1rem}
+.wc h3{margin:.1rem 0 .4rem}
+.wc ul{margin:.1rem 0 .4rem;padding-left:1.15rem}
+.yes,.no{font-weight:700;display:flex;gap:.35rem;align-items:center;margin:.4rem 0 .1rem}
+/* lineage */
+select{font:inherit;padding:.4rem;min-height:44px;border:2px solid var(--ink);background:var(--card);color:var(--ink);max-width:100%}
+.lineage{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr));margin-top:1rem}
+.col{background:var(--cbg);border:1px solid var(--rule);border-top:6px solid var(--c);padding:.75rem}
+.col h3{margin:0 0 .5rem;font-size:1rem}
+.col ul{margin:0;padding-left:1.1rem}.col li{margin:.2rem 0}
+.gap{font-weight:700}
+  .tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;margin:.5rem 0}th,td{border-bottom:1px solid var(--rule);text-align:left;padding:.5rem;vertical-align:top}th{background:var(--panel)}
+.pn{display:inline-flex;gap:.35rem;align-items:center;font-weight:700}
+footer{border-top:8px solid var(--gold);background:var(--navy);color:#eef1f5;padding:1.25rem;font-size:.92rem}
+footer a{color:#cfe3f7}
+footer .cols{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr));max-width:78rem;margin:0 auto}
+footer h2{font-size:1rem;margin:0 0 .35rem;color:#fff}
+.colophon{display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap}.colophon figure{margin:0}.colophon svg{background:#fff;max-width:100%;display:block}
+.colophon figcaption{font-size:.8rem;color:#cfd6de}
+.selfcheck summary{cursor:pointer;font-weight:700}
+.ok{color:#9be0b6}.bad{color:#ffb4a8}
+</style>
+</head>
+<body>
+__SPRITE__
+<a class="skip" href="#main">Skip to main content</a>
+<header>
+<div class="mast">
+<div>
+<p class="eyebrow">Three portals, one compass</p>
+<h1><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>__TITLE__</h1>
+<p>__SUBTITLE__. Not sure which portal you need, or in what order? Answer four quick questions and the compass points the way, step by step, with why each step matters and what you get from it.</p>
+<p>North is the policy, east is the practice, west is what already exists. You are at the centre.</p>
+</div>
+<div class="rose-wrap">__ROSE__<p class="bearing-now" id="bearing-now" aria-live="polite">Answer the questions to take a bearing</p></div>
+</div>
+<div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to three separate portals, each with its own owner, purpose and status. Every link opens the real page. __HOSTNOTE__</div></div>
+</header>
+<main id="main" tabindex="-1">
+<div role="tablist" aria-label="Ways to find your way">
+<button role="tab" id="tab-bearing" aria-controls="bearing" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg>Find your bearing</button>
+<button role="tab" id="tab-portals" aria-controls="portals" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The three portals</button>
+<button role="tab" id="tab-examples" aria-controls="examples" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</button>
+<button role="tab" id="tab-when" aria-controls="when" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</button>
+<button role="tab" id="tab-lineage" aria-controls="lineage" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>By data management area</button>
+<button role="tab" id="tab-links" aria-controls="links" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How they link</button>
+</div>
+
+<section role="tabpanel" id="bearing" aria-labelledby="tab-bearing" tabindex="0">
+<p class="lede">Four questions about you and your situation. The compass suggests where to start, where to go next and why, and what you'll have at the end.</p>
+<form id="wayfinder" class="qgrid" aria-describedby="wf-hint" novalidate></form>
+<p class="hint" id="wf-hint">Nothing you choose leaves this page. Your answers are kept only in this page's address, so you can share or bookmark the route.</p>
+<div id="route" aria-live="polite"></div>
+<h2 id="precedence-h"><svg class="i" aria-hidden="true"><use href="#i-milestone"/></svg>Which way first: the order of precedence</h2>
+<p>When a journey crosses portals, this order usually works best.</p>
+<ol class="prec" id="prec"></ol>
+</section>
+
+<section role="tabpanel" id="portals" aria-labelledby="tab-portals" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The three portals</h2>
+<p class="lede">Three portals, three questions. Each is complete on its own; together they cover what the policy asks, how to do it well and what already exists.</p>
+<div class="cards" id="pcards"></div>
+</section>
+
+<section role="tabpanel" id="examples" aria-labelledby="tab-examples" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</h2>
+<p class="lede">Common situations, where to start and why. These are illustrative examples, not real cases.</p>
+<div class="scen" id="scen"></div>
+</section>
+
+<section role="tabpanel" id="when" aria-labelledby="tab-when" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</h2>
+<p class="lede">When you need each portal, and when you can skip it.</p>
+<div class="when" id="whencards"></div>
+</section>
+
+<section role="tabpanel" id="lineage" aria-labelledby="tab-lineage" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>Follow a data management area</h2>
+<p>Pick a data management area from the DAMA wheel to follow it across the portals: what the DAM Policy asks, how the Commons helps you do it, and what public code shows. The Commons and catalogue mappings are this compass's suggestions; the DAM capabilities come from the DAM playbooks' capability model.</p>
+<label for="area"><strong>Data management area</strong></label><br>
+<select id="area"></select>
+<p id="areadesc" aria-live="polite"></p>
+<div class="lineage" id="lin"></div>
+</section>
+
+<section role="tabpanel" id="links" aria-labelledby="tab-links" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How the portals link to each other</h2>
+<p>How the portals point to each other, as of __ASOF__. Every link says which portal it leads to and what that portal is; the portals stay separate.</p>
+<div id="linktable" class="tablewrap" role="region" aria-label="Links between the portals" tabindex="0"></div>
+</section>
+</main>
+<footer>
+<div class="cols">
+<div><h2>About this compass</h2><p>A neutral guide to three separate, open projects. It was made with help from an AI assistant (Claude) and checked by automated tests; a person reviews each release. Facts about each portal come from that portal's own pages, read on __ASOF__. None is an official GOV.UK service. Where they repeat GOV.UK guidance, GOV.UK is the authority.</p><p>Content: Open Government Licence v3.0. Icons: Lucide (ISC). No tracking, no cookies, and the page cannot make network requests.</p></div>
+<div><h2>Contact</h2><p>Use the <a href="__CONTACT__">contact form</a>. No email address is published.</p>
+<details class="selfcheck"><summary id="sc-sum">Self-check</summary><ul id="sc-list"></ul></details>
+<p>Version __VERSION__, as of __ASOF__.</p></div>
+<div><h2>Colophon</h2><div class="colophon">__CODES__</div></div>
+</div>
+</footer>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function(){
+const D=JSON.parse(document.getElementById('data').textContent),P={};D.portals.forEach(p=>P[p.id]=p);
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ic=(n,cls)=>`<svg class="i${cls?' '+cls:''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const cv=p=>`--c:var(--${p});--cbg:var(--${p}-bg)`;
+const url=(p,path)=>P[p].url+path;
+/* tabs */
+const tabs=[...document.querySelectorAll('[role=tab]')];
+function sel(t,focus){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on;});if(focus)t.focus();}
+tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();const nt=tabs[(i+n+tabs.length)%tabs.length];sel(nt,true);syncHash();}});});
+/* wayfinder */
+const ans={};
+$('#wayfinder').innerHTML=D.questions.map((q,qi)=>`<fieldset><legend><span class="num" aria-hidden="true">${qi+1}</span>${ic(q.icon)}${esc(q.ask)}</legend><p class="hint">${esc(q.help)}</p><div class="opts">`+q.options.map(o=>`<label><input type="radio" name="${q.id}" value="${o.id}"> <span>${esc(o.label)}</span></label>`).join('')+'</div></fieldset>').join('');
+const ROT={N:0,E:90,S:180,W:270};
+function needle(p){const n=document.getElementById('needle');if(!n)return;const deg=p?ROT[P[p].bearing]:45;n.style.transform=`rotate(${deg}deg)`;
+ $('#bearing-now').textContent=p?`Bearing: ${P[p].bearing_name}. Start in ${P[p].short}`:'Answer the questions to take a bearing';}
+function rolePath(){const q=D.questions.find(x=>x.id==='role');const o=q.options.find(x=>x.id===ans.role);return o?o.dam:'personas.html';}
+function render(){
+ const r=D.routes[ans.why];
+ if(!r){$('#route').innerHTML='';needle(null);return;}
+ const scope=ans.scope||'';
+ const steps=r.steps.map(s=>({...s,path:s.path==='role'?rolePath():s.path}));
+ needle(steps[0].p);
+ const fmt=s=>s.scope==='policy'&&scope==='none'?'<span class="flagnote">Optional for you: your organisation is not covered by the policy</span>':s.scope==='policy'&&scope==='optional'?'<span class="flagnote">Recommended, not required for public corporations</span>':'';
+ let svg=trail(steps);
+ let list=steps.map((s,i)=>{const prev=steps[i-1];const cross=prev&&prev.p!==s.p?`<p class="cross">${ic('footprints')}Cross from ${esc(P[prev.p].short)} to ${esc(P[s.p].short)}</p>`:'';
+  return `<li id="wp-${i+1}"><span class="wp" style="${cv(s.p)}" aria-hidden="true">${ic(P[s.p].icon)}</span>${cross}<div class="step${fmt(s)?' dim':''}" style="${cv(s.p)}"><p class="pl">${ic(P[s.p].icon)}Step ${i+1} of ${steps.length}, in ${esc(P[s.p].name)}</p><h3><a href="${esc(url(s.p,s.path))}">${esc(s.title)}</a></h3><p class="ask">Ask yourself: ${esc(s.ask)}</p><dl class="kv"><dt>Why</dt><dd>${esc(s.why)}</dd><dt>You get</dt><dd>${esc(s.gets)}</dd></dl>${fmt(s)}</div></li>`;}).join('');
+ const used=[...new Set(steps.map(s=>s.p))];
+ const pre=used.map(p=>`<div class="tip" style="${cv(p)}"><h3>${ic(P[p].icon)}${esc(P[p].short)}</h3><p>${esc(P[p].needs)}</p><p class="hint">${esc(P[p].binding)}.</p></div>`).join('');
+ const roleq=D.questions.find(x=>x.id==='role').options.find(x=>x.id===ans.role);
+ let tips='';
+ if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each portal</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li></ul></div>`;}
+ if(ans.skill==='new')tips+=`<div class="tip" style="${cv('cat')}"><h3>${ic('git-branch')}New to GitHub?</h3><p>You don't need to code. Read <a href="${esc(url('cat','#home'))}">GitHub in two minutes</a> in the catalogue, or <a href="${esc(url('dqc','github.html'))}">the Commons' plain-English introduction</a>.</p></div>`;
+ if(ans.skill==='daily')tips+=`<div class="tip" style="${cv('dqc')}"><h3>${ic('code-xml')}Working in code?</h3><p>The Commons has a toolkit you can run and an API (<a href="${esc(url('dqc','reuse.html'))}">use the Commons your way</a>). The DAM playbooks publish open data and a reference server for AI assistants (<a href="${esc(url('dam','reuse.html'))}">use and reuse</a>).</p></div>`;
+ if(ans.scope==='mandatory'&&steps[0].p!=='dam')tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('landmark')}Your organisation is covered by the DAM Policy</h3><p>If this work touches a critical data asset, read <a href="${esc(url('dam','dam.html#requirements'))}">what the policy requires</a> before you finish, so the work counts towards it.</p></div>`;
+ $('#route').innerHTML=`<div class="route-head"><div><p class="eyebrow" style="color:var(--trail)">Your route</p><h2>${ic('route')}${esc(r.title)}</h2></div><button type="button" class="btn secondary" id="copy">${ic('share-2')}Copy a link to this route</button></div><p class="outcome">${ic('flag')}<span><strong>Where it takes you:</strong> ${esc(r.outcome)}.</span></p><p id="copy-status" class="hint" aria-live="polite"></p><div class="trail-wrap" role="region" aria-label="Your route as a trail across the three portals" tabindex="0">${svg}</div><ol class="steps">${list}</ol><h3>${ic('circle-check')}What you need before you set off</h3><div class="tips">${pre}</div>${tips?`<h3>${ic('lightbulb')}Tips for you</h3><div class="tips">${tips}</div>`:''}`;
+ $('#copy').addEventListener('click',()=>{const done=ok=>$('#copy-status').textContent=ok?'Link copied.':'Could not copy. Select the address bar and copy it.';if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(()=>done(true),()=>done(false));else done(false);});
+}
+function trail(steps){const n=steps.length,W=Math.max(760,150*n+240),H=230,lanes=['dam','dqc','cat'],ly=p=>({dam:56,dqc:116,cat:176})[p],x=i=>200+i*((W-260)/(n-1||1));
+ let s=`<svg class="trail" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Your route: ${n} steps across ${new Set(steps.map(z=>z.p)).size} portals. The same steps are listed below.">`;
+ lanes.forEach(p=>{s+=`<rect x="0" y="${ly(p)-26}" width="${W}" height="52" fill="var(--${p}-bg)"/><rect x="0" y="${ly(p)-26}" width="6" height="52" fill="var(--${p})"/><text x="14" y="${ly(p)+5}" font-size="13" font-weight="700">${esc(P[p].short)}</text>`;});
+ const d=steps.map((st,i)=>`${i?'L':'M'}${x(i)} ${ly(st.p)}`).join(' ');
+ s+=`<path d="${d}" fill="none" stroke="var(--trail)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>`;
+ steps.forEach((st,i)=>{s+=`<g><circle cx="${x(i)}" cy="${ly(st.p)}" r="19" fill="var(--card)" stroke="var(--${st.p})" stroke-width="3"/><svg x="${x(i)-10}" y="${ly(st.p)-10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--${st.p})" aria-hidden="true">${ic(P[st.p].icon).replace(/<svg[^>]*>|<\/svg>/g,'')}</svg><text x="${x(i)}" y="${ly(st.p)-25}" text-anchor="middle" font-size="12" font-weight="700">${i+1}</text></g>`;});
+ s+=`<text x="${x(n-1)}" y="${H-8}" text-anchor="middle" font-size="12">Destination</text></svg>`;return s;}
+$('#wayfinder').addEventListener('change',e=>{ans[e.target.name]=e.target.value;render();syncHash();});
+/* hash: tab and answers */
+function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');history.replaceState(null,'','#'+t.getAttribute('aria-controls')+(a.replace(/,/g,'')?'/'+a:''));}
+(function(){const h=location.hash.slice(1).split('/');const t=tabs.find(x=>x.getAttribute('aria-controls')===h[0]);if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];if(q&&v&&q.options.some(o=>o.id===v)){ans[q.id]=v;const r=document.querySelector(`input[name="${q.id}"][value="${v}"]`);if(r)r.checked=true;}});render();}})();
+/* precedence */
+$('#prec').innerHTML=D.precedence.map((x,i)=>`<li><h3>${ic(x.icon)}${i+1}. ${esc(x.title)}</h3><p>${esc(x.text)}</p></li>`).join('');
+/* portals */
+$('#pcards').innerHTML=D.portals.map(p=>`<article class="pcard" style="${cv(p.id)}"><header><span class="badge">${ic(p.icon)}</span><div><p class="bear">${esc(p.bearing_name)}: ${esc(p.metaphor)}</p><h3><a href="${esc(p.url)}">${esc(p.name)}</a></h3></div></header><div class="body"><p class="q">${esc(p.question)}</p><p>${esc(p.metaphor_line)}</p><dl>
+<dt>${ic('target')}Purpose</dt><dd>${esc(p.purpose)}</dd>
+<dt>${ic('mountain')}Mission</dt><dd>${esc(p.mission)}</dd>
+<dt>${ic('trophy')}Outcomes it aims for</dt><dd><ul>${p.outcomes.map(o=>`<li>${esc(o)}</li>`).join('')}</ul></dd>
+<dt>${ic('sparkles')}What's in it for you</dt><dd><ul>${p.gets.map(o=>`<li>${esc(o)}</li>`).join('')}</ul></dd>
+<dt>${ic('users-round')}Who it's for</dt><dd>${esc(p.for_whom)}</dd>
+<dt>${ic('route')}How it's laid out</dt><dd>${esc(p.layout)}<ol class="stages">${p.stages.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></dd>
+<dt>${ic('handshake')}Who runs it</dt><dd>${esc(p.owner_model)}</dd>
+<dt>${ic('scale')}How binding</dt><dd>${esc(p.binding)}</dd>
+<dt>${ic('file-text')}Licence</dt><dd>${esc(p.licence)}</dd>
+<dt>${ic('circle-check')}What you need</dt><dd>${esc(p.needs)}</dd></dl>
+<p><a class="btn" href="${esc(url(p.id,p.start.path))}">${ic('navigation')}Go to ${esc(p.start.title)} in ${esc(p.short)}</a></p></div></article>`).join('');
+/* examples */
+$('#scen').innerHTML=D.scenarios.map((x,i)=>{const seq=[x.start,...x.then];return `<article class="sc"><p class="who">${esc(x.who)}</p><h3>${ic(x.icon)}${esc(x.situation)}</h3><ol class="path" aria-label="Order to follow">${seq.map((p,j)=>`<li style="${cv(p)}">${ic(P[p].icon)}${j+1}. ${esc(P[p].short)}</li>`).join('')}</ol><p>${esc(x.why)}</p><p><button type="button" class="btn secondary" data-route="${x.route}">${ic('navigation')}Follow this route: ${esc(D.routes[x.route].title)}</button></p></article>`;}).join('');
+document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{ans.why=b.dataset.route;const r=document.querySelector(`input[name="why"][value="${b.dataset.route}"]`);if(r)r.checked=true;render();sel(tabs[0]);syncHash();const h=document.querySelector('#route h2');if(h){h.setAttribute('tabindex','-1');h.focus();}}));
+/* when */
+$('#whencards').innerHTML=D.portals.map(p=>{const w=D.when[p.id];return `<article class="wc" style="${cv(p.id)}"><h3>${ic(p.icon)}${esc(p.name)}</h3><p class="yes">${ic('circle-check')}Go there when</p><ul>${w.use.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="no">${ic('info')}You can skip it when</p><ul>${w.skip.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article>`;}).join('');
+/* lineage */
+$('#area').innerHTML=D.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+function area(){const a=D.areas.find(x=>x.id===$('#area').value);$('#areadesc').innerHTML=`<strong>${esc(a.name)}:</strong> ${esc(a.desc)} <span class="hint">Records management counterpart: ${esc(a.im)}</span>`;
+ const col=(p,title,items,empty)=>`<section class="col" style="${cv(p)}"><h3 class="pn">${ic(P[p].icon)}${esc(P[p].short)}: ${esc(title)}</h3>${items.length?'<ul>'+items.map(([t,u])=>`<li><a href="${esc(u)}">${esc(t)}</a></li>`).join('')+'</ul>':`<p class="gap">${esc(empty)}</p>`}</section>`;
+ $('#lin').innerHTML=col('dam','what the policy asks',a.dam,'')+col('dqc','do the work',a.dq,'No dedicated page yet.')+col('cat','evidence in public code',a.cat,'');}
+$('#area').addEventListener('change',area);area();
+/* links */
+$('#linktable').innerHTML='<table><caption class="vh">How the portals link to each other</caption><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Links</th></tr></thead><tbody>'+D.links_today.map(([f,t,n])=>`<tr><td class="pn">${ic(P[f].icon)}${esc(P[f].short)}</td><td><span class="pn">${ic(P[t].icon)}${esc(P[t].short)}</span></td><td>${esc(n)}</td></tr>`).join('')+'</tbody></table>';
+/* self-check, on every load */
+const checks=[],ck=(n,ok,d)=>checks.push({n,ok,d});
+const bases=D.portals.map(p=>p.url);
+const allSteps=Object.values(D.routes).flatMap(r=>r.steps);
+ck('Every route step names a known portal',allSteps.every(s=>P[s.p]),allSteps.length+' steps');
+ck('Every situation has a route',D.questions[0].options.every(o=>D.routes[o.id]),D.questions[0].options.length+' situations');
+ck('Every worked example follows a known route',D.scenarios.every(x=>D.routes[x.route]&&P[x.start]&&x.then.every(p=>P[p])),D.scenarios.length+' examples');
+ck('Every portal has a compass bearing',D.portals.every(p=>p.bearing in ROT),'');
+ck('Links go only to the three portals',D.areas.flatMap(a=>[...a.dam,...a.dq,...a.cat].map(x=>x[1])).every(u=>bases.some(b=>u.startsWith(b))),'');
+const csp=(document.querySelector('meta[http-equiv=Content-Security-Policy]')||{}).content||'';
+ck('The page cannot make network requests',/default-src 'none'/.test(csp)&&!/connect-src/.test(csp),'Content Security Policy');
+const ages=D.portals.map(p=>[p.short,Math.round((Date.now()-Date.parse(p.data_as_of||D.meta.as_of))/864e5)]);
+const old=ages.filter(([,d])=>d>30);
+ck('No portal data older than 30 days',old.length===0,old.length?old.map(([n,d])=>`${n}: ${d} days`).join('; '):ages.map(([n,d])=>`${n} ${d} days`).join('; '));
+const pass=checks.filter(c=>c.ok).length;$('#sc-sum').textContent=`Self-check: ${pass} of ${checks.length} passed`;
+$('#sc-list').innerHTML=checks.map(c=>`<li class="${c.ok?'ok':'bad'}">${c.ok?'Pass':'Needs attention'}: ${esc(c.n)}${c.d?` (${esc(c.d)})`:''}</li>`).join('');
+})();
+</script>
+</body>
+</html>

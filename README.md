@@ -51,9 +51,12 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Status page | Weekly scheduled workflow; failures open an issue labelled `health` |
 | What's new | `CHANGELOG.md` and tag-triggered releases |
 | Hosting | GitHub Pages from the `gh-pages` branch, which the workflow publishes from `main` using plain commands (no third-party actions) |
+| Supply chain | Dependency review on pull requests and a weekly OpenSSF Scorecard, using five reviewed actions pinned to commits (ADR 0005) |
 | Security | CodeQL, Dependabot, secret scanning, private vulnerability reporting |
 
 Nothing in the portal depends on any service other than GitHub and GitHub Pages, except the optional private feedback form.
+
+Not sure which portal you need? The [estate compass](https://cyberdudeuk.github.io/dam-capability-playbooks/compass/) (`compass/`, built with this site) suggests where to start and in what order across all three.
 
 Two sister portals are signposted, not merged: the [Public Sector Data Quality Commons](https://cyberdudeuk.github.io/dq-commons/) (a community project) and the [GitHub Repos Asset Catalogue](https://cyberdudeuk.github.io/github-repos-asset-catalogue/) (a specialist evidence tool). Their links live in `related` in `content/frameworks.yaml`; `data/xref.json` publishes this portal's shared keys for them to link back.
 

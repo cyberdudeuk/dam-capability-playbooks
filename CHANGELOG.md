@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.2 (2026-11-05)
+- Estate compass at `compass/`: a neutral page that orients people across the DAM capability playbooks (north: the obligation), the Data Quality Commons (east: the practice) and the GitHub Repos Asset Catalogue (west: what already exists). Four questions (situation, role, whether the DAM Policy applies, comfort with GitHub) give a route of steps across the portals, each with the question to ask yourself, why it matters and what you get, and the compass needle turns to the starting portal. Also: what each portal is for, its mission, outcomes, audience, owner model, how binding it is and its licence; the order of precedence; eight worked examples; when to use or skip each portal; data management areas across the portals; and how the portals link. Routes can be shared as links. Linked from every page's footer and every Related elsewhere section.
+- Dependency review on every pull request and a weekly OpenSSF Scorecard, using five GitHub and OpenSSF actions pinned to commits checked against their release tags (ADR 0005). C-24 now allows exactly those commits; Dependabot proposes updates for a person to check.
+- New checks C-35 (compass self-contained, links only to the three portals, every link into this portal resolves, every situation has a cross-portal route, usual footer) and B-17 (every situation gives its route, the needle points to the start, shared links restore the route), with deliberate breaks. The compass also checks itself in the reader's browser.
+- Nine Lucide icons added for the compass (navigation, map pin, footprints, mountain, trophy, sparkles, check, code and branch).
+
 ## 1.8.1 (2026-11-05)
 - Related elsewhere: signposts to the Data Quality Commons and the GitHub Repos Asset Catalogue at the end of eight pages (quality, cataloguing, tools, perspectives, delivery and change, capability model and reuse), each naming the portal and its status (community project, specialist evidence tool). The portals stay distinct: different owners, licences, audiences and status; nothing is copied across.
 - Tools and interoperability now frames its questions by what the DAM Policy needs and points to the Commons for named products, the lock-in checker, the RFI builder and the test script (D-026).

@@ -16,7 +16,7 @@ meta:
   short_title: DAM capability playbooks
   subtitle: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
   keywords: [data asset management, DAM policy, critical data assets, data governance, data catalogue, metadata, data quality, DQAP, data ownership, UK government]
-  version: 1.8.1
+  version: 1.8.2
   as_of: '2026-11-05'
   review: '2027-02-05'
   verified_on: '2026-11-05'
@@ -1589,6 +1589,7 @@ design:
   - {id: FR-13, kind: Functional, moscow: Should, text: "Let organisations reuse the content through links, embedding, open data, AI assistants and an MCP server.", features: [reuse, data], checks: [C-28, C-31, C-32]}
   - {id: FR-14, kind: Functional, moscow: Should, text: "Help organisations connect and buy data management tools without lock-in, with open standards and RFI questions.", features: [tooling], checks: [C-33]}
   - {id: FR-15, kind: Functional, moscow: Should, text: "Signpost the sister portals where they help, naming each and its status, without merging their journeys or copying their content.", features: [quality, tooling, reuse], checks: [C-34]}
+  - {id: FR-16, kind: Functional, moscow: Should, text: "Help people who work across the three portals choose where to start, in what order and why, without merging the portals.", features: [reuse], checks: [C-35, B-17]}
   - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services (Pages, issue forms, Discussions, Actions and releases), plus an optional Microsoft Forms route for private feedback.", features: [contact, status, whats-new], checks: [C-05, C-33, HL-01]}
   architecture:
     components:
