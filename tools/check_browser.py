@@ -45,6 +45,7 @@ BREAKS = {
     'display': ('b11_display', "var d=document.getElementById('display-panel');if(d){d.replaceWith(d.cloneNode(true));}"),
     'finder': ('b12_sector_finder', "document.querySelectorAll('input[data-q]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
     'navclip': ('b14_menus_usable', ""),
+    'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
 }
 BREAK_CSS = {
@@ -245,6 +246,21 @@ def run(site, axe_path, brk=None, pages=None):
         except Exception as e:
             fail('b13_self_assessment', f'self-assessment could not be used: {str(e).splitlines()[0]}')
         ctx4.close()
+        # B-15 (version 1.7): choosing a role on the DAMA wheel opens every area's guidance with that role highlighted
+        pg.goto(f'{base}/capability-model.html#cm-dama')
+        prep(pg)
+        try:
+            pg.select_option('#dama-role', 'prg', timeout=3000)
+            n_open = pg.evaluate("document.querySelectorAll('.dama-uses[open]').length")
+            n_all = pg.evaluate("document.querySelectorAll('.dama-uses').length")
+            n_me = pg.evaluate("document.querySelectorAll('.dama-uses tr.me').length")
+            if not n_all or n_open != n_all or n_me != n_all:
+                fail('b15_dama_role', f'role choice opened {n_open} of {n_all} areas and highlighted {n_me}')
+            seg = pg.evaluate("(() => { const a = document.querySelector('.dama-wheel a'); return a ? a.getAttribute('href') : null; })()")
+            if not seg or not pg.evaluate("(h) => !!document.getElementById(h.slice(1))", seg):
+                fail('b15_dama_role', 'wheel segments do not link to their area')
+        except Exception as e:
+            fail('b15_dama_role', f'DAMA role choice could not be used: {str(e).splitlines()[0]}')
         # B-14 (D-022): every grouped menu opens, its links can actually be clicked, and they navigate, on desktop and phone
         for w in (1440, 390):
             ctx5 = b.new_context(viewport={'width': w, 'height': 900}, bypass_csp=bool(brk))
@@ -297,7 +313,7 @@ def main(argv=None):
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
     names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
-             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable']
+             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:

@@ -306,7 +306,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.6.0', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.7.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -390,6 +390,21 @@ class Vaccination(unittest.TestCase):
         i = t.index('id: L-CYBER')
         j = t.index('      dq:', i)
         y.write_text(t[:j] + '      dx:' + t[j + len('      dq:'):], encoding='utf-8')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_role_without_icon(self):
+        y = self.r / 'content' / 'playbooks.yaml'
+        edit(y, '- {code: SRO, name: Senior responsible owner,', '- {code: XRO, name: Senior responsible owner,')
+        with self.assertRaises(build.ContentError):
+            build.load(y)
+
+    def test_build_rejects_wheel_area_missing_a_role(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        t = y.read_text(encoding='utf-8')
+        i = t.index('id: DM-ARC')
+        j = t.index('      prg:', i)
+        y.write_text(t[:j] + '      zzz:' + t[j + len('      prg:'):], encoding='utf-8')
         with self.assertRaises(build.ContentError):
             build.load(self.r / 'content' / 'playbooks.yaml')
 

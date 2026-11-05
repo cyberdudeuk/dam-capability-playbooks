@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.0 (2026-11-05)
+- Programme roles: seven roles found in medium and large programmes (senior responsible owner, programme or project manager, service or product owner, design authority or solution architect, data migration lead, commercial lead, programme office and assurance) now have data responsibilities, appear in the roles list and the delivery and change practices, and have a new route: "Programme or project lead".
+- Service blueprint for a programme on the Delivery and change page: five lanes across six stages, from business case to retirement.
+- DAMA wheel on the Capability model page: eleven knowledge areas around data governance, shaded by how many DAM capabilities touch each, with what each area is, the DAM capabilities and maturity topics it maps to, its records and information management counterpart, and how each of seven roles uses it. Choose a role to see your guidance. The data and records life cycles are shown side by side with where DAM acts.
+- Working together page: ten recommendations for join-up between professions, each with an action, an outcome and a measure; 15 verified communities and networks filtered by role; and a map of which professions contribute to each capability.
+- 10 new verified rulebook entries, including the role of the senior responsible owner, the Public Records Act 1958, The National Archives guidance, the Data Standards Authority and the Government Data Quality Hub. ISO 15489 and ISO 23081 are labelled as found by search because the site blocks automated checks.
+- Test tasks T-12 to T-14. The build now refuses a role without an icon and a wheel area without guidance for every role.
+
 ## 1.6.0 (2026-11-05)
 - Perspectives: the DAM Policy through six lenses (data, digital and service, cyber and security, technology and architecture, commercial and suppliers, legacy and technical debt). Each gives questions to ask, actions for each capability, pitfalls, related capabilities, practices and professions, and verified sources, with a coverage assessment of every lens against every capability.
 - Coverage gaps closed: cyber and commercial were the thinnest lenses. New capabilities CR-31 (cyber resilience and incident response for data assets) and CR-32 (avoiding future legacy: open standards, portability and exit); new practices CH-14 (design out lock-in), CH-15 (prepare for a cyber incident) and CH-16 (buying routes and contract terms that protect data).

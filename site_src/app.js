@@ -393,4 +393,21 @@
     $('#sa-clear').addEventListener('click', function () { sa = {}; store.del(SAK); $$('[data-sa]').forEach(function (c) { if (c.type === 'radio') c.checked = false; else c.value = ''; }); drawSA(); });
     drawSA();
   }
+  /* DAMA view: role selector opens each area's role guidance and highlights the chosen role (version 1.7) */
+  var dr = $('#dama-role');
+  if (dr) {
+    var names = {};
+    $$('#dama-role option').forEach(function (o) { names[o.value] = o.textContent; });
+    var applyDr = function () {
+      var v = dr.value;
+      $$('.dama-uses').forEach(function (det) {
+        det.open = !!v;
+        $$('tbody tr', det).forEach(function (tr) { var th = tr.querySelector('th'); tr.classList.toggle('me', !!v && th && th.textContent === names[v]); });
+      });
+      store.set('dcp-dama-role', v);
+    };
+    dr.value = store.get('dcp-dama-role') || '';
+    dr.addEventListener('change', applyDr);
+    applyDr();
+  }
 })();

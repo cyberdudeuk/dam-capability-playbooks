@@ -16,7 +16,7 @@ meta:
   short_title: DAM capability playbooks
   subtitle: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
   keywords: [data asset management, DAM policy, critical data assets, data governance, data catalogue, metadata, data quality, DQAP, data ownership, UK government]
-  version: 1.6.0
+  version: 1.7.0
   as_of: '2026-11-05'
   review: '2027-02-05'
   verified_on: '2026-11-05'
@@ -241,6 +241,13 @@ roles:
 # ---------------------------------------------------------------------------
 # The three capabilities
 # ---------------------------------------------------------------------------
+- {code: SRO, name: Senior responsible owner, text: "Accountable for a programme or project meeting its objectives. Makes sure data assets the change creates, alters or retires have owners, budgets and assurance, and signs off handover to business as usual.", prov: O}
+- {code: PDM, name: Programme or project manager, text: "Plans and runs the change. Builds DAM activities into the plan, the risk register and gate criteria, and makes sure data owners are consulted at each stage.", prov: O}
+- {code: SVO, name: Service or product owner, text: "Owns the service the change delivers. Decides what data the service collects and exposes, and shows DAM evidence at service assessments.", prov: O}
+- {code: ARC, name: Design authority or solution architect, text: "Approves data models, platforms and integrations. Checks new designs use open standards, documented schemas and an exit route, so they do not become future legacy.", prov: O}
+- {code: MIG, name: Data migration lead, text: "Plans and runs data migration. Profiles quality before moving data, reconciles after, and keeps catalogue entries and ownership in step.", prov: O}
+- {code: CML, name: Commercial lead, text: "Runs procurement and manages contracts. Writes data ownership, metadata delivery, quality reporting and exit into contracts.", prov: O}
+- {code: PMO, name: Programme office and assurance, text: "Tracks delivery and organises assurance reviews. Checks DAM checkpoints are met at each gate and reports gaps to the senior responsible owner.", prov: O}
 capabilities:
 - id: gov
   in_brief:
@@ -893,6 +900,7 @@ defects:
 - {id: D-020, found: Review of repository settings after release 1.4, defect: "A suggested Jekyll workflow was added and Pages was set to publish from main, which would have published the raw repository files instead of the built portal.", cause: "GitHub's Pages settings offer a Jekyll starter workflow by default; nothing in the repository explained that the built site lives on gh-pages.", check: "C-24 refused the workflow (unpinned third-party actions) and the build failed safely. The workflow is removed, Pages publishes from gh-pages, and C-25 now fails if any workflow other than the three expected ones appears, or if any workflow publishes from the repository root."}
 - {id: D-021, found: Owner report after release 1.4, defect: "GitHub listed an unrelated account called 'noreply' (location China) as a contributor. It never acted on the repository; four early commits were credited to it.", cause: "Automated build sessions committed with GitHub's generic noreply address under the username 'noreply', which GitHub links to the account with that username.", check: "C-26 fails the build if the latest commit uses any identity outside an allow-list of the owner, GitHub's bots and the named assistant. Removing the credit on GitHub itself needs those four commits rewritten (OR-17)."}
 - {id: D-022, found: Owner report on the live portal (version 1.4), defect: "The Playbooks and Frameworks menus opened but showed nothing and could not be clicked, on desktop and inside the More menu on phones.", cause: "The top bar hid overflow so it could measure when to fold items into More, and that also cut off the drop-down menus positioned inside it. No browser check opened the menus.", check: "The top bar no longer hides overflow; folding still works because it measures scroll width. B-14 opens every grouped menu at 1440 and 390 pixels, checks its first link can be hit and clicked, and follows it; a deliberate break that restores the clipping proves it fails."}
+- {id: D-023, found: Browser checks (version 1.7, before release), defect: "The DAMA wheel's segment links had spoken names that did not match their visible labels, and the wheel's area cards pushed the page sideways at 320 pixels.", cause: "Segment names were set separately from the visible text, and the card grid had a fixed minimum column width wider than a small phone.", check: "B-01 (axe label and name match) and B-02 (sideways scrolling) caught both before release. Segment names now come from the visible label with the detail in a title, and the grid columns shrink to the screen."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1037,6 +1045,40 @@ personas:
 # ---------------------------------------------------------------------------
 # Learning modules
 # ---------------------------------------------------------------------------
+- id: prg
+  title: Programme or project lead
+  icon: construction
+  role: SRO
+  summary: You lead a medium or large change programme or project that creates, changes, migrates or retires critical data assets.
+  context: Your programme has its own governance, gates, budget and suppliers. Data asset management can feel like someone else's job until a gate review, a migration or handover exposes the gaps.
+  goals: [Pass assurance gates without late data surprises, Hand over assets with owners and quality plans in place, Avoid creating the next legacy system]
+  needs:
+  - {need: "to know which DAM duties apply to my programme and when", so: "they are planned and funded from the business case"}
+  - {need: "clear data roles inside my programme team", so: "nobody assumes someone else is doing it"}
+  pains: [Data owners sit outside the programme and are hard to reach, Migration quality problems surface only at cutover]
+  design_for: [Reads on the move between meetings, Needs a one-page view to share with the programme board]
+  success: "Every critical asset the programme touches has an owner, a catalogue entry and a quality plan before the programme closes."
+  modules: [M01, M02, M11, M09]
+  journey:
+  - stage: Learn
+    tasks:
+    - {m: M01}
+    - {m: M11}
+  - stage: Prepare
+    tasks:
+    - {p: gov.assign, label: "Confirm data owners for every asset in scope of the programme"}
+    - {p: cat.discover, label: "List the critical assets the programme creates, changes or retires"}
+  - stage: Do
+    tasks:
+    - {p: dq.define, label: "Agree quality rules and targets with owners before build"}
+    - {p: cat.describe, label: "Catalogue new assets before go-live"}
+  - stage: Report
+    tasks:
+    - {p: gov.assure, label: "Show DAM evidence at each gate review"}
+  - stage: Improve
+    tasks:
+    - {p: dq.sustain, label: "Hand over the DQAP and ownership to business as usual"}
+    - {m: M09}
 modules:
 - id: M01
   title: The DAM Policy - what it asks of you

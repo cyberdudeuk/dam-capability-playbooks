@@ -24,7 +24,8 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Sectors | Supplements for health, social care, geospatial, statistics, sharing, AI and more, with a finder and quality rules the Data Quality Commons kit can run |
 | Delivery and change | Embedding the policy in business as usual and in programmes: business cases, spend control, assurance, legacy exits, contracts, handover and benefits |
 | Joined up | Hand-offs between the three, one set of roles, one yearly cycle |
-| Capability model | 32 capabilities the policy and adjacent guidance need, each flagged explicit, implicit or inferred with signposts to the exact section; the government data maturity model; a self-assessment; crosswalks to industry models |
+| Capability model | A DAMA-DMBOK wheel view with role guidance and the records life cycle alongside; 32 capabilities the policy and adjacent guidance need, each flagged explicit, implicit or inferred with signposts to the exact section; the government data maturity model; a self-assessment; crosswalks to industry models |
+| Working together | Ten recommendations for join-up between data, records, security, digital, technology, analysis, commercial and delivery professionals; communities to join; who contributes to what |
 | Perspectives | The policy through data, digital, cyber, technology, commercial and legacy lenses, with a coverage assessment |
 | Professions and skills | Government professions, Digital and Data framework career pathways with grades and skill levels, and learning routes |
 | Your role | Routes for six roles across learn, prepare, do, report and improve |

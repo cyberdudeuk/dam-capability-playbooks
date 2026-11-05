@@ -1,4 +1,4 @@
-# Version 1.4 content and later: capability map, maturity model, professions and skills, delivery and change, lenses.
+# Version 1.4 content and later: capability map, maturity model, professions and skills, delivery and change, lenses, DAMA view, join-up.
 # Loaded and merged with playbooks.yaml by tools/build.py. Edit here; never edit the generated site.
 rulebook_more:
 - id: RB-GREEN
@@ -675,6 +675,110 @@ rulebook_more:
   caps:
   - gov
   why: The commercial profession, which buys the services and tools that hold critical data assets.
+- id: RB-SRO
+  group: Delivery, change and investment
+  title: Role of the senior responsible owner
+  publisher: National Infrastructure and Service Transformation Authority
+  url: https://www.gov.uk/government/publications/the-role-of-the-senior-responsible-owner
+  updated: '2026-02-23'
+  prov: V
+  caps:
+  - gov
+  why: What a senior responsible owner is accountable for; data assets the programme touches fall within it.
+- id: RB-SMROLES
+  group: Delivery, change and investment
+  title: What each role does in a service team
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/the-team/what-each-role-does-in-service-team
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: Service team roles, including the service owner and product manager who decide what data a service collects.
+- id: RB-PDPROF
+  group: Skills and professions
+  title: How to join the Project Delivery Profession
+  publisher: Government Project Delivery
+  url: https://www.gov.uk/guidance/how-to-join-the-project-delivery-profession
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  why: The profession for programme and project leaders.
+- id: RB-PRA
+  group: Records and information management
+  title: Public Records Act 1958
+  publisher: legislation.gov.uk
+  url: https://www.legislation.gov.uk/ukpga/Eliz2/6-7/51/contents
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: The legal duty to manage, select and transfer public records, which includes many data assets.
+- id: RB-TNAIM
+  group: Records and information management
+  title: 'Manage information: guidance for government'
+  publisher: The National Archives
+  url: https://www.nationalarchives.gov.uk/information-management/manage-information/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - gov
+  - cat
+  why: Guidance on information and records management policy, processes, retention and digital records.
+- id: RB-TNATRANS
+  group: Records and information management
+  title: Digital records transfer
+  publisher: The National Archives
+  url: https://www.nationalarchives.gov.uk/information-management/manage-information/digital-records-transfer/
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - cat
+  why: How digital records, including data, are selected and transferred to The National Archives.
+- id: RB-ISO15489
+  group: Records and information management
+  title: 'ISO 15489-1:2016 Records management: concepts and principles'
+  publisher: International Organization for Standardization
+  url: https://www.iso.org/standard/62542.html
+  updated: null
+  prov: S
+  caps:
+  - gov
+  - cat
+  why: The international records management standard. Its site blocks automated checking.
+- id: RB-ISO23081
+  group: Records and information management
+  title: 'ISO 23081-1:2017 Metadata for records: principles'
+  publisher: International Organization for Standardization
+  url: https://www.iso.org/standard/73172.html
+  updated: null
+  prov: S
+  caps:
+  - cat
+  why: Records metadata principles, the records-management counterpart to catalogue metadata. Its site blocks automated checking.
+- id: RB-DSA
+  group: Data and AI
+  title: Data Standards Authority
+  publisher: Government Digital Service
+  url: https://www.gov.uk/government/groups/data-standards-authority
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - cat
+  - dq
+  why: Sets and promotes the data standards organisations use to make data interoperable.
+- id: RB-DQHUB
+  group: Data and AI
+  title: Government Data Quality Hub
+  publisher: Office for National Statistics
+  url: https://www.gov.uk/government/organisations/government-data-quality-hub
+  updated: '2026-11-05'
+  prov: V
+  caps:
+  - dq
+  why: Cross-government centre for data quality guidance, tools and support.
 capmap:
 - id: CR-01
   name: Accountable leadership and policy oversight
@@ -2404,6 +2508,15 @@ professions:
     - RB-AFCAREER
     - RB-RSS
     - RB-APPDA
+  - persona: prg
+    roles: []
+    profs:
+    - PR-PD
+    - PR-COM
+    learn:
+    - RB-PDPROF
+    - RB-GOVS002
+    - RB-SRO
   profs:
   - id: PR-DD
     name: Government Digital and Data Profession
@@ -2557,6 +2670,7 @@ change:
     - CDO
     - OWN
     - COO
+    - SRO
     refs:
     - RB-GREEN
     - RB-AQUA
@@ -2580,6 +2694,7 @@ change:
     - COO
     - CAT
     - DQL
+    - SVO
     refs:
     - RB-SPEND
     - RB-SVCASSESS
@@ -2604,6 +2719,8 @@ change:
     roles:
     - CDO
     - BRD
+    - SRO
+    - PMO
     refs:
     - RB-IAAP
     - RB-NISTA
@@ -2633,6 +2750,8 @@ change:
     - CUS
     - DQL
     - CAT
+    - MIG
+    - ARC
     refs:
     - RB-LEGACY
     - RB-TECHDEBT
@@ -2686,6 +2805,7 @@ change:
     roles:
     - OWN
     - COO
+    - CML
     refs:
     - RB-SOURCING
     - RB-DDATPB
@@ -2709,6 +2829,7 @@ change:
     roles:
     - OWN
     - BRD
+    - PDM
     refs:
     - RB-ORANGE
     - RB-GSC
@@ -2732,6 +2853,8 @@ change:
     - OWN
     - STW
     - COO
+    - PDM
+    - SVO
     refs:
     - RB-GOVS002
     cr:
@@ -2755,6 +2878,8 @@ change:
     roles:
     - CDO
     - COO
+    - SRO
+    - PDM
     refs:
     - RB-SUCCESS
     - RB-DSFA
@@ -2779,6 +2904,7 @@ change:
     roles:
     - COO
     - DQL
+    - PMO
     refs:
     - RB-MAGENTA
     cr:
@@ -2870,6 +2996,8 @@ change:
     - CUS
     - CAT
     - OWN
+    - ARC
+    - CML
     refs:
     - RB-OPEN
     - RB-API
@@ -2923,6 +3051,7 @@ change:
     roles:
     - COO
     - OWN
+    - CML
     refs:
     - RB-GCLOUD
     - RB-MSC
@@ -2934,6 +3063,158 @@ change:
     - CR-20
     - CR-32
     prov: O
+  programme_roles:
+    intro: Medium and large programmes bring in roles the DAM Policy and its guidance do not name. They decide most of what happens to critical data during change, so each needs explicit data responsibilities.
+      This is this portal's assessment; the policy names only the chief data officer, data owners and the Chief Data Officer Council.
+    rows:
+    - role: SRO
+      stages:
+      - plan
+      - live
+      works_with:
+      - OWN
+      - CDO
+      resp:
+      - Make sure every critical asset in scope has an owner and a funded quality plan
+      - Accept DAM checkpoints into the assurance plan
+      - Sign off handover only when ownership, catalogue and DQAP transfer
+      refs:
+      - RB-SRO
+      - RB-IAAP
+    - role: PDM
+      stages:
+      - plan
+      - discover
+      - beta
+      - live
+      works_with:
+      - OWN
+      - COO
+      - STW
+      resp:
+      - Put DAM activities in the plan, the risk register and gate criteria
+      - Book data owners' time for decisions
+      - Track data asset risks alongside other programme risks
+      refs:
+      - RB-GOVS002
+    - role: SVO
+      stages:
+      - discover
+      - alpha
+      - beta
+      - live
+      works_with:
+      - OWN
+      - CAT
+      - DQL
+      resp:
+      - Check the catalogue before collecting new data
+      - Design validation from the quality rules
+      - Show DAM evidence at service assessments
+      refs:
+      - RB-SMROLES
+      - RB-SVCASSESS
+    - role: ARC
+      stages:
+      - alpha
+      - beta
+      works_with:
+      - CUS
+      - CAT
+      - STW
+      resp:
+      - Approve data models against agreed standards and identifiers
+      - Require documented schemas, open formats and an exit route
+      - Make metadata harvestable from new platforms
+      refs:
+      - RB-TCOP
+      - RB-API
+      - RB-OPEN
+    - role: MIG
+      stages:
+      - beta
+      - retire
+      works_with:
+      - OWN
+      - DQL
+      - CAT
+      - CUS
+      resp:
+      - Profile quality before migration and reconcile after
+      - Keep catalogue entries and ownership in step as assets move
+      - Record lineage from old to new systems
+      refs:
+      - RB-LEGACY
+      - RB-RETIRE
+    - role: CML
+      stages:
+      - plan
+      - discover
+      - retire
+      works_with:
+      - OWN
+      - DPO
+      - COO
+      resp:
+      - Write data ownership, metadata, quality reporting and exit into contracts
+      - Use model contract data and exit schedules
+      - Track contract end dates against the assets they touch
+      refs:
+      - RB-MSC
+      - RB-SOURCING
+      - RB-PPN020
+    - role: PMO
+      stages:
+      - plan
+      - beta
+      - live
+      works_with:
+      - COO
+      - BRD
+      resp:
+      - Check DAM checkpoints at each gate
+      - Report data asset readiness to the senior responsible owner
+      - Feed lessons into the next programme
+      refs:
+      - RB-IAAP
+      - RB-NISTA
+    blueprint:
+    - stage: plan
+      user: Programme board agrees scope and business case
+      front: Business case names critical assets and costs DAM work
+      back: Asset list drawn from the catalogue; risks added to the register
+      data: Data owners and the chief data officer agree priorities
+      support: Assurance plan includes DAM checkpoints
+    - stage: discover
+      user: Team explores needs and existing data
+      front: Catalogue search before new collection
+      back: Contracts and data sharing options reviewed
+      data: Owners confirmed for each asset in scope
+      support: Commercial lead brings data clauses into the route to market
+    - stage: alpha
+      user: Team designs and tests options
+      front: Data model and quality rules designed together
+      back: Schemas, identifiers and exit route approved by design authority
+      data: Stewards agree definitions and targets
+      support: DPIA started where personal data is involved
+    - stage: beta
+      user: Team builds, migrates and goes live
+      front: New assets catalogued; validation built from rules
+      back: Migration profiled and reconciled; lineage recorded
+      data: Owners sign off quality against targets
+      support: Gate review checks DAM evidence
+    - stage: live
+      user: Service runs; programme closes
+      front: Quality published to users
+      back: DQAP, runbook and contracts handed over
+      data: Business-as-usual owner and steward named
+      support: Asset included in the next annual return
+    - stage: retire
+      user: Old systems are switched off
+      front: Users told what happens to their data
+      back: Assets migrated, archived or disposed of under records rules
+      data: Catalogue entries updated or closed
+      support: Records transferred where the Public Records Act applies
 testing:
   intro: This portal is ready for early testing with people who will use it. We want to know whether you can find what you need, understand it and act on it. It takes about 20 minutes. Choose the tasks
     closest to your role; you do not need to do them all.
@@ -3003,6 +3284,24 @@ testing:
     title: Find what your own team, such as digital, cyber, technology or commercial, should ask and do
     start: perspectives.html
     done: You can name two questions and one action for your team's lens.
+  - id: T-12
+    roles:
+    - prg
+    title: Find the data responsibilities of a senior responsible owner and what to check at each programme stage
+    start: change.html#programme-roles
+    done: You can name three responsibilities and the stage each belongs to.
+  - id: T-13
+    roles:
+    - all
+    title: Use the DAMA wheel to see which knowledge areas your role shapes, and one way records management overlaps
+    start: capability-model.html#cm-dama
+    done: You chose your role and can name two areas and one records counterpart.
+  - id: T-14
+    roles:
+    - all
+    title: Pick two recommendations for working with other professions and a community to join
+    start: community.html
+    done: You marked two recommendations and opened one community page.
   - id: T-10
     roles:
     - all
@@ -3300,3 +3599,390 @@ lenses:
     - RB-TNA
     - RB-OPEN
     gap: Covered by the delivery and change practices; 1.6 adds future-legacy prevention.
+dama:
+  intro: The Data Management Body of Knowledge (DAMA-DMBOK) arranges data management as knowledge areas around data governance. This view places the DAM Policy, the capability model and the government maturity
+    model on that wheel, so each role can see which areas it shapes and how the policy fits a wider enterprise data management capability.
+  hub: DM-GOV
+  areas:
+  - id: DM-GOV
+    name: Data governance
+    dmbok: Data governance
+    desc: Decision rights, accountability and policy for data across the organisation.
+    im: Information governance and the information asset owner role.
+    uses:
+      cdo: Set the mandate and board; hold owners to account
+      coo: Run the governance cycle and the return
+      own: Make and record decisions for your assets
+      stw: Prepare decisions and keep definitions agreed
+      cat: Apply governance decisions in the catalogue
+      dql: Escalate quality risks to owners
+      prg: Bring programme decisions into the governance cycle
+    dam: []
+  - id: DM-ARC
+    name: Data architecture
+    dmbok: Data architecture
+    desc: 'The blueprint of data across the organisation: where data lives, how it flows and which source is authoritative.'
+    im: Information architecture and file plans.
+    uses:
+      cdo: Sponsor a target data architecture
+      coo: Use it to find candidate assets
+      own: Agree the authoritative source for your data
+      stw: Map flows and dependencies
+      cat: Link catalogue entries to systems
+      dql: Trace quality problems to where data enters
+      prg: Approve designs against it
+    dam: []
+  - id: DM-MOD
+    name: Data modelling and design
+    dmbok: Data modelling and design
+    desc: Defining the structure, meaning and relationships of data.
+    im: Records classification schemes.
+    uses:
+      cdo: Expect agreed definitions for critical assets
+      coo: Collect definitions for the return
+      own: Approve the meaning of key data items
+      stw: Maintain definitions and the glossary
+      cat: Publish schemas with entries
+      dql: Write rules from the model
+      prg: Require documented models from suppliers
+    dam: []
+  - id: DM-OPS
+    name: Data storage and operations
+    dmbok: Data storage and operations
+    desc: 'Running the platforms that store data: backup, recovery, performance and retention.'
+    im: Storage, preservation and disposal of records.
+    uses:
+      cdo: Fund resilient platforms for critical data
+      coo: Know which platform holds each asset
+      own: Agree recovery objectives
+      stw: Check retention is applied
+      cat: Record system of record and location
+      dql: Check data after restore
+      prg: Plan platform moves and decommissioning
+    dam: []
+  - id: DM-SEC
+    name: Data security
+    dmbok: Data security
+    desc: Protecting data from unauthorised access, change and loss, in line with classification.
+    im: Protective marking and access to records.
+    uses:
+      cdo: Link critical assets to cyber risk
+      coo: Confirm classification is right before reporting
+      own: Accept residual risk for your assets
+      stw: Apply handling rules
+      cat: Record classification and access rights
+      dql: Treat odd quality drops as security signals
+      prg: Build security in from the start
+    dam: []
+  - id: DM-INT
+    name: Data integration and interoperability
+    dmbok: Data integration and interoperability
+    desc: Moving and joining data between systems and organisations using shared standards.
+    im: Records exchange and transfer formats.
+    uses:
+      cdo: Back open standards and shared identifiers
+      coo: Track sharing arrangements
+      own: Approve sharing of your data
+      stw: Map data to shared standards
+      cat: Catalogue APIs and data services
+      dql: Check data after each integration
+      prg: Avoid bespoke, closed integrations
+    dam: []
+  - id: DM-DOC
+    name: Document and content management
+    dmbok: Document and content management
+    desc: 'Managing unstructured information: documents, content and records.'
+    im: 'The core of records management: capture, classification, retention and disposal.'
+    uses:
+      cdo: Align data and records strategies
+      coo: Reconcile the asset register with the information asset register
+      own: Own records and data consistently
+      stw: Apply retention schedules
+      cat: Record retention and disposal in entries
+      dql: Check documents behind key data items
+      prg: Plan records transfer when systems retire
+    dam: []
+  - id: DM-REF
+    name: Reference and master data
+    dmbok: Reference and master data
+    desc: Agreeing and maintaining the shared, authoritative versions of key entities and code lists.
+    im: Authority files and controlled vocabularies.
+    uses:
+      cdo: Sponsor shared reference data
+      coo: Spot duplicate assets
+      own: Own the master version of key entities
+      stw: Maintain code lists and identifiers
+      cat: Link assets that share reference data
+      dql: Check codes against the reference list
+      prg: Reuse existing reference data, do not copy it
+    dam: []
+  - id: DM-BI
+    name: Data warehousing and business intelligence
+    dmbok: Data warehousing and business intelligence
+    desc: Bringing data together for analysis, reporting and decisions.
+    im: Retention of reports and derived records.
+    uses:
+      cdo: Use quality statements in decisions
+      coo: Report progress from catalogue data
+      own: Know where your data is reused
+      stw: Record derived data sets
+      cat: Catalogue analytical products that are critical
+      dql: Publish quality alongside reports
+      prg: Plan reporting needs early
+    dam: []
+  - id: DM-META
+    name: Metadata management
+    dmbok: Metadata management
+    desc: Describing data so people and machines can find, understand and trust it.
+    im: Records metadata (ISO 23081) and the information asset register.
+    uses:
+      cdo: Require complete metadata for the return
+      coo: Build the return from catalogue records
+      own: Approve entries for your assets
+      stw: Keep descriptions accurate
+      cat: Run the catalogue and harvest metadata
+      dql: Record quality metadata
+      prg: Make metadata a delivery output
+    dam: []
+  - id: DM-DQ
+    name: Data quality
+    dmbok: Data quality
+    desc: Defining, measuring and improving how fit data is for its purposes.
+    im: Integrity and authenticity of records.
+    uses:
+      cdo: Fund fixes where quality blocks outcomes
+      coo: Collate DQAP status
+      own: Set targets and accept risks
+      stw: Run checks and log issues
+      cat: Show quality in entries
+      dql: Run the DQAP
+      prg: Profile and reconcile in migrations
+    dam: []
+  lifecycle:
+  - data: Plan and design
+    records: Plan what records are needed
+    dam: Identify critical assets; design metadata and rules
+    who: Owner, architect, records manager
+  - data: Acquire or create
+    records: Create and capture
+    dam: Validate at collection; catalogue on creation
+    who: Service owner, steward
+  - data: Store and secure
+    records: Store and protect
+    dam: Record classification, location and recovery objectives
+    who: Custodian, security
+  - data: Use and share
+    records: Use and provide access
+    dam: Publish quality; record sharing arrangements
+    who: Owner, data protection officer
+  - data: Maintain and improve
+    records: Review and update
+    dam: Annual review of entries and DQAP
+    who: Steward, data quality lead
+  - data: Archive or dispose
+    records: Appraise, transfer or destroy
+    dam: Close or update entries; transfer where the Public Records Act applies
+    who: Records manager, owner
+  im_refs:
+  - RB-TNA
+  - RB-TNAIM
+  - RB-TNATRANS
+  - RB-PRA
+  - RB-ISO15489
+  - RB-ISO23081
+  - RB-KIM
+  - RB-PKSB
+joinup:
+  intro: Data asset management needs data, records and information, security, digital, technology, analysis, commercial and delivery professionals to act on the same assets. These recommendations turn that
+    into shared artefacts, routines and networks, each with a tangible outcome you can check.
+  recs:
+  - id: J-01
+    title: Keep one register of assets
+    action: Reconcile the critical data asset list with the information asset register so each asset has one record, with the data owner and information asset owner linked.
+    who:
+    - COO
+    - IAO
+    - CAT
+    outcome: One list used by data, records and security teams; no asset is reported twice or missed.
+    measure: 'Assets on both lists without a shared identifier: zero.'
+  - id: J-02
+    title: Use one glossary
+    action: Publish one organisation glossary for data, records and security terms, linked to the cross-government vocabulary, and point catalogue entries to it.
+    who:
+    - STW
+    - CAT
+    outcome: The same word means the same thing in a catalogue entry, a file plan and a risk register.
+    measure: Critical assets whose key items link to glossary terms.
+  - id: J-03
+    title: Run one board for data, information and security risk
+    action: Bring the data governance board, information assurance and the senior information risk owner together, quarterly, with one agenda covering critical assets.
+    who:
+    - CDO
+    - BRD
+    - IAO
+    outcome: Decisions on an asset consider data, records and security together.
+    measure: Decisions recorded per quarter that cite more than one discipline.
+  - id: J-04
+    title: Put DAM checkpoints in every programme
+    action: Agree with the programme office a standard set of DAM checks for business cases, gates and handover, and give programmes a named data contact.
+    who:
+    - CDO
+    - PMO
+    - SRO
+    outcome: Programmes stop creating unowned, uncatalogued assets.
+    measure: Programmes closing with every in-scope asset owned, catalogued and quality-planned.
+  - id: J-05
+    title: Align retention with the data life cycle
+    action: Map retention schedules to critical assets and record retention and disposal in catalogue entries.
+    who:
+    - IAO
+    - CAT
+    - OWN
+    outcome: Data is kept as long as needed and no longer, with evidence.
+    measure: Critical assets with a recorded retention rule.
+  - id: J-06
+    title: Learn together
+    action: Run a shared induction for owners, stewards, information asset owners and programme leads, using the recommended curriculum and this portal's modules.
+    who:
+    - CDO
+    - COO
+    outcome: People in different professions use the same method and language.
+    measure: Owners and stewards who completed the shared induction.
+  - id: J-07
+    title: Join the right communities
+    action: Give each role one community to join and one to watch, from the list on this page, and share what you learn at the board.
+    who:
+    - COO
+    - STW
+    - DQL
+    - CAT
+    outcome: Practice spreads across organisations instead of being reinvented.
+    measure: Roles with a named community; lessons shared per quarter.
+  - id: J-08
+    title: Rehearse an incident together
+    action: Run a joint exercise where a critical asset is corrupted or exposed, involving security, records, data quality and the owner.
+    who:
+    - OWN
+    - CUS
+    - DQL
+    - DPO
+    outcome: Everyone knows their part in recovering and re-trusting an asset.
+    measure: Critical assets covered by a tested recovery and quality check.
+  - id: J-09
+    title: Share contract clauses
+    action: Keep a shared library of data, metadata, quality and exit clauses with the commercial team and reuse it in every relevant procurement.
+    who:
+    - CML
+    - OWN
+    - DPO
+    outcome: Suppliers face the same data obligations everywhere.
+    measure: New contracts touching critical assets that use the shared clauses.
+  - id: J-10
+    title: Report one set of measures
+    action: Combine catalogue completeness, DQAP status, records compliance and security assurance for critical assets into one quarterly view.
+    who:
+    - COO
+    - BRD
+    outcome: Leaders see one picture of how well critical assets are managed.
+    measure: Quarterly view produced and discussed at the board.
+  communities:
+  - name: Chief Data Officer Council
+    what: Oversees implementation of the DAM Policy across government.
+    url: https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government#oversight-and-implementation-of-the-policy
+    for_:
+    - cdo
+    prov: V
+  - name: Government Data Quality Hub
+    what: Data quality guidance, tools and support from the Office for National Statistics.
+    url: https://www.gov.uk/government/organisations/government-data-quality-hub
+    for_:
+    - dql
+    - stw
+    prov: V
+  - name: Government Data Quality Community
+    what: Cross-government community for people working on data quality.
+    url: https://www.gov.uk/government/news/introducing-the-government-data-quality-community
+    for_:
+    - dql
+    - stw
+    prov: V
+  - name: Data Standards Authority
+    what: Sets and promotes government data standards.
+    url: https://www.gov.uk/government/groups/data-standards-authority
+    for_:
+    - cat
+    - stw
+    prov: V
+  - name: Knowledge and Information Management profession group
+    what: Community for records, information and knowledge managers.
+    url: https://khub.net/group/government-knowledge-and-information-management-profession
+    for_:
+    - coo
+    - cat
+    prov: V
+  - name: Data engineering community
+    what: Cross-government community for data engineers.
+    url: https://www.gov.uk/service-manual/communities/data-engineering-community
+    for_:
+    - dql
+    - cat
+    prov: V
+  - name: Performance and data analysis community
+    what: Community for performance analysts and data analysts.
+    url: https://www.gov.uk/service-manual/communities/performance-and-data-analysis-community
+    for_:
+    - dql
+    prov: V
+  - name: API community
+    what: Community for people building and running government APIs.
+    url: https://www.gov.uk/service-manual/communities/application-programming-interface-community
+    for_:
+    - cat
+    - prg
+    prov: V
+  - name: Technical architecture community
+    what: Community for technical and data architects.
+    url: https://www.gov.uk/service-manual/communities/technology-community-technical-architecture
+    for_:
+    - prg
+    - cat
+    prov: V
+  - name: Data and AI ethics community
+    what: Community for data and AI ethics practitioners.
+    url: https://www.gov.uk/service-manual/communities/data-and-artificial-intelligence-ethics-community
+    for_:
+    - own
+    - stw
+    prov: V
+  - name: AI for government knowledge and information management community
+    what: Where KIM professionals discuss AI and information.
+    url: https://www.gov.uk/service-manual/communities/ai-for-government-knowledge-information-management-community
+    for_:
+    - coo
+    - cat
+    prov: V
+  - name: Digital buying community
+    what: Community for people buying digital, data and technology.
+    url: https://www.gov.uk/service-manual/communities/digital-buying-community
+    for_:
+    - prg
+    prov: V
+  - name: Standards and assurance community
+    what: Community for service assessors and assurance practitioners.
+    url: https://www.gov.uk/service-manual/communities/standards-and-assurance-community
+    for_:
+    - prg
+    prov: V
+  - name: Product and service community
+    what: Community for product managers and service owners.
+    url: https://www.gov.uk/service-manual/communities/product-and-service-community
+    for_:
+    - prg
+    - own
+    prov: V
+  - name: Analysis Function
+    what: The cross-government network for analysts, including statisticians.
+    url: https://analysisfunction.civilservice.gov.uk/
+    for_:
+    - dql
+    prov: V
