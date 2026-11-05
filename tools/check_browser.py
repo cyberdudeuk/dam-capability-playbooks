@@ -31,9 +31,10 @@ def serve(site):
 
 
 BREAKS = {
-    # name: (check it should trip, JS run on the page before checks)
-    'overflow': ('b02_no_horizontal_overflow', "document.querySelector('main').insertAdjacentHTML('afterbegin','<div class=\"x\">'+'W'.repeat(400)+'</div>');var s=document.createElement('style');document.head.appendChild(s);"),
-    'contrast': ('b01_axe', "document.querySelector('h1').setAttribute('class','lowc');document.querySelectorAll('main p').forEach(function(p){p.classList.add('lowc')});"),
+    # name: (check it should trip, JS run on the page before checks). Every script runs on every page, including pages
+    # without this portal's own objects (the compass), so each must do nothing where its target is absent (D-027).
+    'overflow': ('b02_no_horizontal_overflow', "(document.querySelector('main')||document.body).insertAdjacentHTML('afterbegin','<div class=\"x\">'+'W'.repeat(400)+'</div>');var s=document.createElement('style');document.head.appendChild(s);"),
+    'contrast': ('b01_axe', "var h=document.querySelector('h1');if(h){h.setAttribute('class','lowc');}document.querySelectorAll('main p').forEach(function(p){p.classList.add('lowc')});"),
     'focusfill': ('b03_container_focus', "document.documentElement.classList.add('break-focus');"),
     'consoleerror': ('b04_no_console_errors', "console.error('deliberate break');"),
     'search': ('b05_keyboard', "if (window.DCP_INDEX) window.DCP_INDEX.length = 0;"),

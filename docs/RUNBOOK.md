@@ -10,6 +10,9 @@
 2. If one of them already covers it, write only what the DAM Policy adds, and add the sister page to `related.placements` in `content/frameworks.yaml`. Check C-34 keeps those signposts pointing at the sister portals, naming them and their status.
 3. Keep each portal distinct: they have different owners, licences, audiences and status. Link to them; never copy their text into this portal.
 
+## Before pushing a change that adds a page to the browser checks (D-027)
+Run every break mode locally, not only the new one: `for b in $(python3 -c "import sys; sys.path.insert(0,'tools'); import check_browser; print(' '.join(check_browser.BREAKS))"); do python3 tools/check_browser.py --break "$b"; done`. Each break script runs on every page.
+
 ## Cut a release
 1. Add a section to `CHANGELOG.md` and bump `meta.version` in `content/playbooks.yaml`.
 2. Merge, then push a tag such as `v1.2.0`. The release workflow builds, checks and attaches the site as a zip, with generated notes.

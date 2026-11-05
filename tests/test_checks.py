@@ -550,6 +550,40 @@ class Vaccination(unittest.TestCase):
             build.load(self.r / 'content' / 'playbooks.yaml')
 
 
+class BreakScripts(unittest.TestCase):
+    """D-027: every deliberate-break script runs on every page, so it must not throw where its target is absent."""
+    def test_break_scripts_are_null_safe(self):
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError:
+            self.skipTest('Playwright not installed')
+        import check_browser
+        with sync_playwright() as p:
+            b = p.chromium.launch()
+            pg = b.new_page()
+            pg.set_content('<!DOCTYPE html><html><body><p>No portal objects here.</p></body></html>')
+            bad = []
+            for name, (_, js) in check_browser.BREAKS.items():
+                if not js:
+                    continue
+                try:
+                    pg.evaluate(js)
+                except Exception as e:
+                    bad.append(f'{name}: {str(e).splitlines()[0]}')
+            b.close()
+        self.assertEqual(bad, [], 'break scripts must do nothing where their target is absent (D-027)')
+
+    def test_null_safety_test_catches_unsafe_script(self):
+        from playwright.sync_api import sync_playwright
+        with sync_playwright() as p:
+            b = p.chromium.launch()
+            pg = b.new_page()
+            pg.set_content('<!DOCTYPE html><html><body></body></html>')
+            with self.assertRaises(Exception):
+                pg.evaluate("window.DCP_INDEX.length = 0;")
+            b.close()
+
+
 class SectorRulesRun(unittest.TestCase):
     """T-VAL: every generated sector rule file is valid for, and runs in, the Data Quality Commons kit (dqkit)."""
     def test_rule_files_validate_and_run(self):
