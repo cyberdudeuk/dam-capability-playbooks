@@ -17,7 +17,8 @@ book-marked user-check settings-2 clipboard-check stamp pencil-line share-2 send
 list-ordered wrench presentation activity calendar-check accessibility heart-handshake target lightbulb circle-help book-open
 route map arrow-right download printer type award timer layers circle chevron-down chevron-right x rotate-ccw panel-left
 compass milestone badge-check signpost hand-helping languages eye brain a-large-small sliders-horizontal play link
-banknote construction handshake arrow-right-left trending-up radar archive briefcase grid-3x3 school""".split()
+banknote construction handshake arrow-right-left trending-up radar archive briefcase grid-3x3 school
+ban check circle-x code-xml footprints git-branch history kanban map-pin megaphone mountain navigation package plug sparkles thumbs-up trophy vote""".split()
 
 
 def main():

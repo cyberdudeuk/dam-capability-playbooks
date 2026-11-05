@@ -175,7 +175,7 @@ def validate(d):
     covered = {x['dd'] for x in d.get('supplements', [])}
     for x in d.get('domain_depth', []):
         if x['moscow'] == 'Must' and x['id'] not in covered: errs.append(f"{x['id']}: a Must-have theme has no supplement")
-    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all', 'data', 'test', 'guide', 'site-map', 'reuse'}
+    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all', 'data', 'test', 'guide', 'site-map', 'reuse', 'research'}
     for r in d.get('design', {}).get('requirements', []):
         for c in r['checks']:
             if c not in KNOWN_CHECKS: errs.append(f"{r['id']}: unknown check {c}")
@@ -282,7 +282,7 @@ def validate_frameworks(d, errs, src, roles):
         for p in R['portals']:
             if not p['url'].startswith('https://') or not p['url'].endswith('/'): errs.append(f"related portal {p['id']}: url must be https and end with /")
         for page, items in R['placements'].items():
-            if page not in {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'data', 'test', 'guide', 'site-map', 'reuse'}: errs.append(f"related: unknown page {page}")
+            if page not in {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'data', 'test', 'guide', 'site-map', 'reuse', 'research'}: errs.append(f"related: unknown page {page}")
             for it in items:
                 if it['portal'] not in pids: errs.append(f"related on {page}: unknown portal {it['portal']}")
                 if '://' in it['path'] or it['path'].startswith('/'): errs.append(f"related on {page}: path must be relative to the portal")
@@ -316,6 +316,79 @@ def validate_frameworks(d, errs, src, roles):
         if len(st['levels']) != 5: errs.append(f"maturity strand {st['id']}: needs 5 level indicators")
         for r in st['cr']:
             if r not in crs: errs.append(f"maturity strand {st['id']}: unknown capability {r}")
+    validate_research(d, errs, rb)
+
+
+# ---------------------------------------------------------------------------
+# Version 1.9: research, roadmap, backlog and ideas, in the open
+# ---------------------------------------------------------------------------
+RESEARCH_STATUS = {'now': 'Now', 'next': 'Next', 'later': 'Later', 'done': 'Done', 'out': 'Out of scope'}
+RESEARCH_TYPES = {'feature': 'Feature', 'research': 'Research', 'content': 'Content', 'decision': 'Decision'}
+SIGNUP_HOSTS = ('https://forms.cloud.microsoft/', 'https://forms.office.com/', 'https://forms.microsoft.com/', 'https://forms.service.gov.uk/')
+
+
+def vote_band(votes, bands):
+    """Demand score earned by votes: the highest band whose threshold the votes reach."""
+    return max([b for t, b in bands if votes >= t] or [0])
+
+
+def research_score(item, R, ideas=None):
+    """Score out of 100: each criterion scored 0 to 3, weighted, summed. Votes can raise demand, never lower it."""
+    a = dict(item['assess'])
+    v = (ideas or {}).get(item.get('idea'), {}).get('votes', 0) if item.get('idea') else 0
+    a['demand'] = max(a['demand'], vote_band(v, R['vote_bands']))
+    score = round(sum(c['weight'] * a[c['id']] / 3 for c in R['criteria']))
+    band = next(b for m, b, _ in R['bands'] if score >= m)
+    return score, band, a, v
+
+
+def validate_research(d, errs, rb):
+    R = d.get('research')
+    if not R:
+        return
+    src = {s['id'] for s in d['sources']}
+    orr = {x['id'] for x in d.get('open_register', [])}
+    hyp = {h['id'] for h in d.get('design', {}).get('research', {}).get('hypotheses', [])}
+    crit = [c['id'] for c in R['criteria']]
+    if sum(c['weight'] for c in R['criteria']) != 100: errs.append('research: criteria weights must sum to 100')
+    if len(crit) != len(set(crit)) or 'demand' not in crit: errs.append('research: criteria ids must be unique and include demand')
+    for c in R['criteria']:
+        if len(c['scale']) != 4: errs.append(f"research criterion {c['id']}: scale needs 4 points, 0 to 3")
+    url = R['signup']['url']
+    if url and not url.startswith(SIGNUP_HOSTS): errs.append('research: sign-up must be a private form (Microsoft Forms or GOV.UK Forms), never GitHub')
+    for k in ('new_url', 'list_url'):
+        if '://' in R['ideas'][k] or not R['ideas'][k].startswith('discussions/'): errs.append(f'research ideas {k}: must be a path in this repository\'s discussions')
+    mids = {m['id'] for m in R['methods']}
+    for r in R['rounds']:
+        if r['status'] not in ('now', 'next', 'later', 'done'): errs.append(f"{r['id']}: bad status")
+        for m in r['methods']:
+            if m not in mids: errs.append(f"{r['id']}: unknown method {m}")
+        for h in r['answers']:
+            if h not in hyp: errs.append(f"{r['id']}: unknown hypothesis {h}")
+    sids = {s['id'] for s in R['strategies']}
+    for s in R['strategies']:
+        if s['ref'] and s['ref'] not in rb and s['ref'] not in src: errs.append(f"research strategy {s['id']}: unknown reference {s['ref']}")
+    ids = [x['id'] for x in R['backlog']]
+    if len(ids) != len(set(ids)): errs.append('research: duplicate backlog ids')
+    decided = {x['item'] for x in R['decisions']}
+    for x in R['decisions']:
+        if x['item'] not in ids: errs.append(f"research decision on unknown item {x['item']}")
+    for x in R['backlog']:
+        i = x['id']
+        if not re.fullmatch(r'BL-\d{2}', i): errs.append(f'{i}: id must look like BL-01')
+        if x['status'] not in RESEARCH_STATUS: errs.append(f'{i}: bad status')
+        if x['type'] not in RESEARCH_TYPES: errs.append(f'{i}: bad type')
+        if set(x['assess']) != set(crit) or any(v not in (0, 1, 2, 3) for v in x['assess'].values()): errs.append(f'{i}: assess every criterion 0 to 3')
+        for s in x['strategy']:
+            if s not in sids: errs.append(f'{i}: unknown strategy {s}')
+        if re.fullmatch(r'OR-\d{2}', x['source']) and x['source'] not in orr: errs.append(f'{i}: unknown open register item {x["source"]}')
+        if x['status'] == 'done' and not x.get('release'): errs.append(f'{i}: done items need a release')
+        if x['status'] == 'out' and not x.get('reason'): errs.append(f'{i}: out of scope items need a reason')
+        if chr(64) in x['story'] + x['title']: errs.append(f'{i}: no addresses in the backlog')
+        if x['status'] in ('now', 'next', 'later') and 'assess' in x and set(x['assess']) == set(crit):
+            _, band, _, _ = research_score(x, R)
+            if band != x['status'] and i not in decided: errs.append(f'{i}: status {x["status"]} differs from its score band {band}; record why in the decisions log')
+    if sum(1 for x in R['backlog'] if x['status'] == 'now') > R['wip_limit']: errs.append(f"research: more than {R['wip_limit']} items in Now")
 
 
 FLAGS = {'E': ('Explicit', 'The text names this as a requirement or responsibility.'),
@@ -332,7 +405,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 36)} | {f"B-{i:02d}" for i in range(1, 18)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 37)} | {f"B-{i:02d}" for i in range(1, 18)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -489,7 +562,7 @@ NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', '
 SECTION = {'index': 'home', 'dam': 'policy', 'governance': 'gov', 'cataloguing': 'cat', 'quality': 'dq', 'sectors': 'sectors', 'together': 'together',
            'change': 'change', 'capability-model': 'model', 'perspectives': 'lens', 'community': 'community', 'professions': 'skills',
            'personas': 'roles', 'learning': 'learning', 'library': 'library', 'knowledge': 'knowledge', 'inclusion': 'inclusion',
-           'data': 'data', 'test': 'test', 'guide': 'guide', 'site-map': 'guide', 'reuse': 'reuse', 'tooling': 'tooling'}
+           'data': 'data', 'test': 'test', 'guide': 'guide', 'site-map': 'guide', 'reuse': 'reuse', 'tooling': 'tooling', 'research': 'research'}
 NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3'}
 CAP_PAGE = {'gov': 'governance', 'cat': 'cataloguing', 'dq': 'quality'}
 PAGE_DESC = {
@@ -517,6 +590,7 @@ PAGE_DESC = {
     'guide': 'User guide for the DAM capability playbooks: getting around, what the colours and labels mean, guided tours, tutorials and keyboard shortcuts.',
     'site-map': 'Every page on the DAM capability playbooks portal, grouped the way the menus are, with the main sections of each page.',
     'reuse': 'Ways to use the DAM capability playbooks content: intranet links, embedding, open data, white-label copies, AI assistants and an MCP server.',
+    'research': 'Have your say: take part in user research, suggest and vote for ideas, and see the roadmap, backlog and how priorities are decided, in the open.',
     'whats-new': 'Changes in each release of the Data Asset Management (DAM) capability playbooks, newest first.',
     '404': 'The page you were looking for could not be found on the DAM capability playbooks portal.',
 }
@@ -538,6 +612,8 @@ class Site:
         self.search, self.build_id, self.reg = [], None, {}
         sp = ROOT / 'build' / 'status.json'
         self.status = json.loads(sp.read_text()) if sp.exists() else None
+        ip = ROOT / 'build' / 'ideas.json'
+        self.ideas = json.loads(ip.read_text(encoding='utf-8')) if ip.exists() else {'available': False, 'reason': 'not run', 'ideas': []}
 
     # -- helpers --------------------------------------------------------------
     def gloss(self, text, used=None):
@@ -713,7 +789,7 @@ class Site:
 <div class="mast-tools">
 <button type="button" data-open-search hidden aria-haspopup="dialog">{icon("search")}<span>Search</span> <kbd>Ctrl K</kbd></button>
 <button type="button" id="display-toggle" aria-expanded="false" aria-controls="display-panel" hidden>{icon("a-large-small")}<span>Display options</span></button>
-<a class="mast-link" href="guide.html">{icon("circle-help")}<span>Help</span></a><a class="mast-link" href="site-map.html">{icon("map")}<span>Site map</span></a></div></div>
+<a class="mast-link" href="research.html">{icon("megaphone")}<span>Have your say</span></a><a class="mast-link" href="guide.html">{icon("circle-help")}<span>Help</span></a><a class="mast-link" href="site-map.html">{icon("map")}<span>Site map</span></a></div></div>
 {display}
 </header>
 <div class="banner"><strong class="tag">Prototype</strong>This is not an official GOV.UK service or published guidance. Where it repeats GDS guidance, the GOV.UK page is the authority. <a href="test.html">Help us test it</a> or <a href="contact.html">use the contact form</a> to tell us what you think.</div>
@@ -824,7 +900,7 @@ class Site:
 <div><h2>{icon("info")} About this portal</h2>
 <p>{E(m["status"])}</p>
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
-<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Estate compass: find your way across three portals</a></li></ul></div>
+<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Estate compass: find your way across three portals</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
 <p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>{f'<p>Or <a href="{E(self.ms_form_url())}" rel="noopener">use the private feedback form</a> (Microsoft Forms, no GitHub account needed).</p>' if self.ms_form_url() else ''}
 <p>{E(m["contact_note"])}</p></div>
@@ -866,7 +942,7 @@ class Site:
                  'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
                  'professions': self.p_professions, 'change': self.p_change, 'perspectives': self.p_lenses, 'community': self.p_community, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
                  'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices, 'data': self.p_data, 'test': self.p_test,
-                 'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, '404': self.p_404}
+                 'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, 'research': self.p_research, '404': self.p_404}
         for k, fn in pages.items():
             (self.out / f'{k}.html').write_text(fn(), encoding='utf-8')
         # The estate compass: a neutral page across the three portals, built from compass/ (version 1.8.2)
@@ -1555,7 +1631,7 @@ class Site:
 <p>This portal aims to meet WCAG 2.2 at level AA. Each release is checked automatically with axe-core in a real browser, for keyboard use, for sideways scrolling from 320 to 1920 pixels wide, and in light and dark modes. You can change text size, line spacing and colours in Display options.</p>
 <p>Known limitations: it has not been tested in person with disabled users or with assistive technology users (OR-09). The knowledge graph is a visual aid; the same relationships are in tables on the policy and capability pages. Progress tracking needs scripts; every page can be read without them.</p>
 <p>If you find a problem, use the <a href="contact.html">contact form</a>. If you cannot use it, ask a colleague to send it for you. If you are not happy with the response, contact the Equality Advisory and Support Service (EASS).</p>
-<h2 id="privacy">{icon("lock-keyhole")} Privacy</h2><p>The portal sets no cookies and loads nothing from other sites. Your display choices and progress are kept only in your own browser and can be cleared from the home page. The contact form opens GitHub, where messages are public.</p>
+<h2 id="privacy">{icon("lock-keyhole")} Privacy</h2><p>The portal sets no cookies and loads nothing from other sites. Your display choices and progress are kept only in your own browser and can be cleared from the home page. The contact form opens GitHub, where messages are public. Ideas and votes are GitHub Discussions, which are public too. If you sign up for user research, a separate private form collects your contact details; <a href="research.html#privacy">see how we look after them</a>.</p>
 <h2 id="build">{icon("badge-check")} Build and checks</h2><p>Build {E(self.build_id)}. Generated from one content file. Each release runs structural, link, provenance, email, language, accessibility and layout checks. Each check is shown to fail on a deliberate break before it is trusted. Defects and the checks that now prevent each one are recorded in the repository, with the build report and the full register of open items: <a href="https://github.com/{E(m["repo"])}/tree/main/docs">repository documents</a>.</p>'''
         drawer = [{'label': 'About', 'icon': 'info', 'items': [
             {'id': 'intent', 'label': 'Purpose', 'icon': 'target'},
@@ -1917,6 +1993,7 @@ class Site:
             ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
             ('xref', 'Cross-reference manifest', 'The shared keys this portal uses (DAMA areas, requirements, capabilities, practices, sectors, roles, tool categories) and where each lives, so sister portals and tools can link to them.', ['xref.json'], ['interoperability', 'linked data']),
             ('interoperability-questions', 'Tool interoperability questions', 'Questions for a request for information or tender for catalogue, data quality, lineage and governance tools, to test interoperability and avoid lock-in.', ['interoperability-questions.csv'], ['procurement', 'interoperability', 'RFI']),
+            ('backlog', 'Product backlog and roadmap', 'Every backlog item with its user story, source, status, strategy links, assessment and score, and the roadmap it produces.', ['backlog.csv', 'backlog.json'], ['roadmap', 'backlog', 'user research']),
             ('ddat-role-skills', 'Data role skills and levels', 'Skills and skill levels for Digital and Data capability framework roles with data asset management duties.', ['ddat-role-skills.csv'], ['skills', 'professions']),
             ('rulebook', 'Related policies, standards and legislation', 'Every policy, standard, piece of legislation and framework the portal links to, with publisher and update date.', ['rulebook.csv', 'sources.jsonld'], ['rulebook', 'standards']),
             ('traceability', 'Portal requirements traceability', 'Each portal requirement, the features that meet it and the checks that prove it.', ['traceability.csv'], ['traceability']),
@@ -2188,7 +2265,7 @@ class Site:
                      ('sectors', 'Sector supplements'), ('together', 'Joined up'), ('change', 'Delivery and change'), ('model', 'Capability model'),
                      ('lens', 'Perspectives'), ('community', 'Working together'), ('skills', 'Professions and skills'), ('roles', 'Your role'),
                      ('learning', 'Learning'), ('library', 'Library'), ('knowledge', 'Knowledge'), ('inclusion', 'Inclusion'), ('data', 'Open data'),
-                     ('test', 'Help us test'), ('guide', 'Guide and site map'), ('reuse', 'Use and reuse'), ('tooling', 'Tools and interoperability'), ('other', 'About, contact and notices')]
+                     ('test', 'Help us test'), ('guide', 'Guide and site map'), ('reuse', 'Use and reuse'), ('tooling', 'Tools and interoperability'), ('research', 'Have your say'), ('other', 'About, contact and notices')]
 
     def p_guide(self):
         d = self.d
@@ -2250,7 +2327,7 @@ class Site:
                   ('Playbooks', 'book-open', NAV_GROUPS['Playbooks']),
                   ('Frameworks', 'grid-3x3', NAV_GROUPS['Frameworks']),
                   ('Reference', 'library', ['library', 'knowledge', 'inclusion', 'data', 'reuse']),
-                  ('About and help', 'info', ['about', 'test', 'contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])]
+                  ('About and help', 'info', ['about', 'research', 'test', 'contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])]
         colours = {'Start here': '#1d70b8', 'Playbooks': '#00703c', 'Frameworks': '#3949ab', 'Reference': '#455a64', 'About and help': '#505a5f'}
         seen, out = set(), ''
         for name, ic, keys in groups:
@@ -2428,6 +2505,173 @@ class Site:
             {'id': 'rfi', 'label': 'RFI questions', 'icon': 'circle-help', 'count': qn, 'new': True},
             {'id': 'resources', 'label': 'Where to find out more', 'icon': 'library'}]}]
         return self.page('tooling', 'Tools and interoperability', hero + self.tabbed(tabs, 'Tools and interoperability'), drawer, crumbs=['Frameworks', 'Tools and interoperability'])
+
+    # -- version 1.9: have your say (research, roadmap, backlog and ideas, in the open) -------------------
+    def research_items(self):
+        """Backlog items with their score, band, votes and linked idea, computed once for the page and the data files."""
+        R = self.d['research']
+        ideas = {i['n']: i for i in self.ideas.get('ideas', [])}
+        out = []
+        for x in R['backlog']:
+            score, band, a, v = research_score(x, R, ideas)
+            out.append(dict(x, score=score, band=band, scored=a, votes=v, idea_url=ideas.get(x.get('idea'), {}).get('url', '')))
+        return out
+
+    def p_research(self):
+        d, m, R = self.d, self.m, self.d['research']
+        gh = f'https://github.com/{m["repo"]}'
+        items = self.research_items()
+        crit = {c['id']: c for c in R['criteria']}
+        strat = {s['id']: s for s in R['strategies']}
+        bandname = {b: lbl for _, b, lbl in R['bands']}
+        decided = {}
+        for x in R['decisions']:
+            decided.setdefault(x['item'], []).append(x)
+        signup = R['signup']['url'] or self.ms_form_url()
+
+        def strat_pills(ids):
+            return ' '.join(f'<a class="pill" href="#strategy-{s}" data-tip="{E(strat[s]["name"])}">{E(strat[s]["name"].split(" (")[0])}</a>' for s in ids)
+
+        def card(x):
+            dec = ' '.join(f'<a href="#decision-{x["id"]}">decided differently</a>' for _ in decided.get(x['id'], [])[:1]) if x['band'] != x['status'] and x['status'] in ('now', 'next', 'later') else ''
+            idea = f' <a href="{E(x["idea_url"])}" rel="noopener">{icon("thumbs-up")}{x["votes"]} votes</a>' if x['idea_url'] else ''
+            return (f'<li class="cr-card rm-card" id="{x["id"]}" data-item data-type="{x["type"]}" data-status="{x["status"]}"><p class="caption">{E(x["id"])} · {E(RESEARCH_TYPES[x["type"]])}</p>'
+                    f'<h4>{E(x["title"])}</h4><p class="hint">{E(x["story"])}</p>'
+                    f'<p><span class="score" data-tip="Score out of 100 from the six criteria under How we prioritise">Score {x["score"]}</span> {E(bandname[x["band"]])}{" · " + dec if dec else ""}{idea}</p>'
+                    f'<p>{strat_pills(x["strategy"])}</p></li>')
+
+        # Take part --------------------------------------------------------------
+        meth = ''.join(f'<li class="cr-card" id="{x["id"]}"><div class="cr-head">{tile(x["icon"], "sm")}<div><p class="caption">{E(x["time"])} · {E(x["how"])}</p><h3>{E(x["name"])}</h3></div></div><p>{E(x["what"])}</p></li>' for x in R['methods'])
+        rnd_rows = [[f'<strong>{E(r["id"])}</strong>', E(r['name']), E(r['goal']), ', '.join(E(next(mm['name'] for mm in R['methods'] if mm['id'] == i)) for i in r['methods']),
+                     f'<span class="rm-badge rm-{r["status"]}">{E(RESEARCH_STATUS[r["status"]])}</span>', ', '.join(E(h) for h in r['answers']) or 'None yet'] for r in R['rounds']]
+        if signup:
+            su = (f'<p><a class="btn" href="{E(signup)}" rel="noopener">{icon("clipboard-list")}Sign up to take part</a></p>'
+                  + ('' if R['signup']['url'] else f'<p class="hint">{E(R["signup"]["note"])}</p>'))
+        else:
+            su = f'<p>{E(R["signup"]["note"])} Or <a href="contact.html">use the contact form</a>.</p>'
+        url = m['site_url'] + 'research.html'
+        enc = urllib.parse.quote
+        mail = (f'mailto:?subject={enc("Have your say on the DAM capability playbooks")}&amp;body='
+                + enc(f'The Data Asset Management (DAM) capability playbooks are a prototype portal for putting the DAM Policy into practice. '
+                      f'The team wants people in our kind of role to try it, take part in research and suggest ideas.\n\nFind out more and sign up: {url}\n'))
+        take = (f'<p class="lede">{E(R["intro"])}</p>'
+                f'<h2 id="why">{icon("lightbulb")} Why take part</h2>{ul(R["why_take_part"], cls="ticks")}'
+                f'<h2 id="ways">{icon("list-checks")} Ways to take part</h2><p>Choose as many or as few as suit you. Every session is online unless you ask otherwise, and you can stop at any time.</p><ul class="approach-grid">{meth}</ul>'
+                f'<h2 id="who">{icon("users-round")} Who we want to hear from</h2><p>{E(R["who"])} See <a href="personas.html">Your role</a> for the roles.</p>'
+                f'<h2 id="sign-up">{icon("clipboard-list")} Sign up</h2>{su}<p>The form asks for:</p>{ul(R["signup"]["collects"])}'
+                f'<p>If you use assistive technology, tell us what you use and anything we should arrange. We follow the Service Manual on {self.rb_link("RB-SMDISABLED")}.</p>'
+                f'<h2 id="privacy">{icon("lock-keyhole")} How we look after you and your information</h2>{ul(R["privacy"])}'
+                f'<p class="hint">This follows the Service Manual on {self.rb_link("RB-SMCONSENT")} and {self.rb_link("RB-SMPRIVACY")}.</p>'
+                f'<h2 id="rounds">{icon("route")} Research rounds</h2><p>Each round answers questions from the research plan on <a href="design.html">Service design</a>, and tests its hypotheses.</p>'
+                + table('t-rounds', 'Research rounds', ['Round', 'Name', 'What it will find out', 'Methods', 'When', 'Hypotheses tested'], rnd_rows)
+                + f'<h2 id="introduce">{icon("megaphone")} Introduce the portal to your team</h2>'
+                f'<p>Share this page with colleagues who manage, describe or use data assets. Teams can take part together in a review panel.</p>'
+                f'<p><a class="btn secondary" href="{mail}">{icon("send")}Email a link to your team</a></p>')
+
+        # Roadmap --------------------------------------------------------------
+        cols = ''
+        for st, lede in (('now', 'Being worked on, or next to start.'), ('next', 'Planned once Now has room.'), ('later', 'Wanted, but not yet planned.')):
+            these = sorted((x for x in items if x['status'] == st), key=lambda x: -x['score'])
+            cols += (f'<section class="rm-col rm-{st}" aria-labelledby="rm-h-{st}"><h3 id="rm-h-{st}">{icon({"now": "flag", "next": "calendar-clock", "later": "clock"}[st])} {RESEARCH_STATUS[st]} <span class="count">{len(these)}</span></h3>'
+                     f'<p class="hint">{lede}</p><ul class="cr-list">{"".join(card(x) for x in these)}</ul></section>')
+        done = ''.join(f'<li><strong>{E(x["id"])}</strong> {E(x["title"])} <span class="hint">released in {E(x["release"])}</span></li>' for x in items if x['status'] == 'done')
+        out_ = ''.join(f'<li id="{x["id"]}"><strong>{E(x["id"])}</strong> {E(x["title"])}. {E(x["reason"])}</li>' for x in items if x['status'] == 'out')
+        nnow = sum(1 for x in items if x['status'] == 'now')
+        roadmap = (f'<h2 id="roadmap">{icon("kanban")} Roadmap</h2><p>What is being worked on now, next and later, modelled on the {self.rb_link("RB-DGUROADMAP")}. '
+                   f'Now holds at most {R["wip_limit"]} items at a time, so work gets finished; it holds {nnow}. Reviewed at least every 3 months and after each research round.</p>'
+                   f'<div class="rm-board">{cols}</div>'
+                   f'<h3 id="done">{icon("circle-check")} Done</h3><ul class="ticks">{done}</ul><p>Every change is on <a href="whats-new.html">What\'s new</a>.</p>'
+                   f'<h3 id="out-of-scope">{icon("ban")} Out of scope</h3><ul>{out_}</ul>')
+
+        # Backlog --------------------------------------------------------------
+        rows, attrs = [], []
+        for x in sorted(items, key=lambda x: (list(RESEARCH_STATUS).index(x['status']), -x['score'])):
+            src = f'<a href="about.html#{x["source"]}">{E(x["source"])}</a>' if re.fullmatch(r'OR-\d{2}', x['source']) else E(x['source'])
+            rows.append([f'<strong id="bl-{x["id"]}">{E(x["id"])}</strong>', f'<strong>{E(x["title"])}</strong><br>{E(x["story"])}', E(RESEARCH_TYPES[x['type']]), src,
+                         f'<span class="rm-badge rm-{x["status"]}">{E(RESEARCH_STATUS[x["status"]])}</span>', str(x['score']), strat_pills(x['strategy'])])
+            attrs.append(f' data-item data-status="{x["status"]}" data-type="{x["type"]}"')
+        sopt = ''.join(f'<option value="{k}">{E(v)}</option>' for k, v in RESEARCH_STATUS.items())
+        topt = ''.join(f'<option value="{k}">{E(v)}</option>' for k, v in RESEARCH_TYPES.items())
+        backlog = (f'<h2 id="backlog">{icon("list-ordered")} Backlog</h2><p>Every item is written as a user story, with where it came from: research, the <a href="about.html#limitations">open register</a>, an idea, or a review. '
+                   f'Download it as <a href="data/backlog.csv">CSV</a> or <a href="data/backlog.json">JSON</a>.</p>'
+                   f'<div class="filters" data-filter="bl-body" role="group" aria-label="Filter the backlog"><div><label for="bl-status">Status</label><select id="bl-status" name="status"><option value="">All</option>{sopt}</select></div>'
+                   f'<div><label for="bl-type">Type</label><select id="bl-type" name="type"><option value="">All</option>{topt}</select></div><p class="count-out" aria-live="polite"></p></div>'
+                   + table('t-backlog', 'Product backlog', ['ID', 'Story', 'Type', 'Came from', 'Status', 'Score', 'Fits'], rows, row_attrs=attrs, tbody_id='bl-body'))
+
+        # Ideas ----------------------------------------------------------------
+        I = R['ideas']
+        on_bl = {x.get('idea'): x['id'] for x in items if x.get('idea')}
+        if not self.ideas.get('available'):
+            live = f'<p>The list of ideas could not be read when this page was built. <a href="{gh}/{I["list_url"]}">See every idea on GitHub</a>.</p>'
+        elif not self.ideas['ideas']:
+            live = f'<p>No ideas yet. <a href="{gh}/{I["new_url"]}">Be the first to suggest one</a>.</p>'
+        else:
+            lis = ''.join(f'<li><a href="{E(i["url"])}" rel="noopener">{E(i["title"])}</a> <span class="hint">{i["votes"]} votes · {i["comments"]} comments'
+                          f'{" · on the backlog as " + on_bl[i["n"]] if i["n"] in on_bl else ""}{" · closed" if i["closed"] else ""}</span></li>' for i in self.ideas['ideas'][:15])
+            live = f'<p>The most voted ideas when this page was built, on {E(self.ideas["as_of"])}.</p><ol class="ideas">{lis}</ol><p><a href="{gh}/{I["list_url"]}">See every idea on GitHub</a>.</p>'
+        vb = '; '.join(f'{t} or more votes scores {b}' for t, b in R['vote_bands'])
+        ideas = (f'<h2 id="ideas">{icon("lightbulb")} Ideas and voting</h2><p>Suggest a feature, a page, a fix or a whole new idea. Vote for the ideas you want most. Ideas are public, so everyone can see them and how each one is handled.</p>'
+                 f'<p><a class="btn" href="{gh}/{I["new_url"]}">{icon("lightbulb")}Suggest an idea</a> <a class="btn secondary" href="{gh}/{I["list_url"]}">{icon("thumbs-up")}Vote for ideas</a></p>'
+                 f'<div class="notice-box">{icon("info")}<p>{E(I["note"])} You need a free GitHub account. If you do not have one, use the {"private feedback form" if self.ms_form_url() else "contact form"} and we will add your idea for you, without your name.</p></div>'
+                 f'<h3 id="top-ideas">{icon("trophy")} Most voted ideas</h3>{live}'
+                 f'<h3 id="idea-journey">{icon("route")} What happens to an idea</h3><ol class="tut">'
+                 f'<li><strong>Suggested.</strong> Anyone can suggest an idea and anyone can vote.</li>'
+                 f'<li><strong>Triaged within 2 weeks.</strong> We reply, link related ideas and ask questions if we need to.</li>'
+                 f'<li><strong>Assessed.</strong> If it fits the portal\'s purpose, it becomes a backlog item with a user story and is scored against the six criteria. Votes count towards user demand: {vb}.</li>'
+                 f'<li><strong>Placed.</strong> Its score suggests Now, Next or Later. Where we decide differently, we say why in the decisions log.</li>'
+                 f'<li><strong>Closed with a reason.</strong> Done ideas link to the release. Ideas we will not do are marked out of scope, with the reason.</li></ol>')
+
+        # How we prioritise ------------------------------------------------------
+        crow = [[f'<strong>{tile(c["icon"], "sm")} {E(c["name"])}</strong>', f'{c["weight"]}%', E(c['ask']),
+                 '<ol class="scale" start="0">' + ''.join(f'<li>{E(s)}</li>' for s in c['scale']) + '</ol>'] for c in R['criteria']]
+        brow = [[f'{mn} or more' if mn else 'Under 50', E(lbl)] for mn, _, lbl in R['bands']]
+        slis = ''
+        for s in R['strategies']:
+            link = (self.rb_link(s['ref']) if s['ref'] in self.rb else self.src_link(s['ref'])) if s['ref'] else f'{E(s["name"])} <span class="tag">Not yet published: unconfirmed</span>'
+            slis += f'<li id="strategy-{s["id"]}">{link}</li>'
+        ex = next(x for x in items if x['id'] == 'BL-12')
+        exrow = ' + '.join(f'{crit[k]["weight"]} × {v}/3' for k, v in ex['scored'].items())
+        prio = (f'<h2 id="prioritise">{icon("scale")} How we prioritise</h2><p>Votes tell us what people want. They are one input, not the decision. Each backlog item is also assessed by the service team for policy, strategy, feasibility, capacity and inclusion{prov("O")}.</p>'
+                + table('t-criteria', 'Prioritisation criteria', ['Criterion', 'Weight', 'Question', 'Scores from 0 to 3'], crow)
+                + f'<h3 id="score">{icon("chart-column")} The score</h3><p>Score = the sum, for each criterion, of its weight × its score ÷ 3. The result is out of 100.</p>'
+                f'<p class="hint">Example, {E(ex["id"])} {E(ex["title"])}: {exrow} = {ex["score"]}.</p>'
+                + table('t-bands', 'What a score suggests', ['Score', 'Suggests'], brow)
+                + f'<p>A score suggests a place on the roadmap; it does not decide it. When we place an item differently, for example because it depends on something else, the reason is in the decisions log below. Now holds at most {R["wip_limit"]} items.</p>'
+                f'<h3 id="strategies">{icon("compass")} Government strategies we align to</h3><p>An item scores higher on government strategy when it helps deliver one of these.</p><ul>{slis}</ul>'
+                f'<p class="hint">The {E(strat["sdr"]["name"])}. When it is published, it will be added and every item reassessed against it.</p>'
+                f'<h3 id="decisions">{icon("history")} Decisions log</h3>'
+                + table('t-decisions', 'Decisions log', ['Date', 'Item', 'Decision', 'Why'],
+                        [[E(x['date']), f'<a href="#bl-{x["item"]}" id="decision-{x["item"]}">{E(x["item"])}</a>' if R['decisions'].index(x) == next(i for i, y in enumerate(R['decisions']) if y['item'] == x['item']) else f'<a href="#bl-{x["item"]}">{E(x["item"])}</a>', E(x['decision']), E(x['why'])] for x in R['decisions']]))
+
+        # What we have learned -----------------------------------------------------
+        if R['learned']:
+            lr = ''.join(f'<li><strong>{E(x["round"])}:</strong> {E(x["finding"])} <span class="hint">Changed: {E(x["change"])}</span></li>' for x in R['learned'])
+            learned = f'<h2 id="learned">{icon("book-open")} What we have learned</h2><ul>{lr}</ul>'
+        else:
+            learned = (f'<h2 id="learned">{icon("book-open")} What we have learned</h2><p>Nothing yet: Round 0 is recruiting. After each round we publish what we found, '
+                       f'what we changed because of it, and which hypotheses held or failed. Findings name roles, never people.</p>')
+
+        tabs = [('rs-take-part', 'Take part', take), ('rs-roadmap', 'Roadmap', roadmap), ('rs-backlog', 'Backlog', backlog),
+                ('rs-ideas', 'Ideas and voting', ideas), ('rs-prioritise', 'How we prioritise', prio), ('rs-learned', 'What we have learned', learned)]
+        hero = self.hero('megaphone', 'Have your say', 'Have your say: shape this portal', 'Take part in user research, suggest and vote for ideas, and see what is planned and why. We work in the open.',
+                         brief=['Sign up for research that suits you: from a 5 minute survey to an hour on a call.', 'Suggest ideas and vote for the ones you want; votes count towards priority.',
+                                f'See the roadmap, the backlog of {len(items)} items and how each is scored against government strategy.'],
+                         meta=[('list-checks', f'{len(R["methods"])} ways to take part'), ('kanban', f'{nnow} items in Now'), ('scale', f'{len(R["criteria"])} criteria')])
+        drawer = [{'label': 'Have your say', 'icon': 'megaphone', 'items': [
+            {'id': 'ways', 'label': 'Ways to take part', 'icon': 'list-checks', 'count': len(R['methods']), 'new': True},
+            {'id': 'sign-up', 'label': 'Sign up', 'icon': 'clipboard-list'},
+            {'id': 'privacy', 'label': 'Your information', 'icon': 'lock-keyhole'},
+            {'id': 'rounds', 'label': 'Research rounds', 'icon': 'route', 'count': len(R['rounds'])},
+            {'id': 'roadmap', 'label': 'Roadmap', 'icon': 'kanban', 'new': True},
+            {'id': 'backlog', 'label': 'Backlog', 'icon': 'list-ordered', 'count': len(items)},
+            {'id': 'ideas', 'label': 'Ideas and voting', 'icon': 'lightbulb', 'new': True},
+            {'id': 'prioritise', 'label': 'How we prioritise', 'icon': 'scale'},
+            {'id': 'decisions', 'label': 'Decisions log', 'icon': 'history', 'count': len(R['decisions'])},
+            {'id': 'learned', 'label': 'What we have learned', 'icon': 'book-open'}]}]
+        for x in items:
+            self.add_search(f'{x["id"]} {x["title"]}', 'Backlog', f'research.html#bl-{x["id"]}', x['story'])
+        return self.page('research', 'Have your say', hero + self.tabbed(tabs, 'Have your say'), drawer, crumbs=['Have your say'],
+                         jsonld={'@type': 'WebPage', 'about': 'User research, product roadmap and backlog for the portal'})
 
     def rfi_rows(self):
         n, rows = 0, []
@@ -2641,6 +2885,18 @@ class Site:
                       [[x['id'], x['title'], x['mode'], x['stage'], a, ' '.join(x['roles']), ' '.join(x['refs']), ' '.join(x['cr'])] for x in d['change']['items'] for a in x['actions']])
             write_csv('maturity-structure.csv', ['topic', 'topic_name', 'section_url'] + [t['name'] for t in d['maturity']['themes']],
                       [[t['n'], t['name'], d['maturity']['url'] + '#' + t['anchor']] + [t['rows'][th['name']] for th in d['maturity']['themes']] for t in d['maturity']['topics']])
+        if d.get('research'):
+            ri = self.research_items()
+            keys = [c['id'] for c in d['research']['criteria']]
+            write_csv('backlog.csv', ['id', 'title', 'type', 'story', 'source', 'status', 'release', 'reason', 'strategies', 'score', 'suggests', 'votes'] + keys,
+                      [[x['id'], x['title'], x['type'], x['story'], x['source'], x['status'], x.get('release', ''), x.get('reason', ''), ' '.join(x['strategy']), x['score'], x['band'], x['votes']]
+                       + [x['scored'][k] for k in keys] for x in ri])
+            (out / 'backlog.json').write_text(json.dumps({'as_of': m['as_of'], 'version': m['version'], 'wip_limit': d['research']['wip_limit'],
+                                                          'criteria': d['research']['criteria'], 'vote_bands': d['research']['vote_bands'], 'bands': d['research']['bands'],
+                                                          'strategies': d['research']['strategies'], 'decisions': d['research']['decisions'],
+                                                          'items': [{k: v for k, v in x.items() if k != 'assess'} for x in ri],
+                                                          'ideas': {'available': self.ideas.get('available', False), 'as_of': self.ideas.get('as_of', ''), 'count': len(self.ideas.get('ideas', []))}},
+                                                         indent=1, ensure_ascii=False), encoding='utf-8')
         write_csv('metadata-dictionary.csv', ['property', 'mem_slot', 'obligation', 'rule'],
                   [[x['prop'], x['mem'], x['obligation'], x['rule']] for x in self.caps['cat']['metadata']])
         base = m['site_url'] + 'vocab#'
@@ -2672,7 +2928,7 @@ class Site:
                    'dcterms:type': x['group'], 'dcterms:description': x['why']} for x in d['rulebook']]}
         (out / 'sources.jsonld').write_text(json.dumps(cat, indent=1, ensure_ascii=False), encoding='utf-8')
         self.write_catalogue(out)
-        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility', 'data', 'test', 'guide', 'site-map', 'reuse'])
+        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility', 'data', 'test', 'guide', 'site-map', 'reuse', 'research'])
         (self.out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>', encoding='utf-8')
 
 

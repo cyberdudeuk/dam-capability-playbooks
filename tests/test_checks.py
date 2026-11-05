@@ -308,7 +308,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.8.3', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.9.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -431,7 +431,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c31_navigation_aids')
 
     def test_c32_mcp_version_mismatch(self):
-        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.8.3'", "'version': '0.0.1'")
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.9.0'", "'version': '0.0.1'")
         self.fails('c32_mcp_server')
 
     def test_c32_mcp_tool_undescribed(self):
@@ -560,6 +560,114 @@ class Vaccination(unittest.TestCase):
         edit(y, '  - data-maturity\n', '  - data-wizardry\n')
         with self.assertRaises(build.ContentError):
             build.load(self.r / 'content' / 'playbooks.yaml')
+
+    # -- version 1.9: Have your say (C-36) ------------------------------------------------------
+    def test_c36_signup_goes_to_github(self):
+        edit(self.s / 'research.html', '<p>The form asks for:</p>', '<p><a class="btn" href="https://github.com/cyberdudeuk/dam-capability-playbooks/issues/new">Sign up to take part</a></p><p>The form asks for:</p>')
+        self.fails('c36_have_your_say')
+
+    def test_c36_idea_link_to_another_repository(self):
+        edit(self.s / 'research.html', 'dam-capability-playbooks/discussions/new?category=ideas', 'someone-else/discussions/new?category=ideas', count=99)
+        self.fails('c36_have_your_say')
+
+    def test_c36_published_score_wrong(self):
+        import json
+        p = self.s / 'data' / 'backlog.json'
+        j = json.loads(p.read_text(encoding='utf-8'))
+        j['items'][0]['score'] += 1
+        p.write_text(json.dumps(j), encoding='utf-8')
+        self.fails('c36_have_your_say')
+
+    def test_c36_table_score_wrong(self):
+        t = (self.s / 'research.html').read_text(encoding='utf-8')
+        i = t.index('id="bl-BL-12"')
+        j = t.index('<td class="c-xs">77</td>', i)
+        (self.s / 'research.html').write_text(t[:j] + '<td class="c-xs">97</td>' + t[j + len('<td class="c-xs">77</td>'):], encoding='utf-8')
+        self.fails('c36_have_your_say')
+
+    def test_c36_now_over_limit(self):
+        t = (self.s / 'research.html').read_text(encoding='utf-8')
+        i = t.index('<section class="rm-col rm-now"')
+        a = t.index('<li class="cr-card rm-card"', i)
+        b = t.index('</li>', a) + 5
+        (self.s / 'research.html').write_text(t[:b] + t[a:b] * 3 + t[b:], encoding='utf-8')
+        self.fails('c36_have_your_say')
+
+    def test_c36_placed_against_score_without_decision(self):
+        edit(self.s / 'research.html', 'id="decision-BL-11"', 'id="decision-gone"')
+        self.fails('c36_have_your_say')
+
+    def test_c36_unpublished_strategy_not_labelled(self):
+        edit(self.s / 'research.html', 'Not yet published: unconfirmed', 'Not yet published')
+        self.fails('c36_have_your_say')
+
+    def test_c36_address_in_backlog(self):
+        p = self.s / 'data' / 'backlog.csv'
+        p.write_text(p.read_text(encoding='utf-8') + 'BL-99,x,feature,mail team' + chr(64) + 'example.gov.uk,,,,,,0,later,0,0,0,0,0,0,0\n', encoding='utf-8')
+        self.fails('c36_have_your_say')
+
+    def test_c36_page_without_have_your_say(self):
+        edit(self.s / 'learning.html', 'href="research.html"', 'href="index.html"', count=99)
+        self.fails('c36_have_your_say')
+
+    def _rejects(self, old, new, count=1):
+        edit(self.r / 'content' / 'frameworks.yaml', old, new, count)
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_weights_not_100(self):
+        self._rejects('name: User demand, weight: 25', 'name: User demand, weight: 30')
+
+    def test_build_rejects_signup_on_github(self):
+        self._rejects("  signup:\n    url: ''", "  signup:\n    url: 'https://github.com/cyberdudeuk/dam-capability-playbooks/issues/new'")
+
+    def test_build_rejects_status_against_score_without_decision(self):
+        self._rejects("item: BL-11, decision:", "item: BL-12, decision:")
+
+    def test_build_rejects_now_over_limit(self):
+        self._rejects('wip_limit: 5', 'wip_limit: 3')
+
+    def test_build_rejects_unknown_open_register_source(self):
+        self._rejects('source: OR-15,', 'source: OR-95,')
+
+
+class IdeasRun(unittest.TestCase):
+    """Version 1.9: tools/ideas.py keeps only Ideas, drops any title with an address, counts votes, and never fails the build."""
+    def test_filters_and_counts(self):
+        import ideas
+        repo = 'cyberdudeuk/dam-capability-playbooks'
+        base = f'https://github.com/{repo}/discussions/'
+        batch = [{'number': 1, 'title': 'Embed tables', 'html_url': base + '1', 'category': {'slug': 'ideas'}, 'upvote_count': 4, 'reactions': {'+1': 2}, 'comments': 1},
+                 {'number': 2, 'title': 'Contact me at a' + chr(64) + 'b.gov.uk', 'html_url': base + '2', 'category': {'slug': 'ideas'}, 'upvote_count': 9},
+                 {'number': 3, 'title': 'A question', 'html_url': base + '3', 'category': {'slug': 'q-a'}, 'upvote_count': 9},
+                 {'number': 4, 'title': 'Welsh', 'html_url': base + '4', 'category': {'slug': 'ideas'}, 'reactions': {'+1': 7}},
+                 {'number': 5, 'title': 'Elsewhere', 'html_url': 'https://github.com/other/repo/discussions/5', 'category': {'slug': 'ideas'}}]
+        got = ideas.collect(repo, '', fetch=lambda url, tok: batch if 'page=1' in url else [])
+        self.assertEqual([i['n'] for i in got], [4, 1])
+        self.assertEqual(got[0]['votes'], 7)
+
+    def test_fails_soft(self):
+        import ideas
+        out = Path(tempfile.mkdtemp(prefix='dcp-i-')) / 'ideas.json'
+
+        def boom(url, token):
+            raise ideas.urllib.error.URLError('offline')
+        orig = ideas.get
+        ideas.get = boom
+        try:
+            self.assertEqual(ideas.main(['--out', str(out)]), 0)
+        finally:
+            ideas.get = orig
+        import json
+        self.assertFalse(json.loads(out.read_text())['available'])
+
+
+class IconVendoring(unittest.TestCase):
+    """D-029: every icon the site uses is in the vendor list, so re-vendoring never drops one."""
+    def test_vendor_list_covers_icon_set(self):
+        import vendor_icons
+        missing = set(build.ICON_SET) - set(vendor_icons.ICON_NAMES)
+        self.assertFalse(missing, f'icons not in tools/vendor_icons.py ICON_NAMES: {sorted(missing)}')
 
 
 class BreakScripts(unittest.TestCase):

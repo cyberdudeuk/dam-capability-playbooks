@@ -37,6 +37,7 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Status, What's new, About | Health run results, release notes, findings, open and defect registers, build standard assessment |
 | Service design | Theory of change, research plan, blueprint, requirements traceability, architecture, Service Standard self-assessment |
 | Open data, Help us test | Datasets with a DCAT catalogue for harvesting; testing tasks and feedback forms |
+| Have your say | Take part in user research (private sign-up), suggest and vote for ideas (GitHub Discussions, Ideas), and see the roadmap, backlog, prioritisation criteria and decisions log, in the open (ADR 0006) |
 | User guide, Site map, Use and reuse | How to get around, guided tours and tutorials; every page at a glance; ten ways to reuse the content, including AI assistants and a reference MCP server |
 | Notices, Accessibility | Disclaimers, credits, full citations and the accessibility statement |
 

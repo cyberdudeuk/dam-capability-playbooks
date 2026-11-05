@@ -30,7 +30,14 @@ Close the issue when every problem is resolved. Automation never changes content
 Role levels, grades and skills on the Professions and skills page were read from the Government Digital and Data capability framework on 2026-11-05. When the framework's update history changes, re-read the role pages and update `professions.roles` in `content/frameworks.yaml`. The Data Maturity Assessment is CC BY-NC-SA 4.0: record only its structure, never its level descriptions (check C-21).
 
 ## Change an icon
-Add the Lucide icon name to `ICON_NAMES` in `tools/vendor_icons.py`, run `npm ci && python tools/vendor_icons.py`, and commit `site_src/icons.json`.
+Add the Lucide icon name to `ICON_NAMES` in `tools/vendor_icons.py`, run `npm ci && python tools/vendor_icons.py`, and commit `site_src/icons.json`. Never edit `icons.json` by hand: a test fails if an icon is missing from the list (D-029).
+
+## Run Have your say (version 1.9, ADR 0006)
+- **Each fortnight:** reply to new ideas in Discussions (Ideas). If an idea fits, add a backlog item to `research.backlog` with `idea: <discussion number>`, a user story, its source and an assessment of each criterion from 0 to 3. Say on the idea which item it became.
+- **At least every 3 months, and after each research round:** reassess every item, move items between Now, Next and Later, and add a decisions log entry for any item placed differently from its score (the build rejects it otherwise). Keep Now to 5 items.
+- **After each research round:** add what was found to `research.learned` (round, finding, what changed), naming roles, never people. Update the round's status.
+- **When the sign-up form is ready:** put its address in `research.signup.url` (Microsoft Forms or GOV.UK Forms only). Set it to accept responses from anyone and not to record names, and confirm the privacy notice and data controller with the data protection officer.
+- **When the strategic roadmap for public sector data is published:** add it to the rulebook, set its `ref` in `research.strategies`, and reassess every item's government strategy score.
 
 ## Repository settings the owner keeps switched on
 Pages (source: Deploy from a branch, gh-pages, / (root); the workflow pushes the built site there), Issues, Discussions, private vulnerability reporting, Dependabot alerts, secret scanning,

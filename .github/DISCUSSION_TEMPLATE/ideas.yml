@@ -1,0 +1,67 @@
+title: "[Idea] "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an idea. Ideas are public: do not include your name, colleagues' names, personal data or anything above OFFICIAL.
+        We reply within 2 weeks. If the idea fits the portal's purpose, it becomes a backlog item, is scored against six criteria, and appears on the roadmap on the Have your say page. Votes count towards user demand.
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you need to do?
+      description: Describe the task or problem, not the solution. For example, "find which steps apply to my role".
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What is your idea?
+      description: How the portal could help. Rough ideas are welcome.
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Which role is closest to yours?
+      options:
+        - Chief data officer or senior leader
+        - DAM Policy coordinator
+        - Data owner or information asset owner
+        - Data steward
+        - Catalogue manager
+        - Data quality lead
+        - Analyst or data user
+        - Digital, technology or architecture
+        - Commercial or delivery
+        - Prefer not to say
+    validations:
+      required: false
+  - type: dropdown
+    id: org
+    attributes:
+      label: What kind of organisation do you work in?
+      options:
+        - Central government department
+        - Arm's length body or agency
+        - Local government
+        - NHS or health and care
+        - Devolved government
+        - Other public sector
+        - Supplier or partner
+        - Prefer not to say
+    validations:
+      required: false
+  - type: checkboxes
+    id: access
+    attributes:
+      label: Accessibility
+      options:
+        - label: This idea would help people who use assistive technology, or remove a barrier for disabled people
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Before you post
+      options:
+        - label: I have not included names, personal data or anything above OFFICIAL
+          required: true

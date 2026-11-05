@@ -861,6 +861,78 @@ def c35_estate_compass(site, repo, pages):
     return errs
 
 
+def c36_have_your_say(site, repo, pages):
+    """Rule (version 1.9): Have your say is reachable from every page; research sign-up is private, never GitHub; every idea link goes to this repository's discussions;
+    every backlog item is published with a score that matches the weighted criteria (weights sum to 100, votes only raise demand); Now respects its limit;
+    any item placed differently from its score has a decision; an unpublished strategy is labelled unconfirmed; and no address appears anywhere in it."""
+    import yaml
+    errs = []
+    f = site / 'research.html'
+    if not f.exists():
+        return ['research.html missing']
+    html = f.read_text(encoding='utf-8')
+    meta = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))['meta']
+    R = yaml.safe_load((repo / 'content' / 'frameworks.yaml').read_text(encoding='utf-8'))['research']
+    gh = f'https://github.com/{meta["repo"]}'
+    for name, p in pages.items():
+        if name != '404.html' and 'research.html' not in p.links:
+            errs.append(f'{name}: no link to Have your say')
+    # sign-up is private
+    i = html.find('id="sign-up"')
+    j = html.find('<h2', i + 1)
+    sec = html[i:j] if i >= 0 else ''
+    if not sec:
+        errs.append('research: no sign-up section')
+    for u in re.findall(r'href="([^"]+)"', sec):
+        if 'github.com' in u or 'github.io' in u:
+            errs.append(f'research: sign-up links to GitHub ({u}); sign-up must be a private form')
+    btn = re.search(r'<a class="btn" href="([^"]+)"[^>]*>.*?Sign up to take part', sec)
+    if btn and not btn.group(1).startswith(('https://forms.cloud.microsoft/', 'https://forms.office.com/', 'https://forms.microsoft.com/', 'https://forms.service.gov.uk/')):
+        errs.append(f'research: sign-up button goes to {btn.group(1)}, not a private form')
+    for u in re.findall(r'href="(https://github\.com/[^"]*discussions[^"]*)"', html):
+        if not u.startswith(gh + '/discussions'):
+            errs.append(f'research: idea link {u} is not this repository\'s discussions')
+    # scores, recomputed independently
+    if sum(c['weight'] for c in R['criteria']) != 100:
+        errs.append('research: criteria weights do not sum to 100')
+    jf = site / 'data' / 'backlog.json'
+    if not jf.exists():
+        return errs + ['research: data/backlog.json missing']
+    J = json.loads(jf.read_text(encoding='utf-8'))
+    pub = {x['id']: x for x in J['items']}
+    decided = {x['item'] for x in R['decisions']}
+    for x in R['backlog']:
+        y = pub.get(x['id'])
+        if not y:
+            errs.append(f'research: {x["id"]} not in backlog.json'); continue
+        a = dict(x['assess'])
+        band_v = max([b for t, b in R['vote_bands'] if y.get('votes', 0) >= t] or [0])
+        a['demand'] = max(a['demand'], band_v)
+        s = round(sum(c['weight'] * a[c['id']] / 3 for c in R['criteria']))
+        if y['score'] != s:
+            errs.append(f'research: {x["id"]} published score {y["score"]} but the criteria give {s}')
+        row = re.search(rf'<tr[^>]*>(?:(?!</tr>).)*id="bl-{x["id"]}".*?</tr>', html, re.S)
+        cells = re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>', row.group(0), re.S) if row else []
+        if len(cells) < 6 or cells[5].strip() != str(s):
+            errs.append(f'research: {x["id"]} missing from the backlog table or shows the wrong score')
+        band = next(b for m, b, _ in R['bands'] if s >= m)
+        if x['status'] in ('now', 'next', 'later') and band != x['status'] and (x['id'] not in decided or f'id="decision-{x["id"]}"' not in html):
+            errs.append(f'research: {x["id"]} placed in {x["status"]} against its score with no published decision')
+    m = re.search(r'<section class="rm-col rm-now".*?</section>', html, re.S)
+    if not m or m.group(0).count('class="cr-card rm-card"') > R['wip_limit']:
+        errs.append(f'research: Now column missing or over its limit of {R["wip_limit"]}')
+    for s in R['strategies']:
+        if not s['ref']:
+            li = re.search(rf'<li id="strategy-{s["id"]}">.*?</li>', html, re.S)
+            if not li or 'unconfirmed' not in li.group(0):
+                errs.append(f'research: unpublished strategy {s["id"]} not labelled unconfirmed')
+    for name in ('research.html', 'data/backlog.json', 'data/backlog.csv'):
+        p = site / name
+        if p.exists() and EMAIL.search(p.read_text(encoding='utf-8')):
+            errs.append(f'{name}: contains an address')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -868,7 +940,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
-          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass]
+          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say]
 
 
 def run(site, repo, only=None, quiet=False):

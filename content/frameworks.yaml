@@ -968,6 +968,60 @@ rulebook_more:
   prov: V
   caps: [cat]
   why: An open protocol for connecting AI assistants to tools and data, such as a catalogue.
+- id: RB-RMDG
+  group: Delivery, change and investment
+  title: A roadmap for modern digital government 2025 to 2030
+  publisher: Government Digital Service
+  url: https://roadmap-for-modern-digital-government.campaign.gov.uk
+  updated: '2026-10-09'
+  prov: V
+  caps: [gov, cat, dq]
+  why: "The government's action plan to 2030, with six priorities, from joining up public services to transparency and accountability."
+- id: RB-SMUR
+  group: Service delivery and technology
+  title: 'Service Manual: finding participants for user research'
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/user-research/find-user-research-participants
+  updated: '2026-11-05'
+  prov: V
+  caps: [gov, cat, dq]
+  why: Participants must be actual or likely users, and research must include disabled people.
+- id: RB-SMCONSENT
+  group: Service delivery and technology
+  title: 'Service Manual: getting informed consent for user research'
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/user-research/getting-users-consent-for-research
+  updated: '2026-11-05'
+  prov: V
+  caps: [gov, cat, dq]
+  why: Every participant gives informed consent, even colleagues in the same organisation.
+- id: RB-SMPRIVACY
+  group: Service delivery and technology
+  title: 'Service Manual: managing user research data and participant privacy'
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/user-research/managing-user-research-data-participant-privacy
+  updated: '2026-11-05'
+  prov: V
+  caps: [gov, cat, dq]
+  why: How to collect, store and delete participants' personal data.
+- id: RB-SMDISABLED
+  group: Service delivery and technology
+  title: 'Service Manual: running research sessions with disabled people'
+  publisher: GDS (GOV.UK Service Manual)
+  url: https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities
+  updated: '2026-11-05'
+  prov: V
+  caps: [gov, cat, dq]
+  why: Planning sessions that work for disabled participants and their assistive technology.
+- id: RB-DGUROADMAP
+  group: Data and AI
+  title: data.gov.uk roadmap
+  publisher: Government Digital Service
+  url: https://data.gov.uk/roadmap
+  updated: '2026-11-05'
+  prov: V
+  caps: [cat]
+  why: A public Now, Next, Later roadmap with feedback routes; the model this portal's roadmap follows.
 capmap:
 - id: CR-01
   name: Accountable leadership and policy oversight
@@ -4756,3 +4810,84 @@ related:
     reuse:
     - {portal: dqc, title: Use the Commons your way, path: reuse.html, why: The Commons' own API, embed mode and MCP tools.}
     - {portal: cat, title: Search all code projects, path: '#search', why: Download catalogue records as DCAT or CSV.}
+research:
+  intro: This portal is a prototype. What it becomes depends on the people who use it. Take part in research, suggest and vote for ideas, and see how every decision is made, in the open.
+  why_take_part:
+  - Shape guidance you may be expected to follow, before it settles
+  - Get early sight of what is coming and why
+  - Make sure it works for your role, your organisation and your access needs
+  - Help other organisations avoid duplicated effort
+  methods:
+  - {id: M-INT, name: Interview, icon: message-square-text, time: 45 to 60 minutes, how: Online, one to one, what: How you manage data assets today and what gets in the way}
+  - {id: M-USE, name: Usability session, icon: list-checks, time: 45 to 60 minutes, how: Online, one to one, you share your screen, what: Try real tasks on the portal while thinking aloud}
+  - {id: M-TREE, name: Tree test or card sort, icon: network, time: 10 to 15 minutes, how: Online, in your own time, what: Find things using only the menu labels, so we can test the structure}
+  - {id: M-SURVEY, name: Survey, icon: clipboard-list, time: 5 to 10 minutes, how: Online, in your own time, what: How you use the portal and what you need next}
+  - {id: M-A11Y, name: Accessibility session, icon: accessibility, time: 60 to 90 minutes, how: Online or in person, with your own set-up, what: Use the portal with your assistive technology, such as a screen reader, magnifier or voice control}
+  - {id: M-PANEL, name: Review panel, icon: users-round, time: About an hour a month, how: Online, as a group, what: Review drafts of new content, such as sector supplements, before they are published}
+  who: Anyone who works with data assets in the UK public sector, in any of the roles below, at any level. We especially need people who use assistive technology, people outside central government, and people from all four nations.
+  signup:
+    url: ''
+    note: Sign-up is through a private form, never through GitHub, because it asks for contact details. Until it opens, use the private feedback form and say you would like to take part.
+    collects: [Your role and organisation type, Which kinds of research you would do, Whether you use assistive technology and anything we should arrange, A way to contact you]
+  privacy:
+  - Your contact details are kept separately from your answers, only by the research team, and deleted when you ask or within 12 months.
+  - Notes name roles, not people. Quotes are anonymous.
+  - Sessions are recorded only if you agree, and you can stop at any time.
+  - Nothing above OFFICIAL is discussed.
+  - Who controls your data, and the full privacy notice, are confirmed with the data protection officer before the first session.
+  rounds:
+  - {id: R-0, name: Introduce and recruit, status: now, goal: Introduce the portal to prospective users and teams and build a pool of participants for every role., methods: [M-SURVEY], answers: []}
+  - {id: R-1, name: Find and follow, status: next, goal: "Can each role find and follow the steps that apply to them?", methods: [M-USE, M-TREE], answers: [H-01]}
+  - {id: R-2, name: Access for everyone, status: next, goal: "Can people who use assistive technology complete a route without help?", methods: [M-A11Y], answers: []}
+  - {id: R-3, name: Fit with how organisations work, status: later, goal: "Do the hand-offs, roles and yearly cycle match how organisations actually work?", methods: [M-INT, M-PANEL], answers: [H-02, H-03]}
+  learned: []
+  ideas:
+    category: Ideas
+    new_url: discussions/new?category=ideas
+    list_url: discussions/categories/ideas
+    note: Ideas are public GitHub Discussions, so do not include your name, colleagues' names or anything above OFFICIAL. Vote by upvoting an idea; comments add evidence.
+  wip_limit: 5
+  criteria:
+  - {id: demand, name: User demand, weight: 25, icon: users-round, ask: "How many people need it, and how strong is the evidence?", scale: [No evidence, One source, Several sources or 5+ votes, Research finding or 15+ votes]}
+  - {id: policy, name: DAM Policy, weight: 20, icon: landmark, ask: "Does it help organisations meet the DAM Policy?", scale: [No link, Indirect, Supports a should, Supports a must]}
+  - {id: strategy, name: Government strategy, weight: 20, icon: compass, ask: "Does it fit the government's direction for digital and data?", scale: [No fit, Weak fit, Clear fit, Named in a strategy]}
+  - {id: feasibility, name: Feasibility, weight: 15, icon: wrench, ask: "Can it be done with what exists, safely and lawfully?", scale: [Not feasible now, Major unknowns, Some unknowns, Straightforward]}
+  - {id: capacity, name: Capacity and effort, weight: 10, icon: clock, ask: "Does it fit the time and people available?", scale: [Needs new capacity, Large, Medium, Small]}
+  - {id: inclusion, name: Inclusion, weight: 10, icon: heart-handshake, ask: "Does it make the portal work for more people?", scale: [No effect, Slight, Clear benefit, Removes a barrier]}
+  vote_bands: [[1, 1], [5, 2], [15, 3]]
+  bands: [[70, now, Strong candidate for Now], [50, next, Candidate for Next], [0, later, Later or not yet]]
+  strategies:
+  - {id: dam, name: Data asset management policy, ref: SRC-DAM}
+  - {id: rmdg, name: A roadmap for modern digital government 2025 to 2030, ref: RB-RMDG}
+  - {id: blueprint, name: A blueprint for modern digital government, ref: RB-BLUEPRINT}
+  - {id: ndl, name: National Data Library, ref: RB-NDLPUB}
+  - {id: sdr, name: "Strategic roadmap for public sector data (in development by the Office of the Chief Data Officer; announced for April 2026 and not found published on GOV.UK on 5 November 2026)", ref: null}
+  backlog:
+  - {id: BL-01, type: feature, title: Private feedback route, story: "As someone without a GitHub account, I need a private way to give feedback, so that I can take part without publishing my views.", source: OR-02, status: done, release: 1.8.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 3}}
+  - {id: BL-02, type: feature, title: Share, site map, guided tours and tutorials, story: "As a first-time visitor, I need to see how the portal fits together, so that I can find my way without help.", source: Owner request, status: done, release: 1.8.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 3}}
+  - {id: BL-03, type: feature, title: Signposts to the sister portals, story: "As a practitioner, I need to know when another portal goes deeper, so that I do not miss tools or evidence.", source: Owner request, status: done, release: 1.8.1, strategy: [rmdg, ndl], assess: {demand: 2, policy: 2, strategy: 2, feasibility: 3, capacity: 3, inclusion: 1}}
+  - {id: BL-04, type: feature, title: Estate compass, story: "As someone working across policy, practice and technology, I need to know where to start and in what order, so that I take the shortest route to a result.", source: Owner request, status: done, release: 1.8.2, strategy: [rmdg], assess: {demand: 2, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 2}}
+  - {id: BL-05, type: feature, title: Research, roadmap and ideas in the open, story: "As a user, I need to see what is planned and how decisions are made, and to suggest and vote for ideas, so that the portal meets real needs.", source: Owner request, status: done, release: 1.9.0, strategy: [rmdg, dam], assess: {demand: 2, policy: 2, strategy: 3, feasibility: 3, capacity: 2, inclusion: 2}}
+  - {id: BL-10, type: research, title: "Round 1: can each role find and follow its steps?", story: "As the service owner, I need evidence from 5 to 8 people per role, so that changes rest on what users do, not what we assume.", source: OR-04, status: next, strategy: [dam, rmdg], assess: {demand: 3, policy: 3, strategy: 2, feasibility: 2, capacity: 1, inclusion: 2}}
+  - {id: BL-11, type: research, title: Test with disabled people and assistive technology, story: "As someone who uses a screen reader, magnifier or voice control, I need the portal to work with my set-up, so that I can follow the policy like anyone else.", source: OR-09, status: next, strategy: [rmdg], assess: {demand: 3, policy: 2, strategy: 2, feasibility: 2, capacity: 1, inclusion: 3}}
+  - {id: BL-12, type: feature, title: Private research sign-up form, story: "As a prospective participant, I need to sign up privately, so that my contact details are not published.", source: OR-02, status: now, strategy: [rmdg], assess: {demand: 3, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 2}}
+  - {id: BL-13, type: research, title: "Round 0: introduce the portal and recruit participants", story: "As the service owner, I need a pool of participants from every role, organisation type and nation, so that research rounds can start quickly.", source: OR-04, status: now, strategy: [rmdg], assess: {demand: 3, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 2}}
+  - {id: BL-14, type: content, title: Expert review of the sector supplements, story: "As a sector specialist, I need the supplements checked by people who know the sector, so that I can trust them.", source: OR-12, status: next, strategy: [dam], assess: {demand: 2, policy: 2, strategy: 1, feasibility: 2, capacity: 1, inclusion: 1}}
+  - {id: BL-15, type: feature, title: Check this flag, story: "As a policy coordinator, I need to tell you when a capability flag looks wrong, so that the capability model stays accurate.", source: OR-15, status: now, strategy: [dam], assess: {demand: 2, policy: 3, strategy: 1, feasibility: 3, capacity: 3, inclusion: 1}}
+  - {id: BL-16, type: feature, title: Embed a step or table on an intranet, story: "As a department's data team, I need to show one policy step or table on our intranet, so that colleagues see it where they work.", source: Comparison with the Data Quality Commons, status: next, strategy: [rmdg], assess: {demand: 1, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 1}}
+  - {id: BL-17, type: feature, title: Level labels and easy read summaries, story: "As someone new to data management, I need to know which pages are pitched at me and to read short plain summaries, so that I am not put off.", source: Comparison with the Data Quality Commons, status: next, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 3}}
+  - {id: BL-18, type: feature, title: Ask questions answered from the portal, story: "As a busy reader, I need to ask a question in my own words and get the page that answers it, so that I do not have to know where things are.", source: Comparison with the Data Quality Commons and the catalogue, status: later, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 3, feasibility: 2, capacity: 1, inclusion: 2}}
+  - {id: BL-19, type: feature, title: Releases feed and email-free updates, story: "As a returning user, I need to know when something changes, so that I keep up without checking the site.", source: Comparison with the Data Quality Commons, status: next, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 1}}
+  - {id: BL-20, type: feature, title: Lineage and ontology downloads, story: "As a metadata specialist, I need the requirement-to-check lineage and the ontology in open formats, so that I can reuse them in our tools.", source: Comparison with the catalogue, status: later, strategy: [ndl, dam], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 2, capacity: 2, inclusion: 0}}
+  - {id: BL-21, type: feature, title: One-file offline copy, story: "As someone whose network blocks GitHub Pages, I need a copy I can open offline, so that I can still use the guidance.", source: Comparison with the catalogue, status: later, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 1, feasibility: 2, capacity: 1, inclusion: 2}}
+  - {id: BL-22, type: decision, title: Clearance and an official home, story: "As a department, I need to know whether this is guidance I can rely on, so that I can use it in my organisation.", source: OR-03, status: now, strategy: [dam, rmdg], assess: {demand: 3, policy: 3, strategy: 2, feasibility: 1, capacity: 1, inclusion: 1}}
+  - {id: BL-23, type: content, title: Agreed metadata terms for the four missing properties, story: "As a catalogue manager, I need agreed terms for every required property, so that our records match everyone else's.", source: OR-06, status: later, strategy: [dam, ndl], assess: {demand: 2, policy: 3, strategy: 2, feasibility: 1, capacity: 1, inclusion: 0}}
+  - {id: BL-24, type: research, title: Welsh language needs, story: "As someone in a Welsh public body, I may need the portal in Welsh, so that we can meet our language duties.", source: Research question, status: later, strategy: [rmdg], assess: {demand: 0, policy: 1, strategy: 1, feasibility: 1, capacity: 0, inclusion: 3}}
+  - {id: BL-25, type: feature, title: A chatbot hosted by this portal, story: "As a reader, I would like to chat with the guidance.", source: Reuse decision, status: out, reason: "Out of scope: the portal runs no server and sends nothing anywhere. Assistants your organisation approves can use its open data and MCP server instead (Use and reuse).", strategy: [rmdg], assess: {demand: 1, policy: 0, strategy: 2, feasibility: 0, capacity: 0, inclusion: 0}}
+  decisions:
+  - {date: '2026-11-05', item: BL-05, decision: Research, roadmap and ideas published in the open, why: "Working in the open lets users see and shape priorities; modelled on the data.gov.uk roadmap."}
+  - {date: '2026-11-05', item: BL-25, decision: A hosted chatbot is out of scope, why: "No server, nothing sent anywhere; open data and the MCP server serve approved assistants instead."}
+  - {date: '2026-11-05', item: BL-10, decision: "Round 1 waits until Round 0 has recruited for every role", why: "Usability sessions need 5 to 8 people per role, including disabled people."}
+  - {date: '2026-11-05', item: BL-11, decision: "Accessibility sessions wait until Round 0 has recruited assistive technology users", why: "The score says Now, but sessions cannot start without participants; the sign-up form (BL-12) and recruitment (BL-13) come first."}
+  - {date: '2026-11-05', item: BL-18, decision: Asking questions in your own words stays in Later, why: "The score says Next, but it needs a way to answer without a server or sending anything anywhere; the open data and MCP server already let approved assistants do this."}
+  - {date: '2026-11-05', item: BL-23, decision: Agreed metadata terms stay in Later, why: "The score says Next, but the terms are for the metadata standards owner to agree, not this portal; the proposed crosswalk stays on the cataloguing page meanwhile."}

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.9.0 (2026-11-05)
+- Have your say (`research.html`), linked from the top of every page: user research, the roadmap, the backlog and ideas, in the open.
+  - Take part: six ways to take part (interview, usability session, tree test, survey, accessibility session, review panel), who we want to hear from, a private sign-up (never GitHub), how participants' information is looked after, four research rounds tied to the research plan's hypotheses, and an email link to introduce the portal to a team.
+  - Roadmap: Now, Next and Later, with Done and Out of scope, modelled on the data.gov.uk roadmap. Now holds at most 5 items.
+  - Backlog: 21 items written as user stories, each with where it came from (open register, research, ideas, the portal comparison), filterable, and downloadable as CSV and JSON.
+  - Ideas and voting: GitHub Discussions (Ideas category) with an idea form; the most voted ideas are read at each build by `tools/ideas.py`, which drops any title with an address and never fails the build. Votes count towards user demand.
+  - How we prioritise: six weighted criteria (user demand 25, DAM Policy 20, government strategy 20, feasibility 15, capacity 10, inclusion 10), the score formula with a worked example, what each score suggests, the government strategies items are aligned to, and a decisions log for every item placed differently from its score. The strategic roadmap for public sector data is listed as in development and unconfirmed: announced for April 2026, not found published on 5 November 2026.
+- Six verified rulebook entries: A roadmap for modern digital government 2025 to 2030, four GOV.UK Service Manual user research pages, and the data.gov.uk roadmap.
+- New check C-36 (Have your say on every page, private sign-up, idea links only to this repository, scores recomputed and matched, Now limit, decisions for every override, unconfirmed strategy labelled, no addresses), proved by nine deliberate breaks, with five build-time rejections and tests for the ideas reader.
+- Fixed (D-029): re-vendoring icons would have dropped 11 icons; the vendor list now covers every icon and a test checks it.
+
 ## 1.8.3 (2026-11-05)
 - Related elsewhere links to the new parts of the Data Quality Commons (release 2.10.0): the standards catalogue (open standards for data, digital, cyber and technology with their GOV.UK status) on the cataloguing and tools pages; the Commons data management wheel and "Three portals, one journey", where a DAMA area, role or standard can be traced through all three portals, on the capability model page; and data quality in change programmes on the delivery and change page. The metadata weaver signpost now mentions its DQV output.
 - The Commons now links back: its wheel areas and roles open the same area (`capability-model.html#dm-xx`) and role (`together.html#role-CODE`) here, and its page "Three portals, one journey" reads this portal's `data/xref.json` to check the shared keys still match. The estate compass's table of links between the portals is updated to say so.

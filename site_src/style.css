@@ -628,3 +628,18 @@ a.btn{text-decoration:none}.ms-form a.btn.secondary{background:var(--bg);border:
 .rel-portal{font-size:.9rem;color:var(--secondary)}
 .rel-status{display:inline-block;font-size:.8rem;font-weight:700;border:1px solid var(--border);padding:0 .4rem;margin-left:.25rem;color:var(--text);background:var(--bg)}
 .compass-link{margin:.75rem 0 0;font-weight:700}.compass-link .i{margin-right:.35rem}
+/* Version 1.9: Have your say (roadmap board, status badges, scores) */
+body[data-section="research"]{--accent:#00695c;--accent-bg:#e0f2f1}
+.rm-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem;margin:1rem 0}
+.rm-col{background:var(--panel);padding:.5rem .75rem;border-top:5px solid var(--accent);border-radius:.35rem}
+.rm-col h3{margin:.25rem 0}
+.rm-col .count{font-size:.9rem;font-weight:700;margin-left:.25rem}
+.rm-card h4{margin:.1rem 0 .25rem;font-size:1.05rem}
+.rm-card p{margin:.25rem 0}
+.rm-badge{display:inline-block;font-weight:700;font-size:.85rem;padding:0 .5rem;border:2px solid currentColor;border-radius:999px}
+.rm-badge.rm-now{color:#00703c}.rm-badge.rm-next{color:#1d70b8}.rm-badge.rm-later{color:#505a5f}.rm-badge.rm-done{color:#0b0c0c}.rm-badge.rm-out{color:#942514}
+[data-theme="dark"] .rm-badge{color:var(--text)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rm-badge{color:var(--text)}}
+.score{display:inline-block;font-weight:700;background:var(--accent-bg);color:var(--text);padding:0 .5rem;border-radius:.25rem}
+ol.ideas li{margin:.35rem 0}
+ol.scale{margin:0;padding-left:1.6rem}ol.scale li{margin:0}
