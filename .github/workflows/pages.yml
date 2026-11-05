@@ -36,6 +36,7 @@ jobs:
         id: health
         run: |
           set +e
+          mkdir -p build
           python tools/health.py --out build/status.json > build/health.txt
           echo "code=$?" >> "$GITHUB_OUTPUT"
           cat build/health.txt
