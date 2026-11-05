@@ -18,6 +18,7 @@ import argparse
 import datetime as dt
 import json
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -117,16 +118,26 @@ def external_links(site):
     out = []
     for u in sorted(urls):
         row = {'url': u, 'state': 'ok'}
-        try:
-            code, _ = fetch(u)
-        except urllib.error.HTTPError as e:
-            code = e.code
-        except (urllib.error.URLError, TimeoutError, ValueError, OSError) as e:
-            code, row['detail'] = None, str(e)[:120]
+        code = None
+        for attempt in range(3):  # D-019: retry, because a single 5xx or timeout is not evidence of a broken link
+            try:
+                code, _ = fetch(u)
+                row.pop('detail', None)
+            except urllib.error.HTTPError as e:
+                code = e.code
+            except (urllib.error.URLError, TimeoutError, ValueError, OSError) as e:
+                code, row['detail'] = None, str(e)[:120]
+            if code is not None and code < 500:
+                break
+            time.sleep(2 * (attempt + 1))
         row['code'] = code
         if code in (401, 403, 405, 429):
             row['state'] = 'blocked'  # the site refuses automated checks; not a broken link
-        elif code is None or code >= 400:
+        elif code in (404, 410):
+            row['state'] = 'broken'
+        elif code is None or code >= 500:
+            row['state'] = 'unavailable'  # still failing after retries; reported, but not counted as broken
+        elif code >= 400:
             row['state'] = 'broken'
         out.append(row)
     return out
@@ -175,6 +186,7 @@ def main(argv=None):
         'healthy': not problems, 'problems': problems, 'sources': sources, 'pages': weights,
         'envelope_bytes': PAGE_ENVELOPE, 'links': links, 'anchors': anchors,
         'links_checked': len(links), 'links_blocked': sum(1 for l in links if l['state'] == 'blocked'),
+        'links_unavailable': sum(1 for l in links if l['state'] == 'unavailable'),
     }
     out = Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)

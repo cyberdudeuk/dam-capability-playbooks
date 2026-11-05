@@ -1742,14 +1742,16 @@ class Site:
         good = st['healthy']
         srows = [[E(x['title']), f'<strong class="status s-{"completed" if x["state"] == "ok" else "in-progress" if x["state"] == "unbaselined" else "not-started"}">{E(x["state"])}</strong>', E(x.get('updated') or '-'), E(x['detail'] or '-')] for x in st['sources']]
         prow = [[E(x['page']), f'{x["bytes"] / 1000:.0f} kB', 'Within envelope' if x['ok'] else 'Over envelope'] for x in st['pages']]
-        probs = ul(st['problems']) if st['problems'] else '<p>No problems found.</p>'
+        # D-019: problems quote addresses; show the portal's own repository by role, not by its owner's account name
+        repo_url = f'https://github.com/{self.m["repo"]}'
+        probs = ul([p.replace(repo_url, "the portal's repository") for p in st['problems']]) if st['problems'] else '<p>No problems found.</p>'
         body = self.hero('activity', 'Status', 'Status and health', 'Results of the latest automated health run. It checks that sources are current, the review date has not passed and pages stay light.',
                          meta=[('circle-check' if good else 'triangle-alert', 'Healthy' if good else 'Needs attention'), ('clock', f'Run {st["generated"]}'), ('calendar-check', f'Review due {st["review_date"]}')])
         body += f'''<h2 id="problems">{icon("triangle-alert")} Problems</h2>{probs}
 <p>Problems open an issue in the <a href="https://github.com/{E(self.m["repo"])}/issues?q=label%3Ahealth">repository's issue list</a> for a person to act on.</p>
 <h2 id="sources">{icon("library")} Sources</h2>{table("t-src-health", "Source checks", ["Source", "State", "Last updated (GOV.UK)", "Detail"], srows)}
 <h2 id="weight">{icon("gauge")} Page weight</h2><p>Envelope: {st["envelope_bytes"] // 1000} kB per page including shared files.</p>{table("t-weight", "Page weight", ["Page", "Weight", "Result"], prow)}
-<h2 id="links">{icon("link")} External links</h2><p>{st.get("links_checked", 0)} links checked; {st.get("links_blocked", 0)} sites refused automated checking (not counted as broken); {sum(1 for l in st.get("links", []) if l["state"] == "broken")} broken.</p>
+<h2 id="links">{icon("link")} External links</h2><p>{st.get("links_checked", 0)} links checked; {st.get("links_blocked", 0)} sites refused automated checking and {st.get("links_unavailable", 0)} were temporarily unavailable (neither counted as broken); {sum(1 for l in st.get("links", []) if l["state"] == "broken")} broken.</p>
 <h2 id="signposts">{icon("signpost")} Signposted sections</h2><p>{sum(x["checked"] for x in st.get("anchors", []))} GOV.UK sections linked from the capability model checked across {len(st.get("anchors", []))} pages; {sum(len(x["missing"]) for x in st.get("anchors", []))} no longer found.</p>
 <p>Machine-readable: <a href="data/status.json">status.json</a>.</p>'''
         drawer = [{'label': 'Status', 'icon': 'activity', 'items': [{'id': 'problems', 'label': 'Problems', 'icon': 'triangle-alert', 'count': len(st['problems'])},

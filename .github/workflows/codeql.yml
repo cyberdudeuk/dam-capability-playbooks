@@ -37,7 +37,7 @@ jobs:
         run: |
           asset=codeql-bundle-linux64.tar.gz
           want=$(gh api "repos/github/codeql-action/releases/tags/${CODEQL_BUNDLE}" --jq ".assets[] | select(.name == \"${asset}\") | .digest")
-          curl -sSfL -o "$RUNNER_TEMP/$asset" "https://github.com/github/codeql-action/releases/download/${CODEQL_BUNDLE}/${asset}"
+          curl -sSfL --retry 5 --retry-all-errors --retry-delay 10 -o "$RUNNER_TEMP/$asset" "https://github.com/github/codeql-action/releases/download/${CODEQL_BUNDLE}/${asset}"
           got="sha256:$(sha256sum "$RUNNER_TEMP/$asset" | cut -d' ' -f1)"
           if [ -z "$want" ] || [ "$want" != "$got" ]; then echo "::error::CodeQL bundle digest mismatch (published ${want:-none}, downloaded $got)"; exit 1; fi
           tar -xzf "$RUNNER_TEMP/$asset" -C "$RUNNER_TEMP"

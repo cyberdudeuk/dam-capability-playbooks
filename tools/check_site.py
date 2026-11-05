@@ -472,11 +472,47 @@ def c24_actions_pinned(site, repo, pages):
     return errs
 
 
+EXPECTED_WORKFLOWS = {'pages.yml', 'codeql.yml', 'release.yml'}
+
+
+def c25_workflow_inventory(site, repo, pages):
+    """Rule (D-020): only the three reviewed workflows exist, and none publishes the raw repository instead of the built site."""
+    wf = repo / '.github' / 'workflows'
+    found = {f.name for f in wf.glob('*.y*ml')} if wf.exists() else set()
+    errs = [f'unexpected workflow {n}: review it, then add it to EXPECTED_WORKFLOWS with the defect or decision that justifies it' for n in sorted(found - EXPECTED_WORKFLOWS)]
+    errs += [f'expected workflow {n} is missing' for n in sorted(EXPECTED_WORKFLOWS - found)]
+    for f in sorted(wf.glob('*.y*ml')) if wf.exists() else []:
+        t = f.read_text(encoding='utf-8')
+        if re.search(r'jekyll|source:\s*\./?\s*$', t, re.I | re.M):
+            errs.append(f'{f.name}: builds or publishes the repository root, not the generated site/ folder')
+    return errs
+
+
+# D-021: GitHub's generic noreply address under the username "noreply" belongs to an unrelated account, so commits made
+# with it were credited to that account. Only these identities may author or commit. Addresses are assembled at run
+# time so that no address appears in the repository as text (C-04).
+_AT, _GH = chr(64), 'users.noreply.github.com'
+ALLOWED_COMMIT_EMAILS = {f'68606121+cyberdudeuk{_AT}{_GH}', f'noreply{_AT}github.com', f'noreply{_AT}anthropic.com',
+                         f'49699333+dependabot[bot]{_AT}{_GH}', f'41898282+github-actions[bot]{_AT}{_GH}'}
+
+
+def c26_commit_identity(site, repo, pages):
+    """Rule (D-021): the latest commit is authored and committed by an identity GitHub links to the owner, a GitHub bot or the named assistant, never to an unrelated account."""
+    import subprocess
+    if not (repo / '.git').exists():
+        return []
+    r = subprocess.run(['git', '-C', str(repo), 'log', '-1', '--format=%ae%n%ce'], capture_output=True, text=True)
+    if r.returncode != 0:
+        return []
+    return [f'latest commit uses {e}, which GitHub may credit to an unrelated account' for e in r.stdout.split() if e not in ALLOWED_COMMIT_EMAILS]
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
           c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance, c21_no_restricted_licence_text,
-          c22_signposts_verified, c23_repository_metadata, c24_actions_pinned]
+          c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
+          c25_workflow_inventory, c26_commit_identity]
 
 
 def run(site, repo, only=None, quiet=False):

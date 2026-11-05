@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.1 (2026-11-05)
+- Fixed: one temporary server error from github.com counted as a broken link and blocked publishing (D-019). Links are now retried and only 404 and 410 count as broken; the Status page names the repository by role.
+- Fixed: a suggested Jekyll workflow and Pages publishing from main would have published raw repository files (D-020). Removed; Pages publishes the built site from gh-pages. New check C-25 keeps the workflow set to the three reviewed ones.
+- Commits from automated sessions are now attributed to the repository owner's own noreply address, so GitHub no longer credits an unrelated account named "noreply" (D-021).
+
 ## 1.4.0 (2026-11-05)
 - Capability model: 30 capabilities the DAM Policy, its guidance and adjacent rulebooks need, in six clusters. Each is flagged explicit, implicit or inferred, with 76 signposts to the exact GOV.UK section, maturity topics, Digital and Data framework skills, professions and industry model areas.
 - Government data maturity model shown by topic, theme and level with links to each topic, plus indicators for four DAM strands and crosswalks to CMMI, ISO 8000-61, DAMA-DMBOK and DCAM.

@@ -58,6 +58,41 @@ class HealthRun(unittest.TestCase):
         self.assertTrue(seen['accept'].startswith('text/html'), 'page checks must ask for HTML first (D-013)')
 
 
+    def test_d019_one_server_error_is_not_broken(self):
+        import health
+        calls = []
+
+        def flaky(url, timeout=20, accept=None):
+            calls.append(url)
+            if len(calls) == 1:
+                raise health.urllib.error.HTTPError(url, 504, 'Gateway Timeout', {}, None)
+            return 200, b''
+        d = Path(tempfile.mkdtemp(prefix='dcp-h-'))
+        (d / 'a.html').write_text('<a href="https://example.org/x">x</a>')
+        orig, sleep = health.fetch, health.time.sleep
+        health.fetch, health.time.sleep = flaky, (lambda s: None)
+        try:
+            rows = health.external_links(d)
+        finally:
+            health.fetch, health.time.sleep = orig, sleep
+            shutil.rmtree(d, ignore_errors=True)
+        self.assertEqual(rows[0]['state'], 'ok', 'a single 504 followed by success must not be reported as broken (D-019)')
+
+    def test_d019_persistent_server_error_is_unavailable_not_broken(self):
+        import health
+        def down(url, timeout=20, accept=None):
+            raise health.urllib.error.HTTPError(url, 503, 'Service Unavailable', {}, None)
+        d = Path(tempfile.mkdtemp(prefix='dcp-h-'))
+        (d / 'a.html').write_text('<a href="https://example.org/y">y</a>')
+        orig, sleep = health.fetch, health.time.sleep
+        health.fetch, health.time.sleep = down, (lambda s: None)
+        try:
+            rows = health.external_links(d)
+        finally:
+            health.fetch, health.time.sleep = orig, sleep
+            shutil.rmtree(d, ignore_errors=True)
+        self.assertEqual(rows[0]['state'], 'unavailable')
+
     def test_hl02_missing_anchor_is_reported(self):
         import json as _json
         import health
@@ -270,7 +305,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.4.0', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.4.1', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -280,6 +315,36 @@ class Vaccination(unittest.TestCase):
     def test_c24_unpinned_own_action(self):
         edit(self.r / '.github' / 'workflows' / 'codeql.yml', '    steps:\n', '    steps:\n      - uses: cyberdudeuk/some-action@v1\n')
         self.fails('c24_actions_pinned')
+
+    def test_c25_unexpected_workflow(self):
+        (self.r / '.github' / 'workflows' / 'jekyll-gh-pages.yml').write_text('name: x\non: push\njobs: {}\n', encoding='utf-8')
+        self.fails('c25_workflow_inventory')
+
+    def test_c25_publishes_repository_root(self):
+        edit(self.r / '.github' / 'workflows' / 'release.yml', 'permissions:', '# source: ./\npermissions:')
+        t = (self.r / '.github' / 'workflows' / 'release.yml').read_text()
+        (self.r / '.github' / 'workflows' / 'release.yml').write_text(t.replace('# source: ./', 'env:\n  source: ./'), encoding='utf-8')
+        self.fails('c25_workflow_inventory')
+
+    def test_d019_status_page_hides_owner_account(self):
+        import json as _json
+        st = {'generated': 'x', 'today': '2026-11-05', 'review_date': '2027-02-05', 'review_due': False, 'healthy': False,
+              'problems': ['Broken link: https://github.com/cyberdudeuk/dam-capability-playbooks/releases (404)'], 'sources': [], 'pages': [],
+              'envelope_bytes': 1, 'links': [], 'anchors': []}
+        (self.r / 'build').mkdir(exist_ok=True)
+        site = build.Site(build.load(self.r / 'content' / 'playbooks.yaml'), self.s)
+        site.status = st
+        site.build()
+        failed = check_site.run(self.s, self.r, only={'c17_no_personal_details'}, quiet=True)
+        self.assertEqual(failed, {}, 'the Status page must not print the owner account name (D-019)')
+
+    def test_c26_unrelated_commit_identity(self):
+        import subprocess
+        g = ['git', '-C', str(self.r)]
+        subprocess.run(g + ['init', '-q'], check=True)
+        subprocess.run(g + ['add', 'README.md'], check=True)
+        subprocess.run(g + ['-c', 'user.name=x', '-c', 'user.email=noreply' + chr(64) + 'users.noreply.github.com', 'commit', '-q', '-m', 'x'], check=True)
+        self.fails('c26_commit_identity')
 
     def test_build_rejects_unverified_signpost(self):
         y = self.r / 'content' / 'frameworks.yaml'
