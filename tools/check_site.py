@@ -582,6 +582,9 @@ def c28_open_data_catalogue(site, repo, pages):
         if 'href="data/catalogue.jsonld"' not in (site / name).read_text(encoding='utf-8'):
             errs.append(f'{name}: no link to the open data catalogue in its header')
     dp = site / 'data.html'
+    if dp.exists():
+        linked = set(re.findall(r'href="data/([^"#]+)"', dp.read_text(encoding='utf-8')))
+        errs += [f'data.html: no download link for data/{f} (D-030)' for f in sorted(urls - linked) if f]
     if not dp.exists() or '"@type":"Dataset"' not in dp.read_text(encoding='utf-8').replace('": "', '":"'):
         errs.append('data.html: no schema.org Dataset markup')
     return errs
@@ -933,6 +936,111 @@ def c36_have_your_say(site, repo, pages):
     return errs
 
 
+def c37_involvement_and_reuse(site, repo, pages):
+    """Rule (version 1.10): boards and networks each show purpose, terms of reference status, provenance and a source link; Get involved shows every route,
+    template and badge, and every badge exists as valid SVG and PNG; every requirement and capability has an embed page that links back; the releases feed
+    lists the current version; the ontology and lineage parse; the offline copy holds every page; every capability has a Check this flag link; every page
+    but the accessibility statement and 404 shows its level; and no address appears in any of it."""
+    import yaml
+    import zipfile
+    import xml.etree.ElementTree as ET
+    errs = []
+    F = yaml.safe_load((repo / 'content' / 'frameworks.yaml').read_text(encoding='utf-8'))
+    P = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    version = P['meta']['version']
+    for name in pages:
+        if name not in ('404.html', 'accessibility.html') and 'class="level-tag' not in (site / name).read_text(encoding='utf-8'):
+            errs.append(f'{name}: no level label')
+    b = (site / 'bodies.html').read_text(encoding='utf-8') if (site / 'bodies.html').exists() else ''
+    if not b:
+        errs.append('bodies.html missing')
+    for x in F['bodies']['items']:
+        i = b.find(f'<li class="cr-card body-card" id="{x["id"]}"')
+        if i < 0:
+            errs.append(f'bodies: {x["id"]} missing'); continue
+        ends = [j for j in (b.find('<li class="cr-card body-card"', i + 1), b.find('</ul><h2', i)) if j > 0]
+        c = b[i:min(ends) if ends else len(b)]
+        for need, what in (('Purpose:', 'purpose'), ('Terms of reference', 'terms of reference'), ('class="prov', 'provenance'), (f'href="{x["url"]}"', 'source link')):
+            if need not in c:
+                errs.append(f'bodies: {x["id"]} has no {what}')
+    v = (site / 'involve.html').read_text(encoding='utf-8') if (site / 'involve.html').exists() else ''
+    if not v:
+        errs.append('involve.html missing')
+    for r in F['involve']['routes']:
+        if f'id="{r["id"]}"' not in v:
+            errs.append(f'involve: route {r["id"]} missing')
+    for t in F['involve']['toolkit']:
+        if f'id="{t["id"]}-text"' not in v:
+            errs.append(f'involve: template {t["id"]} missing')
+    for bd in F['involve']['badges']:
+        if f'id="badge-{bd["id"]}"' not in v:
+            errs.append(f'involve: badge {bd["id"]} not described')
+        sv, pn = site / 'badges' / f'{bd["id"]}.svg', site / 'badges' / f'{bd["id"]}.png'
+        try:
+            root = ET.fromstring(sv.read_text(encoding='utf-8'))
+            if root.find('{http://www.w3.org/2000/svg}title') is None or not root.get('aria-label'):
+                errs.append(f'badges/{bd["id"]}.svg: no title or label')
+        except (OSError, ET.ParseError):
+            errs.append(f'badges/{bd["id"]}.svg: missing or not valid SVG')
+        if not pn.exists() or pn.read_bytes()[:8] != b'\x89PNG\r\n\x1a\n':
+            errs.append(f'badges/{bd["id"]}.png: missing or not a PNG')
+    if not (repo / '.github' / 'ISSUE_TEMPLATE' / 'badge-claim.yml').exists() or 'template=badge-claim.yml' not in v:
+        errs.append('involve: badge claim form missing')
+    ids = [r['id'] for r in P['requirements']] + [c['id'] for c in F['capmap']]
+    for i in ids:
+        f = site / 'embed' / f'{i}.html'
+        if not f.exists():
+            errs.append(f'embed/{i}.html missing'); continue
+        h = f.read_text(encoding='utf-8')
+        m = re.search(r'href="([^"]+)" target="_top"', h)
+        if "default-src 'none'" not in h or not m:
+            errs.append(f'embed/{i}.html: no strict CSP or no link back')
+            continue
+        page, _, frag = m.group(1).split('/')[-1].partition('#')
+        if page not in pages or (frag and frag not in pages[page].ids):
+            errs.append(f'embed/{i}.html: links to missing {page}#{frag}')
+    try:
+        feed = ET.fromstring((site / 'feed.xml').read_text(encoding='utf-8'))
+        titles = [e.findtext('{http://www.w3.org/2005/Atom}title') for e in feed.findall('{http://www.w3.org/2005/Atom}entry')]
+        if f'Release {version}' not in titles:
+            errs.append(f'feed.xml: no entry for {version}')
+    except (OSError, ET.ParseError):
+        errs.append('feed.xml missing or not valid XML')
+    try:
+        import rdflib
+        for n in ('ontology.ttl', 'lineage.ttl'):
+            g = rdflib.Graph().parse(site / 'data' / n, format='turtle')
+            if len(g) < 20:
+                errs.append(f'data/{n}: too few statements ({len(g)})')
+    except ImportError:
+        pass
+    except Exception as e:
+        errs.append(f'ontology or lineage does not parse: {type(e).__name__}')
+    try:
+        with zipfile.ZipFile(site / 'dam-playbooks-offline.zip') as z:
+            names = set(z.namelist())
+        for p in pages:
+            if f'dam-playbooks/{p}' not in names:
+                errs.append(f'offline copy: {p} missing')
+    except (OSError, zipfile.BadZipFile):
+        errs.append('offline copy missing or not a zip')
+    cm = (site / 'capability-model.html').read_text(encoding='utf-8')
+    for c in F['capmap']:
+        if not re.search(rf'template=flag-check\.yml[^"]*capability={c["id"]}\b', cm):
+            errs.append(f'capability-model: {c["id"]} has no Check this flag link')
+    if not (repo / '.github' / 'ISSUE_TEMPLATE' / 'flag-check.yml').exists():
+        errs.append('flag-check.yml issue form missing')
+    if '`' in visible_text(site / 'whats-new.html'):
+        errs.append("whats-new.html: shows raw Markdown backticks (D-031)")
+    if 'data-ask' not in (site / 'index.html').read_text(encoding='utf-8'):
+        errs.append('index: no Ask a question box')
+    for name in ['bodies.html', 'involve.html', 'feed.xml', 'data/lineage.ttl'] + [f'badges/{bd["id"]}.svg' for bd in F['involve']['badges']] + [f'embed/{i}.html' for i in ids]:
+        p = site / name
+        if p.exists() and EMAIL.search(p.read_text(encoding='utf-8')):
+            errs.append(f'{name}: contains an address')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -940,7 +1048,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
-          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say]
+          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse]
 
 
 def run(site, repo, only=None, quiet=False):

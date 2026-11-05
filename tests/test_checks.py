@@ -308,7 +308,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.9.0', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.10.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -431,7 +431,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c31_navigation_aids')
 
     def test_c32_mcp_version_mismatch(self):
-        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.9.0'", "'version': '0.0.1'")
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.10.0'", "'version': '0.0.1'")
         self.fails('c32_mcp_server')
 
     def test_c32_mcp_tool_undescribed(self):
@@ -625,10 +625,85 @@ class Vaccination(unittest.TestCase):
         self._rejects("item: BL-11, decision:", "item: BL-12, decision:")
 
     def test_build_rejects_now_over_limit(self):
-        self._rejects('wip_limit: 5', 'wip_limit: 3')
+        self._rejects('wip_limit: 5', 'wip_limit: 2')
 
     def test_build_rejects_unknown_open_register_source(self):
         self._rejects('source: OR-15,', 'source: OR-95,')
+
+    def test_c28_d030_data_page_missing_download(self):
+        edit(self.s / 'data.html', 'href="data/backlog.csv"', 'href="data/backlogx.csv"', count=99)
+        self.fails('c28_open_data_catalogue')
+
+    # -- version 1.10: involvement and reuse (C-37) -------------------------------------------------
+    def test_c37_d031_backticks_on_whats_new(self):
+        edit(self.s / 'whats-new.html', '<code>', '`', count=99)
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_body_without_source(self):
+        edit(self.s / 'bodies.html', 'href="https://www.gov.uk/government/groups/open-standards-board" rel="noopener"', 'href="#" rel="noopener"')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_missing_badge_png(self):
+        (self.s / 'badges' / 'champion.png').unlink()
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_broken_badge_svg(self):
+        edit(self.s / 'badges' / 'tester.svg', '</svg>', '')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_missing_toolkit_template(self):
+        edit(self.s / 'involve.html', 'id="TK-SLACK-text"', 'id="TK-GONE-text"')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_missing_embed(self):
+        (self.s / 'embed' / 'DAM-R03.html').unlink()
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_embed_links_nowhere(self):
+        edit(self.s / 'embed' / 'CR-01.html', 'capability-model.html#CR-01', 'capability-model.html#CR-99')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_feed_without_current_version(self):
+        import yaml
+        v = yaml.safe_load((self.r / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))['meta']['version']
+        edit(self.s / 'feed.xml', f'<title>Release {v}</title>', '<title>Release 0.0.0</title>')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_lineage_does_not_parse(self):
+        p = self.s / 'data' / 'lineage.ttl'
+        p.write_text(p.read_text(encoding='utf-8') + '\nthis is not turtle <\n', encoding='utf-8')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_offline_copy_incomplete(self):
+        import zipfile
+        z = self.s / 'dam-playbooks-offline.zip'
+        with zipfile.ZipFile(z) as src:
+            keep = [(n, src.read(n)) for n in src.namelist() if not n.endswith('/tooling.html')]
+        with zipfile.ZipFile(z, 'w') as dst:
+            for n, b in keep:
+                dst.writestr(n, b)
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_capability_without_flag_check(self):
+        edit(self.s / 'capability-model.html', 'capability=CR-05&', 'capability=XX-05&')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_page_without_level(self):
+        edit(self.s / 'quality.html', 'class="level-tag', 'class="lvl-gone')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_c37_address_in_toolkit(self):
+        edit(self.s / 'involve.html', '[Your name]', 'team' + chr(64) + 'example.gov.uk')
+        self.fails('c37_involvement_and_reuse')
+
+    def test_build_rejects_email_in_toolkit(self):
+        self._rejects('      [Your name]\n  - id: TK-TEAMS', '      mail us at a' + chr(64) + 'b.gov.uk\n  - id: TK-TEAMS')
+
+    def test_build_rejects_unknown_badge_on_route(self):
+        self._rejects('badge: explorer}', 'badge: wizard}')
+
+    def test_build_rejects_body_without_terms_status(self):
+        self._rejects('    tor: Terms of reference not found published on GOV.UK.\n', "    tor: ''\n")
 
 
 class IdeasRun(unittest.TestCase):

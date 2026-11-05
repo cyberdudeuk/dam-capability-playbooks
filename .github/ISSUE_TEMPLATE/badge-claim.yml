@@ -1,0 +1,44 @@
+name: Claim a badge or become a champion
+description: Claim a Contributor, Reviewer, Champion or Ambassador badge for helping with the portal
+title: "[Badge] "
+labels: ["badge"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is public and shows your GitHub username only. Do not include your name, colleagues' names, your organisation's internal details or anything above OFFICIAL.
+        Badges recognise help with a prototype. They are not an official government credential.
+  - type: dropdown
+    id: badge
+    attributes:
+      label: Which badge?
+      options:
+        - Contributor
+        - Reviewer
+        - Champion (or I want to become one)
+        - Ambassador
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What you did
+      description: "For Contributor, link the idea, issue or pull request. For Champion, say what you did with your team, without names. For Ambassador, name the community or event."
+    validations:
+      required: true
+  - type: dropdown
+    id: listed
+    attributes:
+      label: May we list your GitHub username under Recognition on the portal?
+      options:
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I have not included names, personal data or anything above OFFICIAL
+          required: true

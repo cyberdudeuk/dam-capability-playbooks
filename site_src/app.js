@@ -465,4 +465,49 @@
     $$('[data-tour]').forEach(function (b) { b.hidden = false; b.addEventListener('click', function () { start(b.getAttribute('data-tour')); }); });
     var m = /[#&]tour=([a-z0-9-]+)/.exec(location.hash); if (m) setTimeout(function () { start(m[1]); }, 200);
   }
+  /* the portal's own address, filled from the page address (version 1.10) */
+  var siteBase = location.protocol === 'file:' ? '' : location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
+  if (siteBase) $$('[data-site-addr]').forEach(function (s) { s.textContent = siteBase; });
+
+  /* copy text blocks (version 1.10): toolkit templates, badge code and embed code */
+  $$('[data-copy-target]').forEach(function (b) {
+    var src = doc.getElementById(b.getAttribute('data-copy-target'));
+    if (!src) return;
+    b.hidden = false;
+    b.addEventListener('click', function () {
+      var st = b.parentNode.querySelector('.copy-status');
+      var done = function (ok) { if (st) st.textContent = ok ? 'Copied.' : 'Could not copy. Select the text and copy it.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(src.textContent).then(function () { done(true); }, function () { done(false); });
+      else done(false);
+    });
+  });
+
+  /* ask a question (version 1.10, BL-18): ranks this portal's own pages in the browser; nothing is sent anywhere */
+  var askF = $('[data-ask]');
+  if (askF) {
+    var STOP = ' a an and are as at be by can do does for from how i if in is it me my of on or our should the their them this to us we what when where which who why will with you your ';
+    var askOut = doc.getElementById('ask-out');
+    var words = function (s) { return (s || '').toLowerCase().replace(/[^a-z0-9\- ]+/g, ' ').split(/\s+/).filter(function (w) { return w.length > 1 && STOP.indexOf(' ' + w + ' ') < 0; }); };
+    var stem = function (w) { return w.replace(/(ies|es|s|ing|ed)$/, ''); };
+    askF.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var q = askF.querySelector('input').value, qs = words(q).map(stem), idx2 = window.DCP_INDEX || [];
+      while (askOut.firstChild) askOut.removeChild(askOut.firstChild);
+      if (!qs.length) { askOut.textContent = 'Type a question with a few key words.'; return; }
+      var scored = idx2.map(function (it) {
+        var tw = words(it.t).map(stem), sw = words(it.s).map(stem), sc = 0, hit = 0;
+        qs.forEach(function (w) { var a = tw.indexOf(w) >= 0, b = sw.indexOf(w) >= 0; if (a) sc += 3; if (b) sc += 1; if (a || b) hit++; });
+        return { it: it, sc: sc + hit * 2, hit: hit };
+      }).filter(function (x) { return x.hit > 0; }).sort(function (a, b) { return b.sc - a.sc; }).slice(0, 5);
+      if (!scored.length) { askOut.textContent = 'No page matched. Try other words, or use the contact form.'; return; }
+      var h = doc.createElement('p'); h.textContent = 'Pages that best match your question:'; askOut.appendChild(h);
+      var ol = doc.createElement('ol'); ol.className = 'ask-results';
+      scored.forEach(function (x) {
+        var li = doc.createElement('li'), a = doc.createElement('a'), k = doc.createElement('span'), s = doc.createElement('span');
+        a.href = x.it.u; a.textContent = x.it.t; k.className = 'hint'; k.textContent = ' ' + x.it.k; s.className = 'ask-snip'; s.textContent = x.it.s || '';
+        li.appendChild(a); li.appendChild(k); li.appendChild(doc.createElement('br')); li.appendChild(s); ol.appendChild(li);
+      });
+      askOut.appendChild(ol);
+    });
+  }
 })();

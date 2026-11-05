@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.10.0 (2026-11-05)
+- Boards, councils and networks (`bodies.html`, under Frameworks): 7 boards and groups that decide or advise (CDO Council, DSA Steering Board, Peer Review Group, Open Standards Board, the data and technology architecture design authority, Taxonomy Oversight Group, and the Data Steering Group, marked status unclear) and 10 communities and networks, each with purpose, aims, expected outcomes, link to the DAM Policy, how to take part and whether terms of reference are published; how standards and decisions flow; and where to take each kind of issue. Checked on GOV.UK and data.gov.uk on 5 November 2026. No email addresses are listed.
+- Get involved (`involve.html`): nine ways to take part, rules of engagement, how to improve the content, champions and ambassadors, a toolkit of ready-made text (email, Microsoft Teams, Slack, Viva Engage, intranet news, a 15 minute walk-through and an email signature line) with copy buttons, and six badges (Explorer, Tester, Contributor, Reviewer, Champion, Ambassador) as SVG and PNG with code for GitHub profiles, web pages and email signatures. Badges are claimed through a new public form that shows a GitHub username only.
+- Backlog items delivered: Check this flag on every capability (BL-15); embed pages for every requirement and capability (BL-16); level labels on every page and easy read summaries on eight pages (BL-17); Ask a question on the home page, answered in the browser from the portal's own pages (BL-18); an Atom releases feed (BL-19); an OWL ontology and PROV-O lineage from sources to requirements, pages and checks (BL-20); and an offline copy of the whole site (BL-21).
+- New check C-37 and browser check B-18, with 12 deliberate breaks, 3 build-time rejections and a new break mode.
+- Fixed (D-030): the Open data page said "1 files" and offered only a few downloads, because it was built before the data files existed. It is now built after them, lists every file, and C-28 checks every catalogued file has a download link.
+- Fixed (D-031): What's new showed raw Markdown backticks around file names; they now show as code.
+- Packs for the backlog items that need people (sign-up form, recruitment, clearance, expert review, metadata terms, Welsh) in `docs/backlog-packs.md`.
+
 ## 1.9.0 (2026-11-05)
 - Have your say (`research.html`), linked from the top of every page: user research, the roadmap, the backlog and ideas, in the open.
   - Take part: six ways to take part (interview, usability session, tree test, survey, accessibility session, review panel), who we want to hear from, a private sign-up (never GitHub), how participants' information is looked after, four research rounds tied to the research plan's hypotheses, and an email link to introduce the portal to a team.

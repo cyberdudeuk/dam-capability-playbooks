@@ -39,6 +39,12 @@ Add the Lucide icon name to `ICON_NAMES` in `tools/vendor_icons.py`, run `npm ci
 - **When the sign-up form is ready:** put its address in `research.signup.url` (Microsoft Forms or GOV.UK Forms only). Set it to accept responses from anyone and not to record names, and confirm the privacy notice and data controller with the data protection officer.
 - **When the strategic roadmap for public sector data is published:** add it to the rulebook, set its `ref` in `research.strategies`, and reassess every item's government strategy score.
 
+## Boards, networks, badges and backlog packs (version 1.10)
+- **Every 6 months:** re-check each entry in `bodies.items` against its source page and update `bodies.checked`. Never add an email address; link the page that has it.
+- **Badge claims:** review issues labelled `badge`; apply the badge label, reply, and list the GitHub username under Recognition only if the claimant said yes.
+- **Flag checks:** review issues labelled `flag-check` against the DAM Policy text; change the flag in `capmap` with a defect entry if they are right.
+- **Items that need people:** see `docs/backlog-packs.md`.
+
 ## Repository settings the owner keeps switched on
 Pages (source: Deploy from a branch, gh-pages, / (root); the workflow pushes the built site there), Issues, Discussions, private vulnerability reporting, Dependabot alerts, secret scanning,
 and branch protection on `main` requiring the "Build, check and publish" workflow and one review.

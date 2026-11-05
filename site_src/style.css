@@ -643,3 +643,22 @@ body[data-section="research"]{--accent:#00695c;--accent-bg:#e0f2f1}
 .score{display:inline-block;font-weight:700;background:var(--accent-bg);color:var(--text);padding:0 .5rem;border-radius:.25rem}
 ol.ideas li{margin:.35rem 0}
 ol.scale{margin:0;padding-left:1.6rem}ol.scale li{margin:0}
+/* Version 1.10: levels, easy read, ask, boards flow, badges, toolkit */
+.level-tag{display:inline-flex;align-items:center;gap:.25rem;margin-left:.6rem;font-size:.8rem;font-weight:700;padding:0 .5rem;border:2px solid currentColor;border-radius:999px;color:var(--text)}
+.level-tag svg.i{width:1rem;height:1rem}
+.easy-read{margin:.75rem 0;padding:.5rem .75rem;border-left:5px solid var(--accent);background:var(--panel);max-width:46rem}
+.easy-read summary{font-weight:700;cursor:pointer}
+.easy-read li{font-size:1.15rem;line-height:1.6;margin:.25rem 0}
+.ask{background:var(--panel);padding:.5rem 1rem 1rem;border-radius:.35rem;margin:1rem 0}
+.ask-row{display:flex;gap:.5rem;flex-wrap:wrap}.ask-row input{flex:1 1 16rem;min-height:2.5rem;font-size:1rem;padding:.25rem .5rem;border:2px solid var(--text)}
+.ask-results li{margin:.5rem 0}.ask-snip{color:var(--secondary);font-size:.95rem}
+ol.flow{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:0;margin:1rem 0;counter-reset:fl}
+ol.flow li{flex:1 1 12rem;position:relative;margin:0 1.5rem .75rem 0}
+ol.flow li:not(:last-child)::after{content:"\2192";position:absolute;right:-1.3rem;top:50%;transform:translateY(-50%);font-size:1.4rem;color:var(--accent)}
+.flow-step{display:block;height:100%;padding:.6rem .75rem;border:2px solid var(--accent);border-radius:.35rem;background:var(--accent-bg);color:var(--text);text-decoration:none}
+.flow-step strong{display:block}.flow-step span{font-size:.9rem}
+.flow-step:hover strong{text-decoration:underline}
+.toolkit pre.code,.snip pre.code{white-space:pre-wrap;word-break:break-word;max-height:22rem;overflow:auto}
+.snip{margin:.5rem 0}.snip summary{cursor:pointer;font-weight:700}
+.flag-check{font-size:.95rem}
+.notice-box>span{display:block}

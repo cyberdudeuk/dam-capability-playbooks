@@ -4873,16 +4873,20 @@ research:
   - {id: BL-12, type: feature, title: Private research sign-up form, story: "As a prospective participant, I need to sign up privately, so that my contact details are not published.", source: OR-02, status: now, strategy: [rmdg], assess: {demand: 3, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 2}}
   - {id: BL-13, type: research, title: "Round 0: introduce the portal and recruit participants", story: "As the service owner, I need a pool of participants from every role, organisation type and nation, so that research rounds can start quickly.", source: OR-04, status: now, strategy: [rmdg], assess: {demand: 3, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 2}}
   - {id: BL-14, type: content, title: Expert review of the sector supplements, story: "As a sector specialist, I need the supplements checked by people who know the sector, so that I can trust them.", source: OR-12, status: next, strategy: [dam], assess: {demand: 2, policy: 2, strategy: 1, feasibility: 2, capacity: 1, inclusion: 1}}
-  - {id: BL-15, type: feature, title: Check this flag, story: "As a policy coordinator, I need to tell you when a capability flag looks wrong, so that the capability model stays accurate.", source: OR-15, status: now, strategy: [dam], assess: {demand: 2, policy: 3, strategy: 1, feasibility: 3, capacity: 3, inclusion: 1}}
-  - {id: BL-16, type: feature, title: Embed a step or table on an intranet, story: "As a department's data team, I need to show one policy step or table on our intranet, so that colleagues see it where they work.", source: Comparison with the Data Quality Commons, status: next, strategy: [rmdg], assess: {demand: 1, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 1}}
-  - {id: BL-17, type: feature, title: Level labels and easy read summaries, story: "As someone new to data management, I need to know which pages are pitched at me and to read short plain summaries, so that I am not put off.", source: Comparison with the Data Quality Commons, status: next, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 3}}
-  - {id: BL-18, type: feature, title: Ask questions answered from the portal, story: "As a busy reader, I need to ask a question in my own words and get the page that answers it, so that I do not have to know where things are.", source: Comparison with the Data Quality Commons and the catalogue, status: later, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 3, feasibility: 2, capacity: 1, inclusion: 2}}
-  - {id: BL-19, type: feature, title: Releases feed and email-free updates, story: "As a returning user, I need to know when something changes, so that I keep up without checking the site.", source: Comparison with the Data Quality Commons, status: next, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 1}}
-  - {id: BL-20, type: feature, title: Lineage and ontology downloads, story: "As a metadata specialist, I need the requirement-to-check lineage and the ontology in open formats, so that I can reuse them in our tools.", source: Comparison with the catalogue, status: later, strategy: [ndl, dam], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 2, capacity: 2, inclusion: 0}}
-  - {id: BL-21, type: feature, title: One-file offline copy, story: "As someone whose network blocks GitHub Pages, I need a copy I can open offline, so that I can still use the guidance.", source: Comparison with the catalogue, status: later, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 1, feasibility: 2, capacity: 1, inclusion: 2}}
+  - {id: BL-15, type: feature, title: Check this flag, story: "As a policy coordinator, I need to tell you when a capability flag looks wrong, so that the capability model stays accurate.", source: OR-15, status: done, release: 1.10.0, strategy: [dam], assess: {demand: 2, policy: 3, strategy: 1, feasibility: 3, capacity: 3, inclusion: 1}}
+  - {id: BL-16, type: feature, title: Embed a step or table on an intranet, story: "As a department's data team, I need to show one policy step or table on our intranet, so that colleagues see it where they work.", source: Comparison with the Data Quality Commons, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 1, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 1}}
+  - {id: BL-17, type: feature, title: Level labels and easy read summaries, story: "As someone new to data management, I need to know which pages are pitched at me and to read short plain summaries, so that I am not put off.", source: Comparison with the Data Quality Commons, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 3}}
+  - {id: BL-18, type: feature, title: Ask questions answered from the portal, story: "As a busy reader, I need to ask a question in my own words and get the page that answers it, so that I do not have to know where things are.", source: Comparison with the Data Quality Commons and the catalogue, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 3, feasibility: 2, capacity: 1, inclusion: 2}}
+  - {id: BL-19, type: feature, title: Releases feed, story: "As a returning user, I need to know when something changes, so that I keep up without checking the site.", source: Comparison with the Data Quality Commons, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 1}}
+  - {id: BL-20, type: feature, title: Lineage and ontology downloads, story: "As a metadata specialist, I need the requirement-to-check lineage and the ontology in open formats, so that I can reuse them in our tools.", source: Comparison with the catalogue, status: done, release: 1.10.0, strategy: [ndl, dam], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 2, capacity: 2, inclusion: 0}}
+  - {id: BL-21, type: feature, title: Offline copy, story: "As someone whose network blocks GitHub Pages, I need a copy I can open offline, so that I can still use the guidance.", source: Comparison with the catalogue, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 1, policy: 1, strategy: 1, feasibility: 2, capacity: 1, inclusion: 2}}
   - {id: BL-22, type: decision, title: Clearance and an official home, story: "As a department, I need to know whether this is guidance I can rely on, so that I can use it in my organisation.", source: OR-03, status: now, strategy: [dam, rmdg], assess: {demand: 3, policy: 3, strategy: 2, feasibility: 1, capacity: 1, inclusion: 1}}
   - {id: BL-23, type: content, title: Agreed metadata terms for the four missing properties, story: "As a catalogue manager, I need agreed terms for every required property, so that our records match everyone else's.", source: OR-06, status: later, strategy: [dam, ndl], assess: {demand: 2, policy: 3, strategy: 2, feasibility: 1, capacity: 1, inclusion: 0}}
   - {id: BL-24, type: research, title: Welsh language needs, story: "As someone in a Welsh public body, I may need the portal in Welsh, so that we can meet our language duties.", source: Research question, status: later, strategy: [rmdg], assess: {demand: 0, policy: 1, strategy: 1, feasibility: 1, capacity: 0, inclusion: 3}}
+  - {id: BL-26, type: content, title: "Boards, councils and networks", story: "As a data leader, I need to know which boards decide, which advise and where practitioners meet, so that I can take issues to the right place.", source: Owner request, status: done, release: 1.10.0, strategy: [dam, rmdg], assess: {demand: 2, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 1}}
+  - {id: BL-27, type: feature, title: Get involved and champions toolkit, story: "As a champion in my organisation, I need ready-made posts, emails and a walk-through, so that I can bring my team in without extra work.", source: Owner request, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 2}}
+  - {id: BL-28, type: feature, title: Badges for taking part, story: "As someone who helps improve the portal, I want a badge for my profile and signature, so that my contribution is recognised.", source: Owner request, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 2, policy: 0, strategy: 1, feasibility: 3, capacity: 3, inclusion: 1}}
+  - {id: BL-29, type: content, title: Welsh language summaries, story: "As someone in a Welsh public body, I need key pages summarised in Welsh, so that we can meet our language duties.", source: BL-24, status: later, strategy: [rmdg], assess: {demand: 0, policy: 1, strategy: 1, feasibility: 1, capacity: 0, inclusion: 3}}
   - {id: BL-25, type: feature, title: A chatbot hosted by this portal, story: "As a reader, I would like to chat with the guidance.", source: Reuse decision, status: out, reason: "Out of scope: the portal runs no server and sends nothing anywhere. Assistants your organisation approves can use its open data and MCP server instead (Use and reuse).", strategy: [rmdg], assess: {demand: 1, policy: 0, strategy: 2, feasibility: 0, capacity: 0, inclusion: 0}}
   decisions:
   - {date: '2026-11-05', item: BL-05, decision: Research, roadmap and ideas published in the open, why: "Working in the open lets users see and shape priorities; modelled on the data.gov.uk roadmap."}
@@ -4891,3 +4895,320 @@ research:
   - {date: '2026-11-05', item: BL-11, decision: "Accessibility sessions wait until Round 0 has recruited assistive technology users", why: "The score says Now, but sessions cannot start without participants; the sign-up form (BL-12) and recruitment (BL-13) come first."}
   - {date: '2026-11-05', item: BL-18, decision: Asking questions in your own words stays in Later, why: "The score says Next, but it needs a way to answer without a server or sending anything anywhere; the open data and MCP server already let approved assistants do this."}
   - {date: '2026-11-05', item: BL-23, decision: Agreed metadata terms stay in Later, why: "The score says Next, but the terms are for the metadata standards owner to agree, not this portal; the proposed crosswalk stays on the cataloguing page meanwhile."}
+  - {date: '2026-11-05', item: BL-18, decision: "Asking questions built without a server", why: "Answers come from the portal's own search index in the reader's browser; nothing is sent anywhere, so the earlier feasibility concern is met."}
+  - {date: '2026-11-05', item: BL-21, decision: Offline copy built as a download of the whole site, why: "A single file would need every page inlined; a zip of the built site opens offline in any browser and stays in step with each release."}
+bodies:
+  intro: "Who decides, who advises and where practitioners meet, for data asset management in UK government. Each entry says what the body is for, how it relates to the DAM Policy and how you can take part. Facts were checked on GOV.UK and data.gov.uk on 5 November 2026; where terms of reference are not published, it says so."
+  checked: '2026-11-05'
+  flow:
+  - {id: networks, step: Communities of experts, does: "Spot problems, share practice and help develop proposals"}
+  - {id: GB-PRG, step: Peer Review Group, does: "Reviews products, proposals and standards"}
+  - {id: GB-DSASB, step: DSA Steering Board, does: "Endorses cross-government standards (final step)"}
+  items:
+  - id: GB-CDO
+    name: Chief Data Officer (CDO) Council
+    kind: Decision-making council
+    host: Government Digital Service
+    purpose: The decision-making body overseeing strategic delivery of Mission 3 of the National Data Strategy (government's own use of data).
+    aims: [Collective accountability for government's own use and reuse of data, Set future strategy as targets are met, "Help the Data Standards Authority identify strategic risks, problems and opportunities for common standards"]
+    outcomes: Strategic direction for data across government; it does not set specific data standards.
+    dam: DAM Policy artefacts such as the Data Ownership Model are presented to the CDO Council and its Executive before adoption.
+    engage: Through your organisation's chief data officer or equivalent senior data leader. Raise issues with them; the council is not open to direct membership.
+    tor: Terms of reference not found published on GOV.UK.
+    url: https://www.gov.uk/government/publications/data-standards-authority-operational-model-and-processes/data-standards-authority-operational-model-and-processes
+    caps: [gov]
+  - id: GB-DSASB
+    name: Data Standards Authority (DSA) Steering Board
+    kind: Endorsement board
+    host: Government Digital Service
+    purpose: A senior advisory group that supports the Data Standards Authority in setting cross-government data standardisation strategy and delivery plans.
+    aims: [Oversee the DSA's operations and priorities, Approve cross-government standards as the final step of endorsement, Drive implementation in member organisations, Monitor enforcement and assurance]
+    outcomes: Endorsed data standards for central government, and their implementation in member organisations.
+    dam: Endorsed the data quality action plan guidance and was presented the essential shared data assets policy and Data Ownership Model, which the DAM Policy builds on.
+    engage: Through your organisation's representative. Minutes are published, so you can follow decisions.
+    tor: Role set out in the DSA operational model; minutes published.
+    url: https://www.gov.uk/government/publications/meeting-minutes-for-the-data-standards-authority-governance-boards
+    caps: [gov, cat, dq]
+  - id: GB-PRG
+    name: Peer Review Group for the DSA and the Data Quality Hub
+    kind: Advisory group
+    host: Government Digital Service and the Office for National Statistics
+    purpose: Reviews products, proposals and standards before they go to the DSA Steering Board, and reviews products from the Government Data Quality Hub.
+    aims: [Shape the DSA's approach and priorities, "Help develop proposals, weighing cost, impact, skills and technical feasibility", Suggest priority areas for standardisation]
+    outcomes: Proposals that are tested by practitioners before endorsement.
+    dam: Reviews data quality and metadata products that the DAM Policy relies on.
+    engage: Through your organisation's representative, or by bringing evidence to a community that feeds it.
+    tor: Role set out in the DSA operational model; minutes published.
+    url: https://www.gov.uk/government/publications/meeting-minutes-for-the-data-standards-authority-governance-boards
+    caps: [gov, cat, dq]
+  - id: GB-OSB
+    name: Open Standards Board
+    kind: Standards board
+    host: Cabinet Office (Government Digital Service)
+    purpose: Accountable for the transparent selection and implementation of open standards for government.
+    aims: ["Consider open standards for software interoperability, data and document formats", Decide whether a standard is adopted or made compulsory, Make sure open standards are considered before government creates its own]
+    outcomes: Open standards that all of government must or should use, published with profiles on GOV.UK.
+    dam: The route for any data or metadata standard a DAM catalogue or tool should use; see Tools and interoperability.
+    engage: "Propose or support an open standards challenge; volunteer when members are recruited. Members serve 2 years and declare interests."
+    tor: Terms of reference on the group's GOV.UK page; terms and conditions for members published.
+    url: https://www.gov.uk/government/groups/open-standards-board
+    caps: [cat]
+  - id: GB-DTADA
+    name: Data and Technology Architecture Design Authority (DTADA)
+    kind: Design authority
+    host: Government Digital Service
+    purpose: The decision-making body for data architecture principles, policies, strategies and standards.
+    aims: [Commission and approve data architecture artefacts, Oversee the national reference data architecture, Approve domain conceptual data models, Coordinate with other design authorities]
+    outcomes: Joined-up data architecture across government. It is a sub-group of the CDO and CTO councils.
+    dam: Sets architecture that catalogues, data models and reference data used under the DAM Policy should follow.
+    engage: Through your organisation's architecture lead.
+    tor: Role set out in the DSA operational model; terms of reference not found published.
+    url: https://www.gov.uk/government/publications/data-standards-authority-operational-model-and-processes/data-standards-authority-operational-model-and-processes
+    caps: [gov, cat]
+  - id: GB-TOG
+    name: Taxonomy Oversight Group
+    kind: Oversight group
+    host: Government Data Architecture Community
+    purpose: Coordinates taxonomy work across government and recommends taxonomies for common use.
+    aims: [Oversee taxonomy proposals, Address taxonomy challenges, Recommend common taxonomies]
+    outcomes: Shared taxonomies that make catalogue records comparable.
+    dam: Relevant to the vocabulary and classification fields of a DAM catalogue record.
+    engage: Through the Government Data Architecture Community.
+    tor: Described in the DSA operational model; terms of reference not found published.
+    url: https://www.gov.uk/government/publications/data-standards-authority-operational-model-and-processes/data-standards-authority-operational-model-and-processes
+    caps: [cat]
+  - id: GB-DSG
+    name: Data Steering Group
+    kind: Strategic oversight group (status unclear)
+    host: Cabinet Office
+    purpose: Strategic oversight of the use and management of government's data, inside and outside the public sector.
+    aims: [Promote consistent approaches to data privacy and security, Support standards-based access to data, Champion data skills and open data, Review international data policy]
+    outcomes: Advice to ministers and the data programme.
+    dam: Historical context only. The page was updated in January 2026 but its latest minutes are from 2016, so whether it still meets is unclear.
+    engage: None known. Check GOV.UK before relying on it.
+    tor: Terms of reference on the group's GOV.UK page.
+    url: https://www.gov.uk/government/groups/data-steering-group
+    caps: [gov]
+    unclear: true
+  - id: NW-DMC
+    name: Data Management Community
+    kind: Community of practice
+    host: Government Digital Service
+    purpose: A cross-government network sharing practice on data quality, metadata, governance and data catalogues. It also maintains the DAM Policy.
+    aims: ["Share practice on governance, cataloguing and quality", Support departments adopting the DAM Policy, Gather feedback on guidance]
+    outcomes: Departments supported to adopt the DAM Policy, and guidance shaped by practitioners.
+    dam: The closest community to the DAM Policy itself. Bring what you learn from this portal here.
+    engage: Join through the Knowledge Hub; the data.gov.uk page has the link.
+    tor: Not found published.
+    url: https://data.gov.uk/data-manual/join-a-data-community
+    caps: [gov, cat, dq]
+  - id: NW-GDQC
+    name: Government Data Quality Community
+    kind: Community of practice
+    host: Government Data Quality Hub (Office for National Statistics)
+    purpose: A place for public sector data professionals to meet, share and learn about data quality, launched in 2022.
+    aims: [Connect people working on data quality, Share best practice and experience, Build capability and skills]
+    outcomes: Better data quality across government and the public sector.
+    dam: For data quality action plans, quality dimensions and reporting under the DAM Policy.
+    engage: Anyone in UK government or the public sector can join; contact the Data Quality Hub through its GOV.UK page.
+    tor: Not found published.
+    url: https://www.gov.uk/government/news/introducing-the-government-data-quality-community
+    caps: [dq]
+  - id: NW-DSNE
+    name: Data Sharing Network of Experts
+    kind: Expert network
+    host: Cross-government
+    purpose: Impartial advice to unblock data sharing, bringing together data protection, governance, security, privacy and policy specialists.
+    aims: [Share good practice on data sharing, Advise on complex cases, Develop guidance and frameworks]
+    outcomes: Data shared lawfully and faster.
+    dam: For data sharing agreements and access controls on critical data assets.
+    engage: Join through the Knowledge Hub; the data.gov.uk page has the link.
+    tor: Not found published.
+    url: https://data.gov.uk/data-manual/join-a-data-community
+    caps: [gov]
+  - id: NW-GDAC
+    name: Government Data Architecture Community
+    kind: Community of experts
+    host: Supported by the Data Standards Authority
+    purpose: A cross-government community of data architects; it includes the Taxonomy Oversight Group.
+    aims: [Identify architecture problems, Share practice, Review solutions]
+    outcomes: Proposals and patterns that feed the DSA and the design authority.
+    dam: For data models, reference data and catalogue structure.
+    engage: Through your organisation's architecture community or the DSA's GOV.UK pages.
+    tor: Not found published.
+    url: https://www.gov.uk/government/publications/data-standards-authority-operational-model-and-processes/data-standards-authority-operational-model-and-processes
+    caps: [cat]
+  - id: NW-API
+    name: API and data exchange community
+    kind: Community of practice
+    host: Cross-government
+    purpose: Shares knowledge and practice on APIs and interoperability, with monthly meetings and expert speakers.
+    aims: [Share API practice, Improve interoperability]
+    outcomes: APIs and data exchange that follow common standards.
+    dam: For publishing catalogue records and data through APIs.
+    engage: Open to anyone in government or the public sector; the data.gov.uk page says how.
+    tor: Not found published.
+    url: https://data.gov.uk/data-manual/join-a-data-community
+    caps: [cat]
+  - id: NW-ETH
+    name: Data and AI ethics community
+    kind: Community of practice
+    host: Cross-government
+    purpose: Discusses the ethical use of data, AI and technology in government, with events on transparency, trust and fairness.
+    aims: [Share ethical practice, "Discuss transparency, trust and fairness"]
+    outcomes: More ethical use of data and AI.
+    dam: For decisions about using critical data assets in AI and analytics.
+    engage: Open to public sector workers; the data.gov.uk page says how.
+    tor: Not found published.
+    url: https://data.gov.uk/data-manual/join-a-data-community
+    caps: [gov]
+  - id: NW-DENG
+    name: Data engineering community
+    kind: Community of practice
+    host: GOV.UK Service Manual communities
+    purpose: Supports people designing data products, automating data processes and applying data standards and models.
+    aims: [Share data engineering practice, Apply data standards and models]
+    outcomes: Data pipelines that build quality and metadata in.
+    dam: For automating quality rules and catalogue updates.
+    engage: Open to anyone in central government with an interest in data engineering.
+    tor: Not found published.
+    url: https://www.gov.uk/service-manual/communities/data-engineering-community
+    caps: [dq, cat]
+  - id: NW-QCH
+    name: Government Statistical Service quality champions
+    kind: Champions network
+    host: Government Data Quality Hub
+    purpose: Departmental quality champions who support statistical heads of profession, meeting monthly.
+    aims: [Share knowledge and good practice, Two-way flow of information between departments and the Data Quality Hub, Promote good practice rather than enforce compliance]
+    outcomes: Higher quality official statistics and easier compliance with the Code of Practice for Statistics.
+    dam: A model for champions networks, including this portal's own champions.
+    engage: Each department can nominate one or more champions; see the page.
+    tor: Role of a champion described on the page.
+    url: https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/champion-networks/quality-champions
+    caps: [dq]
+  - id: NW-DLCN
+    name: Data Linkage Champions Network
+    kind: Champions network
+    host: Office for National Statistics
+    purpose: A methodological network supporting colleagues involved in data linkage at all levels.
+    aims: [Champion appropriate linkage methods and software, Share knowledge across government, Implement the cross-government data linkage review recommendations]
+    outcomes: Better and more consistent data linkage.
+    dam: For linking and matching critical data assets, such as master and reference data.
+    engage: Champions and practitioners can attend and vote on changes to the network; see the page.
+    tor: Role of champions and co-chairs described on the page.
+    url: https://analysisfunction.civilservice.gov.uk/support/data-linkage/data-linkage-champion-network
+    caps: [dq]
+  - id: NW-NEWS
+    name: Data communities newsletter
+    kind: Newsletter
+    host: Government Digital Service
+    purpose: A monthly newsletter with news, events, learning and community updates for public sector data professionals.
+    aims: [Keep data professionals informed, Promote events and communities]
+    outcomes: People who know what is happening across the data communities.
+    dam: Announcements about the DAM Policy and its guidance.
+    engage: Sign up from the data.gov.uk page.
+    tor: Not applicable.
+    url: https://data.gov.uk/data-manual/join-a-data-community
+    caps: [gov, cat, dq]
+involve:
+  intro: "This portal is built in the open, and anyone can help: use it and tell us what works, test it, suggest and vote for ideas, improve the content, review it as an expert, or champion it in your own team. Every way of taking part is recognised with a badge."
+  rules:
+  - Follow the code of conduct. Be kind, assume good faith and stay on topic.
+  - Nothing above OFFICIAL, no personal data, and no email addresses anywhere.
+  - Name roles, not people. Credit is given by GitHub username, only if you choose.
+  - Every fact needs a source and a provenance label (see How sources are labelled).
+  - "Anyone can suggest a change. The owner reviews every change before it is published, and nobody is added as a collaborator except by the owner's invitation."
+  - Decisions are made in the open, through the roadmap and the decisions log on Have your say.
+  routes:
+  - {id: IN-USE, name: Use it and tell us, icon: message-square-text, time: 2 minutes, how: "Use the portal for real work, then use 'Was this page useful?' at the foot of any page, or the private feedback form.", link: contact.html, badge: explorer}
+  - {id: IN-TEST, name: Test it, icon: list-checks, time: About 20 minutes, how: "Try the tasks for your role on Help us test and say how each went.", link: test.html, badge: tester}
+  - {id: IN-RESEARCH, name: Take part in research, icon: clipboard-list, time: 5 to 90 minutes, how: "Sign up for a survey, interview, usability or accessibility session.", link: research.html#sign-up, badge: tester}
+  - {id: IN-IDEAS, name: Suggest and vote for ideas, icon: lightbulb, time: 5 minutes, how: "Post an idea in Discussions, vote for others, and add evidence in comments.", link: research.html#ideas, badge: contributor}
+  - {id: IN-CONTRIB, name: Improve the content, icon: pencil-line, time: As long as you like, how: "Report a problem, suggest a change to a page, add a source, or propose a sector supplement. Changes go through a reviewed pull request.", link: "#contribute", badge: contributor}
+  - {id: IN-REVIEW, name: Review as an expert, icon: badge-check, time: About an hour a month, how: "Join the review panel to check drafts, such as sector supplements, before they are published.", link: research.html#ways, badge: reviewer}
+  - {id: IN-CHAMP, name: Champion it in your team, icon: megaphone, time: 1 to 2 hours a month, how: "Introduce the portal to your team, run a short walk-through, and pass on what your team needs.", link: "#champions", badge: champion}
+  - {id: IN-AMB, name: Be an ambassador across organisations, icon: users-round, time: As agreed, how: "Present the portal at a community, network or working group, and bring back what you hear.", link: "#champions", badge: ambassador}
+  - {id: IN-COMMUNITY, name: Join a community or network, icon: handshake, time: Varies, how: "Join the government data communities and networks listed on Boards, councils and networks.", link: bodies.html#networks, badge: null}
+  champion:
+    does: [Share the portal with your team using the toolkit below, Run a 15 minute walk-through at a team meeting, Collect your team's feedback and ideas and post them, Encourage colleagues to take part in research, "Tell us when your organisation's practice differs from the portal, so we can fix it"]
+    gets: [Early sight of what is coming on the roadmap, A Champion badge for your GitHub profile and email signature, Your organisation's needs reflected in the roadmap, Recognition by GitHub username on the portal if you choose]
+    ambassador: [Everything a champion does, "Present the portal at a community, network or working group", Bring back what other organisations need, Help shape the roadmap at a review panel]
+    time: About 1 to 2 hours a month for a champion. Stop at any time.
+  toolkit:
+  - id: TK-EMAIL
+    name: Email to your team
+    icon: send
+    text: |
+      Subject: Practical help with the Data Asset Management Policy
+
+      Hello team,
+
+      The DAM capability playbooks are a prototype website that turns the Data Asset Management Policy into practical steps for data governance, cataloguing and quality, by role.
+
+      Have a look: {site}
+      Start with "Your role": {site}personas.html
+
+      It is a prototype, not official GOV.UK guidance, and the team wants feedback. You can test it, take part in research, or suggest and vote for ideas: {site}research.html
+
+      [Your name]
+  - id: TK-TEAMS
+    name: Microsoft Teams post
+    icon: users
+    text: |
+      **Practical steps for the DAM Policy**
+      The DAM capability playbooks turn the Data Asset Management Policy into steps by role, for governance, cataloguing and quality. Prototype, open for feedback.
+      Try it: {site}
+      Have your say: {site}research.html
+  - id: TK-SLACK
+    name: Slack post
+    icon: message-square-text
+    text: |
+      :bulb: *DAM Policy, made practical.* The DAM capability playbooks show the steps for your role in data governance, cataloguing and quality. It's a prototype and wants feedback.
+      Try it: {site}
+      Suggest and vote for ideas: {site}research.html#ideas
+  - id: TK-ENGAGE
+    name: Viva Engage or intranet community post
+    icon: megaphone
+    text: |
+      Are you a data owner, steward or catalogue manager? The DAM capability playbooks set out what the Data Asset Management Policy asks of your role and how to do it. It is a prototype built in the open. Try a task, then tell the team what works: {site}test.html
+  - id: TK-INTRANET
+    name: Intranet news item
+    icon: file-text
+    text: |
+      Headline: Help shape practical guidance for the Data Asset Management Policy
+
+      The DAM capability playbooks are a prototype website that helps organisations meet the Data Asset Management Policy. It sets out the steps for each role in data governance, data cataloguing and data quality, with templates, a capability model and links to GOV.UK guidance.
+
+      The team is looking for people to test it, take part in research, and suggest ideas. Find out more: {site}research.html
+
+      It is not official GOV.UK guidance. Where it repeats GOV.UK, the GOV.UK page is the authority.
+  - id: TK-MEETING
+    name: 15 minute walk-through at a team meeting
+    icon: presentation
+    text: |
+      1. (2 minutes) What the DAM Policy asks of us: {site}dam.html
+      2. (5 minutes) Pick one role in the room and open its route: {site}personas.html
+      3. (5 minutes) Try one task together from Help us test: {site}test.html
+      4. (3 minutes) Agree one idea or problem to post: {site}research.html#ideas
+  - id: TK-SIGNATURE
+    name: Email signature line
+    icon: pencil-line
+    text: |
+      DAM capability playbooks champion · Help shape practical guidance for the DAM Policy: {site}research.html
+  badges:
+  - {id: explorer, name: Explorer, colour: '#1d70b8', icon: compass, earn: "Used the portal for real work and gave feedback.", evidence: Self-declared., claim: self}
+  - {id: tester, name: Tester, colour: '#00703c', icon: list-checks, earn: "Completed at least three testing tasks, or took part in a research session.", evidence: Self-declared; research participants are told after their session., claim: self}
+  - {id: contributor, name: Contributor, colour: '#6a1b9a', icon: pencil-line, earn: "An idea, report or change of yours was accepted onto the backlog or published.", evidence: A link to the idea, issue or pull request., claim: request}
+  - {id: reviewer, name: Reviewer, colour: '#00695c', icon: badge-check, earn: "Reviewed a draft as part of the review panel or an expert review.", evidence: Confirmed by the service owner., claim: request}
+  - {id: champion, name: Champion, colour: '#b23a14', icon: megaphone, earn: "Introduced the portal to your team and ran a walk-through or passed on your team's feedback.", evidence: A short note of what you did, with no names., claim: request}
+  - {id: ambassador, name: Ambassador, colour: '#3949ab', icon: users-round, earn: "Presented the portal at a community, network or working group, or championed it across organisations.", evidence: The community or event, with no names of attendees., claim: request}
+  badge_note: "Badges recognise help with a prototype. They are not an official government credential or qualification."
+easy_read:
+  index: [This website helps people follow the Data Asset Management Policy., The policy is about looking after important government data., It shows the steps for your role., It is a test version. It is not official GOV.UK guidance.]
+  dam: [The Data Asset Management Policy says how government must look after its most important data., This page lists every thing the policy asks for., "Next to each one, it shows the step that helps you do it."]
+  governance: [Data governance means deciding who looks after data and how., This page shows the steps to set that up., It has templates you can copy.]
+  cataloguing: [A data catalogue is a list of your data and what it is about., This page shows how to build one and what to record., It shows what you must send to the Government Digital Service.]
+  quality: [Data quality means data is right and fit for use., This page shows how to check data and make it better., It has rules you can download and run.]
+  personas: [Choose the job closest to yours., You will see the steps for your job in order., Tick each step when you finish it.]
+  research: [You can help make this website better., You can test it, talk to us, or share ideas., We show what we plan to do and why.]
+  involve: [There are many ways to help., Pick the one that suits you., You can get a badge to show you helped.]

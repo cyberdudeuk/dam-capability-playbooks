@@ -175,7 +175,7 @@ def validate(d):
     covered = {x['dd'] for x in d.get('supplements', [])}
     for x in d.get('domain_depth', []):
         if x['moscow'] == 'Must' and x['id'] not in covered: errs.append(f"{x['id']}: a Must-have theme has no supplement")
-    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all', 'data', 'test', 'guide', 'site-map', 'reuse', 'research'}
+    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all', 'data', 'test', 'guide', 'site-map', 'reuse', 'research', 'involve'}
     for r in d.get('design', {}).get('requirements', []):
         for c in r['checks']:
             if c not in KNOWN_CHECKS: errs.append(f"{r['id']}: unknown check {c}")
@@ -282,7 +282,7 @@ def validate_frameworks(d, errs, src, roles):
         for p in R['portals']:
             if not p['url'].startswith('https://') or not p['url'].endswith('/'): errs.append(f"related portal {p['id']}: url must be https and end with /")
         for page, items in R['placements'].items():
-            if page not in {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'data', 'test', 'guide', 'site-map', 'reuse', 'research'}: errs.append(f"related: unknown page {page}")
+            if page not in {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'data', 'test', 'guide', 'site-map', 'reuse', 'research', 'involve'}: errs.append(f"related: unknown page {page}")
             for it in items:
                 if it['portal'] not in pids: errs.append(f"related on {page}: unknown portal {it['portal']}")
                 if '://' in it['path'] or it['path'].startswith('/'): errs.append(f"related on {page}: path must be relative to the portal")
@@ -317,6 +317,7 @@ def validate_frameworks(d, errs, src, roles):
         for r in st['cr']:
             if r not in crs: errs.append(f"maturity strand {st['id']}: unknown capability {r}")
     validate_research(d, errs, rb)
+    validate_involvement(d, errs)
 
 
 # ---------------------------------------------------------------------------
@@ -391,6 +392,34 @@ def validate_research(d, errs, rb):
     if sum(1 for x in R['backlog'] if x['status'] == 'now') > R['wip_limit']: errs.append(f"research: more than {R['wip_limit']} items in Now")
 
 
+def validate_involvement(d, errs):
+    """Version 1.10: boards and networks, Get involved, badges, toolkit and easy read."""
+    B, I = d.get('bodies'), d.get('involve')
+    if B:
+        ids = [x['id'] for x in B['items']]
+        if len(ids) != len(set(ids)): errs.append('bodies: duplicate ids')
+        for x in B['items']:
+            if not re.fullmatch(r'(GB|NW)-[A-Z]+', x['id']): errs.append(f"bodies {x['id']}: id must be GB- (board) or NW- (network)")
+            if not x['url'].startswith('https://'): errs.append(f"bodies {x['id']}: source must be https")
+            for k in ('purpose', 'outcomes', 'dam', 'engage', 'tor'):
+                if not x.get(k): errs.append(f"bodies {x['id']}: {k} missing")
+            if chr(64) in ' '.join(str(v) for v in x.values()): errs.append(f"bodies {x['id']}: no email addresses")
+        for s in B['flow']:
+            if s['id'] not in ids + ['networks']: errs.append(f"bodies flow: unknown {s['id']}")
+    if I:
+        bids = {b['id'] for b in I['badges']}
+        for r in I['routes']:
+            if r['badge'] and r['badge'] not in bids: errs.append(f"involve {r['id']}: unknown badge {r['badge']}")
+        for b in I['badges']:
+            if not re.fullmatch(r'#[0-9a-f]{6}', b['colour']): errs.append(f"badge {b['id']}: colour must be #rrggbb")
+            if b['claim'] not in ('self', 'request'): errs.append(f"badge {b['id']}: claim must be self or request")
+        for tk in I['toolkit']:
+            if chr(64) in tk['text']: errs.append(f"toolkit {tk['id']}: no email addresses")
+            if '{site}' not in tk['text']: errs.append(f"toolkit {tk['id']}: must link to the portal")
+    for k in (d.get('easy_read') or {}):
+        if k not in PAGE_LEVEL: errs.append(f'easy read: unknown page {k}')
+
+
 FLAGS = {'E': ('Explicit', 'The text names this as a requirement or responsibility.'),
          'I': ('Implicit', 'The text depends on it to meet an explicit requirement but does not name it as one.'),
          'N': ('Inferred', 'Not in the text. This portal\'s judgement from good practice and adjacent rulebooks.')}
@@ -405,7 +434,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 37)} | {f"B-{i:02d}" for i in range(1, 18)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 38)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -419,6 +448,11 @@ ROLE_ICONS = {'CDO': 'building-2', 'COO': 'clipboard-list', 'BRD': 'gavel', 'OWN
               'SRO': 'flag', 'PDM': 'calendar-check', 'SVO': 'layers', 'ARC': 'network', 'MIG': 'arrow-right-left', 'CML': 'handshake', 'PMO': 'clipboard-check'}
 CAP_ICONS = {'gov': 'shield-check', 'cat': 'library-big', 'dq': 'gauge'}
 LEVELS = {'Foundation': 'award', 'Practitioner': 'graduation-cap', 'Advanced': 'milestone'}
+PAGE_LEVEL = {**{k: 'Foundation' for k in ('index', 'dam', 'personas', 'learning', 'guide', 'inclusion', 'research', 'involve', 'test', 'contact', 'site-map', 'about', 'whats-new', 'accessibility')},
+              **{k: 'Practitioner' for k in ('governance', 'cataloguing', 'quality', 'together', 'sectors', 'change', 'perspectives', 'community', 'library', 'knowledge', 'professions', 'data', 'bodies', 'status', 'notices')},
+              **{k: 'Advanced' for k in ('capability-model', 'tooling', 'reuse', 'design')}}
+LEVEL_TEXT = {'Foundation': 'For anyone: no data management background needed.', 'Practitioner': 'For people who do data governance, cataloguing or quality work.',
+              'Advanced': 'For specialists: detailed models, standards and technical reuse.'}
 JOURNEY_STAGES = ['Learn', 'Prepare', 'Do', 'Report', 'Improve']
 STAGE_ROW_ICONS = {'Learn': 'graduation-cap', 'Prepare': 'clipboard-list', 'Do': 'wrench', 'Report': 'send', 'Improve': 'refresh-cw'}
 ACTIVITY_ICONS = {'Read': 'book-open', 'Do': 'pencil-line', 'Reflect': 'lightbulb'}
@@ -479,6 +513,11 @@ def table(cap_id, caption, headers, rows, cls=None, row_attrs=None, tbody_id=Non
 def ul(items, raw=False, cls=''):
     c = f' class="{cls}"' if cls else ''
     return f'<ul{c}>' + ''.join(f'<li>{i if raw else E(i)}</li>' for i in items) + '</ul>'
+
+
+def md_code(html):
+    """Changelog text uses Markdown backticks for file names; show them as code, never as raw backticks (D-031)."""
+    return re.sub(r'`([^`]+)`', r'<code>\1</code>', html)
 
 
 def slug(s):
@@ -551,18 +590,18 @@ NAV = [
     ('index', 'Home', 'house'), ('dam', 'The policy', 'landmark'), ('governance', 'Governance', 'shield-check'),
     ('cataloguing', 'Cataloguing', 'library-big'), ('quality', 'Quality', 'gauge'), ('sectors', 'Sectors', 'layers'), ('together', 'Joined up', 'workflow'),
     ('change', 'Delivery and change', 'construction'),
-    ('capability-model', 'Capability model', 'radar'), ('perspectives', 'Perspectives', 'eye'), ('community', 'Working together', 'handshake'), ('professions', 'Professions and skills', 'briefcase'), ('tooling', 'Tools and interoperability', 'plug'),
+    ('capability-model', 'Capability model', 'radar'), ('perspectives', 'Perspectives', 'eye'), ('community', 'Working together', 'handshake'), ('professions', 'Professions and skills', 'briefcase'), ('tooling', 'Tools and interoperability', 'plug'), ('bodies', 'Boards and networks', 'building-2'),
     ('personas', 'Your role', 'users-round'), ('learning', 'Learning', 'graduation-cap'), ('library', 'Library', 'library'),
     ('knowledge', 'Knowledge', 'network'), ('inclusion', 'Inclusion', 'heart-handshake'), ('about', 'About', 'info'),
 ]
 # Grouped menus keep the global bar to about ten top-level destinations (build standard: use hubs before adding more)
 NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', 'together', 'change'],
-              'Frameworks': ['capability-model', 'perspectives', 'community', 'professions', 'tooling']}
+              'Frameworks': ['capability-model', 'perspectives', 'community', 'professions', 'tooling', 'bodies']}
 # Section colour coding (version 1.8): every page carries a section, styled as an accent colour for orientation
 SECTION = {'index': 'home', 'dam': 'policy', 'governance': 'gov', 'cataloguing': 'cat', 'quality': 'dq', 'sectors': 'sectors', 'together': 'together',
            'change': 'change', 'capability-model': 'model', 'perspectives': 'lens', 'community': 'community', 'professions': 'skills',
            'personas': 'roles', 'learning': 'learning', 'library': 'library', 'knowledge': 'knowledge', 'inclusion': 'inclusion',
-           'data': 'data', 'test': 'test', 'guide': 'guide', 'site-map': 'guide', 'reuse': 'reuse', 'tooling': 'tooling', 'research': 'research'}
+           'data': 'data', 'test': 'test', 'guide': 'guide', 'site-map': 'guide', 'reuse': 'reuse', 'tooling': 'tooling', 'research': 'research', 'bodies': 'community', 'involve': 'research'}
 NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3'}
 CAP_PAGE = {'gov': 'governance', 'cat': 'cataloguing', 'dq': 'quality'}
 PAGE_DESC = {
@@ -591,6 +630,8 @@ PAGE_DESC = {
     'site-map': 'Every page on the DAM capability playbooks portal, grouped the way the menus are, with the main sections of each page.',
     'reuse': 'Ways to use the DAM capability playbooks content: intranet links, embedding, open data, white-label copies, AI assistants and an MCP server.',
     'research': 'Have your say: take part in user research, suggest and vote for ideas, and see the roadmap, backlog and how priorities are decided, in the open.',
+    'bodies': 'Boards, councils and networks for data asset management in government: purpose, aims, outcomes, terms of reference and how to take part.',
+    'involve': 'Get involved: ways to take part, rules of engagement, a champions toolkit of emails and posts, and badges for your profile and signature.',
     'whats-new': 'Changes in each release of the Data Asset Management (DAM) capability playbooks, newest first.',
     '404': 'The page you were looking for could not be found on the DAM capability playbooks portal.',
 }
@@ -676,8 +717,9 @@ class Site:
         mt = ''
         if meta:
             mt = '<ul class="hero-meta">' + ''.join(f'<li>{icon(i)}<span>{E(t)}</span></li>' for i, t in meta) + '</ul>'
-        return (f'<div class="hero {kind}">{tile(ic, "lg " + kind)}<div><p class="caption">{E(caption)}</p><h1>{E(title)}</h1>'
-                f'<p class="lede">{lede}</p>{mt}</div></div>{b}')
+        tag, easy = self.level_and_easy()
+        return (f'<div class="hero {kind}">{tile(ic, "lg " + kind)}<div><p class="caption">{E(caption)}{tag}</p><h1>{E(title)}</h1>'
+                f'<p class="lede">{lede}</p>{mt}</div></div>{b}{easy}')
 
     def add_search(self, title, kind, url, snippet=''):
         self.search.append({'t': title, 'k': kind, 'u': url, 's': snippet[:160]})
@@ -760,6 +802,7 @@ class Site:
 <link rel="canonical" href="{E(canonical)}">
 <link rel="alternate" type="application/ld+json" href="data/catalogue.jsonld" title="Open data catalogue (DCAT, JSON-LD)">
 <link rel="alternate" type="text/turtle" href="data/catalogue.ttl" title="Open data catalogue (DCAT, Turtle)">
+<link rel="alternate" type="application/atom+xml" href="feed.xml" title="Releases (Atom feed)">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -900,7 +943,7 @@ class Site:
 <div><h2>{icon("info")} About this portal</h2>
 <p>{E(m["status"])}</p>
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
-<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Estate compass: find your way across three portals</a></li></ul></div>
+<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="involve.html">Get involved, champions and badges</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Estate compass: find your way across three portals</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
 <p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>{f'<p>Or <a href="{E(self.ms_form_url())}" rel="noopener">use the private feedback form</a> (Microsoft Forms, no GitHub account needed).</p>' if self.ms_form_url() else ''}
 <p>{E(m["contact_note"])}</p></div>
@@ -942,9 +985,11 @@ class Site:
                  'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
                  'professions': self.p_professions, 'change': self.p_change, 'perspectives': self.p_lenses, 'community': self.p_community, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
                  'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices, 'data': self.p_data, 'test': self.p_test,
-                 'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, 'research': self.p_research, '404': self.p_404}
+                 'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, 'research': self.p_research, 'bodies': self.p_bodies, 'involve': self.p_involve, '404': self.p_404}
         for k, fn in pages.items():
+            self._key = k
             (self.out / f'{k}.html').write_text(fn(), encoding='utf-8')
+        self._key = 'site-map'
         # The estate compass: a neutral page across the three portals, built from compass/ (version 1.8.2)
         sys.path.insert(0, str(ROOT / 'tools'))
         import compass as _compass
@@ -955,12 +1000,19 @@ class Site:
         # The site map is built last, from the registry every other page has filled
         (self.out / 'site-map.html').write_text(self.p_sitemap(), encoding='utf-8')
         self.write_llms()
+        self.embed_ids = self.write_embeds()
+        self.write_badges()
+        self.write_feed()
         mods = {mm['id']: self.mod_units(mm['id']) for mm in d['modules']}
         (self.out / 'assets' / 'search-index.js').write_text(
             'window.DCP_INDEX=' + json_safe(self.search) + ';\nwindow.DCP_MODULES=' + json_safe(mods) + ';\n', encoding='utf-8')
         self.write_xref()
         self.exports()
+        # D-030: the Open data page lists files that exist, so it is built again once every data file is written
+        self._key = 'data'
+        (self.out / 'data.html').write_text(self.p_data(), encoding='utf-8')
         (self.out / '.nojekyll').write_text('')
+        self.write_offline()
         return self.build_id
 
     def collect_search(self):
@@ -1038,14 +1090,18 @@ class Site:
             ('users-round', '1. Choose your role', 'Each role has its own route through the three capabilities, with the steps in the order you need them.'),
             ('graduation-cap', '2. Learn what you need', f'{n["modules"]} short modules, about {n["minutes"]} minutes in total, each with a quick check of understanding.'),
             ('list-checks', '3. Follow the steps and track progress', 'Mark steps as done. Your progress shows on your route and on each playbook, in this browser only.')])
-        body = f'''<div class="hero home">{tile("library-big", "lg")}<div><p class="caption">Data asset management (DAM) policy</p><h1>{E(m["title"])}</h1>
+        body = f'''<div class="hero home">{tile("library-big", "lg")}<div><p class="caption">Data asset management (DAM) policy{self.level_and_easy()[0]}</p><h1>{E(m["title"])}</h1>
 <p class="lede">Practical guidance for people who govern, catalogue and manage the quality of critical data assets in UK government departments and arm's length bodies.</p></div></div>
 <div class="in-brief" role="note" aria-label="In brief"><h2 class="ib-h">{icon("list-checks")} In brief</h2>
 <ul><li>The DAM Policy asks every department and arm's length body to identify, describe, own and manage the quality of its critical data assets.</li>
 <li>Three capabilities make that possible: data governance, data cataloguing and data quality. This portal puts them side by side.</li>
-<li>It is more detailed than GOV.UK guidance and written for specialists. GOV.UK remains the authority on what the policy requires.</li></ul></div>
+<li>It is more detailed than GOV.UK guidance and written for specialists. GOV.UK remains the authority on what the policy requires.</li></ul></div>{self.level_and_easy()[1]}
 <h2 id="role">{icon("users-round")} Start from your role</h2>
 <ul class="persona-grid">{personas}</ul>
+<section class="ask js-only" aria-labelledby="ask"><h2 id="ask">{icon("circle-help")} Ask a question</h2>
+<form class="ask-form" data-ask><label for="ask-q">Ask in your own words, for example "who signs off a data quality action plan?"</label>
+<div class="ask-row"><input id="ask-q" name="q" type="search" autocomplete="off"><button type="submit" class="btn">{icon("search")}Ask</button></div></form>
+<div id="ask-out" aria-live="polite"></div><p class="hint">Answers are the pages of this portal that best match your question, found in your browser. Nothing is sent anywhere. Read the page, and GOV.UK, before relying on it.</p></section>
 <h2 id="how">{icon("route")} How the playbooks work</h2>
 <ol class="how">{how}</ol>
 <h2 id="capabilities">{icon("layers")} The three capabilities</h2>
@@ -1063,6 +1119,7 @@ class Site:
 <button type="button" class="btn secondary" data-progress-reset>{icon("rotate-ccw")}Clear my progress</button></div>'''
         drawer = [{'label': 'Home', 'icon': 'house', 'items': [
             {'id': 'role', 'label': 'Start from your role', 'icon': 'users-round', 'count': len(d['personas'])},
+            {'id': 'ask', 'label': 'Ask a question', 'icon': 'circle-help', 'new': True},
             {'id': 'how', 'label': 'How the playbooks work', 'icon': 'route', 'count': 3},
             {'id': 'capabilities', 'label': 'The three capabilities', 'icon': 'layers', 'count': 3},
             {'id': 'also', 'label': 'Also useful', 'icon': 'compass', 'count': 4}]}]
@@ -1758,6 +1815,10 @@ class Site:
     def cr_ids(ids):
         return ' '.join(f'<a class="pill" href="capability-model.html#{c}">{E(c)}</a>' for c in ids) or 'all capabilities'
 
+    def flag_check_url(self, c):
+        q = urllib.parse.urlencode({'template': 'flag-check.yml', 'title': f'[Flag] {c["id"]}: {c["name"]}', 'capability': c['id'], 'current': FLAGS[c['flag']][0]})
+        return f'https://github.com/{self.m["repo"]}/issues/new?{q}'
+
     def p_model(self):
         d, mt, v = self.d, self.d['maturity'], self.m['verified_on']
         cm = d['capmap']
@@ -1793,7 +1854,8 @@ class Site:
 <dt>{icon("briefcase")} Skills</dt><dd>{sk} <span class="hint">(Digital and Data capability framework)</span></dd>
 <dt>{icon("users-round")} Professions</dt><dd>{pr}</dd>
 <dt>{icon("book-open")} Industry models</dt><dd>DAMA-DMBOK: {E("; ".join(c["dmbok"]))}. DCAM: {E("; ".join(c["dcam"]))}.{prov("K")}</dd>
-<dt>{icon(cov)} In this portal</dt><dd><strong>{E(c["coverage"])}</strong>: <a href="{E(c["playbook"])}">{E({k: l for k, l, _ in NAV}.get(c["playbook"][:-5], c["playbook"]))}</a></dd></dl></li>'''
+<dt>{icon(cov)} In this portal</dt><dd><strong>{E(c["coverage"])}</strong>: <a href="{E(c["playbook"])}">{E({k: l for k, l, _ in NAV}.get(c["playbook"][:-5], c["playbook"]))}</a></dd></dl>
+<p class="flag-check"><a href="{E(self.flag_check_url(c))}">{icon("flag")}Check this flag</a> <span class="hint">Think {E(c["id"])} should be flagged differently? Tell us why.</span></p></li>'''
         cl_opts = ''.join(f'<option value="{slug(x)}">{E(x)}</option>' for x in CLUSTERS)
         reqmap = f'''<p>Filter by cluster, by how the policy treats the capability, or by how far this portal covers it. Download the map as <a href="data/capability-map.csv">CSV</a>.</p>
 <div class="filters" data-filter="cr-list" role="group" aria-label="Filter capabilities"><div><label for="f-cl">Cluster</label><select id="f-cl" name="cluster"><option value="">All</option>{cl_opts}</select></div>
@@ -1994,6 +2056,7 @@ class Site:
             ('xref', 'Cross-reference manifest', 'The shared keys this portal uses (DAMA areas, requirements, capabilities, practices, sectors, roles, tool categories) and where each lives, so sister portals and tools can link to them.', ['xref.json'], ['interoperability', 'linked data']),
             ('interoperability-questions', 'Tool interoperability questions', 'Questions for a request for information or tender for catalogue, data quality, lineage and governance tools, to test interoperability and avoid lock-in.', ['interoperability-questions.csv'], ['procurement', 'interoperability', 'RFI']),
             ('backlog', 'Product backlog and roadmap', 'Every backlog item with its user story, source, status, strategy links, assessment and score, and the roadmap it produces.', ['backlog.csv', 'backlog.json'], ['roadmap', 'backlog', 'user research']),
+            ('lineage', 'Ontology and lineage', 'An OWL ontology of the portal and PROV-O lineage from sources to policy requirements, capabilities, portal requirements, pages and checks.', ['ontology.ttl', 'lineage.ttl'], ['lineage', 'PROV-O', 'OWL']),
             ('ddat-role-skills', 'Data role skills and levels', 'Skills and skill levels for Digital and Data capability framework roles with data asset management duties.', ['ddat-role-skills.csv'], ['skills', 'professions']),
             ('rulebook', 'Related policies, standards and legislation', 'Every policy, standard, piece of legislation and framework the portal links to, with publisher and update date.', ['rulebook.csv', 'sources.jsonld'], ['rulebook', 'standards']),
             ('traceability', 'Portal requirements traceability', 'Each portal requirement, the features that meet it and the checks that prove it.', ['traceability.csv'], ['traceability']),
@@ -2056,7 +2119,8 @@ class Site:
         rows = []
         for x in ds:
             files = ' '.join(f'<a class="pill" href="data/{E(f)}">{icon("download")}{E(f.split("/")[-1])}</a>' for f in x['files'][:6])
-            more = f' <span class="hint">and {len(x["files"]) - 6} more files</span>' if len(x['files']) > 6 else ''
+            more = (f' <details class="more-files"><summary>{len(x["files"]) - 6} more files</summary>'
+                    + ' '.join(f'<a class="pill" href="data/{E(f)}">{icon("download")}{E(f.split("/")[-1])}</a>' for f in x['files'][6:]) + '</details>') if len(x['files']) > 6 else ''
             rows.append([f'<span id="{x["id"]}">{E(x["title"])}</span>', E(x['desc']), files + more])
         sd = {'@type': 'DataCatalog', 'name': m['title'] + ': open data', 'url': base + 'data.html',
               'dataset': [{'@type': 'Dataset', 'name': x['title'], 'description': x['desc'], 'url': base + 'data.html#' + x['id'],
@@ -2327,7 +2391,7 @@ class Site:
                   ('Playbooks', 'book-open', NAV_GROUPS['Playbooks']),
                   ('Frameworks', 'grid-3x3', NAV_GROUPS['Frameworks']),
                   ('Reference', 'library', ['library', 'knowledge', 'inclusion', 'data', 'reuse']),
-                  ('About and help', 'info', ['about', 'research', 'test', 'contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])]
+                  ('About and help', 'info', ['about', 'research', 'involve', 'test', 'contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])]
         colours = {'Start here': '#1d70b8', 'Playbooks': '#00703c', 'Frameworks': '#3949ab', 'Reference': '#455a64', 'About and help': '#505a5f'}
         seen, out = set(), ''
         for name, ic, keys in groups:
@@ -2357,7 +2421,7 @@ class Site:
                       f'<p><strong>Choose this when:</strong> {E(a["when"])}</p><h4>{icon("triangle-alert")} Watch out for</h4>{ul(a["cautions"])}</li>')
         opts = ''.join(f'<option value="{slug(g)}">{E(g)}</option>' for g in groups)
         endpoints = [('data/catalogue.jsonld', 'DCAT catalogue of every dataset (JSON-LD)'), ('data/catalogue.ttl', 'The same catalogue in Turtle'), ('data/playbooks.json', 'All content in one file'),
-                     ('llms.txt', 'Short guide for AI tools'), ('llms-full.txt', 'Full text for AI tools'), ('sitemap.xml', 'Every page address')]
+                     ('llms.txt', 'Short guide for AI tools'), ('llms-full.txt', 'Full text for AI tools'), ('sitemap.xml', 'Every page address'), ('feed.xml', 'Releases as an Atom feed'), ('data/ontology.ttl', 'Ontology of the portal (OWL, Turtle)'), ('data/lineage.ttl', 'Lineage from sources to requirements, pages and checks (PROV-O, Turtle)')]
         ep = [[f'<a href="{u}"><code>{E(u)}</code></a>', E(t)] for u, t in endpoints]
         mcp = '''{
   "mcpServers": {
@@ -2378,6 +2442,12 @@ class Site:
 <div class="filters" data-filter="reuse-list" role="group" aria-label="Filter approaches"><div><label for="r-g">Kind</label><select id="r-g" name="grp"><option value="">All</option>{opts}</select></div>
 <div><label for="r-e">Effort</label><select id="r-e" name="effort"><option value="">All</option><option value="low">Low</option><option value="medium">Medium</option></select></div><p class="count-out" aria-live="polite"></p></div>
 <ul class="approach-grid" id="reuse-list">{cards}</ul>
+<h2 id="embed">{icon("code-xml")} Embed a requirement or capability</h2>
+<p>Show one DAM Policy requirement or one capability on your intranet or in a document that accepts web content. Each has its own small page, with a link back here. Copy this code and change the identifier, for example <code>DAM-R01</code> or <code>CR-01</code>:</p>
+<pre class="code" id="embed-code" tabindex="0">{self.site_addr(E('<iframe src="{site}embed/DAM-R01.html" title="DAM Policy requirement DAM-R01" width="100%" height="220" loading="lazy"></iframe>'))}</pre>
+<p><button type="button" class="btn secondary" data-copy-target="embed-code" hidden>{icon("link")}Copy code</button> <span class="copy-status" aria-live="polite"></span> Preview: <a href="embed/DAM-R01.html">DAM-R01</a> · <a href="embed/CR-01.html">CR-01</a>. Embedded pages do not change when your copy is cached; they always show the latest release.</p>
+<h2 id="offline">{icon("download")} Offline copy</h2>
+<p>If your network blocks this site, download the <a href="dam-playbooks-offline.zip">whole portal as a zip file</a>, unzip it, and open <code>index.html</code> in your browser. Search, filters and progress work offline. The copy is for this release only: check <a href="whats-new.html">What's new</a> for updates.</p>
 <h2 id="endpoints">{icon("database")} Addresses for tools and AI</h2>{table("t-endpoints", "Machine-readable addresses", ["Address", "What it is"], ep)}
 <h2 id="ai">{icon("brain")} AI assistants and search</h2>
 <p>The built-in search finds pages, steps and terms by their words. An AI assistant can answer questions in plain language, combining several pages. This portal does not run its own chatbot: there is no server, and nothing you type is sent anywhere. Instead it publishes its content in forms that assistants your organisation already approves can use, with the page each answer comes from.</p>
@@ -2390,7 +2460,8 @@ class Site:
 <p>Download the <a href="data/playbooks.json">full content file</a>, or set <code>DAM_PLAYBOOKS_URL</code> to its full address to read the live copy. Example configuration for an assistant that reads MCP servers from a JSON file:</p><pre class="code" tabindex="0" aria-label="Example MCP configuration"><code>{E(mcp)}</code></pre>
 <div class="notice-box">{icon("info")}<p>Whatever route you choose, keep the prototype status, the attribution statement and the licences with the content, and agree who in your organisation keeps your copy up to date.</p></div>'''
         drawer = [{'label': 'Use and reuse', 'icon': 'share-2', 'items': [
-            {'id': 'approaches', 'label': 'Approaches', 'icon': 'layers', 'count': len(r['approaches']), 'new': True},
+            {'id': 'approaches', 'label': 'Approaches', 'icon': 'layers', 'count': len(r['approaches'])},
+            {'id': 'embed', 'label': 'Embed a requirement', 'icon': 'code-xml', 'new': True}, {'id': 'offline', 'label': 'Offline copy', 'icon': 'download', 'new': True},
             {'id': 'endpoints', 'label': 'Addresses for tools', 'icon': 'database', 'count': len(endpoints)},
             {'id': 'ai', 'label': 'AI assistants', 'icon': 'brain'}, {'id': 'mcp', 'label': 'MCP server', 'icon': 'network', 'count': len(tools)}]}]
         return self.page('reuse', 'Use and reuse', body, drawer, crumbs=['Use and reuse'])
@@ -2556,6 +2627,7 @@ class Site:
                       f'The team wants people in our kind of role to try it, take part in research and suggest ideas.\n\nFind out more and sign up: {url}\n'))
         take = (f'<p class="lede">{E(R["intro"])}</p>'
                 f'<h2 id="why">{icon("lightbulb")} Why take part</h2>{ul(R["why_take_part"], cls="ticks")}'
+                f'<p class="notice-box">{icon("hand-helping")}<span>Want to do more? <a href="involve.html">Get involved</a>: improve the content, champion the portal in your team, and earn badges.</span></p>'
                 f'<h2 id="ways">{icon("list-checks")} Ways to take part</h2><p>Choose as many or as few as suit you. Every session is online unless you ask otherwise, and you can stop at any time.</p><ul class="approach-grid">{meth}</ul>'
                 f'<h2 id="who">{icon("users-round")} Who we want to hear from</h2><p>{E(R["who"])} See <a href="personas.html">Your role</a> for the roles.</p>'
                 f'<h2 id="sign-up">{icon("clipboard-list")} Sign up</h2>{su}<p>The form asks for:</p>{ul(R["signup"]["collects"])}'
@@ -2673,6 +2745,249 @@ class Site:
         return self.page('research', 'Have your say', hero + self.tabbed(tabs, 'Have your say'), drawer, crumbs=['Have your say'],
                          jsonld={'@type': 'WebPage', 'about': 'User research, product roadmap and backlog for the portal'})
 
+    # -- version 1.10: level labels and easy read (BL-17) ------------------------------------------
+    def level_and_easy(self):
+        k = getattr(self, '_key', None)
+        lv = PAGE_LEVEL.get(k)
+        tag = f' <span class="level-tag lv-{lv.lower()}" data-tip="{E(LEVEL_TEXT[lv])}">{icon(LEVELS[lv])}Level: {E(lv)}</span>' if lv else ''
+        er = (self.d.get('easy_read') or {}).get(k)
+        easy = (f'<details class="easy-read" id="easy-read"><summary>{icon("book-open")}Easy read summary</summary><ul>' + ''.join(f'<li>{E(x)}</li>' for x in er) + '</ul></details>') if er else ''
+        return tag, easy
+
+    # -- version 1.10: boards, councils and networks ------------------------------------------------
+    def p_bodies(self):
+        B = self.d['bodies']
+        boards = [x for x in B['items'] if x['id'].startswith('GB-')]
+        nets = [x for x in B['items'] if x['id'].startswith('NW-')]
+
+        def card(x):
+            caps = ' '.join(f'<span class="pill {c}">{E({"gov": "Governance", "cat": "Cataloguing", "dq": "Quality"}[c])}</span>' for c in x['caps'])
+            warn = f'<p class="tag">{icon("triangle-alert")}Status unclear</p>' if x.get('unclear') else ''
+            return (f'<li class="cr-card body-card" id="{x["id"]}" data-item data-kind="{slug(x["kind"])}"><div class="cr-head">{tile("building-2" if x["id"].startswith("GB-") else "handshake", "sm")}'
+                    f'<div><p class="caption">{E(x["kind"])} · {E(x["host"])}</p><h3>{E(x["name"])}</h3></div></div>{warn}'
+                    f'<p><strong>Purpose:</strong> {E(x["purpose"])}{prov("V", B["checked"])}</p>'
+                    f'<dl class="cr-dl"><dt>{icon("target")} Aims</dt><dd>{ul(x["aims"])}</dd>'
+                    f'<dt>{icon("flag")} Expected outcomes</dt><dd>{E(x["outcomes"])}</dd>'
+                    f'<dt>{icon("landmark")} Link to the DAM Policy</dt><dd>{E(x["dam"])}{prov("O")}</dd>'
+                    f'<dt>{icon("handshake")} How to take part</dt><dd>{E(x["engage"])}</dd>'
+                    f'<dt>{icon("scroll-text")} Terms of reference</dt><dd>{E(x["tor"])}</dd></dl>'
+                    f'<p>{caps} <a href="{E(x["url"])}" rel="noopener">{icon("link")}Source page</a></p></li>')
+        flow = ''.join(f'<li><a href="#{s["id"]}" class="flow-step"><strong>{E(s["step"])}</strong><span>{E(s["does"])}</span></a></li>' for s in B['flow'])
+        route = [['A question or a problem with a DAM Policy requirement', 'Your DAM Policy coordinator, then the <a href="#NW-DMC">Data Management Community</a>'],
+                 ['A data quality method or tool', 'The <a href="#NW-GDQC">Government Data Quality Community</a>'],
+                 ['A proposed data or metadata standard', 'An open standards challenge to the <a href="#GB-OSB">Open Standards Board</a>, or the DSA through the <a href="#GB-PRG">Peer Review Group</a>'],
+                 ['A data sharing blocker', 'The <a href="#NW-DSNE">Data Sharing Network of Experts</a>'],
+                 ['A data model, taxonomy or architecture question', 'The <a href="#NW-GDAC">Government Data Architecture Community</a> and <a href="#GB-TOG">Taxonomy Oversight Group</a>'],
+                 ['A strategic risk for your organisation', 'Your chief data officer, who can take it to the <a href="#GB-CDO">CDO Council</a>'],
+                 ['Something about this portal', '<a href="research.html">Have your say</a>, not the government bodies above']]
+        body = self.hero('building-2', 'Frameworks', 'Boards, councils and networks', E(B['intro']),
+                         brief=[f'{len(boards)} boards and groups that decide or advise, with how decisions flow.', f'{len(nets)} communities, networks and champion networks you can join.', 'Where to take each kind of issue.'],
+                         meta=[('building-2', f'{len(boards)} boards'), ('handshake', f'{len(nets)} networks'), ('clock', f'Checked {B["checked"]}')])
+        body += (f'<h2 id="how-decisions">{icon("workflow")} How standards and decisions flow</h2>'
+                 f'<p>For data standards, practitioners develop a proposal in a community; the Peer Review Group reviews it; the DSA Steering Board endorses it{prov("V", B["checked"])}.</p>'
+                 f'<ol class="flow" aria-label="How a data standard is developed and endorsed">{flow}</ol>'
+                 f'<p>Alongside this chain, the <a href="#GB-CDO">CDO Council</a> sets strategy and weighs strategic risk, the <a href="#GB-OSB">Open Standards Board</a> decides on open standards, and the <a href="#GB-DTADA">architecture design authority</a> decides on data architecture.</p>'
+                 f'<p class="hint">Source: <a href="https://www.gov.uk/government/publications/data-standards-authority-operational-model-and-processes/data-standards-authority-operational-model-and-processes">Data Standards Authority: operational model and processes</a>.</p>'
+                 f'<h2 id="boards">{icon("building-2")} Boards and groups that decide or advise</h2><ul class="cr-list two">{"".join(card(x) for x in boards)}</ul>'
+                 f'<h2 id="networks">{icon("handshake")} Communities and networks you can join</h2><p>Most are open to anyone working in the public sector. Join details are on each source page; this portal never lists email addresses.</p><ul class="cr-list two">{"".join(card(x) for x in nets)}</ul>'
+                 f'<h2 id="where">{icon("signpost")} Where to take an issue</h2>' + table('t-where', 'Where to take each kind of issue', ['Your issue', 'Where to take it'], route)
+                 + f'<p class="hint">Bodies change. If an entry is out of date, <a href="contact.html">tell us</a>. Membership lists and minutes are on the source pages.</p>')
+        drawer = [{'label': 'Boards and networks', 'icon': 'building-2', 'items': [
+            {'id': 'how-decisions', 'label': 'How decisions flow', 'icon': 'workflow', 'new': True},
+            {'id': 'boards', 'label': 'Boards and groups', 'icon': 'building-2', 'count': len(boards)},
+            {'id': 'networks', 'label': 'Communities and networks', 'icon': 'handshake', 'count': len(nets)},
+            {'id': 'where', 'label': 'Where to take an issue', 'icon': 'signpost', 'count': len(route)}]}]
+        for x in B['items']:
+            self.add_search(x['name'], 'Board or network', f'bodies.html#{x["id"]}', x['purpose'])
+        return self.page('bodies', 'Boards, councils and networks', body, drawer, crumbs=['Frameworks', 'Boards and networks'])
+
+    # -- version 1.10: get involved, champions and badges ------------------------------------------------
+    def badge_url(self, b, ext='svg'):
+        return '{site}' + f'badges/{b}.{ext}'
+
+    @staticmethod
+    def site_addr(html):
+        """Write the portal's own address as a placeholder the reader's browser fills from the page address, so no account name is printed in the page (C-17)."""
+        return html.replace('{site}', '<span class="site-addr" data-site-addr>[this portal\'s address]/</span>')
+
+    def p_involve(self):
+        I, m = self.d['involve'], self.m
+        gh = f'https://github.com/{m["repo"]}'
+        site = m['site_url']
+        B = {b['id']: b for b in I['badges']}
+        routes = ''
+        for r in I['routes']:
+            bd = f'<p><img src="badges/{r["badge"]}.svg" alt="Earns the {E(B[r["badge"]]["name"])} badge" height="20"></p>' if r['badge'] else ''
+            routes += (f'<li class="cr-card" id="{r["id"]}"><div class="cr-head">{tile(r["icon"], "sm")}<div><p class="caption">{E(r["time"])}</p><h3>{E(r["name"])}</h3></div></div>'
+                       f'<p>{E(r["how"])}</p>{bd}<p><a class="btn-link" href="{E(r["link"])}">{icon("arrow-right")}Start</a></p></li>')
+        contrib = (f'<h2 id="contribute">{icon("pencil-line")} Improve the content</h2><ol class="tut">'
+                   f'<li><strong>Small fix or question:</strong> use "Report a problem with this page" at the foot of any page, or the <a href="contact.html">contact form</a>.</li>'
+                   f'<li><strong>Change a page:</strong> select "Suggest a change" at the foot of a page. GitHub makes your own copy, you edit the content file, and you open a pull request. The owner reviews it.</li>'
+                   f'<li><strong>New topic or sector supplement:</strong> post it as an <a href="{gh}/discussions/new?category=ideas">idea</a> first, so others can add evidence.</li>'
+                   f'<li><strong>Check a capability flag:</strong> on the <a href="capability-model.html#cm-map">capability model</a>, select "Check this flag" on any capability.</li></ol>'
+                   f'<p>Read the <a href="{gh}/blob/main/CONTRIBUTING.md">contributing guide</a> and <a href="{gh}/blob/main/CODE_OF_CONDUCT.md">code of conduct</a> first.</p>')
+        C = I['champion']
+        champ = (f'<h2 id="champions">{icon("megaphone")} Champions and ambassadors</h2><p>Champions bring the portal into their own teams; ambassadors carry it across organisations. {E(C["time"])}</p>'
+                 f'<div class="cols"><div class="panel"><h3>{icon("megaphone")} What a champion does</h3>{ul(C["does"])}</div>'
+                 f'<div class="panel"><h3>{icon("award")} What you get</h3>{ul(C["gets"], cls="ticks")}</div>'
+                 f'<div class="panel"><h3>{icon("users-round")} What an ambassador does</h3>{ul(C["ambassador"])}</div></div>'
+                 f'<p><a class="btn" href="{gh}/issues/new?template=badge-claim.yml&amp;title=%5BBadge%5D%20Champion">{icon("megaphone")}Become a champion</a> '
+                 + (f'<a class="btn secondary" href="{E(self.ms_form_url())}" rel="noopener">{icon("lock-keyhole")}Tell us privately instead</a>' if self.ms_form_url() else '') + '</p>')
+        tk = ''
+        for t in I['toolkit']:
+            txt = t['text'].rstrip()
+            extra = ''
+            if t['id'] == 'TK-EMAIL':
+                subj, _, rest = txt.partition('\n')
+                q = urllib.parse.quote
+                extra = f' <a class="btn secondary" href="mailto:?subject={q(subj.replace("Subject: ", ""))}&amp;body={q(rest.strip().replace("{site}", site))}">{icon("send")}Open in your email</a>'
+            tk += (f'<section class="cr-card toolkit" id="{t["id"]}"><h3>{icon(t["icon"])} {E(t["name"])}</h3><pre class="code" id="{t["id"]}-text" tabindex="0">{self.site_addr(E(txt))}</pre>'
+                   f'<p><button type="button" class="btn secondary" data-copy-target="{t["id"]}-text" hidden>{icon("link")}Copy text</button>{extra} <span class="copy-status" aria-live="polite"></span></p></section>')
+        toolkit = (f'<h2 id="toolkit">{icon("send")} Toolkit: bring others in</h2><p>Ready-made text for email, Microsoft Teams, Slack, Viva Engage, your intranet and a team meeting. Copy it, change what you like, and send it from your own account. Nothing here contains anyone\'s contact details.</p>'
+                   f'<div class="cr-list two">{tk}</div>')
+        brows = []
+        snippets = ''
+        for b in I['badges']:
+            how = 'Self-declared: display it once you have done it.' if b['claim'] == 'self' else f'<a href="{gh}/issues/new?template=badge-claim.yml&amp;title=%5BBadge%5D%20{urllib.parse.quote(b["name"])}">Claim it</a>, with {E(b["evidence"][0].lower() + b["evidence"][1:])}'
+            brows.append([f'<img src="badges/{b["id"]}.svg" alt="{E(b["name"])} badge" height="20"><br><strong id="badge-{b["id"]}">{E(b["name"])}</strong>', E(b['earn']), how])
+            md = f'[![DAM capability playbooks {b["name"]}]({self.badge_url(b["id"])})]' + '({site}involve.html#badges)'
+            html = '<a href="{site}involve.html#badges"><img src="' + self.badge_url(b['id'], 'png') + f'" alt="DAM capability playbooks {b["name"]}" height="20"></a>'
+            sig = f'DAM capability playbooks {b["name"]} · ' + '{site}involve.html'
+            snippets += (f'<details class="snip"><summary>{E(b["name"])}: code for your profile and signature</summary>'
+                         f'<p>GitHub profile (Markdown):</p><pre class="code" id="sn-{b["id"]}-md" tabindex="0">{self.site_addr(E(md))}</pre><p><button type="button" class="btn secondary" data-copy-target="sn-{b["id"]}-md" hidden>{icon("link")}Copy</button> <span class="copy-status" aria-live="polite"></span></p>'
+                         f'<p>Email signature or web page (HTML):</p><pre class="code" id="sn-{b["id"]}-html" tabindex="0">{self.site_addr(E(html))}</pre><p><button type="button" class="btn secondary" data-copy-target="sn-{b["id"]}-html" hidden>{icon("link")}Copy</button> <span class="copy-status" aria-live="polite"></span></p>'
+                         f'<p>Plain text signature:</p><pre class="code" id="sn-{b["id"]}-txt" tabindex="0">{self.site_addr(E(sig))}</pre><p><button type="button" class="btn secondary" data-copy-target="sn-{b["id"]}-txt" hidden>{icon("link")}Copy</button> <span class="copy-status" aria-live="polite"></span></p>'
+                         f'<p>Downloads: <a href="badges/{b["id"]}.svg" download>SVG</a> · <a href="badges/{b["id"]}.png" download>PNG for social media and email</a></p></details>')
+        badges = (f'<h2 id="badges">{icon("award")} Badges</h2><p>Every way of taking part earns a badge you can show on your GitHub profile, on social media or in your email signature. {E(I["badge_note"])}</p>'
+                  + table('t-badges', 'Badges and how to earn them', ['Badge', 'How to earn it', 'How to get it'], brows)
+                  + f'<p class="hint">Claims are public GitHub issues that show your GitHub username only. Do not include your name or anything above OFFICIAL. No GitHub account? Use the private feedback form and say which badge.</p>'
+                  + f'<h3 id="badge-code">{icon("code-xml")} Add a badge to your profile or signature</h3>{snippets}'
+                  + f'<h2 id="recognition">{icon("trophy")} Recognition</h2><p>People who claim Contributor, Reviewer, Champion or Ambassador badges can be listed here by GitHub username, if they choose. None yet: be the first.</p>')
+        rules = f'<h2 id="rules">{icon("scale")} Rules of engagement</h2>{ul(I["rules"])}'
+        body = self.hero('hand-helping', 'Have your say', 'Get involved', E(I['intro']),
+                         brief=[f'{len(I["routes"])} ways to take part, from 2 minutes to an ongoing role.', 'A toolkit of emails, posts and a walk-through to bring your team in.', f'{len(I["badges"])} badges for your profile and signature.'],
+                         meta=[('route', f'{len(I["routes"])} ways'), ('send', f'{len(I["toolkit"])} templates'), ('award', f'{len(I["badges"])} badges')])
+        body += (f'<h2 id="ways">{icon("route")} Ways to take part</h2><ul class="approach-grid">{routes}</ul>' + rules + contrib + champ + toolkit + badges
+                 + f'<p>See also <a href="research.html">Have your say</a> for research, the roadmap and ideas, and <a href="bodies.html#networks">Boards, councils and networks</a> for government communities to join.</p>')
+        drawer = [{'label': 'Get involved', 'icon': 'hand-helping', 'items': [
+            {'id': 'ways', 'label': 'Ways to take part', 'icon': 'route', 'count': len(I['routes']), 'new': True},
+            {'id': 'rules', 'label': 'Rules of engagement', 'icon': 'scale', 'count': len(I['rules'])},
+            {'id': 'contribute', 'label': 'Improve the content', 'icon': 'pencil-line'},
+            {'id': 'champions', 'label': 'Champions and ambassadors', 'icon': 'megaphone', 'new': True},
+            {'id': 'toolkit', 'label': 'Toolkit', 'icon': 'send', 'count': len(I['toolkit'])},
+            {'id': 'badges', 'label': 'Badges', 'icon': 'award', 'count': len(I['badges']), 'new': True},
+            {'id': 'recognition', 'label': 'Recognition', 'icon': 'trophy'}]}]
+        return self.page('involve', 'Get involved', body, drawer, crumbs=['Have your say', 'Get involved'])
+
+    def write_badges(self):
+        out = self.out / 'badges'
+        out.mkdir(exist_ok=True)
+        from PIL import Image, ImageDraw, ImageFont
+        left = 'DAM playbooks'
+        for b in self.d['involve']['badges']:
+            lw, rw = 8 + len(left) * 7, 12 + len(b['name']) * 7.4
+            w = lw + rw
+            svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w:.0f}" height="20" role="img" aria-label="{left}: {b["name"]}"><title>{left}: {b["name"]}</title>'
+                   f'<rect width="{w:.0f}" height="20" rx="3" fill="#505a5f"/><rect x="{lw:.0f}" width="{rw:.0f}" height="20" rx="3" fill="{b["colour"]}"/><rect x="{lw:.0f}" width="4" height="20" fill="{b["colour"]}"/>'
+                   f'<g fill="#ffffff" font-family="Verdana,DejaVu Sans,sans-serif" font-size="11"><text x="{lw / 2:.1f}" y="14" text-anchor="middle">{left}</text>'
+                   f'<text x="{lw + rw / 2:.1f}" y="14" text-anchor="middle" font-weight="bold">{b["name"]}</text></g></svg>')
+            (out / f'{b["id"]}.svg').write_text(svg, encoding='utf-8')
+            s = 4
+            im = Image.new('RGBA', (int(w * s), 20 * s), (0, 0, 0, 0))
+            dr = ImageDraw.Draw(im)
+            hexc = tuple(int(b['colour'][i:i + 2], 16) for i in (1, 3, 5))
+            dr.rounded_rectangle([0, 0, w * s - 1, 20 * s - 1], radius=3 * s, fill=(80, 90, 95))
+            dr.rounded_rectangle([lw * s, 0, w * s - 1, 20 * s - 1], radius=3 * s, fill=hexc)
+            dr.rectangle([lw * s, 0, lw * s + 4 * s, 20 * s - 1], fill=hexc)
+            f1 = ImageFont.load_default(size=11 * s)
+            for txt, cx in ((left, lw / 2), (b['name'], lw + rw / 2)):
+                tw = dr.textlength(txt, font=f1)
+                dr.text((cx * s - tw / 2, 3 * s), txt, font=f1, fill=(255, 255, 255))
+            im.save(out / f'{b["id"]}.png', optimize=True)
+
+    # -- version 1.10: embeds (BL-16) ---------------------------------------------------------------------
+    def write_embeds(self):
+        out = self.out / 'embed'
+        out.mkdir(exist_ok=True)
+        m, base = self.m, self.m['site_url']
+        css = ('body{font-family:Arial,Helvetica,sans-serif;margin:0;padding:12px 14px;color:#0b0c0c;background:#fff;line-height:1.45;font-size:16px}'
+               'h1{font-size:1.1rem;margin:.2rem 0 .4rem}.cap{font-size:.85rem;color:#484949;margin:0}.str{font-weight:700;text-transform:uppercase;font-size:.8rem;border:2px solid currentColor;padding:0 .3rem;border-radius:3px}'
+               'a{color:#1d70b8}a:focus{outline:3px solid #ffdd00;background:#ffdd00;color:#0b0c0c}footer{border-top:1px solid #b1b4b6;margin-top:.6rem;padding-top:.4rem;font-size:.8rem;color:#484949}')
+        (out / 'embed.css').write_text(css, encoding='utf-8')
+        items = [(r['id'], f'DAM Policy requirement {r["id"]}', r['text'], f'<span class="str">{E(r["strength"])}</span> {E(self.caps[r["cap"]]["name"])}', f'dam.html#{r["id"]}') for r in self.d['requirements']]
+        items += [(c['id'], f'{c["id"]}: {c["name"]}', c['note'], f'{E(c["cluster"])} · {E(FLAGS[c["flag"]][0])} in the DAM Policy', f'capability-model.html#{c["id"]}') for c in self.d.get('capmap', [])]
+        for i, title, text, cap, url in items:
+            (out / f'{i}.html').write_text(f'''<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="robots" content="noindex"><meta name="referrer" content="no-referrer"><title>{E(title)} - {E(m["short_title"])}</title><link rel="stylesheet" href="embed.css"></head>
+<body><main><p class="cap">{cap}</p><h1>{E(title)}</h1><p>{E(text)}</p></main>
+<footer><a href="{base}{url}" target="_top" rel="noopener">Open in the {E(m["title"])}</a>. A prototype, not official GOV.UK guidance. Open Government Licence v3.0.</footer></body></html>''', encoding='utf-8')
+        return [x[0] for x in items]
+
+    # -- version 1.10: releases feed (BL-19) ----------------------------------------------------------
+    def write_feed(self):
+        m, base = self.m, self.m['site_url']
+        cl = (ROOT / 'CHANGELOG.md').read_text(encoding='utf-8')
+        entries = ''
+        for ptxt in re.split(r'^## ', cl, flags=re.M)[1:]:
+            head, *lines = ptxt.strip().split('\n')
+            mm = re.match(r'([\d.]+) \((\d{4}-\d{2}-\d{2})\)', head)
+            if not mm:
+                continue
+            items = ''.join(f'<li>{md_code(E(l.strip()[2:]))}</li>' for l in lines if l.strip().startswith('- '))
+            entries += (f'<entry><title>Release {mm.group(1)}</title><id>{base}whats-new.html#v{slug(head)}</id><updated>{mm.group(2)}T00:00:00Z</updated>'
+                        f'<link rel="alternate" type="text/html" href="{base}whats-new.html#v{slug(head)}"/><content type="html">{E("<ul>" + items + "</ul>")}</content></entry>\n')
+        feed = (f'<?xml version="1.0" encoding="utf-8"?>\n<feed xmlns="http://www.w3.org/2005/Atom"><title>{E(m["title"])}: releases</title><id>{base}feed.xml</id>'
+                f'<updated>{m["as_of"]}T00:00:00Z</updated><link rel="self" href="{base}feed.xml"/><link rel="alternate" href="{base}whats-new.html"/>'
+                f'<author><name>The portal\'s service owner</name></author><rights>Open Government Licence v3.0</rights>\n{entries}</feed>\n')
+        (self.out / 'feed.xml').write_text(feed, encoding='utf-8')
+
+    # -- version 1.10: ontology and lineage (BL-20) -----------------------------------------------------
+    def write_ontology(self, out):
+        base = self.m['site_url']
+        V = f'{base}ontology#'
+        onto = [f'@prefix dcp: <{V}> .', '@prefix owl: <http://www.w3.org/2002/07/owl#> .', '@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .',
+                '@prefix prov: <http://www.w3.org/ns/prov#> .', '@prefix dcterms: <http://purl.org/dc/terms/> .', '',
+                f'<{base}ontology> a owl:Ontology ; rdfs:label "DAM capability playbooks ontology" ; dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ; owl:versionInfo "{self.m["version"]}" .', '']
+        for c, label, sup in [('PolicyRequirement', 'DAM Policy requirement', 'prov:Entity'), ('Capability', 'Capability', 'prov:Entity'), ('PortalRequirement', 'Portal requirement', 'prov:Entity'),
+                              ('Check', 'Automated check', 'prov:Plan'), ('Page', 'Portal page', 'prov:Entity'), ('Source', 'Source document', 'prov:Entity'), ('BacklogItem', 'Backlog item', 'prov:Entity')]:
+            onto.append(f'dcp:{c} a owl:Class ; rdfs:label "{label}" ; rdfs:subClassOf {sup} .')
+        for p, label, dom, rng in [('metBy', 'met by', 'PolicyRequirement', 'Page'), ('provedBy', 'proved by', 'PortalRequirement', 'Check'), ('realisedIn', 'realised in', 'PortalRequirement', 'Page'),
+                                   ('needs', 'needs', 'Capability', 'Source'), ('strength', 'strength', 'PolicyRequirement', None)]:
+            onto.append(f'dcp:{p} a {"owl:ObjectProperty" if rng else "owl:DatatypeProperty"} ; rdfs:label "{label}" ; rdfs:domain dcp:{dom}' + (f' ; rdfs:range dcp:{rng} .' if rng else ' .'))
+        (out / 'ontology.ttl').write_text('\n'.join(onto) + '\n', encoding='utf-8')
+
+        def lit(s):
+            return '"' + str(s).replace('\\', '\\\\').replace('"', '\\"').replace('\n', ' ') + '"'
+        L = [f'@prefix dcp: <{V}> .', '@prefix prov: <http://www.w3.org/ns/prov#> .', '@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .', '']
+        for s in self.d['sources']:
+            L.append(f'<{s["url"]}> a dcp:Source ; rdfs:label {lit(s["title"])} .')
+        for r in self.d['requirements']:
+            L.append(f'<{base}dam.html#{r["id"]}> a dcp:PolicyRequirement ; rdfs:label {lit(r["id"])} ; dcp:strength {lit(r["strength"])} ; prov:wasDerivedFrom <{self.src[r["src"]]["url"]}> ; dcp:metBy <{base}{CAP_PAGE[r["cap"]]}.html> .')
+        for c in self.d.get('capmap', []):
+            ref = f' ; prov:wasDerivedFrom <{self.src["SRC-DAM"]["url"]}#{c["dam"]}>' if c['dam'] else ''
+            L.append(f'<{base}capability-model.html#{c["id"]}> a dcp:Capability ; rdfs:label {lit(c["name"])}{ref} .')
+        for r in self.d['design']['requirements']:
+            pages = ' , '.join(f'<{base}{"" if f == "index" else f + ".html"}>' for f in r['features'] if f != 'all') or None
+            checks = ' , '.join(f'dcp:check-{c}' for c in r['checks'])
+            L.append(f'<{base}design.html#{r["id"]}> a dcp:PortalRequirement ; rdfs:label {lit(r["id"] + ": " + r["text"])}' + (f' ; dcp:realisedIn {pages}' if pages else '') + (f' ; dcp:provedBy {checks}' if checks else '') + ' .')
+        for c in sorted(KNOWN_CHECKS):
+            L.append(f'dcp:check-{c} a dcp:Check ; rdfs:label {lit(c)} .')
+        for x in self.research_items():
+            L.append(f'<{base}research.html#bl-{x["id"]}> a dcp:BacklogItem ; rdfs:label {lit(x["id"] + ": " + x["title"])} .')
+        (out / 'lineage.ttl').write_text('\n'.join(L) + '\n', encoding='utf-8')
+
+    def write_offline(self):
+        import zipfile
+        z = self.out / 'dam-playbooks-offline.zip'
+        with zipfile.ZipFile(z, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for f in sorted(self.out.rglob('*')):
+                if f.is_file() and f != z:
+                    zi = zipfile.ZipInfo(f'dam-playbooks/{f.relative_to(self.out).as_posix()}', date_time=(2026, 1, 1, 0, 0, 0))
+                    zi.compress_type = zipfile.ZIP_DEFLATED
+                    zf.writestr(zi, f.read_bytes())
+
     def rfi_rows(self):
         n, rows = 0, []
         for g in self.d.get('tooling', {}).get('questions', []):
@@ -2729,8 +3044,8 @@ class Site:
         for ptxt in parts:
             head, *lines = ptxt.strip().split('\n')
             items = [l[2:] for l in lines if l.startswith('- ')]
-            rel += f'<section class="release" id="v{slug(head)}"><h2>{icon("milestone")} {E(head)}</h2>{ul(items)}</section>'
-        body = self.hero('milestone', "What's new", "What's new", 'Changes in each release, newest first. Releases are also listed on GitHub with their source code.')
+            rel += f'<section class="release" id="v{slug(head)}"><h2>{icon("milestone")} {E(head)}</h2>{ul([md_code(E(i)) for i in items], raw=True)}</section>'
+        body = self.hero('milestone', "What's new", "What's new", 'Changes in each release, newest first. Releases are also listed on GitHub with their source code. Follow releases in any feed reader with the <a href="feed.xml">Atom feed</a>.')
         body += rel + f'<p><a href="https://github.com/{E(self.m["repo"])}/releases">{icon("download")}See all releases on GitHub</a></p>'
         return self.page('whats-new', "What's new", body, None, crumbs=["What's new"])
 
@@ -2897,6 +3212,7 @@ class Site:
                                                           'items': [{k: v for k, v in x.items() if k != 'assess'} for x in ri],
                                                           'ideas': {'available': self.ideas.get('available', False), 'as_of': self.ideas.get('as_of', ''), 'count': len(self.ideas.get('ideas', []))}},
                                                          indent=1, ensure_ascii=False), encoding='utf-8')
+        self.write_ontology(out)
         write_csv('metadata-dictionary.csv', ['property', 'mem_slot', 'obligation', 'rule'],
                   [[x['prop'], x['mem'], x['obligation'], x['rule']] for x in self.caps['cat']['metadata']])
         base = m['site_url'] + 'vocab#'
@@ -2928,7 +3244,7 @@ class Site:
                    'dcterms:type': x['group'], 'dcterms:description': x['why']} for x in d['rulebook']]}
         (out / 'sources.jsonld').write_text(json.dumps(cat, indent=1, ensure_ascii=False), encoding='utf-8')
         self.write_catalogue(out)
-        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility', 'data', 'test', 'guide', 'site-map', 'reuse', 'research'])
+        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility', 'data', 'test', 'guide', 'site-map', 'reuse', 'research', 'involve'])
         (self.out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>', encoding='utf-8')
 
 

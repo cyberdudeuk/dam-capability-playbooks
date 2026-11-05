@@ -49,6 +49,7 @@ BREAKS = {
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'tours': ('b16_tours_and_share', ""),
     'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
+    'ask': ('b18_ask_and_copy', "var f=document.querySelector('[data-ask]');if(f){f.replaceWith(f.cloneNode(true));}"),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
 }
 BREAK_CSS = {
@@ -313,6 +314,37 @@ def run(site, axe_path, brk=None, pages=None):
         except Exception as e:
             fail('b16_tours_and_share', f'share menu could not be used: {str(e).splitlines()[0]}')
         ctx6.close()
+        # B-18 (version 1.10): Ask a question returns pages that exist; toolkit copy buttons work; the portal's address is filled in
+        ctx8 = b.new_context(viewport={'width': 1280, 'height': 900}, bypass_csp=bool(brk))
+        pg8 = ctx8.new_page()
+        try:
+            pg8.goto(f'{base}/index.html')
+            prep(pg8)
+            pg8.fill('#ask-q', 'who owns a critical data asset')
+            pg8.click('[data-ask] button[type=submit]', timeout=2000)
+            pg8.wait_for_timeout(300)
+            hrefs = pg8.evaluate("Array.from(document.querySelectorAll('#ask-out a')).map(a => a.getAttribute('href'))")
+            if not hrefs:
+                fail('b18_ask_and_copy', 'Ask a question gave no answers for a common question')
+            for h in hrefs:
+                if not (site / h.split('#')[0]).exists():
+                    fail('b18_ask_and_copy', f'Ask a question linked to a missing page {h}')
+            pg8.goto(f'{base}/involve.html')
+            prep(pg8)
+            addr = pg8.inner_text('#TK-EMAIL-text')
+            if base + '/' not in addr:
+                fail('b18_ask_and_copy', "the toolkit text does not show the portal's address")
+            btn = pg8.locator('[data-copy-target="TK-EMAIL-text"]')
+            if not btn.is_visible():
+                fail('b18_ask_and_copy', 'the copy button is hidden')
+            else:
+                btn.click(timeout=2000)
+                pg8.wait_for_timeout(200)
+                if not pg8.inner_text('#TK-EMAIL .copy-status').strip():
+                    fail('b18_ask_and_copy', 'copying gave no confirmation')
+        except Exception as e:
+            fail('b18_ask_and_copy', f'could not be used: {str(e).splitlines()[0]}')
+        ctx8.close()
         # B-17 (version 1.8.2): the estate compass gives a route for every situation, turns its needle to the starting portal,
         # keeps the answers in the address, and restores the route from a shared link
         if (site / 'compass' / 'index.html').exists():
@@ -397,7 +429,7 @@ def main(argv=None):
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
     names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
-             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role', 'b16_tours_and_share', 'b17_compass']
+             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role', 'b16_tours_and_share', 'b17_compass', 'b18_ask_and_copy']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:
