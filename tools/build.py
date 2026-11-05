@@ -2437,6 +2437,22 @@ class Site:
                 rows.append([f'RFI-{n:02d}', g['group'], q])
         return rows
 
+    def by_role(self, text):
+        """Replace any address in the owner's GitHub account or Pages site with what it is, keeping the page (D-028)."""
+        owner = self.m['repo'].split('/')[0]
+        names = {self.m['repo'].split('/')[1]: 'this portal'}
+        for p in (self.d.get('related') or {}).get('portals', []):
+            m = re.match(r'https://[^/]+\.github\.io/([^/]+)/', p['url'])
+            if m:
+                names[m.group(1)] = 'the ' + p['name']
+        pat = r'https?://(?:github\.com/' + re.escape(owner) + r'/|' + re.escape(owner) + r'\.github\.io/)([A-Za-z0-9._-]+)/?([^\s)]*)'
+
+        def sub(m):
+            kind = 'repository' if 'github.com' in m.group(0) else 'site'
+            what = names.get(m.group(1), "another project in the owner's account")
+            return f'{kind} of {what}' + (f', {m.group(2)}' if m.group(2) else '')
+        return re.sub(pat, sub, text)
+
     def p_status(self):
         st = self.status
         if not st:
@@ -2445,9 +2461,8 @@ class Site:
         good = st['healthy']
         srows = [[E(x['title']), f'<strong class="status s-{"completed" if x["state"] == "ok" else "in-progress" if x["state"] == "unbaselined" else "not-started"}">{E(x["state"])}</strong>', E(x.get('updated') or '-'), E(x['detail'] or '-')] for x in st['sources']]
         prow = [[E(x['page']), f'{x["bytes"] / 1000:.0f} kB', 'Within envelope' if x['ok'] else 'Over envelope'] for x in st['pages']]
-        # D-019: problems quote addresses; show the portal's own repository by role, not by its owner's account name
-        repo_url = f'https://github.com/{self.m["repo"]}'
-        probs = ul([p.replace(repo_url, "the portal's repository") for p in st['problems']]) if st['problems'] else '<p>No problems found.</p>'
+        # D-019, D-028: problems quote addresses; name repositories and sites by role, never by the owner's account name
+        probs = ul([self.by_role(p) for p in st['problems']]) if st['problems'] else '<p>No problems found.</p>'
         body = self.hero('activity', 'Status', 'Status and health', 'Results of the latest automated health run. It checks that sources are current, the review date has not passed and pages stay light.',
                          meta=[('circle-check' if good else 'triangle-alert', 'Healthy' if good else 'Needs attention'), ('clock', f'Run {st["generated"]}'), ('calendar-check', f'Review due {st["review_date"]}')])
         body += f'''<h2 id="problems">{icon("triangle-alert")} Problems</h2>{probs}

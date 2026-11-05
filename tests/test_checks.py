@@ -349,6 +349,18 @@ class Vaccination(unittest.TestCase):
         failed = check_site.run(self.s, self.r, only={'c17_no_personal_details'}, quiet=True)
         self.assertEqual(failed, {}, 'the Status page must not print the owner account name (D-019)')
 
+    def test_d028_status_page_hides_owner_account_in_sister_links(self):
+        st = {'generated': 'x', 'today': '2026-11-05', 'review_date': '2027-02-05', 'review_due': False, 'healthy': False,
+              'problems': ['Broken link: https://cyberdudeuk.github.io/dq-commons/ecosystem.html (404)',
+                           'Broken link: https://github.com/cyberdudeuk/github-repos-asset-catalogue/pull/9 (404)'],
+              'sources': [], 'pages': [], 'envelope_bytes': 1, 'links': [], 'anchors': []}
+        site = build.Site(build.load(self.r / 'content' / 'playbooks.yaml'), self.s)
+        site.status = st
+        site.build()
+        failed = check_site.run(self.s, self.r, only={'c17_no_personal_details'}, quiet=True)
+        self.assertEqual(failed, {}, 'the Status page must name sister portals by role, not by the owner account (D-028)')
+        self.assertIn('site of the Public Sector Data Quality Commons, ecosystem.html', (self.s / 'status.html').read_text(encoding='utf-8'))
+
     def test_c26_unrelated_commit_identity(self):
         import subprocess
         g = ['git', '-C', str(self.r)]

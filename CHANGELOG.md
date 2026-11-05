@@ -3,6 +3,7 @@
 ## 1.8.3 (2026-11-05)
 - Related elsewhere links to the new parts of the Data Quality Commons (release 2.10.0): the standards catalogue (open standards for data, digital, cyber and technology with their GOV.UK status) on the cataloguing and tools pages; the Commons data management wheel and "Three portals, one journey", where a DAMA area, role or standard can be traced through all three portals, on the capability model page; and data quality in change programmes on the delivery and change page. The metadata weaver signpost now mentions its DQV output.
 - The Commons now links back: its wheel areas and roles open the same area (`capability-model.html#dm-xx`) and role (`together.html#role-CODE`) here, and its page "Three portals, one journey" reads this portal's `data/xref.json` to check the shared keys still match. The estate compass's table of links between the portals is updated to say so.
+- Fixed (D-028): the Status page printed the owner's account name when a link to a sister portal was broken (here, a Commons page committed but not yet published). Addresses in the owner's account are now named by what they are, keeping the page name.
 - Fixed (D-027): a break script crashed on the compass page, which has none of this portal's own objects, and stopped the 1.8.2 publish. Every break script is now safe on any page, a test runs each one on an empty page, and the runbook says to run every break mode before adding a page to the browser checks.
 
 ## 1.8.2 (2026-11-05)
