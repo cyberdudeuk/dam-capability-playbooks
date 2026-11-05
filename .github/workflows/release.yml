@@ -1,0 +1,21 @@
+name: Release
+# A person pushes a version tag (for example v1.1.0). This workflow builds, checks and attaches the site as a zip.
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python tools/build.py && python tools/check_site.py && python -m unittest discover -s tests
+      - run: cd site && zip -qr "../dam-capability-playbooks-${GITHUB_REF_NAME}.zip" .
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" "dam-capability-playbooks-${GITHUB_REF_NAME}.zip" --generate-notes --title "$GITHUB_REF_NAME"

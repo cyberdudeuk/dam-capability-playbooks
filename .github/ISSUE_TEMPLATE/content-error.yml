@@ -1,0 +1,32 @@
+name: Something is wrong or out of date on a page
+description: Report an error, a broken link or guidance that has changed
+title: "[Page] "
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: This form is public. Do not include personal data or anything above OFFICIAL.
+  - type: input
+    id: page
+    attributes:
+      label: Page address
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source for the correction (optional)
+      description: A link to the GOV.UK page or standard, if you have one
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I have not included personal data or anything sensitive
+          required: true

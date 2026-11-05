@@ -2,6 +2,7 @@
 
 Run: python -m unittest discover -s tests
 """
+import re
 import shutil
 import sys
 import tempfile
@@ -19,6 +20,8 @@ def fresh():
     repo = tmp / 'repo'
     (repo / 'content').mkdir(parents=True)
     shutil.copy(ROOT / 'content' / 'playbooks.yaml', repo / 'content' / 'playbooks.yaml')
+    for f in ('README.md', 'LICENSE', 'CITATION.cff'):
+        shutil.copy(ROOT / f, repo / f)
     site = repo / 'site'
     build.Site(build.load(repo / 'content' / 'playbooks.yaml'), site).build()
     return tmp, repo, site
@@ -68,7 +71,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c03_links_resolve')
 
     def test_c04_email_in_page(self):
-        edit(self.s / 'about.html', '<h2 id="privacy">Privacy</h2>', '<h2 id="privacy">Privacy</h2><p>team' + '@' + 'dsit.gov.uk</p>')
+        edit(self.s / 'about.html', '<h1>', '<p>team' + '@' + 'dsit.gov.uk</p><h1>')
         self.fails('c04_no_email')
 
     def test_c04_email_in_content(self):
@@ -127,6 +130,42 @@ class Vaccination(unittest.TestCase):
     def test_c15_placeholder(self):
         edit(self.s / 'about.html', '<h1>', '<h1>TODO ')
         self.fails('c15_no_placeholders')
+
+    def test_c16_missing_canonical(self):
+        t = (self.s / 'learning.html').read_text(encoding='utf-8')
+        t = re.sub(r'<link rel="canonical"[^>]*>', '', t)
+        (self.s / 'learning.html').write_text(t, encoding='utf-8')
+        self.fails('c16_search_engines')
+
+    def test_c16_missing_favicon(self):
+        (self.s / 'assets' / 'og-image.png').unlink()
+        self.fails('c16_search_engines')
+
+    def test_c17_name_in_page(self):
+        edit(self.s / 'about.html', '<h1>', '<h1>Written by Eman' + 'uel ')
+        self.fails('c17_no_personal_details')
+
+    def test_c17_team_in_readme(self):
+        (self.r / 'README.md').write_text('Contact the Data Manage' + 'ment Team. Author: Sil' + 'va')
+        self.fails('c17_no_personal_details')
+
+    def test_c18_avoid_words(self):
+        edit(self.s / 'library.html', '<h1>', '<h1>Click ' + 'here ')
+        self.fails('c18_plain_english')
+
+    def test_build_rejects_comma_split(self):
+        y = self.r / 'content' / 'playbooks.yaml'
+        t = y.read_text(encoding='utf-8')
+        t = t.replace('"Set up a decision log and an exception register"', 'Set up a decision log, logs')
+        y.write_text(t, encoding='utf-8')
+        with self.assertRaises(build.ContentError):
+            build.load(y)
+
+    def test_build_rejects_service_owner_in_method(self):
+        y = self.r / 'content' / 'playbooks.yaml'
+        edit(y, '{level: High, who: Data owner,', '{level: High, who: Service owner,')
+        with self.assertRaises(build.ContentError):
+            build.load(y)
 
     def test_build_rejects_missing_accountable(self):
         y = self.r / 'content' / 'playbooks.yaml'

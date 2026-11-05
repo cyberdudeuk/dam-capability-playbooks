@@ -163,7 +163,9 @@ def c05_no_external_assets(site, repo, pages):
     for name, p in pages.items():
         for tag, a in p.tags:
             if tag == 'script' and re.match(r'https?:|//', a.get('src', '')): errs.append(f'{name}: remote script {a["src"]}')
-            if tag == 'link' and re.match(r'https?:|//', a.get('href', '')): errs.append(f'{name}: remote link {a["href"]}')
+            # a canonical or alternate link is an address, not a load; anything the browser fetches must be local
+            if tag == 'link' and re.match(r'https?:|//', a.get('href', '')) and (a.get('rel') or '').lower() not in ('canonical', 'alternate'):
+                errs.append(f'{name}: remote {a.get("rel")} link {a["href"]}')
             if tag in ('img', 'iframe', 'source') and re.match(r'https?:|//', a.get('src', '')): errs.append(f'{name}: remote {tag}')
     for css in site.rglob('*.css'):
         t = css.read_text(encoding='utf-8')
@@ -282,9 +284,72 @@ def c15_no_placeholders(site, repo, pages):
     return [f'{f.name}: placeholder text' for f in text_files(site) if bad.search(f.read_text(encoding='utf-8'))]
 
 
+def visible_text(path):
+    t = path.read_text(encoding='utf-8')
+    t = re.sub(r'<(script|style)[^>]*>.*?</\1>', ' ', t, flags=re.S)
+    t = re.sub(r'<[^>]+>', ' ', t)
+    return re.sub(r'\s+', ' ', t)
+
+
+def c16_search_engines(site, repo, pages):
+    """Rule: every indexable page is optimised for search engines (owner request, version 1.1)."""
+    errs, titles = [], {}
+    for name, p in pages.items():
+        if name == '404.html':
+            if 'noindex' not in (p.metas.get('robots') or ''): errs.append('404.html: not marked noindex')
+            continue
+        desc = p.metas.get('description') or ''
+        if not 50 <= len(desc) <= 160: errs.append(f'{name}: description is {len(desc)} characters (want 50 to 160)')
+        rels = {(a.get('rel') or '').lower(): a.get('href') for t, a in p.tags if t == 'link'}
+        if not rels.get('canonical', '').startswith('https://'): errs.append(f'{name}: no absolute canonical link')
+        if 'icon' not in rels: errs.append(f'{name}: no favicon')
+        props = {a.get('property'): a.get('content') for t, a in p.tags if t == 'meta' and a.get('property')}
+        for k in ('og:title', 'og:description', 'og:image', 'og:url'):
+            if not props.get(k): errs.append(f'{name}: missing {k}')
+        if p.title in titles: errs.append(f'{name}: title duplicates {titles[p.title]}')
+        titles[p.title] = name
+    robots = site / 'robots.txt'
+    if not robots.exists() or 'Sitemap:' not in robots.read_text(): errs.append('robots.txt missing or has no sitemap line')
+    sm = (site / 'sitemap.xml').read_text() if (site / 'sitemap.xml').exists() else ''
+    for name in pages:
+        if name not in ('404.html', 'index.html') and name not in sm: errs.append(f'sitemap.xml: {name} not listed')
+    for f in ('favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'og-image.png'):
+        if not (site / 'assets' / f).exists(): errs.append(f'assets/{f} missing')
+    return errs
+
+
+PERSONAL = re.compile(r'emanuel|silva|cyberdudeuk|data management team|data management lead', re.I)
+
+
+def c17_no_personal_details(site, repo, pages):
+    """Owner request (version 1.1): no details about the author or their team in what readers see; contact form only."""
+    errs = []
+    for name in pages:
+        for m in PERSONAL.finditer(visible_text(site / name)):
+            errs.append(f'{name}: visible text names "{m.group(0)}"')
+    for f in (repo / 'README.md', repo / 'LICENSE', repo / 'content' / 'playbooks.yaml', repo / 'CITATION.cff'):
+        if f.exists():
+            for m in re.finditer(r'emanuel|silva', f.read_text(encoding='utf-8'), re.I):
+                errs.append(f'{f.name}: names "{m.group(0)}"')
+    return sorted(set(errs))
+
+
+AVOID = re.compile(r'\b(click here|simply|easily|e\.g\.|i\.e\.|etc\.|utilise|leverage|going forward)\b', re.I)
+
+
+def c18_plain_english(site, repo, pages):
+    """Rule: GOV.UK content style; no words the style guide asks writers to avoid in visible text."""
+    errs = []
+    for name in pages:
+        for m in AVOID.finditer(visible_text(site / name)):
+            errs.append(f'{name}: avoid "{m.group(0)}"')
+    return sorted(set(errs))
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
-          c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders]
+          c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
+          c17_no_personal_details, c18_plain_english]
 
 
 def run(site, repo, only=None, quiet=False):

@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Ask the community
+    url: https://github.com/cyberdudeuk/dam-capability-playbooks/discussions
+    about: Questions and shared practice from other people using the playbooks.
   - name: The policy itself (GOV.UK)
     url: https://www.gov.uk/government/publications/data-asset-management-policy-in-government
-    about: Read the data asset management policy and its linked guidance. GOV.UK is the authority.
+    about: GOV.UK is the authority on what the policy requires.

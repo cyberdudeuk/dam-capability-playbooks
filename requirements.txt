@@ -2,3 +2,4 @@ PyYAML==6.0.3
 segno==1.6.6
 python-barcode==0.16.1
 playwright==1.63.0
+Pillow==12.3.0

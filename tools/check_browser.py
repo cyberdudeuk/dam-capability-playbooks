@@ -40,6 +40,9 @@ BREAKS = {
     'tabs': ('b06_tabs', "document.querySelectorAll('[role=tablist]').forEach(function(l){l.replaceWith(l.cloneNode(true))});"),
     'filters': ('b08_filters', "document.querySelectorAll('.filters select').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
     'noscript': ('b07_no_script', ""),
+    'contact': ('b09_contact_form', "var f=document.getElementById('contact-form');if(f){f.replaceWith(f.cloneNode(true));}"),
+    'progress': ('b10_progress', "Storage.prototype.setItem=function(){};"),
+    'display': ('b11_display', "var d=document.getElementById('display-panel');if(d){d.replaceWith(d.cloneNode(true));}"),
 }
 BREAK_CSS = {
     'overflow': '.x{white-space:nowrap;font-size:20px}',
@@ -168,6 +171,46 @@ def run(site, axe_path, brk=None, pages=None):
         total = pg.evaluate("document.querySelectorAll('#lib-table [data-item]').length")
         if not (0 < shown < total):
             fail('b08_filters', f'capability filter shows {shown} of {total}')
+        # B-09 contact form: errors are summarised and focused; a valid form opens a pre-filled GitHub issue form
+        pg.goto(f'{base}/contact.html')
+        prep(pg)
+        pg.click('#contact-form button[type=submit]')
+        if pg.locator('#cf-errors').is_hidden() or pg.evaluate("document.activeElement.id") != 'cf-errors':
+            fail('b09_contact_form', 'empty submission does not show and focus the error summary')
+        elif pg.evaluate("Array.from(document.querySelectorAll('#cf-errors a')).some(a => !document.getElementById(a.getAttribute('href').slice(1)))"):
+            fail('b09_contact_form', 'an error summary link points to a field that does not exist (D-011)')
+        else:
+            pg.check('#contact-form input[name=kind] >> nth=0')
+            pg.fill('#cf-detail', 'Test message')
+            pg.check('#cf-privacy')
+            captured = []
+            pg.route('https://github.com/**', lambda r: (captured.append(r.request.url), r.fulfill(status=200, body='ok')))
+            pg.click('#contact-form button[type=submit]')
+            pg.wait_for_timeout(500)
+            if not captured or 'template=contact.yml' not in captured[0] or 'detail=Test+message' not in captured[0]:
+                fail('b09_contact_form', f'valid submission did not open the pre-filled issue form ({captured[:1]})')
+        # B-10 progress persists across pages and shows on the role route
+        ctx3 = b.new_context(bypass_csp=bool(brk))
+        pg3 = ctx3.new_page()
+        pg3.goto(f'{base}/governance.html#method')
+        prep(pg3)
+        pg3.check('input[data-progress="gov.mandate"]')
+        pg3.goto(f'{base}/personas.html')
+        txt = pg3.locator('#p-cdo .progress-text').first.text_content() or ''
+        if not txt.startswith('1 of'):
+            fail('b10_progress', f'marking a step did not show on the chief data officer route ("{txt}")')
+        ctx3.close()
+        # B-11 display options change text size and are remembered
+        pg.goto(f'{base}/index.html')
+        prep(pg)
+        try:
+            pg.click('#display-toggle', timeout=3000)
+            pg.check('input[name=dp-text][value=xl]', timeout=3000)
+            pg.reload()
+            if pg.evaluate("document.documentElement.getAttribute('data-text')") != 'xl':
+                fail('b11_display', 'largest text size was not applied and remembered')
+        except Exception as e:  # a control that cannot be used is a failure, not a crash
+            fail('b11_display', f'display options could not be used: {str(e).splitlines()[0]}')
         b.close()
     httpd.shutdown()
     return failed
@@ -185,7 +228,8 @@ def main(argv=None):
         ok = want in failed
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
-    names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters']
+    names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
+             'b09_contact_form', 'b10_progress', 'b11_display']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:
