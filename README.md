@@ -45,7 +45,7 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Ask the community | Discussions |
 | Status page | Weekly scheduled workflow; failures open an issue labelled `health` |
 | What's new | `CHANGELOG.md` and tag-triggered releases |
-| Hosting | GitHub Pages, deployed by Actions from `main` |
+| Hosting | GitHub Pages from the `gh-pages` branch, which the workflow publishes from `main` using plain commands (no third-party actions) |
 | Security | CodeQL, Dependabot, secret scanning, private vulnerability reporting |
 
 Nothing in the portal depends on any service other than GitHub and GitHub Pages.

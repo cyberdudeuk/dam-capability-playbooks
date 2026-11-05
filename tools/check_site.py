@@ -452,16 +452,23 @@ def c23_repository_metadata(site, repo, pages):
 
 
 def c24_actions_pinned(site, repo, pages):
-    """Rule (supply chain, D-018): every GitHub Action in a workflow is pinned to a full commit SHA, so a moved tag cannot change what runs."""
+    """Rule (supply chain, D-018): workflows use only actions owned by the repository owner and pinned to a full commit SHA, matching the repository's Actions policy."""
+    import yaml
     errs = []
     wf = repo / '.github' / 'workflows'
     if not wf.exists():
         return ['.github/workflows missing']
+    owner = str(yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))['meta']['repo']).split('/')[0].lower()
     for f in sorted(wf.glob('*.yml')):
         for n, line in enumerate(f.read_text(encoding='utf-8').splitlines(), 1):
-            m = re.search(r'uses:\s*([^\s#]+)', line)
-            if m and not m.group(1).startswith('./') and not re.search(r'@[0-9a-f]{40}$', m.group(1)):
-                errs.append(f'{f.name}:{n}: {m.group(1)} is not pinned to a commit SHA')
+            m = re.search(r'^\s*-?\s*uses:\s*([^\s#]+)', line)
+            if not m or m.group(1).startswith('./'):
+                continue
+            ref = m.group(1)
+            if ref.split('/')[0].lower() != owner:
+                errs.append(f'{f.name}:{n}: {ref} is not owned by {owner}; the repository policy will refuse to start the run')
+            elif not re.search(r'@[0-9a-f]{40}$', ref):
+                errs.append(f'{f.name}:{n}: {ref} is not pinned to a commit SHA')
     return errs
 
 

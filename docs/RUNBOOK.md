@@ -25,5 +25,5 @@ Role levels, grades and skills on the Professions and skills page were read from
 Add the Lucide icon name to `ICON_NAMES` in `tools/vendor_icons.py`, run `npm ci && python tools/vendor_icons.py`, and commit `site_src/icons.json`.
 
 ## Repository settings the owner keeps switched on
-Pages (source: GitHub Actions), Issues, Discussions, private vulnerability reporting, Dependabot alerts, secret scanning,
+Pages (source: Deploy from a branch, gh-pages, / (root); the workflow pushes the built site there), Issues, Discussions, private vulnerability reporting, Dependabot alerts, secret scanning,
 and branch protection on `main` requiring the "Build, check and publish" workflow and one review.

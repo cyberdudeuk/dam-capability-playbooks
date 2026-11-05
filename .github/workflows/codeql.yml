@@ -1,4 +1,7 @@
 name: CodeQL
+# Runs the CodeQL command-line bundle directly and uploads results through the code scanning API, because the
+# repository only allows actions owned by its owner and pinned to a commit SHA (D-018). The bundle version is pinned
+# and its download is checked against the SHA-256 digest GitHub publishes for the release asset.
 on:
   push:
     branches: [main]
@@ -7,6 +10,8 @@ on:
     - cron: '41 5 * * 3'
 permissions:
   contents: read
+env:
+  CODEQL_BUNDLE: codeql-bundle-v2.27.4
 jobs:
   analyse:
     runs-on: ubuntu-latest
@@ -15,10 +20,37 @@ jobs:
       contents: read
     strategy:
       matrix:
-        language: [javascript-typescript, python]
+        language: [javascript, python]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
-        with:
-          languages: ${{ matrix.language }}
-      - uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+      - name: Check out the commit (plain git; the repository allows no third-party actions)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch -q --depth 1 origin "${GITHUB_SHA}"
+          git checkout -q FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: Download and verify the pinned CodeQL bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          asset=codeql-bundle-linux64.tar.gz
+          want=$(gh api "repos/github/codeql-action/releases/tags/${CODEQL_BUNDLE}" --jq ".assets[] | select(.name == \"${asset}\") | .digest")
+          curl -sSfL -o "$RUNNER_TEMP/$asset" "https://github.com/github/codeql-action/releases/download/${CODEQL_BUNDLE}/${asset}"
+          got="sha256:$(sha256sum "$RUNNER_TEMP/$asset" | cut -d' ' -f1)"
+          if [ -z "$want" ] || [ "$want" != "$got" ]; then echo "::error::CodeQL bundle digest mismatch (published ${want:-none}, downloaded $got)"; exit 1; fi
+          tar -xzf "$RUNNER_TEMP/$asset" -C "$RUNNER_TEMP"
+      - name: Analyse
+        run: |
+          "$RUNNER_TEMP/codeql/codeql" database create "$RUNNER_TEMP/db" --language="${{ matrix.language }}" --source-root . --overwrite
+          "$RUNNER_TEMP/codeql/codeql" database analyze "$RUNNER_TEMP/db" "codeql/${{ matrix.language }}-queries:codeql-suites/${{ matrix.language }}-security-and-quality.qls" \
+            --format=sarif-latest --output="$RUNNER_TEMP/results.sarif" --sarif-category="/language:${{ matrix.language }}"
+      - name: Upload results to code scanning
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ref="${GITHUB_REF}"
+          sarif=$(gzip -c "$RUNNER_TEMP/results.sarif" | base64 -w0)
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/code-scanning/sarifs" -f commit_sha="${GITHUB_SHA}" -f ref="$ref" -f sarif="$sarif" -f tool_name=CodeQL

@@ -273,8 +273,12 @@ class Vaccination(unittest.TestCase):
         edit(self.r / 'CITATION.cff', 'version: 1.4.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
-    def test_c24_unpinned_action(self):
-        edit(self.r / '.github' / 'workflows' / 'codeql.yml', 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1', 'actions/checkout@v7')
+    def test_c24_third_party_action(self):
+        edit(self.r / '.github' / 'workflows' / 'codeql.yml', '    steps:\n', '    steps:\n      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1\n')
+        self.fails('c24_actions_pinned')
+
+    def test_c24_unpinned_own_action(self):
+        edit(self.r / '.github' / 'workflows' / 'codeql.yml', '    steps:\n', '    steps:\n      - uses: cyberdudeuk/some-action@v1\n')
         self.fails('c24_actions_pinned')
 
     def test_build_rejects_unverified_signpost(self):
