@@ -865,7 +865,7 @@ open_register:
 - {id: OR-13, item: "GitHub Pages is on. Branch protection on main, Discussions, private vulnerability reporting and the repository description and topics must be set in the repository settings.", who: Repository owner}
 - {id: OR-14, item: "The Data Maturity Assessment framework is CC BY-NC-SA 4.0 and asks government users to contact CDDO. Confirm whether its level descriptions may be shown inside this portal; until then it is linked, not copied (F-05).", who: Service owner}
 - {id: OR-15, item: "The explicit, implicit and inferred flags on the capability model are this portal's reading of the policy. Ask the GDS data policy team to confirm them, especially the inferred ones.", who: Service owner, with GDS Data Frameworks and Standards}
-- {id: OR-16, item: "In the repository's Pages settings, set the source to 'Deploy from a branch', branch gh-pages, folder / (root). The workflow now publishes there because the repository's Actions policy does not allow the Pages deployment actions (D-018).", who: Repository owner}
+- {id: OR-16, item: "GitHub Pages cannot publish under the current Actions policy, because GitHub's own Pages build also runs as actions. In Settings, Actions, General, also allow actions created by GitHub (keeping commit SHA pinning required); then in Settings, Pages, choose 'Deploy from a branch', branch gh-pages, folder / (root). The workflow already publishes the site to gh-pages (D-018).", who: Repository owner}
 - {id: OR-11, item: "Verified on GOV.UK: Table 4 of the issues framework contradicts its own rule for a 97.5% target (finding F-01). Raise with the GDS data quality team; tracked as a repository issue.", who: Service owner}
 
 defects:
