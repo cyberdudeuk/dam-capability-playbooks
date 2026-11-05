@@ -1,0 +1,885 @@
+# DAM capability playbooks: the single source of truth.
+# Every page, export and vocabulary file in site/ is generated from this file by tools/build.py.
+# Never edit generated files by hand.
+#
+# Provenance codes (build standard VER-07):
+#   V  verified against the primary source on the date given
+#   P  from a supplied pack (the owner's own playbook suites and portfolio material)
+#   O  an operating rule or this playbook's own synthesis of verified sources
+#   K  background knowledge (a lead, not a fact)
+#   U  unconfirmed
+# Requirement strength follows the source wording: must, should, may, method, gap.
+
+meta:
+  id: DAMCP
+  title: DAM capability playbooks
+  subtitle: Data governance, data cataloguing and data quality for critical data assets, in one place
+  version: 1.0.0
+  as_of: '2026-11-05'
+  review: '2027-02-05'
+  verified_on: '2026-11-05'
+  owner_role: Data Management Lead, Data Management Team, Government Data (GDS)
+  attribution: Emanuel Silva, Data Management Team, Government Data directorate, GDS (department per current machinery of government)
+  repo: cyberdudeuk/dam-capability-playbooks
+  site_url: https://cyberdudeuk.github.io/dam-capability-playbooks/
+  contact_form: https://github.com/cyberdudeuk/dam-capability-playbooks/issues/new/choose
+  contact_note: >-
+    Contact is by form only. For now the form is this repository's issue form, which delivers to the repository's
+    issues, not to a team inbox. Moving to the Data Management Team's own contact form is an open item (OR-02).
+  licence_content: Open Government Licence v3.0
+  licence_content_url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+  licence_code: MIT
+  status: Prototype. Not an official GOV.UK service or published GDS guidance. Where it repeats GDS guidance, the GOV.UK page is the authority.
+  profile: Public sector, UK, UK central government (departments and arm's length bodies), official work. Grade G3 (shared material others will rely on).
+  grade_reason: Shared with departments and ALBs, so G3. It holds no personal data and makes no decisions about people, so not G4.
+  intent: >-
+    Identify, consolidate and assemble the playbook material for the three capabilities the Data Asset Management (DAM)
+    Policy rests on (data governance, data cataloguing and data quality) and deliver it as one interactive portal on
+    GitHub Pages, so that a lead policy coordinator, a data owner or a data steward has one place to start, can see
+    what the policy requires, and can follow a method for each capability that joins up with the other two.
+
+# ---------------------------------------------------------------------------
+# Sources (primary, verified this session unless marked otherwise)
+# ---------------------------------------------------------------------------
+sources:
+- id: SRC-DAM
+  title: Data asset management policy in government
+  publisher: GDS
+  type: Policy
+  url: https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government
+  dates: Published 27 May 2026; page metadata updated 9 September 2026
+  prov: V
+  caps: [gov, cat, dq]
+  note: The mandate. Mandatory for UK government departments and ALBs; optional for public corporations; not for councils.
+- id: SRC-IDC
+  title: Identifying and recording critical data assets
+  publisher: GDS
+  type: Guidance
+  url: https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets
+  dates: Published and updated 16 April 2026
+  prov: V
+  caps: [cat, gov]
+  note: Criticality (provided or acquired), the seven purposes, how to identify, ownership and annual review.
+- id: SRC-MD
+  title: Recording metadata to describe critical data assets
+  publisher: GDS
+  type: Guidance
+  url: https://www.gov.uk/government/publications/record-metadata-to-describe-critical-data-assets/recording-metadata-to-describe-critical-data-assets
+  dates: Published 16 April 2026; page metadata updated 9 September 2026
+  prov: V
+  caps: [cat]
+  note: The metadata properties to record for each critical data asset, and formatting rules.
+- id: SRC-OWN
+  title: Data ownership model
+  publisher: GDS
+  type: Guidance
+  url: https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model
+  dates: Published 16 April 2026; page metadata updated 9 September 2026
+  prov: V
+  caps: [gov]
+  note: Data owner, data steward and data custodian; relationship to IAOs and the SIRO; three compliance options.
+- id: SRC-IAO
+  title: The role of information asset owners in government
+  publisher: GOV.UK
+  type: Guidance
+  url: https://www.gov.uk/government/publications/information-asset-owner-role-guidance
+  dates: Listed on the data.gov.uk data manual, 5 November 2026
+  prov: V
+  caps: [gov]
+  note: Mandatory IAO actions that any ownership option must still meet.
+- id: SRC-GDQF
+  title: The Government Data Quality Framework
+  publisher: GOV.UK
+  type: Framework
+  url: https://www.gov.uk/government/publications/the-government-data-quality-framework/the-government-data-quality-framework
+  dates: Published 3 December 2020; page metadata updated 7 January 2026
+  prov: V
+  caps: [dq]
+  note: Five principles, six dimensions and the data lifecycle.
+- id: SRC-DQAP
+  title: Data quality action plan implementation guide
+  publisher: GDS
+  type: Guidance
+  url: https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-action-plan-implementation-guide
+  dates: Published 11 November 2025; updated 16 April 2026
+  prov: V
+  caps: [dq]
+  note: The seven DQAP steps, the DQAP template and its RACI matrix.
+- id: SRC-DQIF
+  title: Data quality issues framework
+  publisher: GDS
+  type: Method
+  url: https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-issues-framework
+  dates: Published 11 November 2025; updated 16 April 2026
+  prov: V
+  caps: [dq]
+  note: Importance x impact, target ranges, bands and resolution timescales.
+- id: SRC-MAN
+  title: Data manual, data management section (data.gov.uk)
+  publisher: GDS (National Data Library)
+  type: Index
+  url: https://www.data.gov.uk/data-manual/data-management/
+  dates: Read 5 November 2026
+  prov: V
+  caps: [gov, cat, dq]
+  note: The official index of the guidance above, plus the data maturity hub and capability framework.
+- id: SRC-DMA
+  title: Data maturity assessment for government
+  publisher: GDS
+  type: Framework
+  url: https://www.gov.uk/government/collections/data-maturity-assessment-for-government
+  dates: Listed on the data manual, 5 November 2026
+  prov: V
+  caps: [gov]
+  note: The self-assessment used to show maturity across all three capabilities.
+- id: SRC-MEM
+  title: UK Cross-Government Metadata Exchange Model (xGov MEM)
+  publisher: co-cddo on GitHub
+  type: Standard
+  url: https://co-cddo.github.io/ukgov-metadata-exchange-model/
+  dates: Repository read 5 November 2026
+  prov: V
+  caps: [cat]
+  note: LinkML model based on DCAT; classes Dataset, DataService, Distribution, CataloguedResource. Endorsed for implementation by the Data Standards Authority Steering Board.
+- id: SRC-DCAT
+  title: Data Catalog Vocabulary (DCAT) version 3
+  publisher: W3C
+  type: Standard
+  url: https://www.w3.org/TR/vocab-dcat-3/
+  dates: W3C Recommendation
+  prov: K
+  caps: [cat]
+  note: The base vocabulary named in the metadata guidance and used by the MEM.
+- id: SRC-DQV
+  title: Data on the Web Best Practices Data Quality Vocabulary (DQV)
+  publisher: W3C
+  type: Standard
+  url: https://www.w3.org/TR/vocab-dqv/
+  dates: W3C Working Group Note
+  prov: K
+  caps: [dq, cat]
+  note: How to publish quality measurements alongside a catalogue record.
+- id: SRC-ODCS
+  title: Open Data Contract Standard
+  publisher: Bitol (Linux Foundation AI and Data)
+  type: Standard
+  url: https://bitol-io.github.io/open-data-contract-standard/latest/
+  dates: Referenced by the Data Quality Commons
+  prov: K
+  caps: [dq]
+  note: Quality rules written as a data contract that survives a change of tool or supplier.
+- id: SRC-DQC
+  title: Public Sector Data Quality Commons (portal and dqkit)
+  publisher: cyberdudeuk on GitHub (prototype, not an official product)
+  type: Toolkit
+  url: https://cyberdudeuk.github.io/dq-commons/
+  dates: Repository read 5 November 2026 (v2.0.0)
+  prov: P
+  caps: [dq, cat]
+  note: The master for data quality tools; this portal links to it and does not copy its tools.
+
+# ---------------------------------------------------------------------------
+# The DAM Policy spine: what the policy and its guidance require, by capability
+# ---------------------------------------------------------------------------
+requirements:
+- {id: DAM-R01, cap: cat, strength: must, src: SRC-DAM, prov: V, text: "Identify the data assets in scope: classified OFFICIAL (including handling markings such as 'personal'), meeting the critical data asset criteria, and inside your own data ownership accountabilities."}
+- {id: DAM-R02, cap: cat, strength: must, src: SRC-DAM, prov: V, text: "Identify and manage metadata about in-scope assets within your data catalogues."}
+- {id: DAM-R03, cap: cat, strength: must, src: SRC-DAM, prov: V, text: "Report in-scope assets to GDS. Departments provide metadata on their assets and coordinate and assure the returns of their ALBs."}
+- {id: DAM-R04, cap: cat, strength: must, src: SRC-DAM, prov: V, text: "Maintain metadata and review it every year."}
+- {id: DAM-R05, cap: gov, strength: must, src: SRC-DAM, prov: V, text: "Every identified asset has a named data owner, accountable for decisions about the data."}
+- {id: DAM-R06, cap: dq, strength: must, src: SRC-DAM, prov: V, text: "Every identified asset has a data quality action plan (DQAP) or an equivalent mechanism for managing its quality."}
+- {id: DAM-R07, cap: dq, strength: should, src: SRC-DAM, prov: V, text: "Where you already manage the quality of critical data, review those processes to confirm they cover every step of the DQAP implementation guide."}
+- {id: DAM-R08, cap: gov, strength: must, src: SRC-DAM, prov: V, text: "The chief data officer of each in-scope organisation implements the policy; the Chief Data Officer Council oversees implementation; the minister writes to ministers each year on progress."}
+- {id: DAM-R09, cap: gov, strength: must, src: SRC-OWN, prov: V, text: "Choose an ownership option (keep the IAO model, adopt the data ownership model, or a hybrid) and still meet the mandatory IAO actions, with governance covering accountability, reporting lines, assurance and data quality."}
+- {id: DAM-R10, cap: gov, strength: must, src: SRC-IDC, prov: V, text: "When a data owner leaves, tell the coordinating team, have a successor ready and give the successor's details so the metadata can be updated."}
+- {id: DAM-R11, cap: cat, strength: should, src: SRC-IDC, prov: V, text: "Each critical data asset supports at least one of the seven purposes: public service delivery; legislative, legal or contractual requirement; defence, national security and resilience; policy development and evaluation; official statistics; public interest; fraud and error."}
+- {id: DAM-R12, cap: cat, strength: should, src: SRC-IDC, prov: V, text: "If you designate a particular distribution of a data set, designate its source data set as well."}
+- {id: DAM-R13, cap: cat, strength: should, src: SRC-MD, prov: V, text: "Record the metadata properties set out in the metadata guidance, in plain English, with ISO 8601 dates and 'unknown' or 'not applicable' rather than blanks."}
+- {id: DAM-R14, cap: gov, strength: should, src: SRC-IDC, prov: V, text: "The chief data officer, or the most senior data official, leads identification and appoints a coordinating team or person, drawing in owners, IAOs, stewards, service owners, analysts and policy makers."}
+- {id: DAM-R15, cap: dq, strength: method, src: SRC-DQIF, prov: V, text: "Prioritise quality issues with the issues framework: importance of purpose times impact sets the target range; the band below target sets priority. Its resolution timescales (Critical immediately; High, Medium and Low within 1, 3 and 6 measurements) are given as an example."}
+- {id: DAM-R16, cap: cat, strength: gap, src: SRC-DAM, prov: V, text: "The policy's introduction promises minimum requirements for interoperability, but the policy body does not state them. Treat the metadata guidance and the MEM as the current interoperability baseline and watch for guidance (open item OR-05)."}
+
+# Dates and the support offer come from the owner's own portfolio material, not from the GOV.UK policy page.
+timeline:
+- {when: Apr to Jun 2026, what: Launch, kind: phase, prov: P}
+- {when: Jul to Dec 2026, what: "Phase 1: internal transformation", kind: phase, prov: P}
+- {when: Jan 2027, what: Baseline return, kind: return, prov: P}
+- {when: Feb 2027, what: Baseline adoption report, kind: report, prov: P}
+- {when: Jan to Oct 2027, what: "Phase 2: implementation", kind: phase, prov: P}
+- {when: Oct 2027, what: Policy adoption return, kind: return, prov: P}
+- {when: Nov 2027, what: Adoption report, kind: report, prov: P}
+- {when: Nov 2027 onwards, what: "Phase 3: reporting and maintenance", kind: phase, prov: P}
+- {when: End Mar 2028, what: Annual returns, kind: return, prov: P}
+- {when: Apr 2028, what: Annual reports, kind: report, prov: P}
+
+support:
+- {name: DAM Policy Coordinators Working Group, detail: "Launched 30 July 2026 with agreed terms of reference; monthly to the end of 2026; one lead policy coordinator per organisation.", prov: P}
+- {name: Show and tells, detail: "Regular sessions on the policy and its guidance.", prov: P}
+- {name: Cross-government data management community, detail: "On Knowledge Hub, with recordings and materials.", prov: P}
+- {name: One-to-one support in tranches, detail: "Tranche 1 August 2026, Tranche 2 June 2027, Tranche 3 December 2027, prioritised by volume and complexity of critical data assets; doubles as peer review.", prov: P}
+- {name: Data Owner and Data Steward training, detail: "Role-based training for the ownership model the policy assumes (Q3 2026).", prov: P}
+- {name: Catalogue pilot, detail: "A catalogue pilot with HM Treasury and a cloud vendor, with learning shared across government.", prov: P}
+- {name: Discoverability Platform, detail: "GDS is scoping a platform that links to departments' own catalogues (update due December 2026). Interim template returns are used meanwhile.", prov: P}
+
+# ---------------------------------------------------------------------------
+# Roles: one model across the three capabilities
+# ---------------------------------------------------------------------------
+roles:
+- {code: CDO, name: Chief data officer, text: "Implements the policy in the organisation and leads the identification exercise; sponsors governance.", src: SRC-DAM, prov: V}
+- {code: COO, name: Lead policy coordinator, text: "Coordinates identification, collates and assures the return (including ALBs), and is the link to the Working Group.", src: SRC-IDC, prov: P}
+- {code: BRD, name: Data governance board, text: "Sets policy direction, resolves escalations and sees the portfolio. Chaired by the CDO, SIRO or equivalent.", src: null, prov: P}
+- {code: OWN, name: Data owner, text: "Senior leader accountable for the meaning, content, quality and management of the asset; approves changes and signs off targets and risks.", src: SRC-OWN, prov: V}
+- {code: IAO, name: Information asset owner, text: "Accountable to the SIRO for protecting the whole information asset; may hold data owner duties under the IAO or hybrid option.", src: SRC-OWN, prov: V}
+- {code: STW, name: Data steward, text: "Runs the asset day to day: policies and standards, access, quality processes and documentation such as the business glossary in the catalogue.", src: SRC-OWN, prov: V}
+- {code: CUS, name: Data custodian, text: "Technical expert for the system holding the data: storage, access controls, auditable change and disposal.", src: SRC-OWN, prov: V}
+- {code: CAT, name: Catalogue manager, text: "Runs the organisation's catalogue, its metadata standard and its harvest feed.", src: null, prov: O}
+- {code: DQL, name: Data quality lead or analyst, text: "Methods, profiling, tooling and reporting for data quality.", src: SRC-DQAP, prov: V}
+- {code: DPO, name: Data protection officer, text: "Independent advice on lawful basis, DPIAs and data subject rights.", src: null, prov: K}
+- {code: USR, name: Data users, text: "Teams, services and other organisations that rely on the data; say what they need and report problems.", src: SRC-DQAP, prov: V}
+- {code: PUB, name: People the data describes, text: "Citizens, communities and their representatives; help spot exclusion and test whether quality information is understandable.", src: null, prov: P}
+
+# ---------------------------------------------------------------------------
+# The three capabilities
+# ---------------------------------------------------------------------------
+capabilities:
+- id: gov
+  name: Data governance
+  short: Governance
+  colour: '#1d70b8'
+  icon: shield
+  question: Who decides, by what authority, and how do we know it is working?
+  purpose: >-
+    Put the authority, roles and routines in place so that every critical data asset has a named, active owner,
+    decisions are made and recorded, and the organisation can evidence its DAM Policy adoption.
+  why: The policy requires a named data owner for every asset (DAM-R05), an ownership option that still meets the mandatory IAO actions (DAM-R09), and CDO-led implementation under CDO Council oversight (DAM-R08).
+  method_name: Five recipes
+  method_intro: >-
+    Five repeatable recipes: Mandate, Frame, Assign, Operate and Assure. Run them in order the first time, then as a
+    loop, with Assure feeding lessons back into Mandate. The sequence comes from the owner's Data Governance Playbook
+    suite; the requirements it meets come from GDS guidance.
+  method_prov: P
+  stages:
+  - n: 1
+    id: mandate
+    name: Mandate
+    goal: Establish the authority everything else operates under.
+    trigger: A new governance need, the start of DAM Policy adoption, or the annual refresh.
+    steps:
+    - Confirm the sponsor (the CDO, SIRO or equivalent) who will chair or co-sign the charter.
+    - Draft a one-page charter covering purpose, scope, authority and review cadence.
+    - State which data, systems and decisions are in scope, and any exclusions. Start narrow, with critical data assets.
+    - Route the charter for approval and record the decision and its date.
+    - Publish it to every stakeholder found during scoping.
+    outputs: [Governance charter, Board terms of reference, Scope statement with exclusions, Sign-off record]
+    checklist:
+    - Sponsor confirmed in writing
+    - Scope covers every critical data asset the organisation owns
+    - Sign-off obtained and dated
+    - Review date set, at least annual
+    raci: {CDO: A, BRD: R, COO: R, OWN: C, STW: I, DPO: C}
+    reqs: [DAM-R08, DAM-R14]
+    tip: A charter that tries to cover everything is approved slowly or not at all. Widen scope at the annual refresh once the model works.
+  - n: 2
+    id: frame
+    name: Frame
+    goal: Assemble a proportionate rulebook to make decisions against.
+    trigger: The charter is approved and policy gaps are known.
+    steps:
+    - List every data policy and standard already in force, however informal.
+    - Compare it with the core areas - governance, classification and handling, quality, retention and disposal, access and sharing, metadata, master and reference data, and ethics including AI use.
+    - Draft or adopt what is missing, in proportion to the risk. Reuse cross-government guidance before writing your own.
+    - Give every policy a named owner (a role) and a review date.
+    - Register each policy and make it findable, ideally in the data catalogue.
+    outputs: [Policy and standards register, Gap assessment, Policy owner list with review dates]
+    checklist:
+    - Gap assessment against the core areas done
+    - Every policy has an owner role and a review date
+    - The register is published and findable
+    raci: {CDO: A, BRD: A, COO: R, OWN: C, STW: C, DPO: C}
+    reqs: [DAM-R09]
+    tip: Adopting a cross-government template keeps you consistent with other departments and makes shared assurance easier.
+  - n: 3
+    id: assign
+    name: Assign
+    goal: Put a named, accountable owner and an active steward against every critical data asset.
+    trigger: Policies are adopted and critical assets lack named owners.
+    steps:
+    - Choose your ownership option - IAO model, data ownership model or hybrid - and record the decision.
+    - For each critical data asset, propose an owner of matching seniority (SCS for large or complex assets; Grade 6 or 7 for smaller ones), a steward and a custodian.
+    - Agree decision rights using the RACI below and any delegated thresholds.
+    - Brief role holders and record training (Data Owner and Steward training).
+    - Record owner, steward, custodian, effective date and a named successor in the ownership register and the catalogue record.
+    outputs: [Ownership option decision, Data ownership register, RACI per asset or asset class, Succession plan]
+    checklist:
+    - Every critical data asset has a named owner
+    - Every role has a named deputy or successor
+    - The catalogue record shows the owner role and a contact point that is a team or form, never a personal inbox
+    - Mandatory IAO actions still covered whichever option you chose
+    raci: {CDO: A, BRD: C, COO: R, OWN: R, STW: R, CUS: C, IAO: C}
+    reqs: [DAM-R05, DAM-R09, DAM-R10]
+    tip: A single point of failure in accountability is the most common finding when this step is audited. Name a backup for every owner and steward.
+  - n: 4
+    id: operate
+    name: Operate
+    goal: Make governance visible day to day.
+    trigger: Owners are in place and governance moves into business as usual.
+    steps:
+    - Set the board's cadence (monthly, at least quarterly) and publish the calendar.
+    - Keep a decision log - what, who, why, when and the review trigger.
+    - Keep an issue and risk log, with quality issues coming in from the DQAP.
+    - Log every deviation from policy as an exception with an owner and an expiry date.
+    - Escalate anything unresolved up the ladder.
+    outputs: [Decision log, Issue and risk log, Exception register, Board minutes]
+    checklist:
+    - Decision log active and current
+    - Every exception has an expiry date
+    - Escalations tracked to resolution
+    - Minutes published within five working days
+    raci: {CDO: I, BRD: A, OWN: R, STW: R, CUS: C, DQL: C, DPO: C}
+    reqs: [DAM-R05]
+    tip: An empty decision log after three months is a warning, not efficiency. Decisions are being made off the record.
+  - n: 5
+    id: assure
+    name: Assure
+    goal: Prove it works and feed the lessons back into the mandate.
+    trigger: A reporting cycle, the annual return or an audit is due.
+    steps:
+    - Re-run the data maturity self-assessment.
+    - Compile measures from the live registers - owner coverage, review currency, DQAP coverage, exceptions.
+    - Map evidence to the GDS annual return as you go, not at the deadline.
+    - Have someone outside the board check the evidence before submission.
+    - Submit, then log lessons back into Mandate.
+    outputs: [Maturity score and narrative, Measures pack, Evidence pack mapped to the GDS return, Lessons note]
+    checklist:
+    - Evidence collected continuously during Operate
+    - Independent check done before submission
+    - Return submitted on time
+    - Lessons logged to Mandate
+    raci: {CDO: A, BRD: R, COO: R, OWN: C, STW: C, DQL: C}
+    reqs: [DAM-R03, DAM-R08]
+    tip: Keep an evidence folder updated every time a decision is logged, so the return is collation, not reconstruction.
+  roles: [CDO, BRD, COO, OWN, IAO, STW, CUS, DPO]
+  escalation_note: The ladder and its timescales are this playbook's recommendation, not a GOV.UK requirement.
+  escalation:
+  - {level: Tier 1, who: Steward or custodian, trigger: Working-level query or minor exception, when: 2 working days}
+  - {level: Tier 2, who: Data owner, trigger: Access, quality or sharing decision within remit, when: 5 working days}
+  - {level: Tier 3, who: Data governance board, trigger: Cross-owner conflict, policy exception or high risk, when: 10 working days}
+  - {level: Tier 4, who: CDO, SIRO or accounting officer, trigger: Unresolved board decision or legal or reputational risk, when: As required}
+  measures:
+  - {name: Critical data assets with a named owner, target: 100%}
+  - {name: Owners and stewards with a named successor, target: 100%}
+  - {name: Policies with an owner and an in-date review, target: 100%}
+  - {name: Open exceptions past their expiry date, target: '0'}
+  templates:
+  - {id: T-GOV-1, name: Governance charter, fields: [Purpose, Scope and exclusions, Authority and sponsor, Membership, Decision rights, Review cadence, Sign-off (role and date)]}
+  - {id: T-GOV-2, name: Data ownership register entry, fields: [Asset identifier, Asset title, Ownership option (IAO, data owner or hybrid), Data owner (role), Information asset owner (role), Data steward (role), Data custodian (role), Successor (role), Effective date, Training completed, Next review]}
+  - {id: T-GOV-3, name: Decision log entry, fields: [Decision ID, Date, Decision, Decided by (role or forum), Rationale, Assets affected, Review trigger]}
+  - {id: T-GOV-4, name: Exception register entry, fields: [Exception ID, Policy deviated from, Rationale, Owner (role), Risk accepted by (role), Start date, Expiry date, Review outcome]}
+
+- id: cat
+  name: Data cataloguing
+  short: Cataloguing
+  colour: '#00703c'
+  icon: book
+  question: What critical data do we hold, is it described well enough to find and reuse, and have we told GDS?
+  purpose: >-
+    Find the critical data assets, describe each one to the cross-government metadata standard, keep the
+    descriptions in a catalogue that others can harvest, and report them to GDS every year.
+  why: Identifying, cataloguing, reporting and annually reviewing metadata are all 'must' requirements (DAM-R01 to DAM-R04).
+  method_name: Eight stages
+  method_intro: >-
+    Eight stages from mobilising the team to the annual review. The sequence is this playbook's synthesis of the
+    policy, the identification guidance and the metadata guidance; each step points to the requirement it meets.
+    The internal Data Cataloguing Playbook (v2.6) is the fuller source and is not yet public (open item OR-01).
+  method_prov: O
+  stages:
+  - n: 1
+    id: mobilise
+    name: Mobilise
+    goal: Have a named lead and a coordinating team before identification starts.
+    trigger: Policy adoption begins, or a new reporting cycle opens.
+    steps:
+    - The CDO (or most senior data official) leads and appoints a coordinating team or person.
+    - Nominate the lead policy coordinator for the Working Group.
+    - Agree how the department will coordinate and assure its ALBs' returns.
+    - Bring in data owners, IAOs, stewards, service owners, analysts and policy makers.
+    outputs: [Named lead and coordinator, Contributor list, ALB coordination plan]
+    checklist:
+    - Coordinator nominated to the Working Group
+    - Every ALB has a named contact role
+    raci: {CDO: A, COO: R, OWN: C, IAO: C, STW: C}
+    reqs: [DAM-R14, DAM-R03]
+  - n: 2
+    id: discover
+    name: Discover candidates
+    goal: Build a long list of data other organisations depend on.
+    trigger: The team is mobilised.
+    steps:
+    - Start from what you already have - data catalogues, information asset registers and registers of data sharing agreements.
+    - Find data you provide to, or acquire from, other organisations for an essential process or purpose.
+    - Prioritise assets supporting government missions and your services (including Top 75 services).
+    - Include high-reuse-value assets not yet shared.
+    outputs: [Candidate list with source of each entry]
+    checklist:
+    - All three starting registers searched
+    - Both directions covered - data provided and data acquired
+    raci: {CDO: A, COO: R, CAT: R, STW: C, OWN: C, USR: C}
+    reqs: [DAM-R01]
+  - n: 3
+    id: designate
+    name: Test and designate
+    goal: Decide which candidates are critical data assets, and draw each asset's boundary.
+    trigger: The candidate list is complete.
+    steps:
+    - Apply the policy's scope tests - classified OFFICIAL, meets the critical data asset criteria, within your ownership accountabilities.
+    - Record which of the seven purposes each asset supports.
+    - Draw the boundary - only the fields needed for the cross-government purpose form the asset, not the whole system.
+    - If you designate a distribution, designate its source data set too.
+    - Record why each candidate was or was not designated.
+    outputs: [Designation decisions with reasons, Asset boundary per asset]
+    checklist:
+    - Every asset passes all scope tests
+    - Every asset has at least one purpose
+    - Source data sets designated where a distribution is
+    raci: {CDO: A, COO: R, OWN: R, STW: C, DPO: C}
+    reqs: [DAM-R01, DAM-R11, DAM-R12]
+  - n: 4
+    id: own
+    name: Confirm ownership
+    goal: Every designated asset has a named, accountable owner before it is described.
+    trigger: Assets are designated.
+    steps:
+    - Confirm the owner (data owner or IAO) and steward for each asset with the governance Assign recipe.
+    - Use a shared team contact point for the asset, never a personal inbox.
+    - Record a successor so the metadata survives the owner leaving.
+    outputs: [Owner, steward and contact point per asset]
+    checklist:
+    - No asset goes forward without a named owner
+    - Contact point is a team route or form
+    raci: {CDO: A, OWN: R, STW: R, COO: C}
+    reqs: [DAM-R05, DAM-R10]
+  - n: 5
+    id: describe
+    name: Describe
+    goal: Describe each asset well enough for someone outside your team to find, understand and judge it.
+    trigger: The asset has an owner.
+    steps:
+    - Record the properties in the metadata guidance (see the metadata tab).
+    - Write in plain English; expand acronyms; describe the data, and put usage warnings in usage notes.
+    - Use ISO 8601 dates, IANA media types, and 'unknown' or 'not applicable' rather than blanks.
+    - Model datasets, data services and distributions as the MEM and DCAT do.
+    - Add quality information from the DQAP (see data quality, stage 6).
+    outputs: [Catalogue record per asset, conforming to the metadata guidance]
+    checklist:
+    - Title and description are plain English
+    - Access rights, licence and security classification recorded
+    - Dates in ISO 8601
+    raci: {OWN: A, STW: R, CAT: R, CUS: C, DQL: C}
+    reqs: [DAM-R02, DAM-R13]
+  - n: 6
+    id: publish
+    name: Catalogue and expose
+    goal: Keep the record in your catalogue in a form others can harvest.
+    trigger: Records are complete.
+    steps:
+    - Store each record in the organisation's catalogue, or an asset register where no catalogue exists yet.
+    - Expose records in DCAT so portals and the Discoverability Platform can harvest them.
+    - Make sure every link in a record works from outside your organisation.
+    - Choose catalogue tools against what any catalogue must expose, not a single vendor.
+    outputs: [Catalogue entries, Machine-readable feed]
+    checklist:
+    - Records are reachable by harvest, not only by people
+    - No record depends on an internal-only link
+    raci: {OWN: A, CAT: R, CUS: R, STW: C}
+    reqs: [DAM-R02, DAM-R16]
+  - n: 7
+    id: report
+    name: Report to GDS
+    goal: Submit an assured return on time.
+    trigger: A return window opens (baseline January 2027).
+    steps:
+    - Prepare the return from catalogue records, not by retyping them.
+    - Collate and assure ALB returns.
+    - Check the return before submission so moderation is about judgement, not formatting.
+    - Submit through the interim template, or the Discoverability Platform when it is live.
+    outputs: [Assured return, ALB assurance record]
+    checklist:
+    - Every asset in the return has an owner, a purpose and current metadata
+    - ALB returns assured by the department
+    raci: {CDO: A, COO: R, CAT: R, OWN: C, BRD: I}
+    reqs: [DAM-R03]
+  - n: 8
+    id: maintain
+    name: Maintain and review
+    goal: Records stay true.
+    trigger: Every 12 months, and whenever an asset or its owner changes.
+    steps:
+    - Review every record at least every 12 months.
+    - Update records when the asset changes, and when the owner leaves.
+    - Retire assets that are no longer critical, with a reason.
+    - Feed findings into the governance Assure recipe.
+    outputs: [Annual review record, Updated catalogue entries]
+    checklist:
+    - Every record reviewed in the last 12 months
+    - Owner changes reflected within the month
+    raci: {OWN: A, STW: R, CAT: R, COO: C}
+    reqs: [DAM-R04, DAM-R10]
+  roles: [CDO, COO, OWN, IAO, STW, CUS, CAT, USR]
+  metadata:
+  # From SRC-MD (verified 5 November 2026) mapped to the xGov MEM (SRC-MEM). The guidance does not set one
+  # mandatory/recommended column, so obligation follows the wording of each section.
+  - {prop: title, mem: CataloguedResource.title, obligation: must, rule: Plain English name; avoid acronyms and jargon}
+  - {prop: alternativeTitle, mem: CataloguedResource.alternativeTitle, obligation: optional, rule: A short name to keep titles concise}
+  - {prop: description, mem: CataloguedResource.description, obligation: must, rule: Describes the data; usage warnings go elsewhere}
+  - {prop: identifier, mem: CataloguedResource.identifier, obligation: should, rule: Your own system's identifier or an opaque random one, not sequential}
+  - {prop: creator, mem: CataloguedResource.creator, obligation: must, rule: The organisation that created the data, from a list of organisations}
+  - {prop: dateCreated, mem: CataloguedResource.created, obligation: should, rule: ISO 8601 date or date-time}
+  - {prop: temporalCoverage, mem: none in MEM (gap), obligation: listed, rule: The period the data applies to}
+  - {prop: conformsTo, mem: none in MEM (gap), obligation: listed, rule: The standard or schema the data follows}
+  - {prop: accessRights, mem: CataloguedResource.accessRights, obligation: should, rule: 'open, commercial or internal, with any handling caveat'}
+  - {prop: securityClassification, mem: CataloguedResource.securityClassification, obligation: listed, rule: Sensitivity level, OFFICIAL for assets in scope}
+  - {prop: licence, mem: CataloguedResource.licence, obligation: should, rule: OGL URL for open data; the agreement for restricted data}
+  - {prop: mediaType, mem: Distribution.mediaType, obligation: should, rule: IANA media type, such as text/csv}
+  - {prop: expires, mem: none in MEM (gap), obligation: listed, rule: How long this version is valid}
+  - {prop: supersededBy, mem: none in MEM (gap), obligation: listed, rule: The newer version that replaces this one}
+  measures:
+  - {name: Designated assets with a catalogue record, target: 100%}
+  - {name: Records reviewed in the last 12 months, target: 100%}
+  - {name: Records with access rights, licence and classification, target: 100%}
+  - {name: Records harvestable as DCAT, target: Rising each quarter}
+  templates:
+  - {id: T-CAT-1, name: Candidate and designation log, fields: [Candidate, Found in (catalogue, IAR or sharing register), Provided to or acquired from, Purpose (one or more of seven), Scope tests passed, Designated (yes or no), Reason, Decided by (role), Date]}
+  - {id: T-CAT-2, name: Critical data asset catalogue record, fields: [title, alternativeTitle, description, identifier, creator, dateCreated, temporalCoverage, conformsTo, accessRights, securityClassification, licence, mediaType, expires, supersededBy, Owner (role), Contact point (team or form), Purpose, Last reviewed, Next review]}
+  - {id: T-CAT-3, name: Annual record review, fields: [Asset, Date, Still critical (and why), Owner and successor confirmed, Metadata checked against the guidance, Changes made, Signed off by (role)]}
+
+- id: dq
+  name: Data quality
+  short: Quality
+  colour: '#b45f06'
+  icon: gauge
+  question: Is the data good enough for what it is used for, and are we fixing what is not?
+  purpose: >-
+    Know, prove and improve the quality of each critical data asset through a data quality action plan (DQAP),
+    scored with the government issues framework, reported openly and repeated every cycle.
+  why: Every identified asset must have a DQAP or equivalent (DAM-R06), and existing processes should cover all seven DQAP steps (DAM-R07).
+  method_name: Eight stages over the seven DQAP steps
+  method_intro: >-
+    Eight stages taken from the Data Quality Commons playbook, which follows the seven steps of the GDS DQAP
+    implementation guide and adds an annual review. Use the Commons for the tools - rule checking, issue scoring and
+    DQAP workbooks; this page is the method and how it joins governance and cataloguing.
+  method_prov: P
+  stages:
+  - n: 1
+    id: identify
+    name: Identify critical data
+    dqap: Step 1
+    goal: Know which data items in each asset matter most.
+    trigger: The asset is designated and has an owner.
+    steps:
+    - Name the 5 to 15 data items that drive the most important decisions (critical data elements).
+    - Record who uses the data, for what, and who or what it describes.
+    - Log known issues in the DQAP issues log.
+    outputs: [Criticality matrix, User and purpose map]
+    checklist:
+    - Critical data elements agreed with at least two user teams
+    - You know which groups the data might miss
+    raci: {OWN: A, STW: R, USR: C, DQL: C, PUB: I}
+    reqs: [DAM-R06]
+  - n: 2
+    id: define
+    name: Define rules and targets
+    dqap: Step 2
+    goal: Turn 'good enough' into rules a computer can test.
+    trigger: Critical data elements are agreed.
+    steps:
+    - Choose the dimensions that matter - completeness, uniqueness, consistency, timeliness, validity, accuracy.
+    - Write each rule in plain English first, then as a testable rule.
+    - Set targets from the issues framework range for importance times impact.
+    - Store rules as files (a data contract) so they survive a change of tool or supplier.
+    outputs: [Rule catalogue, Targets, Data contract]
+    checklist:
+    - Every critical data element has at least one rule
+    - Targets come from user impact, not from what the data already achieves
+    raci: {OWN: A, STW: R, DQL: R, USR: C}
+    reqs: [DAM-R06, DAM-R15]
+  - n: 3
+    id: baseline
+    name: Measure a baseline
+    dqap: Step 3
+    goal: Know where you are today.
+    trigger: Rules and targets are agreed.
+    steps:
+    - Profile the data and run every rule; record the date and data version.
+    - Log every failure as an issue with its size and who it affects.
+    - Break results down by group where you lawfully can.
+    outputs: [Baseline results, Issue log]
+    checklist:
+    - Results are reproducible
+    - Group differences looked for and recorded
+    raci: {OWN: A, STW: R, DQL: R, CUS: C}
+    reqs: [DAM-R06]
+  - n: 4
+    id: prioritise
+    name: Prioritise and set goals
+    dqap: Step 4
+    goal: Fix what hurts most first.
+    trigger: The baseline is recorded.
+    steps:
+    - Score each issue with the issues framework.
+    - Resolve Critical immediately, High within one cycle, Medium within three and Low within six.
+    - Agree the order with the owner and record accepted risks with a review date.
+    outputs: [Prioritised issue list, Goals in the DQAP, Risk acceptances]
+    checklist:
+    - Every issue has a priority and a timescale
+    - Issues affecting some groups more than others are not ranked down as 'small'
+    raci: {OWN: A, STW: R, BRD: I, DQL: C}
+    reqs: [DAM-R15]
+  - n: 5
+    id: improve
+    name: Fix causes at source
+    dqap: Step 5
+    goal: Stop problems coming back.
+    trigger: Goals are agreed.
+    steps:
+    - Ask why until you reach the cause - people, process, system, supplier or standard.
+    - Prefer prevention at entry over downstream cleaning.
+    - Put supplier duties and measures into contracts.
+    - Re-run the rule to prove the fix worked.
+    outputs: [Root cause records, Actions with owners, Evidence of fixes]
+    checklist:
+    - Every fix proved by re-running the rule
+    - Any downstream cleaning is recorded and temporary
+    raci: {OWN: A, STW: R, CUS: R, DQL: C}
+    reqs: [DAM-R06]
+  - n: 6
+    id: report
+    name: Report openly
+    dqap: Step 6
+    goal: Users know how good the data is and what it should not be used for.
+    trigger: Each measurement cycle.
+    steps:
+    - Update a plain-English data quality statement - scores, trends, known issues and unsuitable uses.
+    - Publish quality information with the catalogue record (W3C DQV) so it travels with the asset.
+    - Report the portfolio to the governance board; quality issues enter the issue and risk log.
+    outputs: [Data quality statement, Quality metadata on the catalogue record, Board report]
+    checklist:
+    - Statement says what the data is not fit for
+    - Quality information sits on the catalogue record
+    raci: {OWN: A, STW: R, CAT: R, BRD: I, USR: I}
+    reqs: [DAM-R06]
+  - n: 7
+    id: sustain
+    name: Repeat and sustain
+    dqap: Step 7
+    goal: Quality stays good without heroics.
+    trigger: After the first cycle.
+    steps:
+    - Run checks automatically on each load or on a fixed cycle.
+    - Track trends and alert when a rule drops below target.
+    - Escalate with the agreed thresholds.
+    - Keep rules, results and the plan in version control.
+    outputs: [Automated checks, Trend record, Escalation log]
+    checklist:
+    - Checks run without manual effort
+    - The steward has a named deputy
+    raci: {OWN: A, STW: R, DQL: R, CUS: R}
+    reqs: [DAM-R06, DAM-R07]
+  - n: 8
+    id: review
+    name: Review every year
+    dqap: Added by the Commons
+    goal: Rules and targets still match what users need.
+    trigger: Every 12 months, on the same date as the catalogue record review.
+    steps:
+    - Review rules, targets and the plan with the owner and users.
+    - Add rules for new uses, including AI.
+    - Retire rules that no longer matter; raise targets that are now easy.
+    outputs: [Annual review note, Next year's goals]
+    checklist:
+    - Reviewed with the catalogue record, not separately
+    - New uses assessed against the AI-ready data guidance
+    raci: {OWN: A, STW: R, USR: C, PUB: C}
+    reqs: [DAM-R04, DAM-R07]
+  roles: [OWN, STW, CUS, DQL, USR, BRD, CAT, PUB]
+  principles:
+  - {name: Commit to data quality, src: SRC-GDQF}
+  - {name: Know your users and their needs, src: SRC-GDQF}
+  - {name: Assess quality throughout the data lifecycle, src: SRC-GDQF}
+  - {name: Communicate data quality clearly and effectively, src: SRC-GDQF}
+  - {name: Anticipate changes affecting data quality, src: SRC-GDQF}
+  dimensions:
+  - {name: Completeness, text: How fully records are present, including whether essential values are filled in}
+  - {name: Uniqueness, text: Whether each thing is recorded once, without duplication}
+  - {name: Consistency, text: Whether values agree with other values about the same thing, within or across data sets}
+  - {name: Timeliness, text: Whether data is up to date for its use, with an acceptable lag}
+  - {name: Validity, text: Whether data is in the expected range and format}
+  - {name: Accuracy, text: How closely data matches reality}
+  escalation_note: Timescales from the GDS issues framework, which presents them as an example; triggers from the Data Quality Commons.
+  escalation:
+  - {level: Critical, who: Owner, with the board informed, trigger: A critical data element in the lowest band, or wrong data could harm people or break the law, when: Immediately}
+  - {level: High, who: Owner, trigger: More than one band below target, when: Within one cycle}
+  - {level: Medium, who: Steward, trigger: One band below target, when: Within three cycles}
+  - {level: Low, who: Steward, trigger: Slightly below target with low impact, when: Within six cycles}
+  measures:
+  - {name: Critical data assets with a current DQAP, target: 100%}
+  - {name: Critical data elements with at least one rule, target: 100%}
+  - {name: Critical issues resolved within timescale, target: 100%}
+  - {name: Assets with quality information on the catalogue record, target: 100%}
+  templates:
+  - {id: T-DQ-1, name: Data quality rule, fields: [Rule ID, Data element, Plain-English rule, Dimension, Test, Importance (1-4), Impact (1-4), Combined score, Target (%), Owner (role), Date agreed]}
+  - {id: T-DQ-2, name: Issue log entry, fields: [Issue ID, Date found, Rule ID, Records affected, Users or groups affected, Performance and target, Band, Priority, Target resolution date, Root cause, Action and owner (role), Status]}
+  - {id: T-DQ-3, name: Data quality statement, fields: [Asset and version, Date, Summary in plain English, Scores by dimension and trend, Known issues, Quality by group where lawful, Fit for, Not fit for, How to report a problem (form)]}
+  tools:
+  - {name: Check a CSV file in the browser, url: https://cyberdudeuk.github.io/dq-commons/check.html}
+  - {name: Score issues with the issues framework, url: https://cyberdudeuk.github.io/dq-commons/guidance.html}
+  - {name: Full data quality management playbook, url: https://cyberdudeuk.github.io/dq-commons/playbook.html}
+  - {name: Size a critical data asset baseline, url: https://cyberdudeuk.github.io/dq-commons/baseline.html}
+
+# ---------------------------------------------------------------------------
+# How the three capabilities join up
+# ---------------------------------------------------------------------------
+interlocks:
+- {id: IL-01, from: gov.assign, to: cat.own, what: The ownership register is the source for the owner and successor on the catalogue record. Record them once.}
+- {id: IL-02, from: cat.own, to: dq.identify, what: The owner on the catalogue record is the owner who signs off DQAP targets and accepts risks.}
+- {id: IL-03, from: cat.designate, to: dq.identify, what: The asset boundary set at designation is the scope of the DQAP. No DQAP for fields outside the asset.}
+- {id: IL-04, from: dq.report, to: cat.describe, what: Quality information is published on the catalogue record, so the record says how good the data is.}
+- {id: IL-05, from: dq.report, to: gov.operate, what: Quality issues above Medium enter the board's issue and risk log.}
+- {id: IL-06, from: gov.frame, to: cat.describe, what: The metadata standard and the classification policy adopted in Frame are what records are checked against.}
+- {id: IL-07, from: cat.maintain, to: dq.review, what: One annual review date per asset covers the record, the owner and the DQAP together.}
+- {id: IL-08, from: cat.report, to: gov.assure, what: The GDS return is part of the governance evidence pack, assembled as you go.}
+- {id: IL-09, from: gov.assure, to: gov.mandate, what: Lessons from assurance refresh the mandate for the next cycle.}
+
+cycle:
+- {when: Before the window, gov: Confirm the mandate and owners, cat: Mobilise and refresh candidates, dq: Agree rules for any new assets}
+- {when: Through the year, gov: Operate the logs, cat: Describe and keep records current, dq: Measure each cycle and fix at source}
+- {when: Quarterly, gov: Board sees measures and exceptions, cat: Check harvest and record currency, dq: Update the action plan and statement}
+- {when: Annual review date, gov: Assure and refresh the mandate, cat: Review every record and submit the return, dq: Review rules and targets}
+
+journeys:
+- id: J-CDO
+  who: Chief data officer
+  need: I need to know what the policy asks of me and who does what, so that my organisation adopts it without duplicate effort.
+  steps: [{page: dam, anchor: requirements, label: What the policy requires}, {page: governance, anchor: method, label: Five governance recipes}, {page: together, anchor: raci, label: Who does what across the three}]
+  minutes: 20
+- id: J-COO
+  who: Lead policy coordinator
+  need: I need one route from mobilising to an assured return, so that the January 2027 baseline is right first time.
+  steps: [{page: cataloguing, anchor: method, label: Eight cataloguing stages}, {page: together, anchor: cycle, label: The joined-up year}, {page: dam, anchor: timeline, label: Reporting dates}, {page: library, anchor: library, label: Templates and sources}]
+  minutes: 40
+- id: J-OWN
+  who: Data owner
+  need: I need to know what I am accountable for on each asset, so that I can sign off with confidence.
+  steps: [{page: governance, anchor: roles, label: Roles and decision rights}, {page: quality, anchor: method, label: Targets and accepted risks}, {page: cataloguing, anchor: method, label: What goes on the record}]
+  minutes: 15
+- id: J-STW
+  who: Data steward
+  need: I need the day-to-day method and templates, so that the record and the DQAP stay current without heroics.
+  steps: [{page: cataloguing, anchor: metadata, label: Metadata properties}, {page: quality, anchor: method, label: Eight quality stages}, {page: library, anchor: templates, label: Templates}]
+  minutes: 30
+- id: J-CAT
+  who: Catalogue manager or data custodian
+  need: I need to know what any catalogue must expose, so that records can be harvested whatever tool we use.
+  steps: [{page: cataloguing, anchor: metadata, label: Metadata and the MEM}, {page: knowledge, anchor: dictionary, label: Data dictionary}, {page: about, anchor: open, label: Open questions on interoperability}]
+  minutes: 20
+- id: J-DQL
+  who: Data quality lead or analyst
+  need: I need the scoring method and the tools, so that priorities are consistent across assets.
+  steps: [{page: quality, anchor: method, label: Eight quality stages}, {page: quality, anchor: escalation, label: Issues framework and escalation}, {page: library, anchor: library, label: Data Quality Commons tools}]
+  minutes: 20
+
+# ---------------------------------------------------------------------------
+# Library: everything playbook-related, wherever it lives
+# ---------------------------------------------------------------------------
+library:
+- {id: LIB-01, title: Data asset management policy in government, cap: [gov, cat, dq], type: Policy, status: Published, audience: All, src: SRC-DAM, prov: V}
+- {id: LIB-02, title: Identifying and recording critical data assets, cap: [cat, gov], type: Guidance, status: Published, audience: Coordinators, src: SRC-IDC, prov: V}
+- {id: LIB-03, title: Recording metadata to describe critical data assets, cap: [cat], type: Guidance, status: Published, audience: Stewards and catalogue managers, src: SRC-MD, prov: V}
+- {id: LIB-04, title: Data ownership model, cap: [gov], type: Guidance, status: Published, audience: Owners and CDOs, src: SRC-OWN, prov: V}
+- {id: LIB-05, title: The role of information asset owners in government, cap: [gov], type: Guidance, status: Published, audience: IAOs and SIROs, src: SRC-IAO, prov: V}
+- {id: LIB-06, title: The Government Data Quality Framework, cap: [dq], type: Framework, status: Published, audience: All, src: SRC-GDQF, prov: V}
+- {id: LIB-07, title: Data quality action plan implementation guide and template, cap: [dq], type: Guidance, status: Published, audience: Stewards, src: SRC-DQAP, prov: V}
+- {id: LIB-08, title: Data quality issues framework, cap: [dq], type: Method, status: Published, audience: Stewards and analysts, src: SRC-DQIF, prov: V}
+- {id: LIB-09, title: Data maturity assessment for government, cap: [gov], type: Framework, status: Published, audience: CDOs, src: SRC-DMA, prov: V}
+- {id: LIB-10, title: UK Cross-Government Metadata Exchange Model, cap: [cat], type: Standard, status: Published, audience: Catalogue managers, src: SRC-MEM, prov: V}
+- {id: LIB-11, title: DCAT version 3, cap: [cat], type: Standard, status: Published, audience: Catalogue managers, src: SRC-DCAT, prov: K}
+- {id: LIB-12, title: W3C Data Quality Vocabulary, cap: [dq, cat], type: Standard, status: Published, audience: Catalogue managers, src: SRC-DQV, prov: K}
+- {id: LIB-13, title: Open Data Contract Standard, cap: [dq], type: Standard, status: Published, audience: Analysts and engineers, src: SRC-ODCS, prov: K}
+- {id: LIB-14, title: Public Sector Data Quality Commons (tools and playbook), cap: [dq, cat], type: Toolkit, status: Prototype, audience: Stewards and analysts, src: SRC-DQC, prov: P}
+- {id: LIB-15, title: Data manual, data management section, cap: [gov, cat, dq], type: Index, status: Published, audience: All, src: SRC-MAN, prov: V}
+- {id: LIB-16, title: Data Cataloguing Playbook v2.6 and learner journey, cap: [cat], type: Playbook, status: Internal, audience: Coordinators, src: null, prov: P, note: Held internally; not public. Its content is what the cataloguing stages here should be checked against (OR-01).}
+- {id: LIB-17, title: Data Governance Playbook suite (master manual, toolkit, templates, pocket guides, assessment, Command Centre), cap: [gov], type: Playbook, status: Internal draft, audience: Owners, stewards and boards, src: null, prov: P, note: The source of the five recipes. Decks in the suite stay outside this repository.}
+- {id: LIB-18, title: Canonical shared glossary of the data playbook compendium, cap: [gov, cat, dq], type: Vocabulary, status: Internal draft, audience: All, src: null, prov: P, note: The terms here reconcile with it; eight conflicts it logged are tracked in the open register.}
+- {id: LIB-19, title: Data Maturity and Transformation suite (MAT-01 to MAT-05) and crosswalk spine, cap: [gov], type: Playbook, status: Internal draft, audience: CDOs, src: null, prov: P, note: Spine indicators S04, S08, S09 and S10 map to the three capabilities.}
+- {id: LIB-20, title: DQAP template workbook, cap: [dq], type: Template, status: Published, audience: Stewards, src: SRC-DQAP, prov: V, note: Downloadable from the DQAP guide; the Commons can produce a filled one from rule results.}
+
+# ---------------------------------------------------------------------------
+# Knowledge layer: glossary, thesaurus (alt labels), taxonomy (broader)
+# ---------------------------------------------------------------------------
+concepts:
+- {id: data-asset, term: Data asset, alt: [], broader: null, caps: [cat, gov], src: SRC-DAM, prov: V, def: "One or more data sets plus, where relevant, the data services used to access them."}
+- {id: data-set, term: Data set, alt: [dataset], broader: data-asset, caps: [cat], src: SRC-DAM, prov: V, def: "A structured collection of data selected and organised for a defined outcome or need. It can be a subset of a larger system."}
+- {id: data-service, term: Data service, alt: [API, access service], broader: data-asset, caps: [cat], src: SRC-DAM, prov: V, def: "A controlled means of accessing one or more data sets, such as an API or secure access mechanism."}
+- {id: distribution, term: Distribution, alt: [representation], broader: data-set, caps: [cat], src: SRC-MEM, prov: V, def: "A specific representation of a data set, for example a CSV file or a feed."}
+- {id: cda, term: Critical data asset, alt: [CDA, essential shared data asset, ESDA], broader: data-asset, caps: [cat, gov, dq], src: SRC-IDC, prov: V, def: "A data asset shared across government where losing access could stop an organisation from fulfilling important functions. 'Essential shared data asset' is the older term it replaced."}
+- {id: provided, term: Provided data, alt: [], broader: cda, caps: [cat], src: SRC-IDC, prov: V, def: "Data one organisation gives to another to support an essential process or purpose the receiver is responsible for."}
+- {id: acquired, term: Acquired data, alt: [], broader: cda, caps: [cat], src: SRC-IDC, prov: V, def: "Data one organisation obtains from another to support an essential process or purpose it is responsible for."}
+- {id: purpose, term: Purpose, alt: [the seven purposes], broader: cda, caps: [cat], src: SRC-IDC, prov: V, def: "One of the seven reasons a critical data asset matters, such as public service delivery or official statistics. Each asset supports at least one."}
+- {id: scope-tests, term: Scope tests, alt: [], broader: cda, caps: [cat, gov], src: SRC-DAM, prov: V, def: "The conditions an asset must meet to be in scope of the policy: classified OFFICIAL, critical, and within the provider's ownership accountabilities."}
+- {id: metadata, term: Metadata, alt: [data about data], broader: null, caps: [cat], src: SRC-MD, prov: V, def: "Information that describes a data asset so it can be found, understood, validated, reused and shared."}
+- {id: catalogue, term: Data catalogue, alt: [catalog, metadata catalogue], broader: null, caps: [cat], src: SRC-DAM, prov: O, def: "A managed collection of metadata records that helps people and systems find, understand and reuse data assets. It holds descriptions, not the data."}
+- {id: dcat, term: DCAT, alt: [Data Catalog Vocabulary], broader: metadata, caps: [cat], src: SRC-DCAT, prov: K, def: "The W3C vocabulary for describing data sets and data services in catalogues, so catalogues can be harvested and searched together."}
+- {id: mem, term: Metadata Exchange Model, alt: [xGov MEM, MEM], broader: metadata, caps: [cat], src: SRC-MEM, prov: V, def: "The UK cross-government model, based on DCAT, for the metadata exchanged about data assets."}
+- {id: discoverability, term: Discoverability Platform, alt: [discovery service], broader: catalogue, caps: [cat], src: null, prov: P, def: "The GDS service being scoped to link to departments' own catalogues and make critical data asset metadata discoverable across government."}
+- {id: return, term: Return, alt: [CDA return, baseline return, annual return], broader: null, caps: [cat, gov], src: SRC-DAM, prov: O, def: "An organisation's report of its in-scope assets and their metadata to GDS, assured by the department for its ALBs."}
+- {id: data-owner, term: Data owner, alt: [], broader: role, caps: [gov, cat, dq], src: SRC-OWN, prov: V, def: "A senior leader accountable for the meaning, content, quality and management of a data asset."}
+- {id: iao, term: Information asset owner, alt: [IAO], broader: role, caps: [gov], src: SRC-OWN, prov: V, def: "The role accountable to the SIRO for protecting the whole information asset. Related to, but not the same as, the data owner."}
+- {id: data-steward, term: Data steward, alt: [], broader: role, caps: [gov, cat, dq], src: SRC-OWN, prov: V, def: "The role running an asset day to day: standards, access, quality processes and documentation."}
+- {id: data-custodian, term: Data custodian, alt: [], broader: role, caps: [gov, cat], src: SRC-OWN, prov: V, def: "The technical expert for the system holding the data: storage, access controls, auditable change and disposal."}
+- {id: role, term: Data role, alt: [], broader: null, caps: [gov], src: SRC-OWN, prov: O, def: "A defined set of accountabilities for data. Records name roles, not people."}
+- {id: ownership-option, term: Ownership option, alt: [IAO model, hybrid model], broader: data-owner, caps: [gov], src: SRC-OWN, prov: V, def: "The choice between keeping the IAO model, adopting the data ownership model, or a hybrid. Each must still meet the mandatory IAO actions."}
+- {id: recipe, term: Recipe, alt: [governance recipe], broader: null, caps: [gov], src: null, prov: P, def: "One of the five repeatable governance activities: Mandate, Frame, Assign, Operate, Assure."}
+- {id: charter, term: Governance charter, alt: [charter], broader: recipe, caps: [gov], src: null, prov: P, def: "A one-page statement of a governance body's purpose, scope, authority and review cadence."}
+- {id: decision-log, term: Decision log, alt: [], broader: recipe, caps: [gov], src: null, prov: P, def: "A running record of governance decisions: what, who, why, when and the review trigger."}
+- {id: exception, term: Exception, alt: [policy exception], broader: recipe, caps: [gov], src: null, prov: P, def: "A logged, time-bound deviation from policy with an owner and an expiry date. An exception without an expiry is an undocumented policy change."}
+- {id: raci, term: RACI, alt: [decision rights], broader: null, caps: [gov, cat, dq], src: SRC-DQAP, prov: O, def: "Responsible, Accountable, Consulted, Informed. One accountable role per activity."}
+- {id: dqap, term: Data quality action plan, alt: [DQAP], broader: null, caps: [dq], src: SRC-DAM, prov: V, def: "The plan every identified asset must have, or an equivalent mechanism, for managing its quality across seven steps."}
+- {id: cde, term: Critical data element, alt: [CDE], broader: dqap, caps: [dq, cat], src: SRC-DQC, prov: P, def: "A data item whose quality drives the most important decisions made with the asset."}
+- {id: dimension, term: Data quality dimension, alt: [dimension], broader: dqap, caps: [dq], src: SRC-GDQF, prov: V, def: "A measurable aspect of quality. The framework's six are completeness, uniqueness, consistency, timeliness, validity and accuracy."}
+- {id: issues-framework, term: Issues framework, alt: [data quality issues framework], broader: dqap, caps: [dq], src: SRC-DQIF, prov: V, def: "The GDS method that scores importance times impact to set targets, and uses the band below target to set priority and time to resolve."}
+- {id: dq-statement, term: Data quality statement, alt: [quality statement], broader: dqap, caps: [dq, cat], src: SRC-DQC, prov: P, def: "A plain-English summary of an asset's quality, known issues and what it should not be used for."}
+- {id: dqv, term: Data Quality Vocabulary, alt: [DQV], broader: metadata, caps: [dq, cat], src: SRC-DQV, prov: K, def: "The W3C vocabulary for publishing quality measurements with a catalogue record."}
+- {id: data-contract, term: Data contract, alt: [ODCS], broader: dqap, caps: [dq], src: SRC-ODCS, prov: K, def: "Quality rules and promises written down as a file that suppliers and users share."}
+- {id: maturity, term: Data maturity, alt: [DMA], broader: null, caps: [gov], src: SRC-DMA, prov: V, def: "An organisation's capability around data, self-assessed with the government framework."}
+- {id: coordinator, term: Lead policy coordinator, alt: [policy coordinator], broader: role, caps: [gov, cat], src: null, prov: P, def: "The person each organisation nominates to coordinate DAM Policy adoption and the return, and to sit on the Working Group."}
+
+# ---------------------------------------------------------------------------
+# Accountability records shown on the About page
+# ---------------------------------------------------------------------------
+open_register:
+- {id: OR-01, item: "The internal Data Cataloguing Playbook v2.6 is not public. The cataloguing stages here are a synthesis of GOV.UK guidance and need checking against it, or replacing with it once cleared.", who: Owner (Data Management Lead)}
+- {id: OR-02, item: "Contact is the repository's issue form. Move to the Data Management Team's own contact form when one exists.", who: Owner}
+- {id: OR-03, item: "Not cleared as official guidance. Clearance, and a move from a personal GitHub account to an official organisation (gds-dtx), are needed before departments are told to rely on it.", who: Owner and line management}
+- {id: OR-04, item: "No research with real users yet (coordinators, owners, stewards). Journeys are assumed needs.", who: Owner, with the Working Group}
+- {id: OR-05, item: "The policy promises minimum interoperability requirements that its body does not state.", who: GDS Data Frameworks and Standards}
+- {id: OR-06, item: "Four metadata properties in the guidance (temporalCoverage, conformsTo, expires, supersededBy) have no slot in the published MEM. Reconcile model and guidance.", who: Metadata standards owner}
+- {id: OR-07, item: "Dates for the rollout phases, returns and support offer come from internal portfolio material, not a public page. Confirm before external use.", who: Owner}
+- {id: OR-08, item: "The governance escalation timescales are this playbook's recommendation. Each organisation should set its own.", who: Each organisation's board}
+- {id: OR-09, item: "Not tested with disabled users or assistive technology users in person; automated checks only.", who: Owner}
+- {id: OR-10, item: "Eight conflicts logged in the canonical shared glossary (for example two maturity models, data owner versus IAO) are not all resolved here.", who: Owner}
+- {id: OR-11, item: "The Data Quality Commons found one GOV.UK issues framework table value that contradicts its stated rule (a High band start). Raise with the GDS data quality team.", who: Owner}
+
+defects:
+- {id: D-001, found: Prior governance suite (September 2026), defect: "DQAP was expanded with the wrong middle word, as an 'assurance' plan.", cause: "Expansion written from memory, not from the policy text.", check: "C-06 bans the wrong expansion anywhere in content or pages."}
+- {id: D-002, found: Prior governance suite (September 2026), defect: "Evidence was mapped to a policy annex that does not exist.", cause: "An assumed reporting template was presented as fact.", check: "C-07 bans references to the non-existent annex."}
+- {id: D-003, found: This build, source reading, defect: "The identification guidance page prints a team email address; copying source text risks putting it on the portal.", cause: "Source text carries contact details.", check: "C-04 fails the build on any email address in content or published files."}
+
+- {id: D-004, found: This build, first browser run, defect: "Focusing a tab panel, table region or the graph filled the whole block with the yellow focus colour.", cause: "One focus rule targeted every element with a tabindex, including large containers.", check: "B-03 focuses each container type and fails if its background becomes the focus colour."}
+- {id: D-005, found: This build, vaccination tests, defect: "The provenance check passed even when a requirement lost its label, because the source cell's own label satisfied it.", cause: "The check looked for a label anywhere in the row, not in the requirement cell.", check: "C-08 now inspects the requirement cell alone; its vaccination test removes that label and must fail."}
+- {id: D-006, found: This build, first browser run, defect: "Every page scrolled sideways on 320 and 390 pixel screens.", cause: "The colophon barcode had a fixed pixel width.", check: "B-02 checks overflow at six widths from 320 to 1920 pixels."}
+- {id: D-007, found: This build, first browser run, defect: "Links in the 'Met by' column were smaller than the 24 pixel target size.", cause: "Plain inline links set side by side in a table cell.", check: "B-01 runs axe with the WCAG 2.2 AA target-size rule in light and dark modes."}
+adversarial:
+- {challenge: "Another portal adds to the scatter it claims to fix. The portfolio's own baseline says playbooks are 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
+- {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
+- {challenge: "Base rate: catalogue programmes commonly stall on adoption rather than on tooling (K, a lead not a measured fact).", answer: "The method puts ownership before description and reporting from catalogue records, so effort lands where adoption fails. Whether that is enough is untested (OR-04)."}
+- {challenge: "It is built before learning from users.", answer: "Named as a risk (OR-04). The journeys say they are assumed needs."}
+- {challenge: "It lives on a personal account and is not cleared.", answer: "Stated on every page and in OR-03. The content is OGL and the code MIT, so it can move to an official organisation unchanged."}

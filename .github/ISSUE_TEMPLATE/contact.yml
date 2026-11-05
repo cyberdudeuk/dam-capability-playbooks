@@ -1,0 +1,50 @@
+name: Contact or feedback
+description: Ask a question, report a problem or suggest an improvement to the DAM capability playbooks
+title: "[Contact] "
+labels: ["contact"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is public. Do not include personal data, names of colleagues, or anything above OFFICIAL.
+        If you cannot use this form, ask a colleague to raise it for you.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this about?
+      options:
+        - A question
+        - Something is wrong or out of date
+        - An accessibility problem
+        - An idea or improvement
+    validations:
+      required: true
+  - type: dropdown
+    id: capability
+    attributes:
+      label: Which part?
+      options:
+        - Data governance
+        - Data cataloguing
+        - Data quality
+        - DAM Policy spine
+        - The whole portal
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: Page address (optional)
+  - type: textarea
+    id: detail
+    attributes:
+      label: Tell us more
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I have not included personal data or anything sensitive
+          required: true
