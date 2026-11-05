@@ -33,6 +33,29 @@ def edit(path, old, new, count=1):
     path.write_text(t.replace(old, new, count), encoding='utf-8')
 
 
+class HealthRun(unittest.TestCase):
+    def test_d013_links_request_html(self):
+        import health
+        seen = {}
+
+        class Fake:
+            status = 200
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+            def read(self): return b''
+
+        def fake_urlopen(req, timeout=0):
+            seen['accept'] = req.get_header('Accept')
+            return Fake()
+        orig = health.urllib.request.urlopen
+        health.urllib.request.urlopen = fake_urlopen
+        try:
+            health.fetch('https://www.gov.uk/government/organisations/example')
+        finally:
+            health.urllib.request.urlopen = orig
+        self.assertTrue(seen['accept'].startswith('text/html'), 'page checks must ask for HTML first (D-013)')
+
+
 class Vaccination(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -152,6 +175,37 @@ class Vaccination(unittest.TestCase):
     def test_c18_avoid_words(self):
         edit(self.s / 'library.html', '<h1>', '<h1>Click ' + 'here ')
         self.fails('c18_plain_english')
+
+    def test_c19_missing_citation(self):
+        t = (self.s / 'notices.html').read_text(encoding='utf-8')
+        t = re.sub(r'<li id="cite-RB-DUAA">.*?</li>', '', t, flags=re.S)
+        (self.s / 'notices.html').write_text(t, encoding='utf-8')
+        self.fails('c19_citations')
+
+    def test_c19_missing_attribution(self):
+        edit(self.s / 'notices.html', 'Contains public sector information', 'Contains information', 3)
+        self.fails('c19_citations')
+
+    def test_c20_missing_page_meta(self):
+        edit(self.s / 'quality.html', 'class="page-meta"', 'class="x"')
+        self.fails('c20_page_governance')
+
+    def test_c20_expired_security_txt(self):
+        p = self.s / '.well-known' / 'security.txt'
+        p.write_text(re.sub(r'Expires: \S+', 'Expires: 2020-01-01T00:00:00.000Z', p.read_text()))
+        self.fails('c20_page_governance')
+
+    def test_build_rejects_unknown_rulebook_ref(self):
+        y = self.r / 'content' / 'playbooks.yaml'
+        edit(y, 'DD-11: [RB-TNA]', 'DD-11: [RB-NOPE]')
+        with self.assertRaises(build.ContentError):
+            build.load(y)
+
+    def test_build_rejects_unknown_check_in_trace(self):
+        y = self.r / 'content' / 'playbooks.yaml'
+        edit(y, 'checks: [C-03, C-08]}', 'checks: [C-99]}')
+        with self.assertRaises(build.ContentError):
+            build.load(y)
 
     def test_build_rejects_comma_split(self):
         y = self.r / 'content' / 'playbooks.yaml'

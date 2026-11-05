@@ -108,7 +108,7 @@ main{flex:1;min-width:0;padding:1rem 1.5rem 3rem}
 
 /* provenance badges */
 .prov{display:inline-block;font-size:.75rem;font-weight:700;border:1px solid currentColor;padding:0 .3rem;margin-left:.25rem;vertical-align:.1em;cursor:help}
-.prov.V{color:var(--v)}.prov.P{color:var(--p)}.prov.O{color:var(--o)}.prov.K{color:var(--k)}.prov.U{color:var(--u)}
+.prov.V{color:var(--v)}.prov.P{color:var(--p)}.prov.O{color:var(--o)}.prov.K{color:var(--k)}.prov.S{color:var(--k)}.prov.U{color:var(--u)}
 .strength{display:inline-block;font-size:.8rem;font-weight:700;text-transform:uppercase;padding:0 .35rem;border:2px solid currentColor}
 .strength.must{color:var(--warn)}.strength.should{color:var(--gov)}.strength.method{color:var(--o)}.strength.gap{color:var(--k)}
 
@@ -393,3 +393,20 @@ footer.site h2{display:flex;align-items:center}
 .moscow.m-must{color:var(--warn)}.moscow.m-should{color:var(--gov)}.moscow.m-could{color:var(--secondary)}
 .leads{font-size:.95rem}
 .release{border-top:1px solid var(--rule)}
+
+.page-meta{display:flex;align-items:center;color:var(--secondary);font-size:.9rem;margin-top:2.5rem;border-top:1px solid var(--rule);padding-top:.75rem}
+.useful{margin:.5rem 0 0}
+.useful a{display:inline-flex;align-items:center;font-weight:700}
+.edit-links{margin-top:.75rem;border-top:0;padding-top:0}
+.rulebook{list-style:none;padding:0}
+.rulebook li{margin:.6rem 0;max-width:52em}
+.rulebook .hint{margin:.1rem 0}
+.toc-chain{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem}
+.toc-step{border:1px solid var(--border);border-top:5px solid var(--brand);padding:.5rem .75rem;position:relative}
+.toc-step h3{margin:.2rem 0;font-size:1.1rem}
+.citations li{margin:.4rem 0;max-width:56em}
+.notice,.finding{border-left:5px solid var(--border);padding:.1rem 1rem;margin:1rem 0;max-width:52em}
+.finding{border-left-color:var(--o)}
+thead th{overflow-wrap:normal;word-break:normal;hyphens:auto}
+.nowrap{white-space:nowrap}
+.table-wrap,.graph-wrap{position:relative}

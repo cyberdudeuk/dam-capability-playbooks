@@ -1,0 +1,33 @@
+name: Page feedback
+description: Tell us whether a page was useful
+title: "[Feedback] "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: This form is public. Do not include personal data or anything above OFFICIAL.
+  - type: input
+    id: page
+    attributes:
+      label: Page address
+  - type: dropdown
+    id: useful
+    attributes:
+      label: Was this page useful?
+      options:
+        - "Yes"
+        - Partly
+        - "No"
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: What could be better? (optional)
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I have not included personal data or anything sensitive
+          required: true

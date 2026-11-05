@@ -346,10 +346,47 @@ def c18_plain_english(site, repo, pages):
     return sorted(set(errs))
 
 
+def c19_citations(site, repo, pages):
+    """Owner request (version 1.2): every source and rulebook entry is cited in full, with its address, on the notices page."""
+    import yaml
+    d = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    t = (site / 'notices.html').read_text(encoding='utf-8') if (site / 'notices.html').exists() else ''
+    errs = [] if t else ['notices.html missing']
+    for x in d['sources'] + d.get('rulebook', []):
+        m = re.search(r'<li id="cite-' + re.escape(x['id']) + r'">(.*?)</li>', t, re.S)
+        if not m: errs.append(f'{x["id"]}: no citation')
+        elif x['url'].replace('&', '&amp;') not in m.group(1): errs.append(f'{x["id"]}: citation does not link the source address')
+        elif 'Accessed:' not in m.group(1): errs.append(f'{x["id"]}: citation has no accessed date')
+    if 'Open Government Licence v3.0' not in t or 'Contains public sector information' not in t: errs.append('notices.html: OGL attribution statement missing')
+    return errs
+
+
+def c20_page_governance(site, repo, pages):
+    """Rule (G3): every page shows its owner role, dates and a feedback route; security.txt is published and in date."""
+    import datetime as dt
+    errs = []
+    for name in pages:
+        if name == '404.html':
+            continue
+        t = (site / name).read_text(encoding='utf-8')
+        if 'class="page-meta"' not in t or 'Next review' not in t: errs.append(f'{name}: no page owner and review line')
+        if 'template=feedback.yml' not in t: errs.append(f'{name}: no page feedback link')
+        if 'href="accessibility.html"' not in t: errs.append(f'{name}: no link to the accessibility statement')
+    st = site / '.well-known' / 'security.txt'
+    if not st.exists():
+        errs.append('security.txt missing')
+    else:
+        txt = st.read_text()
+        m = re.search(r'^Expires: (\S+)', txt, re.M)
+        if not m or not txt.startswith('Contact: https://'): errs.append('security.txt lacks Contact or Expires')
+        elif dt.datetime.fromisoformat(m.group(1).replace('Z', '+00:00')).date() <= dt.date.today(): errs.append('security.txt has expired')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
-          c17_no_personal_details, c18_plain_english]
+          c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance]
 
 
 def run(site, repo, only=None, quiet=False):

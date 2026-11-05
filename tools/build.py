@@ -64,7 +64,7 @@ def validate(d):
     stages = {f"{c['id']}.{st['id']}" for c in d['capabilities'] for st in c['stages']}
     concepts = {c['id'] for c in d['concepts']}
     mods = {m['id'] for m in d['modules']}
-    provs = {'V', 'P', 'O', 'K', 'U'}
+    provs = {'V', 'P', 'O', 'S', 'K', 'U'}
     for r in d['requirements']:
         if r['src'] not in src: errs.append(f"{r['id']}: unknown source {r['src']}")
         if r['cap'] not in caps: errs.append(f"{r['id']}: unknown capability {r['cap']}")
@@ -134,6 +134,24 @@ def validate(d):
         if x['moscow'] not in ('Must', 'Should', 'Could', "Won't"): errs.append(f"{x['id']}: bad MoSCoW")
         for cp in x['caps']:
             if cp not in caps: errs.append(f"{x['id']}: unknown capability {cp}")
+    rb = {x['id'] for x in d.get('rulebook', [])}
+    if len(rb) != len(d.get('rulebook', [])): errs.append('duplicate rulebook ids')
+    for x in d.get('rulebook', []):
+        if x['prov'] not in ('V', 'S', 'K'): errs.append(f"{x['id']}: bad provenance")
+        if not x['url'].startswith('https://'): errs.append(f"{x['id']}: url must be https")
+        for cp in x['caps']:
+            if cp not in caps: errs.append(f"{x['id']}: unknown capability {cp}")
+    dd = {x['id'] for x in d.get('domain_depth', [])}
+    for k, refs in (d.get('depth_refs') or {}).items():
+        if k not in dd: errs.append(f"depth_refs: unknown theme {k}")
+        for r in refs:
+            if r not in rb: errs.append(f"depth_refs {k}: unknown rulebook entry {r}")
+    pages_known = {k for k, _, _ in NAV} | {'contact', 'status', 'whats-new', 'all'}
+    for r in d.get('design', {}).get('requirements', []):
+        for c in r['checks']:
+            if c not in KNOWN_CHECKS: errs.append(f"{r['id']}: unknown check {c}")
+        for f in r['features']:
+            if f not in pages_known: errs.append(f"{r['id']}: unknown feature page {f}")
     for x in d.get('standards', []):
         if x['status'] not in ('Met', 'Partly', 'Not yet'): errs.append(f"{x['id']}: bad status")
     if errs:
@@ -143,6 +161,7 @@ def validate(d):
 # ---------------------------------------------------------------------------
 # Icons (Lucide, ISC, vendored by tools/vendor_icons.py)
 # ---------------------------------------------------------------------------
+KNOWN_CHECKS = {f'C-{i:02d}' for i in range(1, 21)} | {f'B-{i:02d}' for i in range(1, 12)} | {'HL-01', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -172,6 +191,7 @@ PROV_TEXT = {
     'V': 'Verified against the primary source',
     'P': 'Practitioner material from cross-government playbooks not yet published',
     'O': "This playbook's own synthesis of published guidance",
+    'S': 'Found by web search; the site blocked automated checking, so open it before relying on it',
     'K': 'General knowledge, not checked against a source in this release',
     'U': 'Unconfirmed',
 }
@@ -287,6 +307,9 @@ PAGE_DESC = {
     'about': 'Purpose, sources, open register, defect register, accessibility statement and build standard assessment for the DAM capability playbooks.',
     'contact': 'Ask a question, report a problem or suggest an improvement to the DAM capability playbooks using the contact form.',
     'status': 'Latest automated health check of the DAM capability playbooks: source currency, review date and page weight.',
+    'design': 'Theory of change, research plan, service blueprint, requirements traceability, architecture and Service Standard self-assessment for the portal.',
+    'notices': 'Disclaimers, transparency notices, credits and full citations for every source used by the DAM capability playbooks.',
+    'accessibility': 'Accessibility statement for the DAM capability playbooks, following the GOV.UK model statement for public sector websites.',
     'whats-new': 'Changes in each release of the Data Asset Management (DAM) capability playbooks, newest first.',
     '404': 'The page you were looking for could not be found on the DAM capability playbooks portal.',
 }
@@ -302,6 +325,7 @@ class Site:
         self.concepts = {c['id']: c for c in d['concepts']}
         self.mods = {m['id']: m for m in d['modules']}
         self.stage = {f"{c['id']}.{st['id']}": (c, st) for c in d['capabilities'] for st in c['stages']}
+        self.rb = {x['id']: x for x in d.get('rulebook', [])}
         self.search, self.build_id = [], None
         sp = ROOT / 'build' / 'status.json'
         self.status = json.loads(sp.read_text()) if sp.exists() else None
@@ -495,7 +519,11 @@ class Site:
         m = self.m
         gh = f'https://github.com/{m["repo"]}'
         q = urllib.parse.urlencode({'template': 'content-error.yml', 'title': f'[Page] {title}', 'page': m['site_url'] + f'{key}.html'})
-        return (f'<nav class="edit-links" aria-label="Help improve this page">'
+        fb = urllib.parse.urlencode({'template': 'feedback.yml', 'title': f'[Feedback] {title}', 'page': m['site_url'] + f'{key}.html'})
+        meta = (f'<p class="page-meta">{icon("info")}Page owner: the portal\'s service owner (a role) · Published 5 November 2026 · '
+                f'Last updated {E(m["as_of"])} · Next review {E(m["review"])}</p>')
+        return (meta + f'<p class="useful"><a href="{gh}/issues/new?{E(fb)}">{icon("message-square-text")}Was this page useful? Tell us</a></p>'
+                f'<nav class="edit-links" aria-label="Help improve this page">'
                 f'<a href="{gh}/issues/new?{E(q)}">{icon("message-square-text")}Report a problem with this page</a>'
                 f'<a href="{gh}/edit/main/content/playbooks.yaml">{icon("pencil-line")}Suggest a change</a>'
                 f'<a href="{gh}/commits/main/content/playbooks.yaml">{icon("clock")}See the change history</a>'
@@ -508,12 +536,13 @@ class Site:
 <div><h2>{icon("info")} About this portal</h2>
 <p>{E(m["status"])}</p>
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
-<ul class="foot-links"><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#accessibility">Accessibility statement</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#open">Open register</a></li></ul></div>
+<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#open">Open register</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
 <p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>
 <p>{E(m["contact_note"])}</p></div>
 <div><h2>{icon("file-text")} Licence and version</h2>
 <p>Content: <a href="{E(m["licence_content_url"])}">{E(m["licence_content"])}</a>, except where stated. Code: {E(m["licence_code"])}. Icons: Lucide (ISC).</p>
+<p>{E(self.d["attribution_statement"])}</p>
 <p>Version {E(m["version"])}, as of {E(m["as_of"])}, next review {E(m["review"])}. Build {E(self.build_id)}.</p>
 <div class="codes">{self.codes}</div></div>
 </div>
@@ -536,12 +565,19 @@ class Site:
         for f in ('style.css', 'app.js', 'favicon.svg'):
             shutil.copy(ROOT / 'site_src' / f, self.out / 'assets' / f)
         make_images(self.out / 'assets', m)
+        wk = self.out / '.well-known'
+        wk.mkdir()
+        sec = (f'Contact: https://github.com/{m["repo"]}/security/advisories/new\n'
+               f'Policy: https://github.com/{m["repo"]}/blob/main/SECURITY.md\n'
+               f'Expires: 2027-11-05T00:00:00.000Z\nPreferred-Languages: en\nCanonical: {m["site_url"]}.well-known/security.txt\n')
+        (wk / 'security.txt').write_text(sec)
         (self.out / 'robots.txt').write_text(f'User-agent: *\nAllow: /\nDisallow: /404.html\nSitemap: {m["site_url"]}sitemap.xml\n')
         pages = {'index': self.p_index, 'dam': self.p_dam, 'governance': lambda: self.p_cap('gov'),
                  'cataloguing': lambda: self.p_cap('cat'), 'quality': lambda: self.p_cap('dq'), 'together': self.p_together,
                  'personas': self.p_personas, 'learning': self.p_learning, 'library': self.p_library, 'knowledge': self.p_knowledge,
                  'inclusion': self.p_inclusion, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
-                 'whats-new': self.p_whats_new, '404': self.p_404}
+                 'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices,
+                 'accessibility': self.p_accessibility, '404': self.p_404}
         for k, fn in pages.items():
             (self.out / f'{k}.html').write_text(fn(), encoding='utf-8')
         mods = {mm['id']: self.mod_units(mm['id']) for mm in d['modules']}
@@ -574,6 +610,12 @@ class Site:
             self.add_search(p['title'], 'Your role: route and learning journey', f'personas.html#persona-{p["id"]}', p['summary'])
         for mm in self.d['modules']:
             self.add_search(f'{mm["id"]} {mm["title"]}', f'Learning module ({mm["level"]})', f'learning.html#{mm["id"]}', ' '.join(mm['outcomes']))
+        for x in self.d['rulebook']:
+            self.add_search(x['title'], f'Rulebook: {x["group"]}', f'dam.html#{x["id"]}', x['why'])
+        for x in self.d['findings']:
+            self.add_search(f'{x["id"]} {x["title"]}', 'Verification finding', f'about.html#{x["id"]}', x['detail'])
+        for x in self.d['design']['requirements']:
+            self.add_search(f'{x["id"]} {x["text"]}', 'Portal requirement', f'design.html#{x["id"]}', '')
         for o in self.d['open_register']:
             self.add_search(o['id'], 'Open register', f'about.html#{o["id"]}', o['item'])
 
@@ -677,13 +719,19 @@ class Site:
 <div class="warning" role="note">{icon("triangle-alert")}<span>These dates come from practitioner material, not a public GOV.UK page. Check them before you rely on them (open item OR-07).</span></div>
 <ol class="timeline">{tl}</ol>
 <h2 id="support">{icon("hand-helping")} Support available</h2>
-<ul class="icon-list">{sup}</ul>'''
+<ul class="icon-list">{sup}</ul>
+<h2 id="rulebook">{icon("scale")} Related policies, standards, legislation and rulebooks</h2>
+<p>Other government and public sector rules that apply alongside the DAM Policy. Each link was checked on {E(self.m["verified_on"])}: V means the page was fetched and its title confirmed; S means the site blocked automated checking, so open it before relying on it.</p>
+<div class="filters" data-filter="rb-list" role="group" aria-label="Filter the rulebook"><div><label for="r-cap">Capability</label><select id="r-cap" name="cap"><option value="">All</option><option value="gov">Data governance</option><option value="cat">Data cataloguing</option><option value="dq">Data quality</option></select></div>
+<div><label for="r-q">Contains</label><input id="r-q" type="search" name="q"></div><p class="count-out" aria-live="polite"></p></div>
+{self.rulebook_html(d["rulebook"], "rb-list")}'''
         drawer = [{'label': 'The policy', 'icon': 'landmark', 'items': [
             {'id': 'scope', 'label': 'Who and what is in scope', 'icon': 'target'},
             {'id': 'requirements', 'label': 'Requirements', 'icon': 'list-checks', 'count': len(d['requirements'])},
             {'id': 'accountability', 'label': 'Who is accountable', 'icon': 'users', 'count': 7},
             {'id': 'timeline', 'label': 'Rollout and reporting dates', 'icon': 'calendar-clock', 'count': len(d['timeline'])},
-            {'id': 'support', 'label': 'Support available', 'icon': 'hand-helping', 'count': len(d['support'])}]}]
+            {'id': 'support', 'label': 'Support available', 'icon': 'hand-helping', 'count': len(d['support'])},
+            {'id': 'rulebook', 'label': 'Related rulebooks', 'icon': 'scale', 'count': len(d['rulebook']), 'new': True}]}]
         return self.page('dam', 'What the DAM Policy requires', body, drawer, crumbs=['The policy'], desc='What the DAM Policy requires and which capability meets it')
 
     def raci_table(self, c, tid):
@@ -740,6 +788,9 @@ class Site:
             extra_method = (f'<h2 id="metadata">{icon("tag")} Metadata properties</h2>'
                             f'<p>From {self.src_link("SRC-MD")}, mapped to the {self.src_link("SRC-MEM")}. The guidance does not give one mandatory or recommended column, so the obligation follows the wording of each section. "Listed" means it appears in the list of information to record without a stated strength.</p>'
                             + table('t-meta', 'Metadata to record for each critical data asset', ['Property', 'Obligation', 'MEM slot', 'How to record it'], mrows)
+                            + f'<h3 id="mem-proposal">Proposed terms for the four properties missing from the MEM{prov("K")}</h3><p>A proposal to close finding F-04, not an agreed standard (OR-06).</p>'
+                            + table('t-memprop', 'Proposed crosswalk for guidance properties with no MEM slot', ['Property', 'Proposed term', 'Note'],
+                                    [[f'<code>{E(x["prop"])}</code>', f'<code>{E(x["term"])}</code>', E(x['note'])] for x in self.d['mem_proposal']])
                             + '<p>Write in plain English, expand acronyms, use ISO 8601 dates, and use "unknown" or "not applicable" rather than leaving a property blank. Make sure links work from outside your organisation.</p>')
             extra_drawer = [{'id': 'metadata', 'label': 'Metadata properties', 'icon': 'tag', 'count': len(c['metadata'])}]
         if cid == 'dq':
@@ -762,11 +813,13 @@ class Site:
             ('roles', 'Roles', f'<h2 id="role-list">{icon("users")} Roles</h2><ul class="icon-list">{roles}</ul><h2 id="raci">{icon("list-checks")} Who does what</h2>{self.raci_table(c, "t-raci-" + cid)}'),
             ('templates', 'Templates', f'<h2 id="template-list">{icon("file-text")} Templates</h2><p>Blank structures to copy into your own tools. Record roles, never named individuals or personal email addresses.</p>{tmpl}'),
             ('escalation', 'Measures', f'<h2 id="measures">{icon("chart-column")} Measures</h2>{table("t-meas-" + cid, "Measures for " + c["name"].lower(), ["Measure", "Target"], meas_rows)}'
+             + (f'<div class="warning" role="note">{icon("triangle-alert")}<span>Finding F-01: Table 4 of the GOV.UK issues framework gives 96.75% as the High band start for a 97.5% target, but its own rule gives 96.25%. These playbooks follow the rule. <a href="about.html#F-01">Read the finding</a>.</span></div>' if cid == 'dq' else '')
              + (f'<h2 id="ladder">{icon("triangle-alert")} Escalation</h2><p>{E(c["escalation_note"])}</p>{table("t-esc-" + cid, "Escalation for " + c["name"].lower(), ["Level", "Who", "Trigger", "Timescale"], esc_rows)}' if esc_rows
                 else f'<h2 id="ladder">{icon("triangle-alert")} Escalation</h2><p>Cataloguing issues go up the <a href="governance.html#ladder">governance escalation ladder</a>.</p>')),
             ('depth', 'Sector depth', f'<h2 id="sector-depth">{icon("layers")} Where this playbook needs sector-specific content</h2><p>Themes where the general method is not enough, ranked by MoSCoW for the next releases. Use them to plan local supplements, and tell us through the <a href="contact.html">contact form</a> if you can contribute.</p>'
              + self.depth_list([x for x in d['domain_depth'] if cid in x['caps']])),
-            ('sources', 'Sources', f'<h2 id="source-list">{icon("library")} Sources</h2><ul>{src_list}</ul>' + (f'<h2 id="internal">{icon("lock-keyhole")} Practitioner material behind this playbook</h2><ul>{lib}</ul>' if lib else '')),
+            ('sources', 'Sources', f'<h2 id="source-list">{icon("library")} Sources</h2><ul>{src_list}</ul><h2 id="related-rules">{icon("scale")} Related rulebooks</h2>'
+             + self.rulebook_html([x for x in d['rulebook'] if cid in x['caps']], f'rb-{cid}') + (f'<h2 id="internal">{icon("lock-keyhole")} Practitioner material behind this playbook</h2><ul>{lib}</ul>' if lib else '')),
         ]
         tablist = ''.join(f'<button type="button" role="tab" id="tab-{k}" aria-controls="{k}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}">{E(lbl)}</button>' for i, (k, lbl, _) in enumerate(tabs))
         panels = ''.join(f'<section role="tabpanel" id="{k}" aria-labelledby="tab-{k}" tabindex="0"{"" if i == 0 else " hidden"}>{b}</section>' for i, (k, lbl, b) in enumerate(tabs))
@@ -790,6 +843,18 @@ class Site:
         return self.page(p, c['name'], body, drawer, crumbs=[c['name']], desc=c['purpose'],
                          jsonld={'@type': ['WebPage', 'HowTo'], 'name': c['name'], 'step': [{'@type': 'HowToStep', 'position': st['n'], 'name': st['name'], 'text': st['goal']} for st in c['stages']]})
 
+    def rb_link(self, rid):
+        x = self.rb[rid]
+        return f'<a href="{E(x["url"])}">{E(x["title"])}</a>{prov(x["prov"], self.m["verified_on"])}'
+
+    def rulebook_html(self, items, filt_id):
+        groups = []
+        for g in dict.fromkeys(x['group'] for x in items):
+            rows = ''.join(f'<li id="{x["id"]}" data-item data-cap="{" ".join(x["caps"])}" data-group="{slug(x["group"])}">{self.rb_link(x["id"])}'
+                           f'<span class="hint">{E(x["publisher"])}{" · updated " + E(x["updated"]) if x.get("updated") else ""}</span>{E(x["why"])}</li>' for x in items if x['group'] == g)
+            groups.append(f'<h3>{E(g)}</h3><ul class="rulebook">{rows}</ul>')
+        return f'<div id="{filt_id}">{"".join(groups)}</div>'
+
     def depth_list(self, items):
         out = ''
         for x in items:
@@ -798,7 +863,8 @@ class Site:
                     f'<div class="depth-head"><h3>{E(x["theme"])}</h3><strong class="moscow m-{slug(x["moscow"])}">{E(x["moscow"])} have</strong></div>'
                     f'<p class="hint">{E(x["id"])} · For: {E("; ".join(x["sectors"]))}</p>{caps}<p>{E(x["why"])}</p>'
                     f'<h4>{icon("list-checks")} Content needed</h4>{ul(x["needed"], cls="checks")}'
-                    f'<p class="leads"><strong>Sources to verify:</strong> {E("; ".join(x["leads"]))}{prov("K")}</p></section>')
+                    + (f'<p class="leads"><strong>Related rulebook:</strong> {"; ".join(self.rb_link(r) for r in (self.d.get("depth_refs") or {}).get(x["id"], []))}</p>' if (self.d.get("depth_refs") or {}).get(x["id"]) else '')
+                    + f'<p class="leads"><strong>Leads to verify:</strong> {E("; ".join(x["leads"]))}{prov("K")}</p></section>')
         return out
 
     def p_together(self):
@@ -1157,6 +1223,8 @@ class Site:
 <p><strong>Against the brief.</strong> Met for governance and quality. Partly met for cataloguing, which is built from public guidance because the fuller cataloguing playbook is not yet published (OR-01). Routes and personas are not yet tested with users (OR-04).</p>
 <h2 id="provenance">{icon("tag")} How sources are labelled</h2><ul>{provs}</ul>
 <p>Requirement strength follows the wording of the source. Step sequences are labelled as synthesis or practitioner material; they are not GOV.UK requirements.</p>
+<h2 id="findings">{icon("search")} Verification findings</h2>
+{"".join(f'<section class="finding" id="{x["id"]}"><h3>{E(x["id"])}: {E(x["title"])}</h3><p>{E(x["detail"])}</p><p><strong>Action:</strong> {E(x["action"])} <span class="hint">Verified {E(x["verified"])}{(" against " + E(self.src[x["src"]]["title"])) if x.get("src") else ""}</span></p></section>' for x in d["findings"])}
 <h2 id="standards">{icon("badge-check")} Assessment against the build standard</h2>
 <p>How this portal meets the self-routines and practices of the reusable build standard, rated MoSCoW for a shared portal. Status is what is in place in this release.</p>
 {table("t-std", "Build standard assessment", ["ID", "Routine or practice", "MoSCoW", "Status", "How"], [[E(x["id"]), E(x["name"]), E(x["moscow"]), f'<strong class="status s-{slug(x["status"]).replace("met", "completed").replace("partly", "in-progress").replace("not-yet", "not-started")}">{E(x["status"])}</strong>', E(x["how"])] for x in d["standards"]])}
@@ -1178,7 +1246,8 @@ class Site:
         drawer = [{'label': 'About', 'icon': 'info', 'items': [
             {'id': 'intent', 'label': 'Purpose', 'icon': 'target'}, {'id': 'checkpoint', 'label': 'Checkpoint', 'icon': 'milestone'},
             {'id': 'provenance', 'label': 'Source labels', 'icon': 'tag', 'count': 5},
-            {'id': 'standards', 'label': 'Build standard assessment', 'icon': 'badge-check', 'count': len(d['standards']), 'new': True},
+            {'id': 'findings', 'label': 'Verification findings', 'icon': 'search', 'count': len(d['findings']), 'new': True},
+            {'id': 'standards', 'label': 'Build standard assessment', 'icon': 'badge-check', 'count': len(d['standards'])},
             {'id': 'explain', 'label': 'How the portal decides', 'icon': 'lightbulb', 'count': 3},
             {'id': 'adversarial', 'label': 'The case against', 'icon': 'scale', 'count': len(d['adversarial'])},
             {'id': 'open', 'label': 'Open register', 'icon': 'clipboard-list', 'count': len(d['open_register'])},
@@ -1202,10 +1271,12 @@ class Site:
 <p>Problems open an issue in the <a href="https://github.com/{E(self.m["repo"])}/issues?q=label%3Ahealth">repository's issue list</a> for a person to act on.</p>
 <h2 id="sources">{icon("library")} Sources</h2>{table("t-src-health", "Source checks", ["Source", "State", "Last updated (GOV.UK)", "Detail"], srows)}
 <h2 id="weight">{icon("gauge")} Page weight</h2><p>Envelope: {st["envelope_bytes"] // 1000} kB per page including shared files.</p>{table("t-weight", "Page weight", ["Page", "Weight", "Result"], prow)}
+<h2 id="links">{icon("link")} External links</h2><p>{st.get("links_checked", 0)} links checked; {st.get("links_blocked", 0)} sites refused automated checking (not counted as broken); {sum(1 for l in st.get("links", []) if l["state"] == "broken")} broken.</p>
 <p>Machine-readable: <a href="data/status.json">status.json</a>.</p>'''
         drawer = [{'label': 'Status', 'icon': 'activity', 'items': [{'id': 'problems', 'label': 'Problems', 'icon': 'triangle-alert', 'count': len(st['problems'])},
                                                                      {'id': 'sources', 'label': 'Sources', 'icon': 'library', 'count': len(srows)},
-                                                                     {'id': 'weight', 'label': 'Page weight', 'icon': 'gauge', 'count': len(prow)}]}]
+                                                                     {'id': 'weight', 'label': 'Page weight', 'icon': 'gauge', 'count': len(prow)},
+                                                                     {'id': 'links', 'label': 'External links', 'icon': 'link', 'count': st.get('links_checked', 0)}]}]
         return self.page('status', 'Status and health', body, drawer, crumbs=['Status'])
 
     def p_whats_new(self):
@@ -1219,6 +1290,110 @@ class Site:
         body = self.hero('milestone', "What's new", "What's new", 'Changes in each release, newest first. Releases are also listed on GitHub with their source code.')
         body += rel + f'<p><a href="https://github.com/{E(self.m["repo"])}/releases">{icon("download")}See all releases on GitHub</a></p>'
         return self.page('whats-new', "What's new", body, None, crumbs=["What's new"])
+
+    def tabbed(self, tabs, label):
+        tablist = ''.join(f'<button type="button" role="tab" id="tab-{k}" aria-controls="{k}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}">{E(l)}</button>' for i, (k, l, _) in enumerate(tabs))
+        panels = ''.join(f'<section role="tabpanel" id="{k}" aria-labelledby="tab-{k}" tabindex="0"{"" if i == 0 else " hidden"}>{b}</section>' for i, (k, l, b) in enumerate(tabs))
+        return f'<div class="tabs"><div role="tablist" aria-label="{E(label)}">{tablist}</div>{panels}</div>'
+
+    def p_design(self):
+        ds = self.d['design']
+        toc = ds['theory_of_change']
+        chain = ''.join(f'<li class="toc-step" id="{c["id"]}"><h3>{E(c["stage"])}</h3>{ul(c["items"])}</li>' for c in toc['chain'])
+        hyp = [[E(h['id']), E(h['statement']), E(h['falsified_if'])] for h in ds['research']['hypotheses']]
+        bp = [[E(b['stage']), E(b['user']), E(b['front']), E(b['back']), E(b['support'])] for b in ds['blueprint']]
+        req_rows = []
+        for r in ds['requirements']:
+            feats = ' '.join(f'<a class="pill" href="{f}.html">{E(f)}</a>' if f != 'all' else 'every page' for f in r['features'])
+            req_rows.append([f'<span class="nowrap" id="{r["id"]}">{E(r["id"])}</span>', E(r['kind']), E(r['moscow']), E(r['text']), feats, E(', '.join(r['checks']))])
+        comps = ''.join(f'<li id="{c["id"]}">{tile("layers", "sm")}<div><strong>{E(c["id"])} {E(c["name"])}</strong><br>{E(c["detail"])}</div></li>' for c in ds['architecture']['components'])
+        flows = ul(ds['architecture']['flows'])
+        stat = {'Met': 'completed', 'Partly': 'in-progress', 'Not yet': 'not-started'}
+        ss = [[str(x['n']), E(x['point']), f'<strong class="status s-{stat[x["rating"]]}">{E(x["rating"])}</strong>', E(x['evidence'])] for x in ds['service_standard']]
+        tabs = [
+            ('theory', 'Theory of change', f'<h2 id="toc">{icon("route")} Theory of change</h2><p class="lede">{E(toc["problem"])}</p><ol class="toc-chain">{chain}</ol><h3>Assumptions to test</h3>{ul(toc["assumptions"])}'),
+            ('research', 'Research plan', f'<h2 id="research-plan">{icon("user-search")} Research plan</h2><h3>Questions</h3>{ul(ds["research"]["questions"])}<h3>Methods</h3>{ul(ds["research"]["methods"])}'
+             f'<h3>Hypotheses and how they would be disproved</h3>{table("t-hyp", "Hypotheses and falsification conditions", ["ID", "Hypothesis", "Disproved if"], hyp)}<h3>Ethics and consent</h3><p>{E(ds["research"]["ethics"])}</p>'),
+            ('blueprint', 'Service blueprint', f'<h2 id="service-blueprint">{icon("workflow")} Service blueprint</h2>{table("t-bp", "Service blueprint: what the user does and what supports it", ["Stage", "User action", "Front stage", "Back stage", "Support process"], bp)}'),
+            ('requirements', 'Requirements', f'<h2 id="traceability">{icon("list-checks")} Requirements and traceability</h2><p>Each requirement traces to the pages that meet it and the checks that prove it. Also available as <a href="data/traceability.csv">CSV</a>.</p>'
+             f'{table("t-trace", "Requirements traced to features and checks", ["ID", "Kind", "MoSCoW", "Requirement", "Met by", "Proved by"], req_rows)}'
+             '<p>Check prefixes: C static checks, B browser checks, HL the weekly health run, T-VAL build validation. Each is described on the About page and in the repository.</p>'),
+            ('architecture', 'Architecture', f'<h2 id="solution-architecture">{icon("layers")} Solution architecture</h2><h3>Components</h3><ul class="icon-list">{comps}</ul><h3>Flows</h3>{flows}<h3>Data</h3><p>{E(ds["architecture"]["data"])}</p>'),
+            ('standard', 'Service Standard', f'<h2 id="service-standard">{icon("badge-check")} Service Standard self-assessment</h2><div class="warning" role="note">{icon("triangle-alert")}<span>Self-assessed against the <a href="{E(self.rb["RB-SVC"]["url"])}">Service Standard</a>. It has not been through a service assessment and claims no conformance.</span></div>'
+             f'{table("t-ss", "Service Standard self-assessment", ["Point", "Standard", "Self-rating", "Evidence"], ss)}'),
+        ]
+        body = self.hero('workflow', 'How the portal is designed', 'Service design and architecture', 'The design artefacts behind this portal: why it exists, how it will be tested with users, how it works and how each requirement is proved.',
+                         brief=['Every requirement traces to the pages that meet it and the checks that prove it.', 'The research plan says how each assumption could be proved wrong.', 'The Service Standard rating is a self-assessment, not an assessment.'])
+        body += self.tabbed(tabs, 'Design artefacts')
+        drawer = [{'label': 'Service design', 'icon': 'workflow', 'items': [
+            {'id': 'toc', 'label': 'Theory of change', 'icon': 'route', 'count': len(toc['chain'])},
+            {'id': 'research-plan', 'label': 'Research plan', 'icon': 'user-search', 'count': len(ds['research']['hypotheses'])},
+            {'id': 'service-blueprint', 'label': 'Service blueprint', 'icon': 'workflow', 'count': len(bp)},
+            {'id': 'traceability', 'label': 'Requirements', 'icon': 'list-checks', 'count': len(req_rows)},
+            {'id': 'solution-architecture', 'label': 'Architecture', 'icon': 'layers', 'count': len(ds['architecture']['components'])},
+            {'id': 'service-standard', 'label': 'Service Standard', 'icon': 'badge-check', 'count': len(ss)}]}]
+        return self.page('design', 'Service design and architecture', body, drawer, crumbs=['Service design'])
+
+    @staticmethod
+    def _year(*vals):
+        for v in vals:
+            m = re.search(r'(19|20)\d\d', str(v or ''))
+            if m:
+                return m.group(0)
+        return 'n.d.'
+
+    def citations(self):
+        acc = '5 November 2026'
+        items = [(s['publisher'], self._year(s.get('dates')), s['title'], s['url'], s['id']) for s in self.d['sources']]
+        items += [(x['publisher'], self._year(x.get('updated')), x['title'], x['url'], x['id']) for x in self.d['rulebook']]
+        items.sort(key=lambda t: (t[0].lower(), t[2].lower()))
+        def shown(u):
+            # addresses on a personal GitHub Pages host are linked but not printed, so no account name appears in the text (C-17)
+            return 'GitHub Pages' if '.github.io/' in u else u
+        return ''.join(f'<li id="cite-{E(i)}">{E(pub)} ({E(y)}) <cite>{E(t)}</cite>. Available at: <a href="{E(u)}">{E(shown(u))}</a> (Accessed: {acc}).</li>' for pub, y, t, u, i in items), len(items)
+
+    def p_notices(self):
+        d = self.d
+        notes = ''.join(f'<section class="notice" id="{n["id"]}"><h3>{icon("info")} {E(n["title"])}</h3><p>{E(n["text"])}</p></section>' for n in d['notices'])
+        cred = [[E(c['who']), E(c['what']), E(c['licence'])] for c in d['credits']]
+        cites, ncite = self.citations()
+        body = self.hero('scale', 'Notices', 'Disclaimers, credits and citations', 'What this portal is and is not, who and what it relies on, and a full citation for every source.',
+                         brief=['This is a prototype, not official guidance or legal advice.', 'Do not submit personal data or anything above OFFICIAL.', 'Every source is cited in full, with the date it was accessed.'])
+        body += f'''<h2 id="disclaimers">{icon("triangle-alert")} Disclaimers and transparency notices</h2>{notes}
+<h2 id="attribution">{icon("file-text")} Attribution</h2><p>{E(d["attribution_statement"])} Material quoted or summarised from GOV.UK is Crown copyright. Re-use it under the <a href="{E(self.m["licence_content_url"])}">Open Government Licence v3.0</a>.</p>
+<h2 id="credits">{icon("award")} Credits and acknowledgements</h2>{table("t-credits", "Credits and licences", ["Who", "What we use", "Licence"], cred)}
+<h2 id="citations">{icon("library")} Citations ({ncite})</h2><p>Sources and rulebook entries, by publisher. Accessed dates are the date of verification for this release.</p><ol class="citations">{cites}</ol>'''
+        drawer = [{'label': 'Notices', 'icon': 'scale', 'items': [
+            {'id': 'disclaimers', 'label': 'Disclaimers and notices', 'icon': 'triangle-alert', 'count': len(d['notices'])},
+            {'id': 'attribution', 'label': 'Attribution', 'icon': 'file-text'},
+            {'id': 'credits', 'label': 'Credits', 'icon': 'award', 'count': len(cred)},
+            {'id': 'citations', 'label': 'Citations', 'icon': 'library', 'count': ncite}]}]
+        return self.page('notices', 'Disclaimers, credits and citations', body, drawer, crumbs=['Notices'])
+
+    def p_accessibility(self):
+        m = self.m
+        body = f'''<h1>Accessibility statement for the DAM capability playbooks</h1>
+<p>The maintainers of this portal are committed to making it accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
+<p>This accessibility statement applies to the <a href="index.html">DAM capability playbooks website</a> and all its pages.</p>
+<p>You should be able to change colours, text size and line spacing using Display options; zoom up to 400% without the text spilling off the screen; navigate the whole website using just a keyboard; and use it with a screen reader. Every page can be read with scripts turned off.</p>
+<h2 id="compliance">Compliance status</h2>
+<p>This website is partially compliant with the Web Content Accessibility Guidelines version 2.2 AA standard, due to the non-compliances listed below.</p>
+<h2 id="non-accessible">Non-accessible content</h2>
+<p>The content listed below is non-accessible for the following reasons.</p>
+<h3>Non-compliance with the accessibility regulations</h3>
+<ul><li>The website has not yet been tested by disabled people or with assistive technology in person. Automated testing cannot find every issue, so some may remain against any success criterion (open item OR-09).</li>
+<li>The knowledge graph on the Knowledge page is a visual diagram. Its shapes can be reached with a keyboard and have names, but the layout is not meaningful to screen reader users. The same relationships are available as tables on the policy and capability pages (success criterion 1.3.1).</li></ul>
+<h3>Content that is not within the scope of the accessibility regulations</h3>
+<p>Pages on GitHub that this website links to, including the contact form and Discussions, are run by GitHub and are not covered by this statement.</p>
+<h2 id="preparation">Preparation of this accessibility statement</h2>
+<p>This statement was prepared on 5 November 2026. It was last reviewed on {E(m["as_of"])}.</p>
+<p>The website was evaluated by self-assessment. Every page is tested on each change with axe-core against WCAG 2.2 A and AA rules in light and dark modes, for sideways scrolling at six widths from 320 to 1920 pixels, for keyboard use of search, menus, tabs and the contact form, and with scripts turned off. Each of these tests is shown to fail on a deliberate break before it is trusted.</p>
+<h2 id="feedback">Feedback and contact information</h2>
+<p>If you find a problem or need information on this website in a different format, use the <a href="contact.html">contact form</a> and choose "An accessibility problem". If you cannot use the form, ask a colleague to send it for you. We aim to reply within 10 working days.</p>
+<h2 id="enforcement">Enforcement procedure</h2>
+<p>The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the 'accessibility regulations'). If you're not happy with how we respond to your complaint, contact the <a href="https://www.equalityadvisoryservice.com/">Equality Advisory and Support Service (EASS)</a>.</p>
+<p>This statement follows the <a href="{E(self.rb["RB-MODEL"]["url"])}">GOV.UK model accessibility statement</a>.</p>'''
+        return self.page('accessibility', 'Accessibility statement', body, None, crumbs=['Accessibility statement'])
 
     def p_404(self):
         return self.page('404', 'Page not found', '<h1>Page not found</h1><p>If you typed the address, check it is correct.</p><p><a href="index.html">Go to the home page</a> or press Ctrl and K to search.</p>')
@@ -1241,6 +1416,10 @@ class Site:
                   [[t['id'], t['name'], c['id'], i + 1, f] for c in d['capabilities'] for t in c.get('templates', []) for i, f in enumerate(t['fields'])])
         write_csv('glossary.csv', ['id', 'term', 'alt_labels', 'broader', 'definition', 'capabilities', 'provenance'],
                   [[c['id'], c['term'], '; '.join(c.get('alt') or []), c['broader'] or '', c['def'], ' '.join(c['caps']), c['prov']] for c in d['concepts']])
+        write_csv('traceability.csv', ['requirement', 'kind', 'moscow', 'text', 'features', 'checks'],
+                  [[r['id'], r['kind'], r['moscow'], r['text'], ' '.join(r['features']), ' '.join(r['checks'])] for r in d['design']['requirements']])
+        write_csv('rulebook.csv', ['id', 'group', 'title', 'publisher', 'url', 'updated', 'provenance', 'capabilities'],
+                  [[x['id'], x['group'], x['title'], x['publisher'], x['url'], x.get('updated') or '', x['prov'], ' '.join(x['caps'])] for x in d['rulebook']])
         write_csv('metadata-dictionary.csv', ['property', 'mem_slot', 'obligation', 'rule'],
                   [[x['prop'], x['mem'], x['obligation'], x['rule']] for x in self.caps['cat']['metadata']])
         base = m['site_url'] + 'vocab#'
@@ -1267,9 +1446,11 @@ class Site:
                '@id': m['site_url'] + 'data/catalogue.jsonld', '@type': 'dcat:Catalog', 'dcterms:title': m['title'] + ': sources',
                'dcterms:modified': m['as_of'], 'dcat:contactPoint': {'@type': 'http://www.w3.org/2006/vcard/ns#Kind', 'http://www.w3.org/2006/vcard/ns#hasURL': m['site_url'] + 'contact.html'},
                'dcat:resource': [{'@id': s['url'], '@type': 'dcat:Resource', 'dcterms:title': s['title'], 'dcterms:publisher': s['publisher'],
-                                  'dcterms:type': s['type'], 'dcterms:description': s['note']} for s in d['sources']]}
+                                  'dcterms:type': s['type'], 'dcterms:description': s['note']} for s in d['sources']]
+               + [{'@id': x['url'], '@type': 'dcat:Resource', 'dcterms:title': x['title'], 'dcterms:publisher': x['publisher'],
+                   'dcterms:type': x['group'], 'dcterms:description': x['why']} for x in d['rulebook']]}
         (out / 'catalogue.jsonld').write_text(json.dumps(cat, indent=1, ensure_ascii=False), encoding='utf-8')
-        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new'])
+        sm = ''.join(f'<url><loc>{m["site_url"]}{"" if k == "index" else k + ".html"}</loc><lastmod>{m["as_of"]}</lastmod></url>' for k in [x[0] for x in NAV] + ['contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])
         (self.out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>', encoding='utf-8')
 
 

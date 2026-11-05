@@ -27,7 +27,9 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Library | All material, templates, an assessment of where sector-specific content is needed, and open data |
 | Knowledge | Glossary, thesaurus, taxonomy, knowledge graph and data dictionary |
 | Inclusion | Equality, inclusion and accessibility checks for each capability |
-| Status, What's new, About | Health run results, release notes, open and defect registers, build standard assessment |
+| Status, What's new, About | Health run results, release notes, findings, open and defect registers, build standard assessment |
+| Service design | Theory of change, research plan, blueprint, requirements traceability, architecture, Service Standard self-assessment |
+| Notices, Accessibility | Disclaimers, credits, full citations and the accessibility statement |
 
 ## How the repository supports the portal
 

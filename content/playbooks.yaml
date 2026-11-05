@@ -16,7 +16,7 @@ meta:
   short_title: DAM capability playbooks
   subtitle: Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
   keywords: [data asset management, DAM policy, critical data assets, data governance, data catalogue, metadata, data quality, DQAP, data ownership, UK government]
-  version: 1.1.0
+  version: 1.2.0
   as_of: '2026-11-05'
   review: '2027-02-05'
   verified_on: '2026-11-05'
@@ -854,16 +854,16 @@ open_register:
 - {id: OR-01, item: "The internal Data Cataloguing Playbook v2.6 is not public. The cataloguing stages here are a synthesis of GOV.UK guidance and need checking against it, or replacing with it once cleared.", who: Service owner}
 - {id: OR-02, item: "Contact is the repository's issue form. Replace it with a dedicated form service that delivers privately, so people without a GitHub account can get in touch.", who: Service owner}
 - {id: OR-03, item: "Not cleared as official guidance. Clearance, and a move to an official GitHub organisation, are needed before departments are told to rely on it.", who: Service owner}
-- {id: OR-04, item: "No research with real users yet (coordinators, owners, stewards). Journeys are assumed needs.", who: Service owner, with the Working Group}
+- {id: OR-04, item: "No research with real users yet. A research plan with questions, methods, hypotheses and falsification conditions is now published on the Service design page; it needs participants through the Working Group.", who: Service owner, with the Working Group}
 - {id: OR-05, item: "The policy promises minimum interoperability requirements that its body does not state.", who: GDS Data Frameworks and Standards}
-- {id: OR-06, item: "Four metadata properties in the guidance (temporalCoverage, conformsTo, expires, supersededBy) have no slot in the published MEM. Reconcile model and guidance.", who: Metadata standards owner}
+- {id: OR-06, item: "Four metadata properties in the guidance have no slot in the published MEM. A crosswalk to DCAT and Dublin Core terms is proposed on the cataloguing page (finding F-04) and needs agreement.", who: Metadata standards owner}
 - {id: OR-07, item: "Dates for the rollout phases, returns and support offer come from practitioner material, not a public page. Confirm before external use.", who: Service owner}
 - {id: OR-08, item: "The governance escalation timescales are this playbook's recommendation. Each organisation should set its own.", who: Each organisation's board}
 - {id: OR-09, item: "Not tested with disabled users or assistive technology users in person; automated checks only.", who: Service owner}
-- {id: OR-10, item: "Eight conflicts logged in the canonical shared glossary (for example two maturity models, data owner versus IAO) are not all resolved here.", who: Service owner}
-- {id: OR-12, item: "The sector-depth assessment (DD-01 to DD-14) lists content that needs subject experts from each sector; its source leads are not yet verified.", who: Service owner, with sector data leads}
-- {id: OR-13, item: "Branch protection on main, Discussions and private vulnerability reporting must be switched on in the repository settings if they are not already.", who: Repository owner}
-- {id: OR-11, item: "The Data Quality Commons found one GOV.UK issues framework table value that contradicts its stated rule (a High band start). Raise with the GDS data quality team.", who: Service owner}
+- {id: OR-10, item: "Data owner versus information asset owner is resolved by the GOV.UK data ownership model (three options). The two maturity models and the remaining glossary conflicts are not resolved here.", who: Service owner}
+- {id: OR-12, item: "The sector-depth assessment (DD-01 to DD-14) needs subject experts from each sector. Its source leads now link to the related rulebook entries, each labelled with how it was checked; leads with no entry are marked for checking.", who: Service owner, with sector data leads}
+- {id: OR-13, item: "GitHub Pages is on. Branch protection on main, Discussions, private vulnerability reporting and the repository description and topics must be set in the repository settings.", who: Repository owner}
+- {id: OR-11, item: "Verified on GOV.UK: Table 4 of the issues framework contradicts its own rule for a 97.5% target (finding F-01). Raise with the GDS data quality team; tracked as a repository issue.", who: Service owner}
 
 defects:
 - {id: D-001, found: Prior governance suite (September 2026), defect: "DQAP was expanded with the wrong middle word, as an 'assurance' plan.", cause: "Expansion written from memory, not from the policy text.", check: "C-06 bans the wrong expansion anywhere in content or pages."}
@@ -879,6 +879,8 @@ defects:
 - {id: D-010, found: This build (version 1.1), static checks, defect: "The external-assets check treated canonical links as remote loads.", cause: "The check looked at every link element, not only ones the browser fetches.", check: "C-05 now ignores canonical and alternate links; its existing vaccination still fails on a remote script."}
 - {id: D-011, found: This build (version 1.1), screenshot review, defect: "The contact form's first error link pointed to a radio button with no id, so it went nowhere.", cause: "The error summary is written by script, so the static link check could not see it.", check: "B-09 now checks every error summary link resolves to a field."}
 - {id: D-012, found: First CI run on GitHub (version 1.1), defect: "The health step failed before running because its output folder did not exist on a fresh runner.", cause: "The build folder is ignored by git, so it exists locally but not in CI.", check: "The workflow creates the folder first; the CI run itself is the check and blocks publishing when it fails."}
+- {id: D-013, found: First external link check (version 1.2), defect: "The health run reported a working GOV.UK organisation page as broken (HTTP 406).", cause: "Page checks asked for JSON before HTML, which some GOV.UK pages refuse.", check: "A unit test proves page checks ask for HTML first; it fails when the old header is restored."}
+- {id: D-014, found: Browser checks (version 1.2), defect: "Stopping all table row headings from wrapping made the library, knowledge and policy pages scroll sideways on phones, and placed feature links too close together.", cause: "A global no-wrap rule applied to long titles as well as short identifiers.", check: "B-02 (sideways scrolling at six widths) and B-01 (target size) caught it; no-wrap now applies only to identifiers. A second cause was screen-reader-only labels inside wide tables escaping their scroll region; scroll regions are now positioned so they contain them."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1324,7 +1326,7 @@ standards:
 - {id: SR03, name: Self-describing, moscow: Must, status: Met, how: "Artefact meta tags, JSON-LD on every page, DCAT catalogue, SKOS vocabulary, sitemap"}
 - {id: SR07, name: Self-testing, moscow: Must, status: Met, how: "Static and browser checks on every change; each check proved to fail on a deliberate break; release blocked on failure"}
 - {id: SR18, name: Self-degrading, moscow: Must, status: Met, how: "Declared shed order in app.js; every page readable with scripts off (browser check B-07)"}
-- {id: SR26, name: Self-updating, moscow: Must, status: Met, how: "Weekly health run re-checks every source and marks changed or unreachable sources as stale on the status page"}
+- {id: SR26, name: Self-updating, moscow: Must, status: Met, how: "Weekly health run re-checks every source date through the GOV.UK Content API and every external link, and reports changes on the Status page"}
 - {id: SR09, name: Self-reviewing, moscow: Must, status: Met, how: "Weekly health run fails when the review date has passed and opens an issue"}
 - {id: SR33, name: Self-reporting, moscow: Must, status: Met, how: "status.json and the Status page publish health, coverage and open problems; failures open a GitHub issue"}
 - {id: SR32, name: Self-limiting, moscow: Must, status: Met, how: "Automation only reads, builds and opens issues. A person merges, tags releases and changes settings"}
@@ -1348,5 +1350,193 @@ standards:
 - {id: OP21, name: Static-first delivery, moscow: Must, status: Met, how: "Static pages on GitHub Pages; no server code"}
 - {id: OP24, name: Personal data kept out, moscow: Must, status: Met, how: "No analytics, no cookies; progress stays in the browser; the contact form warns against personal data"}
 - {id: OP30, name: Algorithmic transparency, moscow: Should, status: Met, how: "Not applicable: no automated decisions about people. Recorded here as the decision"}
-- {id: OP32, name: Service Standard self-assessment, moscow: Should, status: Not yet, how: "To be done before any move to official status"}
+- {id: OP32, name: Service Standard self-assessment, moscow: Should, status: Partly, how: "Self-assessment against all 14 points on the Service design page; no service assessment yet"}
 - {id: OP33, name: Horizon scanning, moscow: Must, status: Met, how: "Weekly source checks flag changed GOV.UK guidance for review"}
+
+# ---------------------------------------------------------------------------
+# Related policies, standards, legislation and rulebooks (version 1.2)
+# V: page fetched on 2026-11-05 (GOV.UK pages through the GOV.UK Content API; others by HTTP 200 and page title).
+# S: found by web search; the site blocked automated checking, so a person should open it before relying on it.
+# ---------------------------------------------------------------------------
+rulebook:
+- {id: RB-SVC, group: Service delivery and technology, title: Service Standard, publisher: GDS (GOV.UK Service Manual), url: "https://www.gov.uk/service-manual/service-standard", updated: '2019-06-07', prov: V, caps: [gov, cat, dq], why: "The 14 points any government service is assessed against; used for this portal's self-assessment."}
+- {id: RB-TCOP, group: Service delivery and technology, title: The Technology Code of Practice, publisher: GDS, url: "https://www.gov.uk/guidance/the-technology-code-of-practice", updated: '2026-10-29', prov: V, caps: [cat, gov], why: "Make things open, use open standards and make data reusable: the basis for catalogue and tool choices."}
+- {id: RB-GDSWAY, group: Service delivery and technology, title: The GDS Way, publisher: GDS, url: "https://gds-way.digital.cabinet-office.gov.uk/", updated: null, prov: V, caps: [cat], why: "Engineering practice this portal follows, including using GitHub and publishing a vulnerability disclosure route."}
+- {id: RB-OPEN, group: Service delivery and technology, title: Open standards for government, publisher: GDS, url: "https://www.gov.uk/government/publications/open-standards-for-government", updated: '2026-01-29', prov: V, caps: [cat, dq], why: "The recommended open standards, including those for metadata, identifiers and data exchange."}
+- {id: RB-UPRN, group: Service delivery and technology, title: Identifying property and street information (UPRN and USRN), publisher: GDS, url: "https://www.gov.uk/government/publications/open-standards-for-government/identifying-property-and-street-information", updated: '2026-01-29', prov: V, caps: [cat, dq], why: "The open standard for property and street identifiers; the basis for address quality rules."}
+- {id: RB-DDAT, group: Service delivery and technology, title: Government Digital and Data Profession Capability Framework, publisher: GDS, url: "https://ddat-capability-framework.service.gov.uk/", updated: null, prov: V, caps: [gov], why: "Role and skill definitions for data governance and data roles."}
+- {id: RB-NDL, group: Data and AI, title: National Data Library (data.gov.uk), publisher: GDS, url: "https://www.data.gov.uk/", updated: null, prov: V, caps: [cat], why: "The cross-government gateway to public data; the destination for harvested catalogue records."}
+- {id: RB-ETH, group: Data and AI, title: Data and AI Ethics Framework, publisher: GDS, url: "https://www.gov.uk/government/publications/data-ethics-framework", updated: '2025-12-18', prov: V, caps: [gov], why: "Ethical questions for new or higher-risk uses of data, including AI."}
+- {id: RB-AIREADY, group: Data and AI, title: Making government datasets ready for AI, publisher: GDS, url: "https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai", updated: '2026-01-19', prov: V, caps: [dq, cat, gov], why: "The criteria to assess at the annual review when data is used for AI."}
+- {id: RB-AIPLAY, group: Data and AI, title: AI Playbook for the UK Government, publisher: GDS, url: "https://www.gov.uk/government/publications/ai-playbook-for-the-uk-government", updated: '2025-02-10', prov: V, caps: [gov], why: "Safe and effective use of AI in government."}
+- {id: RB-ATRS, group: Data and AI, title: Algorithmic Transparency Recording Standard hub, publisher: GDS, url: "https://www.gov.uk/government/collections/algorithmic-transparency-recording-standard-hub", updated: '2025-05-08', prov: V, caps: [gov, dq], why: "Transparency records for algorithmic tools that support decisions about people."}
+- {id: RB-DUAA, group: Legislation, title: Data (Use and Access) Act 2025, publisher: legislation.gov.uk, url: "https://www.legislation.gov.uk/ukpga/2025/18/contents", updated: null, prov: V, caps: [gov], why: "Amends UK GDPR and the Data Protection Act 2018; affects the lawful basis for sharing."}
+- {id: RB-DPA, group: Legislation, title: Data Protection Act 2018, publisher: legislation.gov.uk, url: "https://www.legislation.gov.uk/ukpga/2018/12/contents", updated: null, prov: V, caps: [gov, dq], why: "Data protection law, including Part 3 for law enforcement processing."}
+- {id: RB-DEA, group: Legislation, title: Digital Economy Act 2017, publisher: legislation.gov.uk, url: "https://www.legislation.gov.uk/ukpga/2017/30/contents", updated: null, prov: V, caps: [gov], why: "Data sharing powers for public authorities, including for fraud and debt."}
+- {id: RB-EQA, group: Legislation, title: Equality Act 2010, publisher: legislation.gov.uk, url: "https://www.legislation.gov.uk/ukpga/2010/15/contents", updated: null, prov: V, caps: [gov, dq], why: "Includes the public sector equality duty."}
+- {id: RB-ICOSHARE, group: Legislation, title: ICO data sharing code of practice, publisher: Information Commissioner's Office, url: "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/", updated: null, prov: S, caps: [gov], why: "Statutory code on sharing personal data between controllers (in force since October 2021, according to search results)."}
+- {id: RB-GSC, group: Security, title: Government Security Classifications, publisher: Cabinet Office, url: "https://www.gov.uk/government/publications/government-security-classifications", updated: '2024-08-05', prov: V, caps: [gov, cat], why: "Defines OFFICIAL and handling markings; the policy covers OFFICIAL assets only."}
+- {id: RB-VDP, group: Security, title: Report a vulnerability on a GOV.UK domain or subdomain, publisher: GDS, url: "https://www.gov.uk/help/report-vulnerability", updated: '2021-03-23', prov: V, caps: [cat], why: "The government vulnerability disclosure approach this portal's security.txt follows in spirit."}
+- {id: RB-ACC, group: Accessibility and equality, title: Understanding accessibility requirements for public sector bodies, publisher: GDS, url: "https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps", updated: '2024-09-30', prov: V, caps: [cat, dq], why: "The accessibility regulations that apply to published records, statements and this portal."}
+- {id: RB-MODEL, group: Accessibility and equality, title: Model accessibility statement, publisher: GDS, url: "https://www.gov.uk/guidance/model-accessibility-statement", updated: '2024-09-30', prov: V, caps: [cat], why: "Mandatory wording used in this portal's accessibility statement."}
+- {id: RB-PSED, group: Accessibility and equality, title: Public sector equality duty, publisher: GOV.UK, url: "https://www.gov.uk/government/publications/public-sector-equality-duty", updated: '2012-07-06', prov: V, caps: [gov, dq], why: "How public bodies have due regard to equality in their functions, including data work."}
+- {id: RB-STYLE, group: Content, title: Writing to GOV.UK standards - style guides, publisher: GDS, url: "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/style-guides/", updated: null, prov: V, caps: [cat], why: "The style this portal is written in (the old GOV.UK style guide address redirects here)."}
+- {id: RB-COP, group: Statistics, title: Code of Practice for Statistics, publisher: Office for Statistics Regulation, url: "https://code.statisticsauthority.gov.uk/", updated: null, prov: V, caps: [dq], why: "Trustworthiness, quality and value for official statistics; read across to DQAPs for statistical sources."}
+- {id: RB-QAAD, group: Statistics, title: Quality assurance of administrative data, publisher: Office for Statistics Regulation, url: "https://osr.statisticsauthority.gov.uk/guidance/administrative-data-and-official-statistics/", updated: null, prov: S, caps: [dq], why: "How statistics producers assure administrative data; the site blocked automated checking."}
+- {id: RB-TNA, group: Records, title: Information management guidance, publisher: The National Archives, url: "https://www.nationalarchives.gov.uk/information-management/", updated: null, prov: V, caps: [gov], why: "Records management, retention and disposal for public records."}
+- {id: RB-OGL, group: Content, title: Open Government Licence v3.0, publisher: The National Archives, url: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/", updated: null, prov: V, caps: [cat], why: "The licence for open government data and for this portal's content."}
+- {id: RB-DSPT, group: Health and care, title: Data Security and Protection Toolkit, publisher: NHS England, url: "https://www.dsptoolkit.nhs.uk/", updated: null, prov: V, caps: [gov], why: "Annual self-assessment against data security standards for organisations with access to NHS patient data."}
+- {id: RB-CALD, group: Health and care, title: The Caldicott Principles, publisher: National Data Guardian, url: "https://www.gov.uk/government/publications/the-caldicott-principles", updated: '2020-12-08', prov: V, caps: [gov], why: "Principles for using confidential information about patients and service users."}
+- {id: RB-CLD, group: Health and care, title: "Adult social care client level data, England: background quality and methodology", publisher: Department of Health and Social Care, url: "https://www.gov.uk/government/publications/adult-social-care-client-level-data-england-background-quality-and-methodology", updated: '2026-01-15', prov: V, caps: [dq], why: "Quality and coverage of the national adult social care client level data collection."}
+- {id: RB-ASCOF, group: Health and care, title: "Adult social care outcomes framework: handbook of definitions", publisher: Department of Health and Social Care, url: "https://www.gov.uk/government/publications/adult-social-care-outcomes-framework-handbook-of-definitions", updated: '2026-03-10', prov: V, caps: [dq], why: "Definitions of measures derived from client level data."}
+- {id: RB-CDM, group: Health and care, title: "Care data matters: a roadmap for better adult social care data", publisher: Department of Health and Social Care, url: "https://www.gov.uk/government/publications/care-data-matters-a-roadmap-for-better-adult-social-care-data", updated: '2023-12-20', prov: V, caps: [gov, dq], why: "The roadmap for adult social care data, including client level data."}
+- {id: RB-CIN, group: Children and education, title: "Children in need census: guide to submitting data", publisher: Department for Education, url: "https://www.gov.uk/guidance/children-in-need-census", updated: '2026-11-03', prov: V, caps: [dq], why: "Specification and validation for children in need data returns."}
+- {id: RB-GEOBP, group: Geospatial, title: Best practice guidance and tools for managing geospatial data, publisher: Geospatial Commission, url: "https://www.gov.uk/government/collections/best-practice-guidance-and-tools-for-geospatial-data-managers", updated: '2022-05-26', prov: V, caps: [cat, dq], why: "Guidance on managing and sharing geospatial data in a FAIR way."}
+- {id: RB-QFAIR, group: Geospatial, title: "How FAIR are the UK's national geospatial data assets?", publisher: Geospatial Commission, url: "https://www.gov.uk/government/publications/how-fair-are-the-uks-geospatial-assets", updated: '2022-02-09', prov: V, caps: [cat, dq], why: "The Q-FAIR assessment of national geospatial data assets."}
+- {id: RB-GEMINI, group: Geospatial, title: UK GEMINI metadata standard, publisher: Association for Geographic Information, url: "https://www.agi.org.uk/uk-gemini/", updated: null, prov: V, caps: [cat], why: "Geospatial metadata standard named in the GOV.UK metadata guidance; the AGI page says it has moved to GitHub."}
+- {id: RB-PSFA, group: Fraud and error, title: Public Sector Fraud Authority, publisher: Cabinet Office, url: "https://www.gov.uk/government/organisations/public-sector-fraud-authority", updated: '2025-02-06', prov: V, caps: [gov, dq], why: "Counter-fraud standards and support for the fraud and error purpose."}
+- {id: RB-LDD, group: Local government, title: Local Digital Declaration, publisher: Local Digital, url: "https://www.localdigital.gov.uk/declaration/", updated: null, prov: V, caps: [gov], why: "Shared commitments for councils, which can adopt the policy voluntarily."}
+- {id: RB-SDMX, group: Standards, title: SDMX, publisher: SDMX sponsors, url: "https://sdmx.org/", updated: null, prov: V, caps: [cat], why: "Statistical data and metadata exchange standard."}
+- {id: RB-DCAT, group: Standards, title: Data Catalog Vocabulary (DCAT) version 3, publisher: W3C, url: "https://www.w3.org/TR/vocab-dcat-3/", updated: null, prov: V, caps: [cat], why: "The base vocabulary for catalogue records."}
+- {id: RB-DQV, group: Standards, title: "Data on the Web Best Practices: Data Quality Vocabulary", publisher: W3C, url: "https://www.w3.org/TR/vocab-dqv/", updated: null, prov: V, caps: [dq, cat], why: "Publishing quality measurements with catalogue records."}
+
+# Leads in the sector assessment that now point to a verified rulebook entry
+depth_refs:
+  DD-01: [RB-DSPT, RB-CALD]
+  DD-02: [RB-CLD, RB-ASCOF, RB-CDM, RB-CIN]
+  DD-03: [RB-UPRN, RB-GEMINI, RB-QFAIR, RB-GEOBP]
+  DD-04: [RB-COP, RB-QAAD, RB-SDMX]
+  DD-05: [RB-DUAA, RB-DEA, RB-ICOSHARE]
+  DD-06: [RB-AIREADY, RB-ATRS, RB-AIPLAY, RB-ETH]
+  DD-07: [RB-PSFA, RB-DEA]
+  DD-08: [RB-DPA, RB-GSC]
+  DD-10: [RB-OPEN]
+  DD-11: [RB-TNA]
+  DD-12: [RB-LDD]
+
+# Findings from verification (version 1.2)
+findings:
+- id: F-01
+  title: Issues framework Table 4 contradicts its own rule for a 97.5% target
+  detail: "The framework says the High band starts halfway between the Middle band start and the target. For a 97.5% target the Middle band starts at 95%, so the High band should start at 96.25%. Table 4 shows 96.75%. The other four rows follow the rule."
+  src: SRC-DQIF
+  verified: '2026-11-05'
+  action: "This portal follows the stated rule. Raise with the GDS data quality team; tracked as a repository issue."
+- id: F-02
+  title: The Data Ethics Framework is now the Data and AI Ethics Framework
+  detail: "The GOV.UK page at the Data Ethics Framework address is titled 'Data and AI Ethics Framework' (updated 18 December 2025)."
+  src: null
+  verified: '2026-11-05'
+  action: "Use the new name. Earlier practitioner material that cites the old name should be updated."
+- id: F-03
+  title: The GOV.UK style guide has moved
+  detail: "The style guide and 'writing for GOV.UK' addresses on GOV.UK now redirect to guidance.publishing.service.gov.uk."
+  src: null
+  verified: '2026-11-05'
+  action: "Link to the new address."
+- id: F-04
+  title: Four metadata properties have no slot in the Metadata Exchange Model
+  detail: "temporalCoverage, conformsTo, expires and supersededBy appear in the GOV.UK metadata guidance but not in the published MEM classes."
+  src: SRC-MD
+  verified: '2026-11-05'
+  action: "Proposed crosswalk below, to be agreed by the metadata standards owner (OR-06)."
+
+# Proposed crosswalk for the four guidance properties missing from the MEM (OR-06). Proposal, not agreed.
+mem_proposal:
+- {prop: temporalCoverage, term: "dcterms:temporal", note: "DCAT uses dcterms:temporal with a dcterms:PeriodOfTime (dcat:startDate, dcat:endDate)."}
+- {prop: conformsTo, term: "dcterms:conformsTo", note: "Already used by DCAT for a standard or schema a resource conforms to."}
+- {prop: expires, term: "dcterms:valid", note: "Dublin Core 'date (often a range) of validity'; record the end date. No DCAT-specific term exists."}
+- {prop: supersededBy, term: "dcterms:isReplacedBy", note: "Dublin Core relation for a resource that supplants this one; DCAT 3 versioning also offers dcat:previousVersion in the other direction."}
+
+# ---------------------------------------------------------------------------
+# Service design artefacts (version 1.2). Each item has a stable id so it can be traced.
+# ---------------------------------------------------------------------------
+design:
+  theory_of_change:
+    problem: "Departments must adopt the DAM Policy, but guidance for its three capabilities is spread across many pages and practitioner packs, so the same facts are recorded several times and returns are assembled late."
+    chain:
+    - {id: TOC-IN, stage: Inputs, items: ["Published GOV.UK guidance behind the policy", "Practitioner playbooks for governance and quality", "Open standards (DCAT, MEM, DQV)", "GitHub for hosting, contact and automation"]}
+    - {id: TOC-ACT, stage: Activities, items: ["Join the three capabilities into one method with one set of roles", "Give each role a route and a learning journey", "Check sources, accessibility and links automatically every week"]}
+    - {id: TOC-OUT, stage: Outputs, items: ["One portal with step-by-step methods, templates and modules", "Open data versions of every requirement, template and term", "A public record of defects, open items and health"]}
+    - {id: TOC-OC, stage: Outcomes, items: ["Owners, records and DQAPs are set up once and reused", "Returns are built from catalogue records, not retyped", "Practitioners know which requirement each step meets"]}
+    - {id: TOC-IMP, stage: Impact, items: ["Critical data assets are owned, findable and fit for use across government", "Services that rely on shared data, and the people they serve, are less affected by poor data"]}
+    assumptions: ["Practitioners will use a single portal if it saves them effort (untested, OR-04)", "Hand-offs between capabilities reduce duplicate recording (untested)", "GOV.UK guidance remains the authority and changes are caught weekly"]
+  research:
+    questions: ["Can each role find the steps that apply to them in under two minutes?", "Do the hand-offs match how departments actually organise ownership, cataloguing and quality?", "Which sector supplements (DD-01 to DD-14) are needed first?", "Can people with access needs complete a route without help?"]
+    methods: ["Moderated usability sessions with 5 to 8 people per role, including people who use assistive technology", "Tree test of the navigation", "A survey through the Working Group", "Analysis of feedback received through the contact and feedback forms"]
+    hypotheses:
+    - {id: H-01, statement: "Routes by role reduce time to find the right step.", falsified_if: "Median time to find a step is not lower on a route than through search alone."}
+    - {id: H-02, statement: "Recording the owner once and reusing it reduces mismatches.", falsified_if: "Owner mismatches between register, record and DQAP do not fall after adoption."}
+    - {id: H-03, statement: "Learning modules improve confidence for new owners and stewards.", falsified_if: "Self-rated confidence does not rise after completing the role's modules."}
+    ethics: "Participants give informed consent, can withdraw at any time, and are recorded only with permission. Notes name roles, not people. No session collects data above OFFICIAL."
+  blueprint:
+  - {id: BP-1, stage: Find, user: "Searches or follows a link to the portal", front: "Home page, role cards, search", back: "GitHub Pages hosting; sitemap and metadata for search engines", support: "Weekly health run keeps pages current"}
+  - {id: BP-2, stage: Learn, user: "Works through modules for their role", front: "Learning page, checks of understanding, progress", back: "Progress kept in the reader's browser only", support: "Content reviewed against GOV.UK sources each release"}
+  - {id: BP-3, stage: Do, user: "Follows step-by-step methods and copies templates", front: "Capability pages, templates, open data downloads", back: "Content file generates every page and export", support: "Build refuses broken references"}
+  - {id: BP-4, stage: Report, user: "Builds the return and evidence pack", front: "Policy spine, joined-up year, templates", back: "Requirements and templates as CSV", support: "Release notes record changes that affect returns"}
+  - {id: BP-5, stage: Improve, user: "Reports a problem or suggests a change", front: "Contact form, page feedback, Discussions", back: "GitHub issue forms and Discussions", support: "A person triages issues; fixes include a new check"}
+  requirements:
+  - {id: FR-01, kind: Functional, moscow: Must, text: "Show every DAM Policy requirement with its strength, source and the step that meets it.", features: [dam], checks: [C-03, C-08]}
+  - {id: FR-02, kind: Functional, moscow: Must, text: "Give a step-by-step method for each capability with roles, templates and measures.", features: [governance, cataloguing, quality], checks: [C-10, B-06]}
+  - {id: FR-03, kind: Functional, moscow: Must, text: "Offer a route and learning journey for each role, with progress the reader controls.", features: [personas, learning], checks: [B-10]}
+  - {id: FR-04, kind: Functional, moscow: Must, text: "Let anyone get in touch without an email address being published.", features: [contact], checks: [C-04, C-14, B-09]}
+  - {id: FR-05, kind: Functional, moscow: Should, text: "Let readers search everything and filter every list.", features: [index, library, knowledge], checks: [B-05, B-08]}
+  - {id: FR-06, kind: Functional, moscow: Should, text: "Publish the vocabulary, requirements and templates as open data.", features: [library, knowledge], checks: [C-11]}
+  - {id: NFR-01, kind: Non-functional, moscow: Must, text: "Meet WCAG 2.2 AA in light and dark modes, from 320 to 1920 pixels wide.", features: [all], checks: [B-01, B-02, B-03]}
+  - {id: NFR-02, kind: Non-functional, moscow: Must, text: "Work with scripts turned off and load nothing from other sites.", features: [all], checks: [C-05, C-12, B-07]}
+  - {id: NFR-03, kind: Non-functional, moscow: Must, text: "Label every fact with its provenance and keep sources current.", features: [all], checks: [C-08, HL-01]}
+  - {id: NFR-04, kind: Non-functional, moscow: Must, text: "Name roles, never people, and hold no personal data.", features: [all], checks: [C-04, C-17]}
+  - {id: NFR-05, kind: Non-functional, moscow: Should, text: "Be findable by search engines with accurate descriptions.", features: [all], checks: [C-16]}
+  - {id: TR-01, kind: Technical, moscow: Must, text: "Generate every page from one content file and refuse to build on a broken reference.", features: [all], checks: [T-VAL]}
+  - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services: Pages, issue forms, Discussions, Actions and releases.", features: [contact, status, whats-new], checks: [C-05, HL-01]}
+  architecture:
+    components:
+    - {id: AC-01, name: Content file, detail: "content/playbooks.yaml: requirements, methods, roles, personas, modules, sources and registers."}
+    - {id: AC-02, name: Generator, detail: "tools/build.py: validates references, writes static pages, open data, sitemap, images."}
+    - {id: AC-03, name: Front end, detail: "Static HTML and CSS with one progressive-enhancement script; no external assets; strict Content Security Policy."}
+    - {id: AC-04, name: Checks, detail: "tools/check_site.py (static), tools/check_browser.py (Playwright with axe-core), tests/ (vaccinations)."}
+    - {id: AC-05, name: Health run, detail: "tools/health.py: GOV.UK Content API source dates, review date and page weight; results on the Status page."}
+    - {id: AC-06, name: GitHub services, detail: "Actions (build, check, publish, weekly health, CodeQL, release), Pages, issue forms, Discussions, Dependabot."}
+    flows:
+    - "Change: pull request -> build -> static checks -> vaccinations -> browser checks -> review -> merge -> Pages"
+    - "Weekly: health run -> Status page -> issue labelled health if something needs a person"
+    - "Contact: contact form -> pre-filled GitHub issue form -> person sends it -> triage"
+    data: "No personal data is held. Browser storage keeps progress and display choices on the reader's device only."
+  service_standard:
+  - {n: 1, point: Understand users and their needs, rating: Partly, evidence: "Roles and needs drawn from practitioner material; research plan written, not yet run (OR-04)."}
+  - {n: 2, point: Solve a whole problem for users, rating: Partly, evidence: "Joins three capabilities and the return; depends on GOV.UK guidance and departmental catalogues."}
+  - {n: 3, point: Provide a joined up experience across all channels, rating: Partly, evidence: "Links to GOV.UK, the Working Group and the Data Quality Commons; offline support not covered."}
+  - {n: 4, point: Make the service simple to use, rating: Met, evidence: "Routes by role, step by step, plain English, search; not yet tested with users."}
+  - {n: 5, point: Make sure everyone can use the service, rating: Partly, evidence: "Automated WCAG 2.2 AA checks pass; no testing with disabled users yet (OR-09)."}
+  - {n: 6, point: Have a multidisciplinary team, rating: Not yet, evidence: "Built by one practitioner with AI assistance; no dedicated team (OP20)."}
+  - {n: 7, point: Use agile ways of working, rating: Met, evidence: "Small releases, public changelog, issues and pull requests."}
+  - {n: 8, point: Iterate and improve frequently, rating: Met, evidence: "Weekly health run; feedback routes on every page."}
+  - {n: 9, point: Create a secure service which protects users' privacy, rating: Met, evidence: "No personal data, strict CSP, CodeQL, Dependabot, security.txt."}
+  - {n: 10, point: Define what success looks like and publish performance data, rating: Partly, evidence: "Success measures defined per capability; no usage data collected by design."}
+  - {n: 11, point: Choose the right tools and technology, rating: Met, evidence: "Static site on GitHub Pages; open standards; ADRs recorded."}
+  - {n: 12, point: Make new source code open, rating: Met, evidence: "Public repository under MIT; content under OGL."}
+  - {n: 13, point: Use and contribute to open standards, components and patterns, rating: Met, evidence: "DCAT, SKOS, DQV, JSON-LD; GOV.UK Design System patterns."}
+  - {n: 14, point: Operate a reliable service, rating: Partly, evidence: "Static hosting and health checks; single account dependency (OR-03)."}
+
+# ---------------------------------------------------------------------------
+# Notices, disclaimers and credits (version 1.2)
+# ---------------------------------------------------------------------------
+notices:
+- {id: N-01, title: Not official guidance, text: "This portal is a prototype. It is not an official GOV.UK service, is not published or endorsed by GDS or any department, and does not change what the DAM Policy requires. Where it repeats GDS guidance, the GOV.UK page is the authority."}
+- {id: N-02, title: Not legal advice, text: "Nothing here is legal advice. For questions about data protection, data sharing powers or equality duties, ask your data protection officer or legal adviser."}
+- {id: N-03, title: Accuracy and currency, text: "Facts carry a provenance label and sources are re-checked weekly. Guidance changes; check the date on each source and the Status page before relying on a detail."}
+- {id: N-04, title: Information above OFFICIAL, text: "Do not enter information classified above OFFICIAL, or personal data, into this portal, its forms or its GitHub repository. Everything submitted through GitHub is public."}
+- {id: N-05, title: Use of artificial intelligence, text: "An AI assistant (Claude, by Anthropic) helped research, write and build this portal. A person directed the work and reviews each release. Automated checks and source verification are described on the About page."}
+- {id: N-06, title: External links, text: "Links to other sites are provided for reference. We are not responsible for their content or availability; the weekly health run reports links that stop working."}
+- {id: N-07, title: Re-use, text: "You can re-use the content under the Open Government Licence v3.0 and the code under the MIT licence. Third-party material keeps its own licence, listed under credits."}
+- {id: N-08, title: Cookies and tracking, text: "The portal sets no cookies and uses no analytics. Progress and display choices are kept in your own browser and can be cleared at any time."}
+attribution_statement: "Contains public sector information licensed under the Open Government Licence v3.0."
+credits:
+- {who: Government Digital Service and the teams behind the GOV.UK guidance cited here, what: "The DAM Policy and its guidance, the data quality framework, action plan guide and issues framework, and the GOV.UK Design System patterns", licence: "Crown copyright, Open Government Licence v3.0 (content); MIT (Design System code patterns)"}
+- {who: Contributors to the UK Cross-Government Metadata Exchange Model and the Metadata Implementation Working Group, what: "The metadata model used for the cataloguing data dictionary", licence: "Open Government Licence v3.0 (per the repository licence file)"}
+- {who: Contributors to the Public Sector Data Quality Commons, what: "The eight-stage data quality playbook, requirements register and tools linked from the quality pages", licence: "MIT (code), OGL v3.0 (content)"}
+- {who: W3C, what: "DCAT and the Data Quality Vocabulary", licence: "W3C Document License (linked, not reproduced)"}
+- {who: Lucide Icons and contributors, what: "Icons", licence: "ISC"}
+- {who: Deque Systems (axe-core), what: "Accessibility testing in the build, not shipped", licence: "MPL 2.0"}
+- {who: Microsoft (Playwright), what: "Browser testing in the build, not shipped", licence: "Apache 2.0"}
+- {who: segno, python-barcode, Pillow and PyYAML maintainers, what: "QR code, barcode, image generation and content parsing at build time", licence: "BSD (segno), MIT (python-barcode, PyYAML), MIT-CMU (Pillow)"}

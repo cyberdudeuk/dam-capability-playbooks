@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0 (2026-11-05)
+- Related policies, standards, legislation and rulebooks: 40 entries, each checked live and labelled with how it was checked.
+- Sector assessment now links to the related rulebook entries.
+- Verification findings published, including a contradiction in Table 4 of the GOV.UK issues framework (F-01) and the renamed Data and AI Ethics Framework (F-02).
+- Proposed crosswalk for the four metadata properties missing from the Metadata Exchange Model.
+- New pages: service design (theory of change, research plan, blueprint, requirements traceability, architecture, Service Standard self-assessment), disclaimers, credits and citations, and an accessibility statement following the GOV.UK model.
+- Every page now shows its owner role, dates and a "was this page useful?" link. A security.txt is published.
+- The weekly health run now checks every external link.
+- New checks C-19 and C-20 and a health-run test, each proved by a deliberate break; defect D-013 recorded.
+
 ## 1.1.0 (2026-11-05)
 - Title spells out Data Asset Management (DAM). New favicon, social sharing image and search engine metadata on every page.
 - Routes for six roles, each with a profile, user needs, a five-stage journey and a learning journey.
