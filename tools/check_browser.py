@@ -44,9 +44,11 @@ BREAKS = {
     'progress': ('b10_progress', "Storage.prototype.setItem=function(){};"),
     'display': ('b11_display', "var d=document.getElementById('display-panel');if(d){d.replaceWith(d.cloneNode(true));}"),
     'finder': ('b12_sector_finder', "document.querySelectorAll('input[data-q]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
+    'navclip': ('b14_menus_usable', ""),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
 }
 BREAK_CSS = {
+    'navclip': '.gbar ul.top{overflow:hidden!important}',
     'overflow': '.x{white-space:nowrap;font-size:20px}',
     'contrast': '.lowc{color:#cccccc!important}',
     'focusfill': '.break-focus [role="tabpanel"]:focus-visible,.break-focus .table-wrap:focus-visible{background:#ffdd00!important}',
@@ -243,6 +245,40 @@ def run(site, axe_path, brk=None, pages=None):
         except Exception as e:
             fail('b13_self_assessment', f'self-assessment could not be used: {str(e).splitlines()[0]}')
         ctx4.close()
+        # B-14 (D-022): every grouped menu opens, its links can actually be clicked, and they navigate, on desktop and phone
+        for w in (1440, 390):
+            ctx5 = b.new_context(viewport={'width': w, 'height': 900}, bypass_csp=bool(brk))
+            pg5 = ctx5.new_page()
+            pg5.goto(f'{base}/index.html')
+            prep(pg5)
+            groups = pg5.evaluate("Array.from(document.querySelectorAll('#gbar li.group > button')).map(b => b.textContent.trim())")
+            if not groups:
+                fail('b14_menus_usable', f'{w}px: no grouped menus found')
+            for gi, name in enumerate(groups):
+                pg5.goto(f'{base}/index.html')
+                prep(pg5)
+                pg5.wait_for_timeout(150)
+                btn = pg5.locator('#gbar li.group > button').nth(gi)
+                try:
+                    if not btn.is_visible():
+                        pg5.locator('#gbar li.more > button').click(timeout=2000)
+                    btn.click(timeout=2000)
+                    pg5.wait_for_timeout(150)
+                    hit = pg5.evaluate("""(gi) => { const li = document.querySelectorAll('#gbar li.group')[gi]; const a = li && li.querySelector('ul a');
+                        if (!a) return 'no link'; const r = a.getBoundingClientRect(); if (!r.width || !r.height) return 'link has no size';
+                        const e = document.elementFromPoint(r.x + Math.min(10, r.width / 2), r.y + r.height / 2);
+                        return e && (e === a || a.contains(e)) ? 'ok' : 'link is covered or clipped'; }""", gi)
+                    if hit != 'ok':
+                        fail('b14_menus_usable', f'{w}px "{name}": {hit}')
+                        continue
+                    href = pg5.evaluate("(gi) => document.querySelectorAll('#gbar li.group')[gi].querySelector('ul a').getAttribute('href')", gi)
+                    pg5.locator('#gbar li.group').nth(gi).locator('ul a').first.click(timeout=2000)
+                    pg5.wait_for_load_state()
+                    if not pg5.url.endswith(href):
+                        fail('b14_menus_usable', f'{w}px "{name}": clicking the first item did not open {href}')
+                except Exception as e:
+                    fail('b14_menus_usable', f'{w}px "{name}": menu could not be used: {str(e).splitlines()[0]}')
+            ctx5.close()
         b.close()
     httpd.shutdown()
     return failed
@@ -261,7 +297,7 @@ def main(argv=None):
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
     names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
-             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment']
+             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:

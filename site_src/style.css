@@ -61,7 +61,8 @@ h2 svg.i,h3 svg.i,h4 svg.i{color:var(--brand)}
 /* global bar: cross-section only */
 .gbar{border-bottom:1px solid var(--rule);background:var(--bg)}
 .gbar ul{list-style:none;margin:0;padding:0 .5rem;display:flex;flex-wrap:wrap;align-items:stretch}
-.gbar.folding ul{flex-wrap:nowrap;overflow:hidden}
+/* D-022: never clip the top list; drop-down menus are positioned inside it and were cut off */
+.gbar.folding ul.top{flex-wrap:nowrap}
 .gbar li{margin:0}
 .gbar a,.gbar .more>button{display:flex;align-items:center;gap:.35rem;padding:.65rem .6rem;min-height:2.75rem;text-decoration:none;color:var(--link);font-weight:700;white-space:nowrap;border-bottom:4px solid transparent;font-size:1rem}
 .gbar a[aria-current="page"]{border-bottom-color:var(--brand);color:var(--text)}
@@ -491,3 +492,6 @@ html:not(.no-js) .no-js-only{display:none}
 .lc-head{display:flex;gap:.4rem;align-items:center}.lc-head h3{margin:0;font-size:1rem}
 .lc-stage ul{padding-left:1.1rem;margin:.5rem 0;font-size:.95rem}
 .pathway th[scope=row]{min-width:10rem;overflow-wrap:break-word;word-break:normal}
+.sector-callout{display:flex;gap:.75rem;align-items:flex-start;border:1px solid var(--border);border-left:5px solid var(--brand);background:var(--panel);padding:.6rem .9rem;margin:1rem 0;max-width:52em}
+.sector-callout p{margin:.2rem 0}.sector-callout .chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.sector-callout .pill svg.i{width:1rem;height:1rem;margin-right:.25rem;vertical-align:-.15em}

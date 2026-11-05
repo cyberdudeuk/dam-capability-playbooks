@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.0 (2026-11-05)
+- Fixed: the Playbooks and Frameworks menus opened but could not be seen or clicked (D-022). New browser check B-14 opens every grouped menu on desktop and phone and follows its links.
+- Sector content is now signposted where it is used: each capability playbook has a Sectors tab showing what each supplement adds to it, and its step-by-step method opens with a link to the finder (ADR 0004). The sector-depth assessment is removed now that every theme has a supplement.
+- The defect register and the challenge review move from the About page to the repository (docs/defect-register.md and docs/challenge-review.md). New check C-27 keeps them complete and off the portal.
+
 ## 1.4.1 (2026-11-05)
 - Fixed: one temporary server error from github.com counted as a broken link and blocked publishing (D-019). Links are now retried and only 404 and 410 count as broken; the Status page names the repository by role.
 - Fixed: a suggested Jekyll workflow and Pages publishing from main would have published raw repository files (D-020). Removed; Pages publishes the built site from gh-pages. New check C-25 keeps the workflow set to the three reviewed ones.

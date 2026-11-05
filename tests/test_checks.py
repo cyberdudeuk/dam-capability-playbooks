@@ -24,6 +24,7 @@ def fresh():
     for f in ('README.md', 'LICENSE', 'CITATION.cff'):
         shutil.copy(ROOT / f, repo / f)
     shutil.copytree(ROOT / '.github', repo / '.github')
+    shutil.copytree(ROOT / 'docs', repo / 'docs')
     site = repo / 'site'
     build.Site(build.load(repo / 'content' / 'playbooks.yaml'), site).build()
     return tmp, repo, site
@@ -305,7 +306,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.4.1', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.5.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -345,6 +346,15 @@ class Vaccination(unittest.TestCase):
         subprocess.run(g + ['add', 'README.md'], check=True)
         subprocess.run(g + ['-c', 'user.name=x', '-c', 'user.email=noreply' + chr(64) + 'users.noreply.github.com', 'commit', '-q', '-m', 'x'], check=True)
         self.fails('c26_commit_identity')
+
+    def test_c27_register_out_of_date(self):
+        t = (self.r / 'docs' / 'defect-register.md').read_text(encoding='utf-8')
+        (self.r / 'docs' / 'defect-register.md').write_text(re.sub(r'^\| D-022 \|.*\n', '', t, flags=re.M), encoding='utf-8')
+        self.fails('c27_registers_in_repository')
+
+    def test_c27_register_back_on_portal(self):
+        edit(self.s / 'about.html', '</main>', '<h2 id="defects">Defect register</h2></main>')
+        self.fails('c27_registers_in_repository')
 
     def test_build_rejects_unverified_signpost(self):
         y = self.r / 'content' / 'frameworks.yaml'

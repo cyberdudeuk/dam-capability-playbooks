@@ -263,7 +263,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 25)} | {f'B-{i:02d}' for i in range(1, 14)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 25)} | {f'B-{i:02d}' for i in range(1, 15)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -954,15 +954,14 @@ class Site:
 <h2 id="policy">{icon("landmark")} What the policy requires</h2>{table(f"t-req-{cid}", f"Policy requirements met by {c['name'].lower()}", ["ID", "Strength", "Requirement"], req_rows)}
 <h2 id="links">{icon("workflow")} How it joins the other two</h2><ul class="hand-offs">{il_html}</ul>
 <h2 id="learn">{icon("graduation-cap")} Learn it</h2><ul class="link-list">{mod_html}</ul>'''),
-            ('method', 'Step by step', f'<h2 id="stages">{icon("route")} {E(c["method_name"])}{prov(c["method_prov"])}</h2><p>{E(c["method_intro"])}</p>{self.step_by_step(c)}{extra_method}'),
+            ('method', 'Step by step', f'<h2 id="stages">{icon("route")} {E(c["method_name"])}{prov(c["method_prov"])}</h2><p>{E(c["method_intro"])}</p>{self.sector_callout(cid)}{self.step_by_step(c)}{extra_method}'),
             ('roles', 'Roles', f'<h2 id="role-list">{icon("users")} Roles</h2><ul class="icon-list">{roles}</ul><h2 id="raci">{icon("list-checks")} Who does what</h2>{self.raci_table(c, "t-raci-" + cid)}'),
             ('templates', 'Templates', f'<h2 id="template-list">{icon("file-text")} Templates</h2><p>Blank structures to copy into your own tools. Record roles, never named individuals or personal email addresses.</p>{tmpl}'),
             ('escalation', 'Measures', f'<h2 id="measures">{icon("chart-column")} Measures</h2>{table("t-meas-" + cid, "Measures for " + c["name"].lower(), ["Measure", "Target"], meas_rows)}'
              + (f'<div class="warning" role="note">{icon("triangle-alert")}<span>Finding F-01: Table 4 of the GOV.UK issues framework gives 96.75% as the High band start for a 97.5% target, but its own rule gives 96.25%. These playbooks follow the rule. <a href="about.html#F-01">Read the finding</a>.</span></div>' if cid == 'dq' else '')
              + (f'<h2 id="ladder">{icon("triangle-alert")} Escalation</h2><p>{E(c["escalation_note"])}</p>{table("t-esc-" + cid, "Escalation for " + c["name"].lower(), ["Level", "Who", "Trigger", "Timescale"], esc_rows)}' if esc_rows
                 else f'<h2 id="ladder">{icon("triangle-alert")} Escalation</h2><p>Cataloguing issues go up the <a href="governance.html#ladder">governance escalation ladder</a>.</p>')),
-            ('depth', 'Sector depth', f'<h2 id="sector-depth">{icon("layers")} Where this playbook needs sector-specific content</h2><p>Themes where the general method is not enough, ranked by MoSCoW for the next releases. Use them to plan local supplements, and tell us through the <a href="contact.html">contact form</a> if you can contribute.</p>'
-             + self.depth_list([x for x in d['domain_depth'] if cid in x['caps']])),
+            ('sector-supplements', 'Sectors', self.cap_sectors(cid)),
             ('sources', 'Sources', f'<h2 id="source-list">{icon("library")} Sources</h2><ul>{src_list}</ul><h2 id="related-rules">{icon("scale")} Related rulebooks</h2>'
              + self.rulebook_html([x for x in d['rulebook'] if cid in x['caps']], f'rb-{cid}') + (f'<h2 id="internal">{icon("lock-keyhole")} Practitioner material behind this playbook</h2><ul>{lib}</ul>' if lib else '')),
         ]
@@ -982,7 +981,7 @@ class Site:
                                                               {'id': 'template-list', 'label': 'Templates', 'icon': 'file-text', 'count': len(c.get('templates', []))},
                                                               {'id': 'measures', 'label': 'Measures', 'icon': 'chart-column', 'count': len(c['measures'])},
                                                               {'id': 'ladder', 'label': 'Escalation', 'icon': 'triangle-alert', 'count': len(esc_rows)},
-                                                              {'id': 'sector-depth', 'label': 'Sector depth', 'icon': 'layers', 'count': len([x for x in d['domain_depth'] if cid in x['caps']]), 'new': True},
+                                                              {'id': 'sector-list', 'label': 'Sector supplements', 'icon': 'layers', 'count': len(self.cap_sups(cid)), 'new': True},
                                                               {'id': 'source-list', 'label': 'Sources', 'icon': 'library', 'count': len(srcs)}]},
         ]
         return self.page(p, c['name'], body, drawer, crumbs=[c['name']], desc=c['purpose'],
@@ -1000,19 +999,28 @@ class Site:
             groups.append(f'<h3>{E(g)}</h3><ul class="rulebook">{rows}</ul>')
         return f'<div id="{filt_id}">{"".join(groups)}</div>'
 
-    def depth_list(self, items):
-        out = ''
-        for x in items:
-            caps = ' '.join(f'<span class="pill {c}">{E(self.caps[c]["short"])}</span>' for c in x['caps'])
-            sup = next((sp for sp in self.d.get('supplements', []) if sp['dd'] == x['id']), None)
-            out += (f'<section class="depth" id="{x["id"]}" data-item data-cap="{" ".join(x["caps"])}" data-moscow="{slug(x["moscow"])}">'
-                    f'<div class="depth-head"><h3>{E(x["theme"])}</h3><strong class="moscow m-{slug(x["moscow"])}">{E(x["moscow"])} have</strong></div>'
-                    f'<p class="hint">{E(x["id"])} · For: {E("; ".join(x["sectors"]))}</p>{caps}<p>{E(x["why"])}</p>'
-                    f'<h4>{icon("list-checks")} Content needed</h4>{ul(x["needed"], cls="checks")}'
-                    + (f'<p><a class="btn-link" href="sectors.html#{sup["id"]}">{icon("arrow-right")}Open the {E(sup["title"].lower())} supplement</a></p>' if sup else '')
-                    + (f'<p class="leads"><strong>Related rulebook:</strong> {"; ".join(self.rb_link(r) for r in (self.d.get("depth_refs") or {}).get(x["id"], []))}</p>' if (self.d.get("depth_refs") or {}).get(x["id"]) else '')
-                    + f'<p class="leads"><strong>Leads to verify:</strong> {E("; ".join(x["leads"]))}{prov("K")}</p></section>')
-        return out
+    # Sector signposting (version 1.5, ADR 0004): one home for sector content (the Sectors page), signposted where it is used
+    def cap_sups(self, cid):
+        dd = {x['id']: x for x in self.d['domain_depth']}
+        return [x for x in self.d['supplements'] if cid in dd[x['dd']]['caps']]
+
+    def sup_adds(self, x, cid):
+        return {'gov': f'{len(x["gov"])} governance points and {len(x["risks"])} risks',
+                'cat': f'{len(x["cat"])} extra catalogue fields' + (f' and {len(x.get("identifiers", []))} identifiers' if x.get('identifiers') else ''),
+                'dq': f'{len(x["rules"])} quality rules you can run'}[cid]
+
+    def sector_callout(self, cid):
+        sups = self.cap_sups(cid)
+        chips = ' '.join(f'<a class="pill" href="sectors.html#{x["id"]}">{icon(x["icon"])}{E(x["title"])}</a>' for x in sups)
+        return (f'<aside class="sector-callout" aria-label="Sector supplements">{icon("layers")}<div><p><strong>Working with sector-specific data?</strong> '
+                f'{len(sups)} sector supplements add to this method. <a href="sectors.html#which">Find which apply to your asset</a> or <a href="#sector-list">see what each adds</a>.</p><p class="chips">{chips}</p></div></aside>')
+
+    def cap_sectors(self, cid):
+        rows = [[f'<a href="sectors.html#{x["id"]}">{icon(x["icon"])} {E(x["title"])}</a>', E(x['summary']), E(self.sup_adds(x, cid))] for x in self.cap_sups(cid)]
+        return (f'<h2 id="sector-list">{icon("layers")} Sector supplements for {E(self.caps[cid]["name"].lower())}</h2>'
+                f'<p>The method on this page works for any critical data asset. Some kinds of data need more: extra rules, fields or safeguards. Those live in one place, the <a href="sectors.html">Sectors</a> section, and are listed here with what each adds to {E(self.caps[cid]["name"].lower())}.</p>'
+                f'<p><a class="btn-link" href="sectors.html#which">{icon("compass")}Find which supplements apply to your asset</a></p>'
+                + table(f't-sups-{cid}', f'Sector supplements that add to {self.caps[cid]["name"].lower()}', ['Supplement', 'What it covers', f'What it adds to {self.caps[cid]["short"].lower()}'], rows))
 
     def p_together(self):
         d = self.d
@@ -1220,17 +1228,14 @@ class Site:
                          brief=['Filter by capability, type or status.', 'Templates are blank structures to copy into your own tools.', 'Everything on this portal is also available as open data.'])
         body += f'''<h2 id="library">{icon("library")} All material</h2>{filt}{tbl}
 <h2 id="templates">{icon("file-text")} Templates</h2>{table("t-tmpl", "Templates in the three playbooks", ["Template", "Capability", "Fields", "Download"], tm)}
-<h2 id="depth">{icon("layers")} Where more sector-specific content is needed</h2>
-<p>An assessment of themes where the three playbooks need more specific capability, domain or sector content. MoSCoW sets the order for the next releases.</p>
-<div class="filters" data-filter="depth-list" role="group" aria-label="Filter the assessment"><div><label for="d-cap">Capability</label><select id="d-cap" name="cap"><option value="">All</option><option value="gov">Data governance</option><option value="cat">Data cataloguing</option><option value="dq">Data quality</option></select></div>
-<div><label for="d-m">Priority</label><select id="d-m" name="moscow"><option value="">All</option><option value="must">Must have</option><option value="should">Should have</option><option value="could">Could have</option></select></div><p class="count-out" aria-live="polite"></p></div>
-<div id="depth-list">{self.depth_list(d["domain_depth"])}</div>
+<h2 id="sectors">{icon("layers")} Sector supplements</h2>
+<p>Extra governance, catalogue fields and quality rules for {len(d["supplements"])} kinds of data are in the <a href="sectors.html">Sectors</a> section, and signposted from each capability playbook.</p>
 <h2 id="data">{icon("download")} Open data</h2><p>Every page is generated from one content file, also published in open formats.</p>
 <ul class="link-list">{"".join(f'<li><a href="{u}">{icon("download")}{E(t)}</a></li>' for u, t in dl)}</ul>'''
         drawer = [{'label': 'Library', 'icon': 'library', 'items': [
             {'id': 'library', 'label': 'All material', 'icon': 'library', 'count': len(d['library'])},
             {'id': 'templates', 'label': 'Templates', 'icon': 'file-text', 'count': len(tm)},
-            {'id': 'depth', 'label': 'Sector depth needed', 'icon': 'layers', 'count': len(d['domain_depth']), 'new': True},
+            {'id': 'sectors', 'label': 'Sector supplements', 'icon': 'layers', 'count': len(d['supplements'])},
             {'id': 'data', 'label': 'Open data', 'icon': 'download', 'count': len(dl)}]}]
         return self.page('library', 'Library', body, drawer, crumbs=['Library'])
 
@@ -1355,8 +1360,6 @@ class Site:
     def p_about(self):
         d, m = self.d, self.m
         orr = ''.join(f'<tr id="{o["id"]}"><th scope="row">{E(o["id"])}</th><td>{E(o["item"])}</td><td>{E(o["who"])}</td></tr>' for o in d['open_register'])
-        dfr = [[E(x['id']), E(x['found']), E(x['defect']), E(x['cause']), E(x['check'])] for x in d['defects']]
-        adv = ''.join(f'<li><strong>{E(a["challenge"])}</strong><br>{E(a["answer"])}</li>' for a in d['adversarial'])
         n = self.counts()
         provs = ''.join(f'<li>{prov(k)} {E(v)}</li>' for k, v in PROV_TEXT.items())
         body = self.hero('info', 'About', 'About this portal', E(m['subtitle']) + '.',
@@ -1379,26 +1382,21 @@ class Site:
 <ul><li><strong>Search order.</strong> Exact title matches first, then titles that start with your words, then titles containing all your words, then other matches, each in page order.</li>
 <li><strong>Progress.</strong> A step is done when you mark it. A module is done when all its activities are marked. A route counts both.</li>
 <li><strong>Status page.</strong> A weekly automated run checks sources, the review date and page weight. It never changes content; it opens an issue for a person to act on.</li></ul>
-<h2 id="adversarial">{icon("scale")} The case against, answered</h2><ul>{adv}</ul>
 <h2 id="open">{icon("clipboard-list")} Open register</h2>
 <div class="table-wrap" role="region" aria-labelledby="t-open" tabindex="0"><table><caption id="t-open">What design cannot close, and who must act</caption><thead><tr><th scope="col">ID</th><th scope="col">Item</th><th scope="col">Who must act</th></tr></thead><tbody>{orr}</tbody></table></div>
-<h2 id="defects">{icon("wrench")} Defect register</h2><p>Every defect gets a check that stops it coming back. The set of checks never shrinks.</p>
-{table("t-def", "Defects and the checks that prevent them", ["ID", "Found", "Defect", "Root cause", "Check"], dfr)}
 <h2 id="accessibility">{icon("accessibility")} Accessibility statement</h2>
 <p>This portal aims to meet WCAG 2.2 at level AA. Each release is checked automatically with axe-core in a real browser, for keyboard use, for sideways scrolling from 320 to 1920 pixels wide, and in light and dark modes. You can change text size, line spacing and colours in Display options.</p>
 <p>Known limitations: it has not been tested in person with disabled users or with assistive technology users (OR-09). The knowledge graph is a visual aid; the same relationships are in tables on the policy and capability pages. Progress tracking needs scripts; every page can be read without them.</p>
 <p>If you find a problem, use the <a href="contact.html">contact form</a>. If you cannot use it, ask a colleague to send it for you. If you are not happy with the response, contact the Equality Advisory and Support Service (EASS).</p>
 <h2 id="privacy">{icon("lock-keyhole")} Privacy</h2><p>The portal sets no cookies and loads nothing from other sites. Your display choices and progress are kept only in your own browser and can be cleared from the home page. The contact form opens GitHub, where messages are public.</p>
-<h2 id="build">{icon("badge-check")} Build and checks</h2><p>Build {E(self.build_id)}. Generated from one content file. Each release runs structural, link, provenance, email, language, accessibility and layout checks. Each check is shown to fail on a deliberate break before it is trusted.</p>'''
+<h2 id="build">{icon("badge-check")} Build and checks</h2><p>Build {E(self.build_id)}. Generated from one content file. Each release runs structural, link, provenance, email, language, accessibility and layout checks. Each check is shown to fail on a deliberate break before it is trusted. Defects and the checks that now prevent each one are recorded in the repository's <a href="https://github.com/{E(m["repo"])}/blob/main/docs/defect-register.md">defect register</a>.</p>'''
         drawer = [{'label': 'About', 'icon': 'info', 'items': [
             {'id': 'intent', 'label': 'Purpose', 'icon': 'target'}, {'id': 'checkpoint', 'label': 'Checkpoint', 'icon': 'milestone'},
             {'id': 'provenance', 'label': 'Source labels', 'icon': 'tag', 'count': 5},
             {'id': 'findings', 'label': 'Verification findings', 'icon': 'search', 'count': len(d['findings']), 'new': True},
             {'id': 'standards', 'label': 'Build standard assessment', 'icon': 'badge-check', 'count': len(d['standards'])},
             {'id': 'explain', 'label': 'How the portal decides', 'icon': 'lightbulb', 'count': 3},
-            {'id': 'adversarial', 'label': 'The case against', 'icon': 'scale', 'count': len(d['adversarial'])},
             {'id': 'open', 'label': 'Open register', 'icon': 'clipboard-list', 'count': len(d['open_register'])},
-            {'id': 'defects', 'label': 'Defect register', 'icon': 'wrench', 'count': len(d['defects'])},
             {'id': 'accessibility', 'label': 'Accessibility', 'icon': 'accessibility'},
             {'id': 'privacy', 'label': 'Privacy', 'icon': 'lock-keyhole'}, {'id': 'build', 'label': 'Build and checks', 'icon': 'badge-check'}]}]
         return self.page('about', 'About', body, drawer, crumbs=['About'])
@@ -1438,7 +1436,7 @@ class Site:
             checklist = ''.join(f'<li>{mark_done(cid, "Done")}<span>{E(c)}</span></li>' for cid, c in zip(cl_ids, x['checklist']))
             ids_html = f'<h4>{icon("tag")} Identifiers</h4><ul>{ids}</ul>' if ids else ''
             detail += f'''<section class="module supplement" id="{x["id"]}" aria-labelledby="h-{x["id"]}">
-<div class="mod-head">{tile(x["icon"], "lg")}<div><p class="caption">{E(x["id"])} · from assessment <a href="library.html#{t["id"]}">{E(t["id"])}</a> · <strong class="moscow m-{slug(t["moscow"])}">{E(t["moscow"])} have</strong></p><h3 id="h-{x["id"]}">{E(x["title"])}</h3>{caps}</div></div>
+<div class="mod-head">{tile(x["icon"], "lg")}<div><p class="caption">{E(x["id"])} · <strong class="moscow m-{slug(t["moscow"])}">{E(t["moscow"])} have</strong></p><h3 id="h-{x["id"]}">{E(x["title"])}</h3>{caps}</div></div>
 <p class="lede">{E(x["summary"])}</p><p class="hint">For: {E("; ".join(t["sectors"]))}. A synthesis of the sources below{prov("O")}.</p>
 <div class="cols"><div class="panel"><h4>{icon("shield-check")} Governance overlay</h4>{ul(x["gov"], cls="ticks")}</div>
 <div class="panel"><h4>{icon("triangle-alert")} Risks to check</h4>{ul(x["risks"])}</div></div>
@@ -1955,6 +1953,22 @@ class Site:
         (self.out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>', encoding='utf-8')
 
 
+def write_registers(d, docs):
+    """Defect register and challenge review live in the repository, not on the portal (version 1.5). C-27 keeps them in step."""
+    docs.mkdir(exist_ok=True)
+    cell = lambda t: str(t).replace('|', '\\|').replace('\n', ' ')
+    rows = '\n'.join(f'| {x["id"]} | {cell(x["found"])} | {cell(x["defect"])} | {cell(x["cause"])} | {cell(x["check"])} |' for x in d['defects'])
+    (docs / 'defect-register.md').write_text(
+        '# Defect register\n\nGenerated from `content/playbooks.yaml` by `tools/build.py`. Do not edit by hand.\n\n'
+        'Every defect has a root cause and a check, written in the same change as the fix, that stops it coming back. '
+        'The set of checks never shrinks.\n\n| ID | Found | Defect | Root cause | Check that now prevents it |\n|---|---|---|---|---|\n' + rows + '\n', encoding='utf-8')
+    rows = '\n'.join(f'| {cell(a["challenge"])} | {cell(a["answer"])} |' for a in d['adversarial'])
+    (docs / 'challenge-review.md').write_text(
+        '# Challenge review\n\nGenerated from `content/playbooks.yaml` by `tools/build.py`. Do not edit by hand.\n\n'
+        'The strongest arguments against the portal and how each is answered. Where an answer depends on something not yet done, '
+        'the open register on the portal\'s About page tracks it.\n\n| Challenge | Answer |\n|---|---|\n' + rows + '\n', encoding='utf-8')
+
+
 def make_images(assets, m):
     """Favicon PNGs and the social sharing image, drawn with Pillow from the same design as favicon.svg."""
     from PIL import Image, ImageDraw, ImageFont
@@ -1998,6 +2012,7 @@ def main(argv=None):
         print('Content errors:\n' + str(e), file=sys.stderr)
         return 1
     print(f'Built {Site(d, a.out).build()} into {a.out}')
+    write_registers(d, Path(a.content).resolve().parent.parent / 'docs')
     return 0
 
 

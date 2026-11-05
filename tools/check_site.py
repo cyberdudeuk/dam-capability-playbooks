@@ -507,12 +507,36 @@ def c26_commit_identity(site, repo, pages):
     return [f'latest commit uses {e}, which GitHub may credit to an unrelated account' for e in r.stdout.split() if e not in ALLOWED_COMMIT_EMAILS]
 
 
+def c27_registers_in_repository(site, repo, pages):
+    """Rule (version 1.5): the defect register and challenge review live in the repository, list every recorded item, and are not published on the portal."""
+    import yaml
+    d = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    errs = []
+    reg = repo / 'docs' / 'defect-register.md'
+    t = reg.read_text(encoding='utf-8') if reg.exists() else ''
+    if not t:
+        errs.append('docs/defect-register.md missing; run tools/build.py')
+    want = {x['id'] for x in d['defects']}
+    have = set(re.findall(r'^\| (D-\d{3}) \|', t, re.M))
+    errs += [f'docs/defect-register.md: {i} missing; run tools/build.py' for i in sorted(want - have)]
+    errs += [f'docs/defect-register.md: {i} is not in the content file' for i in sorted(have - want)]
+    cr = repo / 'docs' / 'challenge-review.md'
+    if not cr.exists() or cr.read_text(encoding='utf-8').count('\n| ') - 1 < len(d['adversarial']):
+        errs.append('docs/challenge-review.md missing or out of date; run tools/build.py')
+    for name in pages:
+        h = (site / name).read_text(encoding='utf-8')
+        if 'id="defects"' in h or 'id="adversarial"' in h:
+            errs.append(f'{name}: publishes the defect register or challenge review, which belong in the repository')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
           c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance, c21_no_restricted_licence_text,
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
-          c25_workflow_inventory, c26_commit_identity]
+          c25_workflow_inventory, c26_commit_identity,
+          c27_registers_in_repository]
 
 
 def run(site, repo, only=None, quiet=False):
