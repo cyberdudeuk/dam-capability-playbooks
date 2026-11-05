@@ -9,6 +9,7 @@
 - 43 new rulebook entries for delivery, investment, assurance, skills and professions, each checked live.
 - New learning module M11. Findings F-05 (maturity framework licence), F-06 (legacy guidance asks for a separate asset register) and F-07 (learning platform accessibility).
 - New checks: C-21 (no copying of text under a licence the portal cannot carry), C-22 (every signpost verified, every capability flagged), B-12 (sector finder), B-13 (self-assessment), HL-02 (signposted sections still exist) and a dqkit run of every sector rule file. Defects D-015 and D-016 recorded.
+- Fixed: workflow runs had stopped starting since 1.2.0, so the portal was not being published (D-018). Every GitHub Action is now pinned to a full commit SHA and check C-24 enforces it. Pillow 13.0.0, Playwright 1.64.1 and axe-core 4.14.0 replace versions flagged by Dependabot.
 - Fixed: the repository citation file had been published empty since 1.2.0 (D-017). New check C-23 keeps it complete and in step with the release.
 
 ## 1.3.0 (2026-11-05)

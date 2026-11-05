@@ -451,11 +451,25 @@ def c23_repository_metadata(site, repo, pages):
     return errs
 
 
+def c24_actions_pinned(site, repo, pages):
+    """Rule (supply chain, D-018): every GitHub Action in a workflow is pinned to a full commit SHA, so a moved tag cannot change what runs."""
+    errs = []
+    wf = repo / '.github' / 'workflows'
+    if not wf.exists():
+        return ['.github/workflows missing']
+    for f in sorted(wf.glob('*.yml')):
+        for n, line in enumerate(f.read_text(encoding='utf-8').splitlines(), 1):
+            m = re.search(r'uses:\s*([^\s#]+)', line)
+            if m and not m.group(1).startswith('./') and not re.search(r'@[0-9a-f]{40}$', m.group(1)):
+                errs.append(f'{f.name}:{n}: {m.group(1)} is not pinned to a commit SHA')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
           c17_no_personal_details, c18_plain_english, c19_citations, c20_page_governance, c21_no_restricted_licence_text,
-          c22_signposts_verified, c23_repository_metadata]
+          c22_signposts_verified, c23_repository_metadata, c24_actions_pinned]
 
 
 def run(site, repo, only=None, quiet=False):

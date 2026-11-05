@@ -23,6 +23,7 @@ def fresh():
         shutil.copy(ROOT / 'content' / f, repo / 'content' / f)
     for f in ('README.md', 'LICENSE', 'CITATION.cff'):
         shutil.copy(ROOT / f, repo / f)
+    shutil.copytree(ROOT / '.github', repo / '.github')
     site = repo / 'site'
     build.Site(build.load(repo / 'content' / 'playbooks.yaml'), site).build()
     return tmp, repo, site
@@ -271,6 +272,10 @@ class Vaccination(unittest.TestCase):
     def test_c23_citation_version_drift(self):
         edit(self.r / 'CITATION.cff', 'version: 1.4.0', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
+
+    def test_c24_unpinned_action(self):
+        edit(self.r / '.github' / 'workflows' / 'codeql.yml', 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1', 'actions/checkout@v7')
+        self.fails('c24_actions_pinned')
 
     def test_build_rejects_unverified_signpost(self):
         y = self.r / 'content' / 'frameworks.yaml'
