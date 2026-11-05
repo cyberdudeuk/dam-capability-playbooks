@@ -4,7 +4,7 @@
   "description": "Test-only dependencies. Nothing here is shipped in the site.",
   "license": "MIT",
   "devDependencies": {
-    "axe-core": "4.10.3",
+    "axe-core": "4.14.0",
     "lucide-static": "1.69.0"
   }
 }
