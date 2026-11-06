@@ -37,7 +37,7 @@ CATMAP = {'DM-GOV': [('Data and metadata management', 'dam'), ('How well code is
           'DM-META': [('Data catalogues and standards', 'standards'), ('Knowledge layer', 'knowledge')],
           'DM-DQ': [('Data tools and suppliers', 'suppliers')]}
 
-# DCAT-UK AP pages for each DAMA knowledge area (version 1.1; this compass's own mapping, labelled so on the page)
+# DCAT-AP-UK pages for each DAMA knowledge area (version 1.1; this compass's own mapping, labelled so on the page)
 APMAP = {'DM-GOV': [('Responsible roles, not names', 'class-attribution.html'), ('How the profile is governed and changed', 'governance.html#change')],
          'DM-ARC': [('How the classes connect', 'profile.html#model'), ('Where the profile sits in a pan-UK infrastructure', 'strategy.html#layers')],
          'DM-MOD': [('Every property', 'properties.html'), ('Shapes, schema and data dictionary', 'downloads.html#files')],
@@ -117,7 +117,7 @@ def rose(c):
         return (f'<g><circle cx="{x}" cy="{y}" r="17" fill="#0b2545" stroke="#f2c14e" stroke-width="2"/>'
                 f'<svg x="{x - 10}" y="{y - 10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-{p["icon"]}"/></svg></g>')
     labels = lab('N', 150, 10 + 8, 'middle') + lab('E', 282, 150, 'start') + lab('W', 18, 150, 'end') + lab('S', 150, 282, 'middle')
-    you = ''  # version 1.1: South is DCAT-UK AP; you stand at the centre, where the needle pivots
+    you = ''  # version 1.1: South is DCAT-AP-UK; you stand at the centre, where the needle pivots
     desc = 'Compass rose. North: ' + P['N']['name'] + '. East: ' + P['E']['name'] + '. West: ' + P['W']['name'] + '. South: ' + P['S']['name'] + '. You are at the centre. The needle turns to the portal where your route starts.'
     return (f'<svg class="rose" viewBox="-8 -8 316 316" role="img" aria-label="{desc}">'
             '<circle cx="150" cy="150" r="140" fill="#102f57" stroke="#f2c14e" stroke-width="3"/><circle cx="150" cy="150" r="118" fill="none" stroke="#3b5577" stroke-width="1"/>'

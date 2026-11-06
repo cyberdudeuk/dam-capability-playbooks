@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Estate compass 1.1.1: South is now called DCAT-AP-UK, the DCAT Application Profile for the UK, as the profile renamed itself after other national DCAT-AP profiles (DCAT-AP-NO, -SE, -NL) in its release 1.2.0-rc.1. Its address is unchanged until its owner renames the repository.
+
 ## 1.10.1 (2026-11-06)
 - Estate compass 1.1.0: a fourth bearing. South is the DCAT-UK Application Profile (DCAT-UK AP), the proposed successor to the xGov MEM: how to describe data so others can find it. It has a portal card, a "describe data so others can find it" situation and route, steps in the policy and reuse routes, a worked example, when to use it, links for each DAMA area, a lane on the route trail, and its links in the link table. North, east and west are unchanged. DCAT-UK AP is proposed, not endorsed, and the card says so.
 
