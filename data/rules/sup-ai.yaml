@@ -1,0 +1,35 @@
+# AI-ready data: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-ai-ready-data
+  title: 'Starter rules: AI-ready data (adapt column names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: AI-01
+  check: not_null
+  description: Training labels are complete
+  dimension: completeness
+  column: label
+- id: AI-02
+  check: group_disparity
+  description: Label completeness does not differ by more than 5 points between groups
+  dimension: completeness
+  group: group
+  tolerance: 5
+  inner:
+    check: not_null
+    column: label
+- id: AI-03
+  check: unique
+  description: Each record appears once, so training and test sets do not overlap
+  dimension: uniqueness
+  columns:
+  - record_id
+- id: AI-04
+  check: outlier
+  description: Numeric features have no implausible outliers
+  dimension: accuracy
+  column: feature_value
+  method: zscore
+  threshold: 4

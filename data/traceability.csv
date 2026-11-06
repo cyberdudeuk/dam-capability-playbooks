@@ -1,0 +1,25 @@
+requirement,kind,moscow,text,features,checks
+FR-01,Functional,Must,"Show every DAM Policy requirement with its strength, source and the step that meets it.",dam,C-03 C-08
+FR-02,Functional,Must,"Give a step-by-step method for each capability with roles, templates and measures.",governance cataloguing quality,C-10 B-06
+FR-03,Functional,Must,"Offer a route and learning journey for each role, with progress the reader controls.",personas learning,B-10
+FR-04,Functional,Must,Let anyone get in touch without an email address being published.,contact,C-04 C-14 B-09
+FR-05,Functional,Should,Let readers search everything and filter every list.,index library knowledge,B-05 B-08
+FR-06,Functional,Should,"Publish the vocabulary, requirements and templates as open data.",library knowledge,C-11
+NFR-01,Non-functional,Must,"Meet WCAG 2.2 AA in light and dark modes, from 320 to 1920 pixels wide.",all,B-01 B-02 B-03
+NFR-02,Non-functional,Must,Work with scripts turned off and load nothing from other sites.,all,C-05 C-12 B-07
+NFR-03,Non-functional,Must,Label every fact with its provenance and keep sources current.,all,C-08 HL-01
+NFR-04,Non-functional,Must,"Name roles, never people, and hold no personal data.",all,C-04 C-17
+NFR-05,Non-functional,Should,Be findable by search engines with accurate descriptions.,all,C-16
+TR-01,Technical,Must,Generate every page from one content file and refuse to build on a broken reference.,all,T-VAL
+FR-07,Functional,Must,"Show every capability the policy and adjacent guidance need, flagged explicit, implicit or inferred, with a signpost to the section it comes from.",capability-model,C-22 HL-02
+FR-08,Functional,Should,"Let organisations assess their maturity against the government model and DAM strands, keep the answers privately and download them.",capability-model,B-13 C-21
+FR-09,Functional,Should,"Link each role in the policy to government professions, framework roles, skills and learning routes.",professions,C-03 HL-01
+FR-10,Functional,Must,"Help organisations embed the policy in business as usual and in change programmes, with actions they can track.",change,B-08 B-10
+FR-11,Functional,Should,Help readers find which sector supplements apply to an asset.,sectors,B-12 T-VAL
+FR-12,Functional,Should,"Help readers find their way: a share menu on every page, a site map, a user guide with guided tours and tutorials.",guide site-map,C-31 B-16
+FR-13,Functional,Should,"Let organisations reuse the content through links, embedding, open data, AI assistants and an MCP server.",reuse data,C-28 C-31 C-32
+FR-14,Functional,Should,"Help organisations connect and buy data management tools without lock-in, with open standards and RFI questions.",tooling,C-33
+FR-15,Functional,Should,"Signpost the sister portals where they help, naming each and its status, without merging their journeys or copying their content.",quality tooling reuse,C-34
+FR-16,Functional,Should,"Help people who work across the three portals choose where to start, in what order and why, without merging the portals.",reuse,C-35 B-17
+FR-17,Functional,Must,"Let users take part in research privately, suggest and vote for ideas, and see the roadmap, backlog and how each item is prioritised against government strategy, in the open.",research,C-36 C-04 B-01
+IR-01,Integration,Must,"Use only GitHub services (Pages, issue forms, Discussions, Actions and releases), plus an optional Microsoft Forms route for private feedback.",contact status whats-new,C-05 C-33 HL-01

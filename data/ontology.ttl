@@ -1,0 +1,20 @@
+@prefix dcp: <https://cyberdudeuk.github.io/dam-capability-playbooks/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://cyberdudeuk.github.io/dam-capability-playbooks/ontology> a owl:Ontology ; rdfs:label "DAM capability playbooks ontology" ; dcterms:license <https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/> ; owl:versionInfo "1.10.1" .
+
+dcp:PolicyRequirement a owl:Class ; rdfs:label "DAM Policy requirement" ; rdfs:subClassOf prov:Entity .
+dcp:Capability a owl:Class ; rdfs:label "Capability" ; rdfs:subClassOf prov:Entity .
+dcp:PortalRequirement a owl:Class ; rdfs:label "Portal requirement" ; rdfs:subClassOf prov:Entity .
+dcp:Check a owl:Class ; rdfs:label "Automated check" ; rdfs:subClassOf prov:Plan .
+dcp:Page a owl:Class ; rdfs:label "Portal page" ; rdfs:subClassOf prov:Entity .
+dcp:Source a owl:Class ; rdfs:label "Source document" ; rdfs:subClassOf prov:Entity .
+dcp:BacklogItem a owl:Class ; rdfs:label "Backlog item" ; rdfs:subClassOf prov:Entity .
+dcp:metBy a owl:ObjectProperty ; rdfs:label "met by" ; rdfs:domain dcp:PolicyRequirement ; rdfs:range dcp:Page .
+dcp:provedBy a owl:ObjectProperty ; rdfs:label "proved by" ; rdfs:domain dcp:PortalRequirement ; rdfs:range dcp:Check .
+dcp:realisedIn a owl:ObjectProperty ; rdfs:label "realised in" ; rdfs:domain dcp:PortalRequirement ; rdfs:range dcp:Page .
+dcp:needs a owl:ObjectProperty ; rdfs:label "needs" ; rdfs:domain dcp:Capability ; rdfs:range dcp:Source .
+dcp:strength a owl:DatatypeProperty ; rdfs:label "strength" ; rdfs:domain dcp:PolicyRequirement .

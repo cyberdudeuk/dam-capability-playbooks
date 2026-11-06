@@ -1,0 +1,29 @@
+# Data sharing and legal gateways: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-data-sharing-and-legal-gateways
+  title: 'Starter rules: Data sharing and legal gateways (adapt column names to your
+    data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: SHR-01
+  check: not_null
+  description: Every shared extract carries the agreement reference
+  dimension: completeness
+  column: agreement_ref
+- id: SHR-02
+  check: freshness
+  description: Extracts arrive on the agreed schedule
+  dimension: timeliness
+  column: extract_date
+  expected: P1M
+  lag: P7D
+- id: SHR-03
+  check: required_columns
+  description: Only the columns in the agreement are present
+  dimension: validity
+  columns:
+  - person_id
+  - agreement_ref
+  - extract_date

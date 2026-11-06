@@ -1,0 +1,703 @@
+{
+ "@context": {
+  "skos": "http://www.w3.org/2004/02/skos/core#",
+  "dcterms": "http://purl.org/dc/terms/"
+ },
+ "@graph": [
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-asset",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data asset",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "One or more data sets plus, where relevant, the data services used to access them.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": []
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-set",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data set",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A structured collection of data selected and organised for a defined outcome or need. It can be a subset of a larger system.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "dataset",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-asset"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-service",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data service",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A controlled means of accessing one or more data sets, such as an API or secure access mechanism.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "API",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "access service",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-asset"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#distribution",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Distribution",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A specific representation of a data set, for example a CSV file or a feed.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "representation",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-set"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#cda",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Critical data asset",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A data asset shared across government where losing access could stop an organisation from fulfilling important functions. 'Essential shared data asset' is the older term it replaced.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "CDA",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "essential shared data asset",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "ESDA",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-asset"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#provided",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Provided data",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "Data one organisation gives to another to support an essential process or purpose the receiver is responsible for.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#cda"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#acquired",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Acquired data",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "Data one organisation obtains from another to support an essential process or purpose it is responsible for.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#cda"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#purpose",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Purpose",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "One of the seven reasons a critical data asset matters, such as public service delivery or official statistics. Each asset supports at least one.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "the seven purposes",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#cda"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#scope-tests",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Scope tests",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The conditions an asset must meet to be in scope of the policy: classified OFFICIAL, critical, and within the provider's ownership accountabilities.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#cda"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#metadata",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Metadata",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "Information that describes a data asset so it can be found, understood, validated, reused and shared.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "data about data",
+     "@language": "en-GB"
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#catalogue",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data catalogue",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A managed collection of metadata records that helps people and systems find, understand and reuse data assets. It holds descriptions, not the data.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "catalog",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "metadata catalogue",
+     "@language": "en-GB"
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dcat",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "DCAT",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The W3C vocabulary for describing data sets and data services in catalogues, so catalogues can be harvested and searched together.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "Data Catalog Vocabulary",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#metadata"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#mem",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Metadata Exchange Model",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The UK cross-government model, based on DCAT, for the metadata exchanged about data assets.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "xGov MEM",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "MEM",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#metadata"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#discoverability",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Discoverability Platform",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The GDS service being scoped to link to departments' own catalogues and make critical data asset metadata discoverable across government.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "discovery service",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#catalogue"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#return",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Return",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "An organisation's report of its in-scope assets and their metadata to GDS, assured by the department for its ALBs.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "CDA return",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "baseline return",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "annual return",
+     "@language": "en-GB"
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-owner",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data owner",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A senior leader accountable for the meaning, content, quality and management of a data asset.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#role"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#iao",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Information asset owner",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The role accountable to the SIRO for protecting the whole information asset. Related to, but not the same as, the data owner.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "IAO",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#role"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-steward",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data steward",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The role running an asset day to day: standards, access, quality processes and documentation.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#role"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-custodian",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data custodian",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The technical expert for the system holding the data: storage, access controls, auditable change and disposal.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#role"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#role",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data role",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A defined set of accountabilities for data. Records name roles, not people.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": []
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#ownership-option",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Ownership option",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The choice between keeping the IAO model, adopting the data ownership model, or a hybrid. Each must still meet the mandatory IAO actions.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "IAO model",
+     "@language": "en-GB"
+    },
+    {
+     "@value": "hybrid model",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-owner"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#recipe",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Recipe",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "One of the five repeatable governance activities: Mandate, Frame, Assign, Operate, Assure.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "governance recipe",
+     "@language": "en-GB"
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#charter",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Governance charter",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A one-page statement of a governance body's purpose, scope, authority and review cadence.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "charter",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#recipe"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#decision-log",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Decision log",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A running record of governance decisions: what, who, why, when and the review trigger.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#recipe"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#exception",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Exception",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A logged, time-bound deviation from policy with an owner and an expiry date. An exception without an expiry is an undocumented policy change.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "policy exception",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#recipe"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#raci",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "RACI",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "Responsible, Accountable, Consulted, Informed. One accountable role per activity.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "decision rights",
+     "@language": "en-GB"
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dqap",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data quality action plan",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The plan every identified asset must have, or an equivalent mechanism, for managing its quality across seven steps.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "DQAP",
+     "@language": "en-GB"
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#cde",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Critical data element",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A data item whose quality drives the most important decisions made with the asset.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "CDE",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dqap"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dimension",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data quality dimension",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A measurable aspect of quality. The framework's six are completeness, uniqueness, consistency, timeliness, validity and accuracy.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "dimension",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dqap"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#issues-framework",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Issues framework",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The GDS method that scores importance times impact to set targets, and uses the band below target to set priority and time to resolve.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "data quality issues framework",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dqap"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dq-statement",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data quality statement",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "A plain-English summary of an asset's quality, known issues and what it should not be used for.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "quality statement",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dqap"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dqv",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data Quality Vocabulary",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The W3C vocabulary for publishing quality measurements with a catalogue record.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "DQV",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#metadata"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#data-contract",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data contract",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "Quality rules and promises written down as a file that suppliers and users share.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "ODCS",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#dqap"
+   }
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#maturity",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Data maturity",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "An organisation's capability around data, self-assessed with the government framework.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "DMA",
+     "@language": "en-GB"
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#coordinator",
+   "@type": "skos:Concept",
+   "skos:prefLabel": {
+    "@value": "Lead policy coordinator",
+    "@language": "en-GB"
+   },
+   "skos:definition": {
+    "@value": "The person each organisation nominates to coordinate DAM Policy adoption and the return, and to sit on the Working Group.",
+    "@language": "en-GB"
+   },
+   "skos:altLabel": [
+    {
+     "@value": "policy coordinator",
+     "@language": "en-GB"
+    }
+   ],
+   "skos:broader": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#role"
+   }
+  }
+ ]
+}

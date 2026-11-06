@@ -1,0 +1,141 @@
+id,group,title,publisher,url,updated,provenance,capabilities
+RB-SVC,Service delivery and technology,Service Standard,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/service-standard,2019-06-07,V,gov cat dq
+RB-TCOP,Service delivery and technology,The Technology Code of Practice,GDS,https://www.gov.uk/guidance/the-technology-code-of-practice,2026-10-29,V,cat gov
+RB-GDSWAY,Service delivery and technology,The GDS Way,GDS,https://gds-way.digital.cabinet-office.gov.uk/,,V,cat
+RB-OPEN,Service delivery and technology,Open standards for government,GDS,https://www.gov.uk/government/publications/open-standards-for-government,2026-01-29,V,cat dq
+RB-UPRN,Service delivery and technology,Identifying property and street information (UPRN and USRN),GDS,https://www.gov.uk/government/publications/open-standards-for-government/identifying-property-and-street-information,2026-01-29,V,cat dq
+RB-DDAT,Service delivery and technology,Government Digital and Data Profession Capability Framework,GDS,https://ddat-capability-framework.service.gov.uk/,,V,gov
+RB-NDL,Data and AI,National Data Library (data.gov.uk),GDS,https://www.data.gov.uk/,,V,cat
+RB-ETH,Data and AI,Data and AI Ethics Framework,GDS,https://www.gov.uk/government/publications/data-ethics-framework,2025-12-18,V,gov
+RB-AIREADY,Data and AI,Making government datasets ready for AI,GDS,https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai,2026-01-19,V,dq cat gov
+RB-AIPLAY,Data and AI,AI Playbook for the UK Government,GDS,https://www.gov.uk/government/publications/ai-playbook-for-the-uk-government,2025-02-10,V,gov
+RB-ATRS,Data and AI,Algorithmic Transparency Recording Standard hub,GDS,https://www.gov.uk/government/collections/algorithmic-transparency-recording-standard-hub,2025-05-08,V,gov dq
+RB-DUAA,Legislation,Data (Use and Access) Act 2025,legislation.gov.uk,https://www.legislation.gov.uk/ukpga/2025/18/contents,,V,gov
+RB-DPA,Legislation,Data Protection Act 2018,legislation.gov.uk,https://www.legislation.gov.uk/ukpga/2018/12/contents,,V,gov dq
+RB-DEA,Legislation,Digital Economy Act 2017,legislation.gov.uk,https://www.legislation.gov.uk/ukpga/2017/30/contents,,V,gov
+RB-EQA,Legislation,Equality Act 2010,legislation.gov.uk,https://www.legislation.gov.uk/ukpga/2010/15/contents,,V,gov dq
+RB-ICOSHARE,Legislation,ICO data sharing code of practice,Information Commissioner's Office,https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/,,S,gov
+RB-GSC,Security,Government Security Classifications,Cabinet Office,https://www.gov.uk/government/publications/government-security-classifications,2024-08-05,V,gov cat
+RB-VDP,Security,Report a vulnerability on a GOV.UK domain or subdomain,GDS,https://www.gov.uk/help/report-vulnerability,2021-03-23,V,cat
+RB-ACC,Accessibility and equality,Understanding accessibility requirements for public sector bodies,GDS,https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps,2024-09-30,V,cat dq
+RB-MODEL,Accessibility and equality,Model accessibility statement,GDS,https://www.gov.uk/guidance/model-accessibility-statement,2024-09-30,V,cat
+RB-PSED,Accessibility and equality,Public sector equality duty,GOV.UK,https://www.gov.uk/government/publications/public-sector-equality-duty,2012-07-06,V,gov dq
+RB-STYLE,Content,Writing to GOV.UK standards - style guides,GDS,https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/style-guides/,,V,cat
+RB-COP,Statistics,Code of Practice for Statistics,Office for Statistics Regulation,https://code.statisticsauthority.gov.uk/,,V,dq
+RB-QAAD,Statistics,Quality assurance of administrative data,Office for Statistics Regulation,https://osr.statisticsauthority.gov.uk/guidance/administrative-data-and-official-statistics/,,S,dq
+RB-TNA,Records,Information management guidance,The National Archives,https://www.nationalarchives.gov.uk/information-management/,,V,gov
+RB-OGL,Content,Open Government Licence v3.0,The National Archives,https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/,,V,cat
+RB-DSPT,Health and care,Data Security and Protection Toolkit,NHS England,https://www.dsptoolkit.nhs.uk/,,V,gov
+RB-CALD,Health and care,The Caldicott Principles,National Data Guardian,https://www.gov.uk/government/publications/the-caldicott-principles,2020-12-08,V,gov
+RB-CLD,Health and care,"Adult social care client level data, England: background quality and methodology",Department of Health and Social Care,https://www.gov.uk/government/publications/adult-social-care-client-level-data-england-background-quality-and-methodology,2026-01-15,V,dq
+RB-ASCOF,Health and care,Adult social care outcomes framework: handbook of definitions,Department of Health and Social Care,https://www.gov.uk/government/publications/adult-social-care-outcomes-framework-handbook-of-definitions,2026-03-10,V,dq
+RB-CDM,Health and care,Care data matters: a roadmap for better adult social care data,Department of Health and Social Care,https://www.gov.uk/government/publications/care-data-matters-a-roadmap-for-better-adult-social-care-data,2023-12-20,V,gov dq
+RB-CIN,Children and education,Children in need census: guide to submitting data,Department for Education,https://www.gov.uk/guidance/children-in-need-census,2026-11-03,V,dq
+RB-GEOBP,Geospatial,Best practice guidance and tools for managing geospatial data,Geospatial Commission,https://www.gov.uk/government/collections/best-practice-guidance-and-tools-for-geospatial-data-managers,2022-05-26,V,cat dq
+RB-QFAIR,Geospatial,How FAIR are the UK's national geospatial data assets?,Geospatial Commission,https://www.gov.uk/government/publications/how-fair-are-the-uks-geospatial-assets,2022-02-09,V,cat dq
+RB-GEMINI,Geospatial,UK GEMINI metadata standard,Association for Geographic Information,https://www.agi.org.uk/uk-gemini/,,V,cat
+RB-PSFA,Fraud and error,Public Sector Fraud Authority,Cabinet Office,https://www.gov.uk/government/organisations/public-sector-fraud-authority,2025-02-06,V,gov dq
+RB-LDD,Local government,Local Digital Declaration,Local Digital,https://www.localdigital.gov.uk/declaration/,,V,gov
+RB-SDMX,Standards,SDMX,SDMX sponsors,https://sdmx.org/,,V,cat
+RB-DCAT,Standards,Data Catalog Vocabulary (DCAT) version 3,W3C,https://www.w3.org/TR/vocab-dcat-3/,,V,cat
+RB-DQV,Standards,Data on the Web Best Practices: Data Quality Vocabulary,W3C,https://www.w3.org/TR/vocab-dqv/,,V,dq cat
+RB-GREEN,"Delivery, change and investment",The Green Book and accompanying guidance,HM Treasury,https://www.gov.uk/government/collections/the-green-book-and-accompanying-guidance-and-documents,2026-10-06,V,gov dq
+RB-GOVS002,"Delivery, change and investment",Government Functional Standard GovS 002: Project Delivery,Government Project Delivery function,https://www.gov.uk/government/publications/project-delivery-functional-standard,2025-09-17,V,gov
+RB-GOVS005,"Delivery, change and investment",Government Functional Standard GovS 005: Digital,Government Digital Service,https://www.gov.uk/government/publications/government-functional-standard-govs-005-digital,2026-10-01,V,gov cat dq
+RB-IAAP,"Delivery, change and investment",Implementing integrated assurance for major projects,National Infrastructure and Service Transformation Authority,https://www.gov.uk/government/publications/implementing-integrated-assurance-for-major-projects,2026-08-20,V,gov
+RB-NISTA,"Delivery, change and investment",National Infrastructure and Service Transformation Authority,HM Treasury and Cabinet Office,https://www.gov.uk/government/organisations/national-infrastructure-and-service-transformation-authority,2026-08-20,V,gov
+RB-GMPP,"Delivery, change and investment",Government Major Projects Portfolio,National Infrastructure and Service Transformation Authority,https://www.gov.uk/government/publications/government-major-projects-portfolio,2026-03-31,V,gov
+RB-SPEND,"Delivery, change and investment",Set up a commercial or digital and technology spend controls pipeline,Government Digital Service,https://www.gov.uk/guidance/set-up-a-commercial-or-digital-and-technology-spend-controls-pipeline,2025-02-18,V,gov cat
+RB-SVCASSESS,"Delivery, change and investment",Service assessments and applying the Service Standard,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/service-assessments,2025-03-10,V,gov cat dq
+RB-RETIRE,"Delivery, change and investment",Retiring your service,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/agile-delivery/retiring-your-service,2025-08-26,V,gov cat
+RB-LEGACY,"Delivery, change and investment",Managing legacy technology,Government Digital Service,https://www.gov.uk/guidance/managing-legacy-technology,2026-10-15,V,gov cat dq
+RB-TECHDEBT,"Delivery, change and investment",Prevent technical debt and legacy,Government Digital Service,https://www.gov.uk/guidance/prevent-technical-debt-and-legacy,2024-10-23,V,gov dq
+RB-ORANGE,"Delivery, change and investment",The Orange Book: management of risk,HM Treasury,https://www.gov.uk/government/publications/orange-book,2026-07-29,V,gov dq
+RB-MAGENTA,"Delivery, change and investment",The Magenta Book,HM Treasury,https://www.gov.uk/government/publications/the-magenta-book,2026-05-15,V,gov dq
+RB-AQUA,"Delivery, change and investment",The AQuA Book,HM Treasury and the Analysis Function,https://www.gov.uk/guidance/the-aqua-book,2025-07-30,V,dq
+RB-SOURCING,"Delivery, change and investment",The Sourcing Playbook,Cabinet Office,https://www.gov.uk/government/publications/the-sourcing-and-consultancy-playbooks,2026-11-05,V,gov cat
+RB-DDATPB,"Delivery, change and investment","The Digital, Data and Technology Playbook",Cabinet Office,https://www.gov.uk/government/publications/the-digital-data-and-technology-playbook,2023-06-20,V,gov cat
+RB-PPN020,"Delivery, change and investment",PPN 020: Guidance on data protection legislation,Cabinet Office,https://www.gov.uk/government/publications/ppn-020-guidance-on-data-protection-legislation,2025-04-24,V,gov
+RB-DSGF,Data and AI,Data Sharing Governance Framework,Central Digital and Data Office,https://www.gov.uk/government/publications/data-sharing-governance-framework,2022-05-23,V,gov
+RB-BLUEPRINT,"Delivery, change and investment",A blueprint for modern digital government,"Department for Science, Innovation and Technology",https://www.gov.uk/government/publications/a-blueprint-for-modern-digital-government,2025-01-21,V,gov cat dq
+RB-NDLPUB,Data and AI,National Data Library,"Department for Science, Innovation and Technology",https://www.gov.uk/government/publications/national-data-library,2025-07-29,V,cat
+RB-DMAF,Data and AI,Data Maturity Assessment for Government: Framework,Central Digital and Data Office (developed with the ONS Data Quality Hub),https://www.gov.uk/government/publications/data-maturity-assessment-for-government-framework,2026-07-23,V,gov cat dq
+RB-DMAHUB,Data and AI,Government data maturity hub,Central Digital and Data Office,https://www.gov.uk/government/collections/data-maturity-assessment-for-government,2026-07-23,V,gov
+RB-PROFS,Skills and professions,Government professions,Government Skills,https://www.gov.uk/government/publications/government-professions/government-professions,2026-09-30,V,gov cat dq
+RB-GSKILLS,Skills and professions,Government Skills,Cabinet Office,https://www.gov.uk/government/organisations/government-skills,2024-07-09,V,gov cat dq
+RB-CURRIC,Skills and professions,The Civil Service recommended curriculum,Government Skills,https://www.gov.uk/government/collections/the-civil-service-recommended-curriculum,2025-05-29,V,gov cat dq
+RB-DSFA,Skills and professions,Data skills for all,Government Skills,https://www.gov.uk/guidance/data-skills-for-all,2026-03-31,V,gov cat dq
+RB-SPECIALIST,Skills and professions,Specialist skills from government professions,Government Skills,https://www.gov.uk/guidance/specialist-skills,2024-08-23,V,gov cat dq
+RB-PROSPECTUS,Skills and professions,Government Campus prospectus,Government Skills,https://prospectus.governmentcampus.co.uk/,2026-11-05,V,gov cat dq
+RB-NSG,Skills and professions,National School of Government,Cabinet Office,https://www.gov.uk/government/organisations/national-school-of-government,2026-11-05,V,gov
+RB-AFCAREER,Skills and professions,Analysis Function career framework,Analysis Function,https://analysisfunction.civilservice.gov.uk/careers/career-framework/,2026-11-05,V,dq
+RB-AFROLES,Skills and professions,Analysis Function role profiles and career pathways,Analysis Function,https://analysisfunction.civilservice.gov.uk/careers/role-profiles-and-career-pathways/,2026-11-05,V,dq
+RB-GSS,Skills and professions,Government Statistical Service and Statistician Group,Analysis Function,https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/,2026-11-05,V,dq
+RB-KIM,Skills and professions,Government Knowledge and Information Management Profession,Government KIM Profession,https://www.gov.uk/government/organisations/civil-service-government-knowledge-information-management-profession/about,2025-06-20,V,gov cat
+RB-SECPROF,Skills and professions,Government Security Profession,Government Security Group,https://www.gov.uk/government/organisations/government-security-profession,2026-11-05,V,gov
+RB-CYBERPROF,Skills and professions,Government Cyber Profession,Government Cyber Profession,https://www.gov.uk/government/organisations/government-cyber-profession,2026-03-26,V,gov
+RB-SUCCESS,Skills and professions,Success Profiles,Civil Service HR,https://www.gov.uk/government/publications/success-profiles,2025-01-29,V,gov
+RB-SFIA,Skills and professions,SFIA 9: the global skills and competency framework for a digital world,SFIA Foundation,https://sfia-online.org/en/sfia-9,2026-11-05,V,gov cat dq
+RB-PKSB,Skills and professions,Professional Knowledge and Skills Base (PKSB),CILIP,https://www.cilip.org.uk/page/PKSB,2026-11-05,V,cat
+RB-RSS,Skills and professions,Royal Statistical Society professional development,Royal Statistical Society,https://www.rss.org.uk/membership/professional-development/,2026-11-05,V,dq
+RB-APPDA,Skills and professions,Data analyst apprenticeship standard,Skills England,https://www.instituteforapprenticeships.org/apprenticeship-standards/data-analyst-v1-1,2026-11-05,V,dq
+RB-DAMA,Skills and professions,DAMA-DMBOK: Data Management Body of Knowledge,DAMA International,https://www.dama.org/cpages/body-of-knowledge,2026-11-05,V,gov cat dq
+RB-DCAM,Skills and professions,DCAM: Data Management Capability Assessment Model,EDM Council,https://edmcouncil.org/frameworks/dcam/,2026-11-05,V,gov cat dq
+RB-CMMI,Skills and professions,Capability Maturity Model Integration (CMMI),ISACA (CMMI Institute),https://cmmiinstitute.com/,2026-11-05,V,gov
+RB-CAF,Cyber and security,Cyber Assessment Framework (CAF),National Cyber Security Centre,https://www.ncsc.gov.uk/collection/cyber-assessment-framework,2026-11-05,V,gov
+RB-GCSS,Cyber and security,Government Cyber Security Strategy: 2022 to 2030,Cabinet Office,https://www.gov.uk/government/publications/government-cyber-security-strategy-2022-to-2030,2026-01-06,V,gov
+RB-GOVS007,Cyber and security,Government Functional Standard GovS 007: Security,Government Security Group,https://www.gov.uk/government/publications/government-functional-standard-govs-007-security,2021-09-13,V,gov
+RB-SBD,Cyber and security,Secure by design,Cabinet Office,https://www.gov.uk/government/collections/secure-by-design,2024-12-05,V,gov dq
+RB-NCSC10,Cyber and security,10 Steps to Cyber Security,National Cyber Security Centre,https://www.ncsc.gov.uk/collection/10-steps,2026-11-05,V,gov
+RB-NCSCIR,Cyber and security,Incident management,National Cyber Security Centre,https://www.ncsc.gov.uk/collection/incident-management,2026-11-05,V,gov dq
+RB-NCSCCLOUD,Cyber and security,Cloud security guidance,National Cyber Security Centre,https://www.ncsc.gov.uk/collection/cloud,2026-11-05,V,gov cat
+RB-SECINFO,Cyber and security,Securing information in your service,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/technology/securing-your-information,2024-10-17,V,gov
+RB-AICODE,Cyber and security,"AI, open code and vulnerability risk in the public sector",Government Digital Service,https://www.gov.uk/guidance/ai-open-code-and-vulnerability-risk-in-the-public-sector,2026-05-14,V,gov
+RB-CLOUD,Technology and architecture,Government Cloud First policy,Government Digital Service,https://www.gov.uk/guidance/government-cloud-first-policy,2023-06-19,V,gov cat
+RB-API,Technology and architecture,API technical and data standards,Government Digital Service,https://www.gov.uk/guidance/gds-api-technical-and-data-standards,2026-09-30,V,cat dq
+RB-REFARCH,Technology and architecture,Develop your data and APIs using a reference architecture,Government Digital Service,https://www.gov.uk/guidance/develop-your-data-and-apis-using-a-reference-architecture,2021-03-22,V,cat dq
+RB-CHOOSE,Technology and architecture,Choosing technology: an introduction,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/technology/choosing-technology-an-introduction,2024-10-15,V,gov
+RB-OPENSRC,Technology and architecture,Be open and use open source,Government Digital Service,https://www.gov.uk/guidance/be-open-and-use-open-source,2021-03-31,V,gov
+RB-MSC,Commercial and procurement,Model Services Contract,Cabinet Office,https://www.gov.uk/government/publications/model-services-contract,2025-11-24,V,gov
+RB-MTC20,Commercial and procurement,The Mid-Tier Contract: Schedule 20 (Processing Data),Cabinet Office,https://www.gov.uk/government/publications/the-mid-tier-contract-schedule-20-processing-data,2025-02-21,V,gov
+RB-PA23,Commercial and procurement,Procurement Act 2023,legislation.gov.uk,https://www.legislation.gov.uk/ukpga/2023/54/contents,2026-11-05,V,gov
+RB-PA23G,Commercial and procurement,Procurement Act 2023: guidance documents,Cabinet Office,https://www.gov.uk/government/collections/procurement-act-2023-guidance-documents,2026-02-04,V,gov
+RB-GCLOUD,Commercial and procurement,G-Cloud 15 framework,Crown Commercial Service,https://www.crowncommercial.gov.uk/agreements/RM1557.15,2026-11-05,V,gov cat
+RB-COMMFN,Skills and professions,Government Commercial Function,Cabinet Office,https://www.gov.uk/government/organisations/government-commercial-function,2026-11-05,V,gov
+RB-SRO,"Delivery, change and investment",Role of the senior responsible owner,National Infrastructure and Service Transformation Authority,https://www.gov.uk/government/publications/the-role-of-the-senior-responsible-owner,2026-02-23,V,gov
+RB-SMROLES,"Delivery, change and investment",What each role does in a service team,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/the-team/what-each-role-does-in-service-team,2026-11-05,V,gov
+RB-PDPROF,Skills and professions,How to join the Project Delivery Profession,Government Project Delivery,https://www.gov.uk/guidance/how-to-join-the-project-delivery-profession,2026-11-05,V,gov
+RB-PRA,Records and information management,Public Records Act 1958,legislation.gov.uk,https://www.legislation.gov.uk/ukpga/Eliz2/6-7/51/contents,2026-11-05,V,gov cat
+RB-TNAIM,Records and information management,Manage information: guidance for government,The National Archives,https://www.nationalarchives.gov.uk/information-management/manage-information/,2026-11-05,V,gov cat
+RB-TNATRANS,Records and information management,Digital records transfer,The National Archives,https://www.nationalarchives.gov.uk/information-management/manage-information/digital-records-transfer/,2026-11-05,V,cat
+RB-ISO15489,Records and information management,ISO 15489-1:2016 Records management: concepts and principles,International Organization for Standardization,https://www.iso.org/standard/62542.html,,S,gov cat
+RB-ISO23081,Records and information management,ISO 23081-1:2017 Metadata for records: principles,International Organization for Standardization,https://www.iso.org/standard/73172.html,,S,cat
+RB-DSA,Data and AI,Data Standards Authority,Government Digital Service,https://www.gov.uk/government/groups/data-standards-authority,2026-11-05,V,cat dq
+RB-DQHUB,Data and AI,Government Data Quality Hub,Office for National Statistics,https://www.gov.uk/government/organisations/government-data-quality-hub,2026-11-05,V,dq
+RB-OSP,Technology and architecture,Open Standards principles,Cabinet Office,https://www.gov.uk/government/publications/open-standards-principles/open-standards-principles,2018-04-05,V,gov cat dq
+RB-TCOP4,Technology and architecture,Technology Code of Practice point 4: make use of open standards,GDS,https://www.gov.uk/guidance/make-use-of-open-standards,2021-03-31,V,gov cat dq
+RB-TCOP11,Commercial and procurement,Technology Code of Practice point 11: define your purchasing strategy,GDS,https://www.gov.uk/guidance/define-your-purchasing-strategy,2026-09-03,V,gov cat dq
+RB-LOCKIN,Technology and architecture,Managing technical lock-in in the cloud,GDS,https://www.gov.uk/guidance/managing-technical-lock-in-in-the-cloud,2026-09-03,V,gov cat dq
+RB-PPN0715,Commercial and procurement,Procurement Policy Note 07/15: open standards for technology,Cabinet Office,https://www.gov.uk/government/publications/procurement-policy-note-0715-open-standards-for-technology,2023-01-31,V,gov cat dq
+RB-METASTD,Data and AI,Metadata standards for sharing and publishing data,Data Standards Authority,https://www.gov.uk/government/collections/metadata-standards-for-sharing-and-publishing-data,2026-04-22,V,cat
+RB-DSACAT,Data and AI,Data Standards Authority: Standards Catalogue,Data Standards Authority,https://www.gov.uk/government/publications/data-standards-authority-standards-catalogue,2023-10-25,V,gov cat dq
+RB-CMACLOUD,Commercial and procurement,Cloud services market investigation,Competition and Markets Authority,https://www.gov.uk/cma-cases/cloud-services-market-investigation,2025-07-31,V,gov
+RB-CMAPKG,Commercial and procurement,CMA announces package of actions on business software and cloud services,Competition and Markets Authority,https://www.gov.uk/government/news/cma-announces-package-of-actions-on-business-software-and-cloud-services,2026-03-31,V,gov
+RB-EUDA,Legislation,EU Data Act (Regulation (EU) 2023/2854),European Union,https://eur-lex.europa.eu/eli/reg/2023/2854/oj,,S,gov
+RB-FTS,Commercial and procurement,Find a Tender,Cabinet Office,https://www.find-tender.service.gov.uk/,2026-11-05,V,gov cat dq
+RB-GCSEARCH,Commercial and procurement,Digital Marketplace: search G-Cloud services,Crown Commercial Service,https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/search,2026-11-05,V,gov cat dq
+RB-PROVO,Standards,PROV-O: the PROV ontology,W3C,https://www.w3.org/TR/prov-o/,,V,cat dq
+RB-SKOS,Standards,SKOS: Simple Knowledge Organization System reference,W3C,https://www.w3.org/TR/skos-reference/,,V,cat gov
+RB-CSVW,Standards,CSV on the Web (CSVW) primer,W3C,https://www.w3.org/TR/tabular-data-primer/,,V,cat dq
+RB-OLINEAGE,Standards,OpenLineage,LF AI & Data Foundation,https://openlineage.io/docs/,2026-11-05,V,cat dq
+RB-ODCS,Standards,Open Data Contract Standard (ODCS),Bitol (LF AI & Data Foundation),https://bitol-io.github.io/open-data-contract-standard/,2026-11-05,V,cat dq
+RB-ODPS,Standards,Open Data Product Standard (ODPS),Bitol (LF AI & Data Foundation),https://bitol-io.github.io/open-data-product-standard/,2026-11-05,V,cat
+RB-EGERIA,Standards,Egeria open metadata and governance,LF AI & Data Foundation,https://egeria-project.org/,2026-11-05,V,cat gov
+RB-OAS,Standards,OpenAPI Specification,OpenAPI Initiative,https://spec.openapis.org/oas/latest.html,,V,gov cat dq
+RB-MCPSPEC,Standards,Model Context Protocol,Model Context Protocol project,https://modelcontextprotocol.io/,2026-11-05,V,cat
+RB-RMDG,"Delivery, change and investment",A roadmap for modern digital government 2025 to 2030,Government Digital Service,https://roadmap-for-modern-digital-government.campaign.gov.uk,2026-10-09,V,gov cat dq
+RB-SMUR,Service delivery and technology,Service Manual: finding participants for user research,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/user-research/find-user-research-participants,2026-11-05,V,gov cat dq
+RB-SMCONSENT,Service delivery and technology,Service Manual: getting informed consent for user research,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/user-research/getting-users-consent-for-research,2026-11-05,V,gov cat dq
+RB-SMPRIVACY,Service delivery and technology,Service Manual: managing user research data and participant privacy,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/user-research/managing-user-research-data-participant-privacy,2026-11-05,V,gov cat dq
+RB-SMDISABLED,Service delivery and technology,Service Manual: running research sessions with disabled people,GDS (GOV.UK Service Manual),https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities,2026-11-05,V,gov cat dq
+RB-DGUROADMAP,Data and AI,data.gov.uk roadmap,Government Digital Service,https://data.gov.uk/roadmap,2026-11-05,V,cat

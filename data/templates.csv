@@ -1,0 +1,103 @@
+template_id,template,capability,field_order,field
+T-GOV-1,Governance charter,gov,1,Purpose
+T-GOV-1,Governance charter,gov,2,Scope and exclusions
+T-GOV-1,Governance charter,gov,3,Authority and sponsor
+T-GOV-1,Governance charter,gov,4,Membership
+T-GOV-1,Governance charter,gov,5,Decision rights
+T-GOV-1,Governance charter,gov,6,Review cadence
+T-GOV-1,Governance charter,gov,7,Sign-off (role and date)
+T-GOV-2,Data ownership register entry,gov,1,Asset identifier
+T-GOV-2,Data ownership register entry,gov,2,Asset title
+T-GOV-2,Data ownership register entry,gov,3,Ownership option (IAO
+T-GOV-2,Data ownership register entry,gov,4,data owner or hybrid)
+T-GOV-2,Data ownership register entry,gov,5,Data owner (role)
+T-GOV-2,Data ownership register entry,gov,6,Information asset owner (role)
+T-GOV-2,Data ownership register entry,gov,7,Data steward (role)
+T-GOV-2,Data ownership register entry,gov,8,Data custodian (role)
+T-GOV-2,Data ownership register entry,gov,9,Successor (role)
+T-GOV-2,Data ownership register entry,gov,10,Effective date
+T-GOV-2,Data ownership register entry,gov,11,Training completed
+T-GOV-2,Data ownership register entry,gov,12,Next review
+T-GOV-3,Decision log entry,gov,1,Decision ID
+T-GOV-3,Decision log entry,gov,2,Date
+T-GOV-3,Decision log entry,gov,3,Decision
+T-GOV-3,Decision log entry,gov,4,Decided by (role or forum)
+T-GOV-3,Decision log entry,gov,5,Rationale
+T-GOV-3,Decision log entry,gov,6,Assets affected
+T-GOV-3,Decision log entry,gov,7,Review trigger
+T-GOV-4,Exception register entry,gov,1,Exception ID
+T-GOV-4,Exception register entry,gov,2,Policy deviated from
+T-GOV-4,Exception register entry,gov,3,Rationale
+T-GOV-4,Exception register entry,gov,4,Owner (role)
+T-GOV-4,Exception register entry,gov,5,Risk accepted by (role)
+T-GOV-4,Exception register entry,gov,6,Start date
+T-GOV-4,Exception register entry,gov,7,Expiry date
+T-GOV-4,Exception register entry,gov,8,Review outcome
+T-CAT-1,Candidate and designation log,cat,1,Candidate
+T-CAT-1,Candidate and designation log,cat,2,Found in (catalogue
+T-CAT-1,Candidate and designation log,cat,3,IAR or sharing register)
+T-CAT-1,Candidate and designation log,cat,4,Provided to or acquired from
+T-CAT-1,Candidate and designation log,cat,5,Purpose (one or more of seven)
+T-CAT-1,Candidate and designation log,cat,6,Scope tests passed
+T-CAT-1,Candidate and designation log,cat,7,Designated (yes or no)
+T-CAT-1,Candidate and designation log,cat,8,Reason
+T-CAT-1,Candidate and designation log,cat,9,Decided by (role)
+T-CAT-1,Candidate and designation log,cat,10,Date
+T-CAT-2,Critical data asset catalogue record,cat,1,title
+T-CAT-2,Critical data asset catalogue record,cat,2,alternativeTitle
+T-CAT-2,Critical data asset catalogue record,cat,3,description
+T-CAT-2,Critical data asset catalogue record,cat,4,identifier
+T-CAT-2,Critical data asset catalogue record,cat,5,creator
+T-CAT-2,Critical data asset catalogue record,cat,6,dateCreated
+T-CAT-2,Critical data asset catalogue record,cat,7,temporalCoverage
+T-CAT-2,Critical data asset catalogue record,cat,8,conformsTo
+T-CAT-2,Critical data asset catalogue record,cat,9,accessRights
+T-CAT-2,Critical data asset catalogue record,cat,10,securityClassification
+T-CAT-2,Critical data asset catalogue record,cat,11,licence
+T-CAT-2,Critical data asset catalogue record,cat,12,mediaType
+T-CAT-2,Critical data asset catalogue record,cat,13,expires
+T-CAT-2,Critical data asset catalogue record,cat,14,supersededBy
+T-CAT-2,Critical data asset catalogue record,cat,15,Owner (role)
+T-CAT-2,Critical data asset catalogue record,cat,16,Contact point (team or form)
+T-CAT-2,Critical data asset catalogue record,cat,17,Purpose
+T-CAT-2,Critical data asset catalogue record,cat,18,Last reviewed
+T-CAT-2,Critical data asset catalogue record,cat,19,Next review
+T-CAT-3,Annual record review,cat,1,Asset
+T-CAT-3,Annual record review,cat,2,Date
+T-CAT-3,Annual record review,cat,3,Still critical (and why)
+T-CAT-3,Annual record review,cat,4,Owner and successor confirmed
+T-CAT-3,Annual record review,cat,5,Metadata checked against the guidance
+T-CAT-3,Annual record review,cat,6,Changes made
+T-CAT-3,Annual record review,cat,7,Signed off by (role)
+T-DQ-1,Data quality rule,dq,1,Rule ID
+T-DQ-1,Data quality rule,dq,2,Data element
+T-DQ-1,Data quality rule,dq,3,Plain-English rule
+T-DQ-1,Data quality rule,dq,4,Dimension
+T-DQ-1,Data quality rule,dq,5,Test
+T-DQ-1,Data quality rule,dq,6,Importance (1-4)
+T-DQ-1,Data quality rule,dq,7,Impact (1-4)
+T-DQ-1,Data quality rule,dq,8,Combined score
+T-DQ-1,Data quality rule,dq,9,Target (%)
+T-DQ-1,Data quality rule,dq,10,Owner (role)
+T-DQ-1,Data quality rule,dq,11,Date agreed
+T-DQ-2,Issue log entry,dq,1,Issue ID
+T-DQ-2,Issue log entry,dq,2,Date found
+T-DQ-2,Issue log entry,dq,3,Rule ID
+T-DQ-2,Issue log entry,dq,4,Records affected
+T-DQ-2,Issue log entry,dq,5,Users or groups affected
+T-DQ-2,Issue log entry,dq,6,Performance and target
+T-DQ-2,Issue log entry,dq,7,Band
+T-DQ-2,Issue log entry,dq,8,Priority
+T-DQ-2,Issue log entry,dq,9,Target resolution date
+T-DQ-2,Issue log entry,dq,10,Root cause
+T-DQ-2,Issue log entry,dq,11,Action and owner (role)
+T-DQ-2,Issue log entry,dq,12,Status
+T-DQ-3,Data quality statement,dq,1,Asset and version
+T-DQ-3,Data quality statement,dq,2,Date
+T-DQ-3,Data quality statement,dq,3,Summary in plain English
+T-DQ-3,Data quality statement,dq,4,Scores by dimension and trend
+T-DQ-3,Data quality statement,dq,5,Known issues
+T-DQ-3,Data quality statement,dq,6,Quality by group where lawful
+T-DQ-3,Data quality statement,dq,7,Fit for
+T-DQ-3,Data quality statement,dq,8,Not fit for
+T-DQ-3,Data quality statement,dq,9,How to report a problem (form)

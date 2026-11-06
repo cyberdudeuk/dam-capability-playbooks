@@ -1,0 +1,16 @@
+# Records, retention and disposal: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-records-retention-and-disposal
+  title: 'Starter rules: Records, retention and disposal (adapt column names to your
+    data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: REC-01
+  check: freshness
+  description: 'Records are not older than the retention period (example: 7 years)'
+  dimension: timeliness
+  column: created_date
+  expected: P7Y
+  lag: P30D

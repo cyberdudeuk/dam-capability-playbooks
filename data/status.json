@@ -1,0 +1,1602 @@
+{
+ "generated": "2026-11-06T09:27:57+00:00",
+ "today": "2026-11-06",
+ "review_date": "2027-02-05",
+ "review_due": false,
+ "healthy": true,
+ "problems": [],
+ "sources": [
+  {
+   "id": "SRC-DAM",
+   "title": "Data asset management policy in government",
+   "url": "https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government",
+   "state": "ok",
+   "detail": "",
+   "updated": "2026-05-27T10:57:00+01:00"
+  },
+  {
+   "id": "SRC-IDC",
+   "title": "Identifying and recording critical data assets",
+   "url": "https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets",
+   "state": "ok",
+   "detail": "",
+   "updated": "2026-04-16T17:13:29+01:00"
+  },
+  {
+   "id": "SRC-MD",
+   "title": "Recording metadata to describe critical data assets",
+   "url": "https://www.gov.uk/government/publications/record-metadata-to-describe-critical-data-assets/recording-metadata-to-describe-critical-data-assets",
+   "state": "ok",
+   "detail": "",
+   "updated": "2026-04-16T17:13:56+01:00"
+  },
+  {
+   "id": "SRC-OWN",
+   "title": "Data ownership model",
+   "url": "https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model",
+   "state": "ok",
+   "detail": "",
+   "updated": "2026-04-16T17:13:16+01:00"
+  },
+  {
+   "id": "SRC-IAO",
+   "title": "The role of information asset owners in government",
+   "url": "https://www.gov.uk/government/publications/information-asset-owner-role-guidance",
+   "state": "ok",
+   "detail": "",
+   "updated": "2025-10-01T09:06:34+01:00"
+  },
+  {
+   "id": "SRC-GDQF",
+   "title": "The Government Data Quality Framework",
+   "url": "https://www.gov.uk/government/publications/the-government-data-quality-framework/the-government-data-quality-framework",
+   "state": "ok",
+   "detail": "",
+   "updated": "2020-12-03T12:11:00+00:00"
+  },
+  {
+   "id": "SRC-DQAP",
+   "title": "Data quality action plan implementation guide",
+   "url": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-action-plan-implementation-guide",
+   "state": "ok",
+   "detail": "",
+   "updated": "2026-04-16T17:13:45+01:00"
+  },
+  {
+   "id": "SRC-DQIF",
+   "title": "Data quality issues framework",
+   "url": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-issues-framework",
+   "state": "ok",
+   "detail": "",
+   "updated": "2026-04-16T17:13:45+01:00"
+  },
+  {
+   "id": "SRC-MAN",
+   "title": "Data manual, data management section (data.gov.uk)",
+   "url": "https://www.data.gov.uk/data-manual/data-management/",
+   "state": "ok",
+   "detail": ""
+  },
+  {
+   "id": "SRC-DMA",
+   "title": "Data maturity assessment for government",
+   "url": "https://www.gov.uk/government/collections/data-maturity-assessment-for-government",
+   "state": "ok",
+   "detail": "",
+   "updated": "2026-07-23T10:30:32+01:00"
+  },
+  {
+   "id": "SRC-MEM",
+   "title": "UK Cross-Government Metadata Exchange Model (xGov MEM)",
+   "url": "https://co-cddo.github.io/ukgov-metadata-exchange-model/",
+   "state": "ok",
+   "detail": ""
+  },
+  {
+   "id": "SRC-DCAT",
+   "title": "Data Catalog Vocabulary (DCAT) version 3",
+   "url": "https://www.w3.org/TR/vocab-dcat-3/",
+   "state": "ok",
+   "detail": ""
+  },
+  {
+   "id": "SRC-DQV",
+   "title": "Data on the Web Best Practices Data Quality Vocabulary (DQV)",
+   "url": "https://www.w3.org/TR/vocab-dqv/",
+   "state": "ok",
+   "detail": ""
+  },
+  {
+   "id": "SRC-ODCS",
+   "title": "Open Data Contract Standard",
+   "url": "https://bitol-io.github.io/open-data-contract-standard/latest/",
+   "state": "ok",
+   "detail": ""
+  },
+  {
+   "id": "SRC-DQC",
+   "title": "Public Sector Data Quality Commons (portal and dqkit)",
+   "url": "https://cyberdudeuk.github.io/dq-commons/",
+   "state": "ok",
+   "detail": ""
+  }
+ ],
+ "pages": [
+  {
+   "page": "404.html",
+   "bytes": 258103,
+   "ok": true
+  },
+  {
+   "page": "about.html",
+   "bytes": 280564,
+   "ok": true
+  },
+  {
+   "page": "accessibility.html",
+   "bytes": 264259,
+   "ok": true
+  },
+  {
+   "page": "bodies.html",
+   "bytes": 330684,
+   "ok": true
+  },
+  {
+   "page": "capability-model.html",
+   "bytes": 601658,
+   "ok": true
+  },
+  {
+   "page": "cataloguing.html",
+   "bytes": 412186,
+   "ok": true
+  },
+  {
+   "page": "change.html",
+   "bytes": 402835,
+   "ok": true
+  },
+  {
+   "page": "community.html",
+   "bytes": 300501,
+   "ok": true
+  },
+  {
+   "page": "contact.html",
+   "bytes": 266452,
+   "ok": true
+  },
+  {
+   "page": "dam.html",
+   "bytes": 396816,
+   "ok": true
+  },
+  {
+   "page": "data.html",
+   "bytes": 296658,
+   "ok": true
+  },
+  {
+   "page": "design.html",
+   "bytes": 292853,
+   "ok": true
+  },
+  {
+   "page": "governance.html",
+   "bytes": 406320,
+   "ok": true
+  },
+  {
+   "page": "guide.html",
+   "bytes": 282415,
+   "ok": true
+  },
+  {
+   "page": "inclusion.html",
+   "bytes": 273820,
+   "ok": true
+  },
+  {
+   "page": "index.html",
+   "bytes": 286933,
+   "ok": true
+  },
+  {
+   "page": "involve.html",
+   "bytes": 308817,
+   "ok": true
+  },
+  {
+   "page": "knowledge.html",
+   "bytes": 341644,
+   "ok": true
+  },
+  {
+   "page": "learning.html",
+   "bytes": 352140,
+   "ok": true
+  },
+  {
+   "page": "library.html",
+   "bytes": 285132,
+   "ok": true
+  },
+  {
+   "page": "notices.html",
+   "bytes": 318520,
+   "ok": true
+  },
+  {
+   "page": "personas.html",
+   "bytes": 362203,
+   "ok": true
+  },
+  {
+   "page": "perspectives.html",
+   "bytes": 323516,
+   "ok": true
+  },
+  {
+   "page": "professions.html",
+   "bytes": 366536,
+   "ok": true
+  },
+  {
+   "page": "quality.html",
+   "bytes": 403096,
+   "ok": true
+  },
+  {
+   "page": "research.html",
+   "bytes": 326200,
+   "ok": true
+  },
+  {
+   "page": "reuse.html",
+   "bytes": 293206,
+   "ok": true
+  },
+  {
+   "page": "sectors.html",
+   "bytes": 447652,
+   "ok": true
+  },
+  {
+   "page": "site-map.html",
+   "bytes": 284179,
+   "ok": true
+  },
+  {
+   "page": "status.html",
+   "bytes": 261678,
+   "ok": true
+  },
+  {
+   "page": "test.html",
+   "bytes": 287100,
+   "ok": true
+  },
+  {
+   "page": "together.html",
+   "bytes": 303886,
+   "ok": true
+  },
+  {
+   "page": "tooling.html",
+   "bytes": 361241,
+   "ok": true
+  },
+  {
+   "page": "whats-new.html",
+   "bytes": 289562,
+   "ok": true
+  }
+ ],
+ "envelope_bytes": 1500000,
+ "links": [
+  {
+   "url": "https://analysisfunction.civilservice.gov.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://analysisfunction.civilservice.gov.uk/careers/career-framework/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://analysisfunction.civilservice.gov.uk/careers/role-profiles-and-career-pathways/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/champion-networks/quality-champions",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://analysisfunction.civilservice.gov.uk/support/data-linkage/data-linkage-champion-network",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://bitol-io.github.io/open-data-contract-standard/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://bitol-io.github.io/open-data-contract-standard/latest/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://bitol-io.github.io/open-data-product-standard/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cmmiinstitute.com/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://co-cddo.github.io/ukgov-metadata-exchange-model/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://code.statisticsauthority.gov.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/baseline.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/catalogues.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/check.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/commercial.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/ecosystem.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/guidance.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/interop.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/legacy.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/models.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/playbook.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/reuse.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/roles.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/weaver.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/dq-commons/wheel.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://cyberdudeuk.github.io/github-repos-asset-catalogue/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://data.gov.uk/data-manual/join-a-data-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://data.gov.uk/roadmap",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/role/chief-data-officer/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/role/data-analyst/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/role/data-and-ai-ethicist/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/role/data-architect/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/role/data-engineer/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/role/data-governance-manager/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/role/performance-analyst/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ddat-capability-framework.service.gov.uk/skills/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://edmcouncil.org/frameworks/dcam/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://egeria-project.org/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://eur-lex.europa.eu/eli/reg/2023/2854/oj",
+   "state": "ok",
+   "code": 202
+  },
+  {
+   "url": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2OgGVkJSDelPgquubNu4dJpUNjc2Ukw2N1hMTTc1WE5DQTE5QkZEMkVWSi4u",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://gds-way.digital.cabinet-office.gov.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/blob/main/CODE_OF_CONDUCT.md",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/blob/main/CONTRIBUTING.md",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/commits/main/content/playbooks.yaml",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/discussions",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/discussions/categories/ideas",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/discussions/new?category=ideas",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/releases",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://github.com/cyberdudeuk/dam-capability-playbooks/tree/main/docs",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/style-guides/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/",
+   "state": "blocked",
+   "code": 403
+  },
+  {
+   "url": "https://khub.net/group/government-knowledge-and-information-management-profession",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://modelcontextprotocol.io/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://openlineage.io/docs/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://osr.statisticsauthority.gov.uk/guidance/administrative-data-and-official-statistics/",
+   "state": "blocked",
+   "code": 405
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/01-data-and-analytics/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/03-digital/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/04-artificial-intelligence/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/04-data-and-analytics/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/04-risk-management/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/04-security/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://prospectus.governmentcampus.co.uk/find-out-more/05-domain-knowledge/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://roadmap-for-modern-digital-government.campaign.gov.uk",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://sdmx.org/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://sfia-online.org/en/sfia-9",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://spec.openapis.org/oas/latest.html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2F&msgText=DAM%20capability%20playbooks%3A%20governance%2C%20cataloguing%20and%20quality",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2F404.html&msgText=Page%20not%20found",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fabout.html&msgText=About",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Faccessibility.html&msgText=Accessibility%20statement",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fbodies.html&msgText=Boards%2C%20councils%20and%20networks",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fcapability-model.html&msgText=Capability%20model",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fcataloguing.html&msgText=Data%20cataloguing",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fchange.html&msgText=Delivery%20and%20change",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fcommunity.html&msgText=Working%20together",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fcontact.html&msgText=Contact%20form",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fdam.html&msgText=What%20the%20DAM%20Policy%20requires",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fdata.html&msgText=Open%20data",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fdesign.html&msgText=Service%20design%20and%20architecture",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fgovernance.html&msgText=Data%20governance",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fguide.html&msgText=User%20guide",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Finclusion.html&msgText=Inclusive%20data%20practice",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Finvolve.html&msgText=Get%20involved",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fknowledge.html&msgText=Knowledge",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Flearning.html&msgText=Learning",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Flibrary.html&msgText=Library",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fnotices.html&msgText=Disclaimers%2C%20credits%20and%20citations",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fpersonas.html&msgText=Start%20from%20your%20role",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fperspectives.html&msgText=Perspectives",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fprofessions.html&msgText=Professions%20and%20skills",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fquality.html&msgText=Data%20quality",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fresearch.html&msgText=Have%20your%20say",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Freuse.html&msgText=Use%20and%20reuse",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fsectors.html&msgText=Sector%20supplements",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fsite-map.html&msgText=Site%20map",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fstatus.html&msgText=Status%20and%20health",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Ftest.html&msgText=Help%20us%20test",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Ftogether.html&msgText=Joined%20up",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Ftooling.html&msgText=Tools%20and%20interoperability",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://teams.microsoft.com/share?href=https%3A%2F%2Fcyberdudeuk.github.io%2Fdam-capability-playbooks%2Fwhats-new.html&msgText=What%27s%20new",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.agi.org.uk/uk-gemini/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/search",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.cilip.org.uk/page/PKSB",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.crowncommercial.gov.uk/agreements/RM1557.15",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.dama.org/cpages/body-of-knowledge",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.data.gov.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.data.gov.uk/data-manual/data-management/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.dsptoolkit.nhs.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.equalityadvisoryservice.com/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.find-tender.service.gov.uk/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/cma-cases/cloud-services-market-investigation",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/algorithmic-transparency-recording-standard-hub",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/best-practice-guidance-and-tools-for-geospatial-data-managers",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/data-maturity-assessment-for-government",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/metadata-standards-for-sharing-and-publishing-data",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/procurement-act-2023-guidance-documents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/secure-by-design",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/the-civil-service-recommended-curriculum",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/collections/the-green-book-and-accompanying-guidance-and-documents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/groups/data-standards-authority",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/groups/data-steering-group",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/groups/open-standards-board",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/news/cma-announces-package-of-actions-on-business-software-and-cloud-services",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/news/introducing-the-government-data-quality-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/civil-service-government-knowledge-information-management-profession/about",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/government-commercial-function",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/government-cyber-profession",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/government-data-quality-hub",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/government-security-profession",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/government-skills",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/national-infrastructure-and-service-transformation-authority",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/national-school-of-government",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/organisations/public-sector-fraud-authority",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/a-blueprint-for-modern-digital-government",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/accessibility-statement-for-the-government-skills-campus-gsc",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/adult-social-care-client-level-data-england-background-quality-and-methodology",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/adult-social-care-outcomes-framework-handbook-of-definitions",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/ai-playbook-for-the-uk-government",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/care-data-matters-a-roadmap-for-better-adult-social-care-data",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-ethics-framework",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-maturity-assessment-for-government-framework",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-maturity-assessment-for-government-framework/data-maturity-assessment-for-government-framework-html",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-sharing-governance-framework",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-standards-authority-operational-model-and-processes/data-standards-authority-operational-model-and-processes",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/data-standards-authority-standards-catalogue",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/government-cyber-security-strategy-2022-to-2030",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/government-functional-standard-govs-005-digital",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/government-functional-standard-govs-007-security",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/government-major-projects-portfolio",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/government-professions/government-professions",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/government-security-classifications",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/how-fair-are-the-uks-geospatial-assets",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-action-plan-implementation-guide",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-issues-framework",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/implementing-integrated-assurance-for-major-projects",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/information-asset-owner-role-guidance",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/meeting-minutes-for-the-data-standards-authority-governance-boards",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/model-services-contract",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/national-data-library",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/open-standards-for-government",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/open-standards-for-government/identifying-property-and-street-information",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/open-standards-principles/open-standards-principles",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/orange-book",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/ppn-020-guidance-on-data-protection-legislation",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/procurement-policy-note-0715-open-standards-for-technology",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/project-delivery-functional-standard",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/public-sector-equality-duty",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/record-metadata-to-describe-critical-data-assets/recording-metadata-to-describe-critical-data-assets",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/success-profiles",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/the-caldicott-principles",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/the-digital-data-and-technology-playbook",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/the-government-data-quality-framework/the-government-data-quality-framework",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/the-magenta-book",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/the-mid-tier-contract-schedule-20-processing-data",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/the-role-of-the-senior-responsible-owner",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/government/publications/the-sourcing-and-consultancy-playbooks",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/ai-open-code-and-vulnerability-risk-in-the-public-sector",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/be-open-and-use-open-source",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/children-in-need-census",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/data-skills-for-all",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/define-your-purchasing-strategy",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/develop-your-data-and-apis-using-a-reference-architecture",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/gds-api-technical-and-data-standards",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/government-cloud-first-policy",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/how-to-join-the-project-delivery-profession",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/make-use-of-open-standards",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/managing-legacy-technology",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/managing-technical-lock-in-in-the-cloud",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/model-accessibility-statement",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/prevent-technical-debt-and-legacy",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/set-up-a-commercial-or-digital-and-technology-spend-controls-pipeline",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/specialist-skills",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/the-aqua-book",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/guidance/the-technology-code-of-practice",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/help/report-vulnerability",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/agile-delivery/retiring-your-service",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/ai-for-government-knowledge-information-management-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/application-programming-interface-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/data-and-artificial-intelligence-ethics-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/data-engineering-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/digital-buying-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/performance-and-data-analysis-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/product-and-service-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/standards-and-assurance-community",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/communities/technology-community-technical-architecture",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/service-assessments",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/service-standard",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/technology/choosing-technology-an-introduction",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/technology/securing-your-information",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/the-team/what-each-role-does-in-service-team",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/user-research/find-user-research-participants",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/user-research/getting-users-consent-for-research",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/user-research/managing-user-research-data-participant-privacy",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.instituteforapprenticeships.org/apprenticeship-standards/data-analyst-v1-1",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.iso.org/standard/62542.html",
+   "state": "blocked",
+   "code": 403
+  },
+  {
+   "url": "https://www.iso.org/standard/73172.html",
+   "state": "blocked",
+   "code": 403
+  },
+  {
+   "url": "https://www.legislation.gov.uk/ukpga/2010/15/contents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.legislation.gov.uk/ukpga/2017/30/contents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.legislation.gov.uk/ukpga/2018/12/contents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.legislation.gov.uk/ukpga/2023/54/contents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.legislation.gov.uk/ukpga/2025/18/contents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.legislation.gov.uk/ukpga/Eliz2/6-7/51/contents",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.localdigital.gov.uk/declaration/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.nationalarchives.gov.uk/information-management/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.nationalarchives.gov.uk/information-management/manage-information/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.nationalarchives.gov.uk/information-management/manage-information/digital-records-transfer/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.ncsc.gov.uk/collection/10-steps",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.ncsc.gov.uk/collection/cloud",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.ncsc.gov.uk/collection/cyber-assessment-framework",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.ncsc.gov.uk/collection/incident-management",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.rss.org.uk/membership/professional-development/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.w3.org/TR/prov-o/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.w3.org/TR/skos-reference/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.w3.org/TR/tabular-data-primer/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.w3.org/TR/vocab-dcat-3/",
+   "state": "ok",
+   "code": 200
+  },
+  {
+   "url": "https://www.w3.org/TR/vocab-dqv/",
+   "state": "ok",
+   "code": 200
+  }
+ ],
+ "anchors": [
+  {
+   "doc": "RB-LEGACY",
+   "url": "https://www.gov.uk/guidance/managing-legacy-technology",
+   "checked": 2,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "RB-RETIRE",
+   "url": "https://www.gov.uk/service-manual/agile-delivery/retiring-your-service",
+   "checked": 1,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "SRC-DAM",
+   "url": "https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government",
+   "checked": 8,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "SRC-DQAP",
+   "url": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-action-plan-implementation-guide",
+   "checked": 11,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "SRC-DQIF",
+   "url": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-issues-framework",
+   "checked": 3,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "SRC-GDQF",
+   "url": "https://www.gov.uk/government/publications/the-government-data-quality-framework/the-government-data-quality-framework",
+   "checked": 5,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "SRC-IDC",
+   "url": "https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets",
+   "checked": 3,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "SRC-MD",
+   "url": "https://www.gov.uk/government/publications/record-metadata-to-describe-critical-data-assets/recording-metadata-to-describe-critical-data-assets",
+   "checked": 4,
+   "missing": [],
+   "state": "ok"
+  },
+  {
+   "doc": "SRC-OWN",
+   "url": "https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model",
+   "checked": 23,
+   "missing": [],
+   "state": "ok"
+  }
+ ],
+ "links_checked": 247,
+ "links_blocked": 4,
+ "links_unavailable": 0
+}

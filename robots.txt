@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /404.html
+Sitemap: https://cyberdudeuk.github.io/dam-capability-playbooks/sitemap.xml

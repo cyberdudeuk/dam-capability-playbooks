@@ -1,0 +1,736 @@
+{
+ "portal": "Data Asset Management (DAM) capability playbooks",
+ "id": "dam",
+ "version": "1.10.1",
+ "as_of": "2026-11-06",
+ "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/",
+ "status": "Prototype guidance for implementing the DAM Policy; central ownership",
+ "licence": "Open Government Licence v3.0",
+ "keys": {
+  "dama_areas": [
+   {
+    "id": "DM-GOV",
+    "name": "Data governance",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-gov"
+   },
+   {
+    "id": "DM-ARC",
+    "name": "Data architecture",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-arc"
+   },
+   {
+    "id": "DM-MOD",
+    "name": "Data modelling and design",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-mod"
+   },
+   {
+    "id": "DM-OPS",
+    "name": "Data storage and operations",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-ops"
+   },
+   {
+    "id": "DM-SEC",
+    "name": "Data security",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-sec"
+   },
+   {
+    "id": "DM-INT",
+    "name": "Data integration and interoperability",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-int"
+   },
+   {
+    "id": "DM-DOC",
+    "name": "Document and content management",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-doc"
+   },
+   {
+    "id": "DM-REF",
+    "name": "Reference and master data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-ref"
+   },
+   {
+    "id": "DM-BI",
+    "name": "Data warehousing and business intelligence",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-bi"
+   },
+   {
+    "id": "DM-META",
+    "name": "Metadata management",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-meta"
+   },
+   {
+    "id": "DM-DQ",
+    "name": "Data quality",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#dm-dq"
+   }
+  ],
+  "requirements": [
+   {
+    "id": "DAM-R01",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R01"
+   },
+   {
+    "id": "DAM-R02",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R02"
+   },
+   {
+    "id": "DAM-R03",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R03"
+   },
+   {
+    "id": "DAM-R04",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R04"
+   },
+   {
+    "id": "DAM-R05",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R05"
+   },
+   {
+    "id": "DAM-R06",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R06"
+   },
+   {
+    "id": "DAM-R07",
+    "strength": "should",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R07"
+   },
+   {
+    "id": "DAM-R08",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R08"
+   },
+   {
+    "id": "DAM-R09",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R09"
+   },
+   {
+    "id": "DAM-R10",
+    "strength": "must",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R10"
+   },
+   {
+    "id": "DAM-R11",
+    "strength": "should",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R11"
+   },
+   {
+    "id": "DAM-R12",
+    "strength": "should",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R12"
+   },
+   {
+    "id": "DAM-R13",
+    "strength": "should",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R13"
+   },
+   {
+    "id": "DAM-R14",
+    "strength": "should",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R14"
+   },
+   {
+    "id": "DAM-R15",
+    "strength": "method",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R15"
+   },
+   {
+    "id": "DAM-R16",
+    "strength": "gap",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html#DAM-R16"
+   }
+  ],
+  "capabilities": [
+   {
+    "id": "CR-01",
+    "name": "Accountable leadership and policy oversight",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-01"
+   },
+   {
+    "id": "CR-02",
+    "name": "Data strategy and prioritisation by reuse value",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-02"
+   },
+   {
+    "id": "CR-03",
+    "name": "Central reporting, assurance and arm's length body coordination",
+    "dmbok": [
+     "Metadata management",
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-03"
+   },
+   {
+    "id": "CR-04",
+    "name": "Performance measurement and annual review",
+    "dmbok": [
+     "Data governance",
+     "Data quality"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-04"
+   },
+   {
+    "id": "CR-05",
+    "name": "Identify and scope critical data assets",
+    "dmbok": [
+     "Metadata management",
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-05"
+   },
+   {
+    "id": "CR-06",
+    "name": "Data cataloguing and metadata management",
+    "dmbok": [
+     "Metadata management"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-06"
+   },
+   {
+    "id": "CR-07",
+    "name": "Data ownership and stewardship",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-07"
+   },
+   {
+    "id": "CR-08",
+    "name": "Data quality management through action plans",
+    "dmbok": [
+     "Data quality"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-08"
+   },
+   {
+    "id": "CR-09",
+    "name": "Data quality issue management",
+    "dmbok": [
+     "Data quality"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-09"
+   },
+   {
+    "id": "CR-10",
+    "name": "Data life cycle management",
+    "dmbok": [
+     "Data governance",
+     "Data storage and operations"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-10"
+   },
+   {
+    "id": "CR-11",
+    "name": "Interoperability, data standards and identifiers",
+    "dmbok": [
+     "Data integration and interoperability",
+     "Reference and master data"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-11"
+   },
+   {
+    "id": "CR-12",
+    "name": "Data architecture and data services",
+    "dmbok": [
+     "Data architecture",
+     "Data modelling and design"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-12"
+   },
+   {
+    "id": "CR-13",
+    "name": "Catalogue and quality tooling",
+    "dmbok": [
+     "Metadata management",
+     "Data quality"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-13"
+   },
+   {
+    "id": "CR-14",
+    "name": "Reference data, master data and authoritative sources",
+    "dmbok": [
+     "Reference and master data"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-14"
+   },
+   {
+    "id": "CR-15",
+    "name": "Records, retention and disposal",
+    "dmbok": [
+     "Document and content management",
+     "Data storage and operations"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-15"
+   },
+   {
+    "id": "CR-16",
+    "name": "Security classification and protective controls",
+    "dmbok": [
+     "Data security"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-16"
+   },
+   {
+    "id": "CR-17",
+    "name": "Data protection and lawful sharing",
+    "dmbok": [
+     "Data security",
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-17"
+   },
+   {
+    "id": "CR-18",
+    "name": "AI readiness and data and AI ethics",
+    "dmbok": [
+     "Data governance",
+     "Data quality"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-18"
+   },
+   {
+    "id": "CR-19",
+    "name": "Data risk management",
+    "dmbok": [
+     "Data governance",
+     "Data security"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-19"
+   },
+   {
+    "id": "CR-20",
+    "name": "Third-party and supplier data",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-20"
+   },
+   {
+    "id": "CR-21",
+    "name": "Data skills, capability and literacy",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-21"
+   },
+   {
+    "id": "CR-22",
+    "name": "Data culture and engagement with users",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-22"
+   },
+   {
+    "id": "CR-23",
+    "name": "Maturity assessment and continuous improvement",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-23"
+   },
+   {
+    "id": "CR-24",
+    "name": "Investment, business cases and value",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-24"
+   },
+   {
+    "id": "CR-25",
+    "name": "Integration with programmes, spend control and assurance",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-25"
+   },
+   {
+    "id": "CR-26",
+    "name": "Legacy migration and decommissioning",
+    "dmbok": [
+     "Data integration and interoperability",
+     "Data storage and operations"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-26"
+   },
+   {
+    "id": "CR-27",
+    "name": "Ownership transition and handover to business as usual",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-27"
+   },
+   {
+    "id": "CR-28",
+    "name": "Cross-boundary collaboration",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-28"
+   },
+   {
+    "id": "CR-29",
+    "name": "Benefits realisation and evaluation",
+    "dmbok": [
+     "Data governance"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-29"
+   },
+   {
+    "id": "CR-30",
+    "name": "Equality and inclusion in data",
+    "dmbok": [
+     "Data governance",
+     "Data quality"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-30"
+   },
+   {
+    "id": "CR-31",
+    "name": "Cyber resilience and incident response for data assets",
+    "dmbok": [
+     "Data security"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-31"
+   },
+   {
+    "id": "CR-32",
+    "name": "Avoiding future legacy: open standards, portability and exit",
+    "dmbok": [
+     "Data architecture",
+     "Data integration and interoperability"
+    ],
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html#CR-32"
+   }
+  ],
+  "practices": [
+   {
+    "id": "CH-01",
+    "title": "Put data assets in the business case",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-01"
+   },
+   {
+    "id": "CH-02",
+    "title": "Use spend control and service assessments as checkpoints",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-02"
+   },
+   {
+    "id": "CH-03",
+    "title": "Write DAM into programme assurance",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-03"
+   },
+   {
+    "id": "CH-04",
+    "title": "Plan legacy exits from the asset register",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-04"
+   },
+   {
+    "id": "CH-05",
+    "title": "Target legacy where it blocks outcomes and widens inequalities",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-05"
+   },
+   {
+    "id": "CH-06",
+    "title": "Build DAM into contracts",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-06"
+   },
+   {
+    "id": "CH-07",
+    "title": "Manage data asset risk on the same registers",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-07"
+   },
+   {
+    "id": "CH-08",
+    "title": "Hand over to business as usual",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-08"
+   },
+   {
+    "id": "CH-09",
+    "title": "Plan people change, not just process change",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-09"
+   },
+   {
+    "id": "CH-10",
+    "title": "Show the benefits",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-10"
+   },
+   {
+    "id": "CH-11",
+    "title": "Keep the yearly cycle running in business as usual",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-11"
+   },
+   {
+    "id": "CH-12",
+    "title": "Assess maturity and set a target",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-12"
+   },
+   {
+    "id": "CH-13",
+    "title": "Share and reuse safely across organisations",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-13"
+   },
+   {
+    "id": "CH-14",
+    "title": "Design out future legacy and lock-in",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-14"
+   },
+   {
+    "id": "CH-15",
+    "title": "Prepare for a cyber incident affecting a critical asset",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-15"
+   },
+   {
+    "id": "CH-16",
+    "title": "Use the buying routes and contract terms that protect data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/change.html#CH-16"
+   }
+  ],
+  "sectors": [
+   {
+    "id": "SUP-HLT",
+    "title": "Health and care data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-HLT"
+   },
+   {
+    "id": "SUP-SOC",
+    "title": "Adult and children's social care data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-SOC"
+   },
+   {
+    "id": "SUP-GEO",
+    "title": "Geospatial and address data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-GEO"
+   },
+   {
+    "id": "SUP-STA",
+    "title": "Official statistics and administrative sources",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-STA"
+   },
+   {
+    "id": "SUP-SHR",
+    "title": "Data sharing and legal gateways",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-SHR"
+   },
+   {
+    "id": "SUP-AI",
+    "title": "AI-ready data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-AI"
+   },
+   {
+    "id": "SUP-FRD",
+    "title": "Fraud and error",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-FRD"
+   },
+   {
+    "id": "SUP-JUS",
+    "title": "Justice, policing and national security",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-JUS"
+   },
+   {
+    "id": "SUP-PER",
+    "title": "Data about people",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-PER"
+   },
+   {
+    "id": "SUP-REF",
+    "title": "Reference data and identifiers",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-REF"
+   },
+   {
+    "id": "SUP-REC",
+    "title": "Records, retention and disposal",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-REC"
+   },
+   {
+    "id": "SUP-DEV",
+    "title": "Devolved governments and local government",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-DEV"
+   },
+   {
+    "id": "SUP-ENV",
+    "title": "Environmental, sensor and time-series data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-ENV"
+   },
+   {
+    "id": "SUP-EDU",
+    "title": "Pupil and learner data",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html#SUP-EDU"
+   }
+  ],
+  "roles": [
+   {
+    "code": "CDO",
+    "name": "Chief data officer",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-CDO"
+   },
+   {
+    "code": "COO",
+    "name": "Lead policy coordinator",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-COO"
+   },
+   {
+    "code": "BRD",
+    "name": "Data governance board",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-BRD"
+   },
+   {
+    "code": "OWN",
+    "name": "Data owner",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-OWN"
+   },
+   {
+    "code": "IAO",
+    "name": "Information asset owner",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-IAO"
+   },
+   {
+    "code": "STW",
+    "name": "Data steward",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-STW"
+   },
+   {
+    "code": "CUS",
+    "name": "Data custodian",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-CUS"
+   },
+   {
+    "code": "CAT",
+    "name": "Catalogue manager",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-CAT"
+   },
+   {
+    "code": "DQL",
+    "name": "Data quality lead or analyst",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-DQL"
+   },
+   {
+    "code": "DPO",
+    "name": "Data protection officer",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-DPO"
+   },
+   {
+    "code": "USR",
+    "name": "Data users",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-USR"
+   },
+   {
+    "code": "PUB",
+    "name": "People the data describes",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-PUB"
+   },
+   {
+    "code": "SRO",
+    "name": "Senior responsible owner",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-SRO"
+   },
+   {
+    "code": "PDM",
+    "name": "Programme or project manager",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-PDM"
+   },
+   {
+    "code": "SVO",
+    "name": "Service or product owner",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-SVO"
+   },
+   {
+    "code": "ARC",
+    "name": "Design authority or solution architect",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-ARC"
+   },
+   {
+    "code": "MIG",
+    "name": "Data migration lead",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-MIG"
+   },
+   {
+    "code": "CML",
+    "name": "Commercial lead",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-CML"
+   },
+   {
+    "code": "PMO",
+    "name": "Programme office and assurance",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/together.html#role-PMO"
+   }
+  ],
+  "tool_categories": [
+   {
+    "id": "TL-CAT",
+    "name": "Data catalogue and metadata management",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-CAT"
+   },
+   {
+    "id": "TL-GLOS",
+    "name": "Business glossary and vocabularies",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-GLOS"
+   },
+   {
+    "id": "TL-DQ",
+    "name": "Data quality profiling, rules and monitoring",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-DQ"
+   },
+   {
+    "id": "TL-LIN",
+    "name": "Lineage and data observability",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-LIN"
+   },
+   {
+    "id": "TL-MDM",
+    "name": "Reference and master data management",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-MDM"
+   },
+   {
+    "id": "TL-POL",
+    "name": "Governance workflow, policy and access",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-POL"
+   },
+   {
+    "id": "TL-CONTRACT",
+    "name": "Data contracts and data products",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-CONTRACT"
+   },
+   {
+    "id": "TL-REC",
+    "name": "Records and content management",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-REC"
+   },
+   {
+    "id": "TL-AI",
+    "name": "AI assistants and search over metadata",
+    "url": "https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html#TL-AI"
+   }
+  ]
+ },
+ "related": [
+  {
+   "id": "dqc",
+   "name": "Public Sector Data Quality Commons",
+   "url": "https://cyberdudeuk.github.io/dq-commons/",
+   "status": "Community project",
+   "licence": "Code MIT; content Open Government Licence v3.0"
+  },
+  {
+   "id": "cat",
+   "name": "GitHub Repos Asset Catalogue",
+   "url": "https://cyberdudeuk.github.io/github-repos-asset-catalogue/",
+   "status": "Specialist evidence tool",
+   "licence": "Code MIT; content and data Open Government Licence v3.0"
+  }
+ ]
+}

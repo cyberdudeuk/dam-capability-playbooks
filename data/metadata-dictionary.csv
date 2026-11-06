@@ -1,0 +1,15 @@
+property,mem_slot,obligation,rule
+title,CataloguedResource.title,must,Plain English name; avoid acronyms and jargon
+alternativeTitle,CataloguedResource.alternativeTitle,optional,A short name to keep titles concise
+description,CataloguedResource.description,must,Describes the data; usage warnings go elsewhere
+identifier,CataloguedResource.identifier,should,Your own system's identifier or an opaque random one
+creator,CataloguedResource.creator,must,The organisation that created the data
+dateCreated,CataloguedResource.created,should,ISO 8601 date or date-time
+temporalCoverage,none in MEM (gap),listed,The period the data applies to
+conformsTo,none in MEM (gap),listed,The standard or schema the data follows
+accessRights,CataloguedResource.accessRights,should,"open, commercial or internal, with any handling caveat"
+securityClassification,CataloguedResource.securityClassification,listed,Sensitivity level
+licence,CataloguedResource.licence,should,OGL URL for open data; the agreement for restricted data
+mediaType,Distribution.mediaType,should,IANA media type
+expires,none in MEM (gap),listed,How long this version is valid
+supersededBy,none in MEM (gap),listed,The newer version that replaces this one

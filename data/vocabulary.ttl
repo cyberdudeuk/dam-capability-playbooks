@@ -1,0 +1,278 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcp: <https://cyberdudeuk.github.io/dam-capability-playbooks/vocab#> .
+
+dcp:scheme a skos:ConceptScheme ; dcterms:title "Data Asset Management (DAM) capability playbooks vocabulary"@en-GB ; dcterms:modified "2026-11-06" .
+
+dcp:data-asset a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data asset"@en-GB ;
+  skos:definition "One or more data sets plus, where relevant, the data services used to access them."@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government> .
+
+dcp:data-set a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data set"@en-GB ;
+  skos:definition "A structured collection of data selected and organised for a defined outcome or need. It can be a subset of a larger system."@en-GB ;
+  skos:altLabel "dataset"@en-GB ;
+  skos:broader dcp:data-asset ;
+  dcterms:source <https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government> .
+
+dcp:data-service a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data service"@en-GB ;
+  skos:definition "A controlled means of accessing one or more data sets, such as an API or secure access mechanism."@en-GB ;
+  skos:altLabel "API"@en-GB ;
+  skos:altLabel "access service"@en-GB ;
+  skos:broader dcp:data-asset ;
+  dcterms:source <https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government> .
+
+dcp:distribution a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Distribution"@en-GB ;
+  skos:definition "A specific representation of a data set, for example a CSV file or a feed."@en-GB ;
+  skos:altLabel "representation"@en-GB ;
+  skos:broader dcp:data-set ;
+  dcterms:source <https://co-cddo.github.io/ukgov-metadata-exchange-model/> .
+
+dcp:cda a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Critical data asset"@en-GB ;
+  skos:definition "A data asset shared across government where losing access could stop an organisation from fulfilling important functions. 'Essential shared data asset' is the older term it replaced."@en-GB ;
+  skos:altLabel "CDA"@en-GB ;
+  skos:altLabel "essential shared data asset"@en-GB ;
+  skos:altLabel "ESDA"@en-GB ;
+  skos:broader dcp:data-asset ;
+  dcterms:source <https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets> .
+
+dcp:provided a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Provided data"@en-GB ;
+  skos:definition "Data one organisation gives to another to support an essential process or purpose the receiver is responsible for."@en-GB ;
+  skos:broader dcp:cda ;
+  dcterms:source <https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets> .
+
+dcp:acquired a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Acquired data"@en-GB ;
+  skos:definition "Data one organisation obtains from another to support an essential process or purpose it is responsible for."@en-GB ;
+  skos:broader dcp:cda ;
+  dcterms:source <https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets> .
+
+dcp:purpose a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Purpose"@en-GB ;
+  skos:definition "One of the seven reasons a critical data asset matters, such as public service delivery or official statistics. Each asset supports at least one."@en-GB ;
+  skos:altLabel "the seven purposes"@en-GB ;
+  skos:broader dcp:cda ;
+  dcterms:source <https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets> .
+
+dcp:scope-tests a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Scope tests"@en-GB ;
+  skos:definition "The conditions an asset must meet to be in scope of the policy: classified OFFICIAL, critical, and within the provider's ownership accountabilities."@en-GB ;
+  skos:broader dcp:cda ;
+  dcterms:source <https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government> .
+
+dcp:metadata a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Metadata"@en-GB ;
+  skos:definition "Information that describes a data asset so it can be found, understood, validated, reused and shared."@en-GB ;
+  skos:altLabel "data about data"@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/publications/record-metadata-to-describe-critical-data-assets/recording-metadata-to-describe-critical-data-assets> .
+
+dcp:catalogue a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data catalogue"@en-GB ;
+  skos:definition "A managed collection of metadata records that helps people and systems find, understand and reuse data assets. It holds descriptions, not the data."@en-GB ;
+  skos:altLabel "catalog"@en-GB ;
+  skos:altLabel "metadata catalogue"@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government> .
+
+dcp:dcat a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "DCAT"@en-GB ;
+  skos:definition "The W3C vocabulary for describing data sets and data services in catalogues, so catalogues can be harvested and searched together."@en-GB ;
+  skos:altLabel "Data Catalog Vocabulary"@en-GB ;
+  skos:broader dcp:metadata ;
+  dcterms:source <https://www.w3.org/TR/vocab-dcat-3/> .
+
+dcp:mem a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Metadata Exchange Model"@en-GB ;
+  skos:definition "The UK cross-government model, based on DCAT, for the metadata exchanged about data assets."@en-GB ;
+  skos:altLabel "xGov MEM"@en-GB ;
+  skos:altLabel "MEM"@en-GB ;
+  skos:broader dcp:metadata ;
+  dcterms:source <https://co-cddo.github.io/ukgov-metadata-exchange-model/> .
+
+dcp:discoverability a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Discoverability Platform"@en-GB ;
+  skos:definition "The GDS service being scoped to link to departments' own catalogues and make critical data asset metadata discoverable across government."@en-GB ;
+  skos:altLabel "discovery service"@en-GB ;
+  skos:broader dcp:catalogue .
+
+dcp:return a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Return"@en-GB ;
+  skos:definition "An organisation's report of its in-scope assets and their metadata to GDS, assured by the department for its ALBs."@en-GB ;
+  skos:altLabel "CDA return"@en-GB ;
+  skos:altLabel "baseline return"@en-GB ;
+  skos:altLabel "annual return"@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government> .
+
+dcp:data-owner a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data owner"@en-GB ;
+  skos:definition "A senior leader accountable for the meaning, content, quality and management of a data asset."@en-GB ;
+  skos:broader dcp:role ;
+  dcterms:source <https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model> .
+
+dcp:iao a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Information asset owner"@en-GB ;
+  skos:definition "The role accountable to the SIRO for protecting the whole information asset. Related to, but not the same as, the data owner."@en-GB ;
+  skos:altLabel "IAO"@en-GB ;
+  skos:broader dcp:role ;
+  dcterms:source <https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model> .
+
+dcp:data-steward a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data steward"@en-GB ;
+  skos:definition "The role running an asset day to day: standards, access, quality processes and documentation."@en-GB ;
+  skos:broader dcp:role ;
+  dcterms:source <https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model> .
+
+dcp:data-custodian a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data custodian"@en-GB ;
+  skos:definition "The technical expert for the system holding the data: storage, access controls, auditable change and disposal."@en-GB ;
+  skos:broader dcp:role ;
+  dcterms:source <https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model> .
+
+dcp:role a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data role"@en-GB ;
+  skos:definition "A defined set of accountabilities for data. Records name roles, not people."@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model> .
+
+dcp:ownership-option a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Ownership option"@en-GB ;
+  skos:definition "The choice between keeping the IAO model, adopting the data ownership model, or a hybrid. Each must still meet the mandatory IAO actions."@en-GB ;
+  skos:altLabel "IAO model"@en-GB ;
+  skos:altLabel "hybrid model"@en-GB ;
+  skos:broader dcp:data-owner ;
+  dcterms:source <https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model> .
+
+dcp:recipe a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Recipe"@en-GB ;
+  skos:definition "One of the five repeatable governance activities: Mandate, Frame, Assign, Operate, Assure."@en-GB ;
+  skos:altLabel "governance recipe"@en-GB ;
+  skos:topConceptOf dcp:scheme .
+
+dcp:charter a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Governance charter"@en-GB ;
+  skos:definition "A one-page statement of a governance body's purpose, scope, authority and review cadence."@en-GB ;
+  skos:altLabel "charter"@en-GB ;
+  skos:broader dcp:recipe .
+
+dcp:decision-log a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Decision log"@en-GB ;
+  skos:definition "A running record of governance decisions: what, who, why, when and the review trigger."@en-GB ;
+  skos:broader dcp:recipe .
+
+dcp:exception a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Exception"@en-GB ;
+  skos:definition "A logged, time-bound deviation from policy with an owner and an expiry date. An exception without an expiry is an undocumented policy change."@en-GB ;
+  skos:altLabel "policy exception"@en-GB ;
+  skos:broader dcp:recipe .
+
+dcp:raci a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "RACI"@en-GB ;
+  skos:definition "Responsible, Accountable, Consulted, Informed. One accountable role per activity."@en-GB ;
+  skos:altLabel "decision rights"@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-action-plan-implementation-guide> .
+
+dcp:dqap a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data quality action plan"@en-GB ;
+  skos:definition "The plan every identified asset must have, or an equivalent mechanism, for managing its quality across seven steps."@en-GB ;
+  skos:altLabel "DQAP"@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government> .
+
+dcp:cde a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Critical data element"@en-GB ;
+  skos:definition "A data item whose quality drives the most important decisions made with the asset."@en-GB ;
+  skos:altLabel "CDE"@en-GB ;
+  skos:broader dcp:dqap ;
+  dcterms:source <https://cyberdudeuk.github.io/dq-commons/> .
+
+dcp:dimension a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data quality dimension"@en-GB ;
+  skos:definition "A measurable aspect of quality. The framework's six are completeness, uniqueness, consistency, timeliness, validity and accuracy."@en-GB ;
+  skos:altLabel "dimension"@en-GB ;
+  skos:broader dcp:dqap ;
+  dcterms:source <https://www.gov.uk/government/publications/the-government-data-quality-framework/the-government-data-quality-framework> .
+
+dcp:issues-framework a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Issues framework"@en-GB ;
+  skos:definition "The GDS method that scores importance times impact to set targets, and uses the band below target to set priority and time to resolve."@en-GB ;
+  skos:altLabel "data quality issues framework"@en-GB ;
+  skos:broader dcp:dqap ;
+  dcterms:source <https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-issues-framework> .
+
+dcp:dq-statement a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data quality statement"@en-GB ;
+  skos:definition "A plain-English summary of an asset's quality, known issues and what it should not be used for."@en-GB ;
+  skos:altLabel "quality statement"@en-GB ;
+  skos:broader dcp:dqap ;
+  dcterms:source <https://cyberdudeuk.github.io/dq-commons/> .
+
+dcp:dqv a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data Quality Vocabulary"@en-GB ;
+  skos:definition "The W3C vocabulary for publishing quality measurements with a catalogue record."@en-GB ;
+  skos:altLabel "DQV"@en-GB ;
+  skos:broader dcp:metadata ;
+  dcterms:source <https://www.w3.org/TR/vocab-dqv/> .
+
+dcp:data-contract a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data contract"@en-GB ;
+  skos:definition "Quality rules and promises written down as a file that suppliers and users share."@en-GB ;
+  skos:altLabel "ODCS"@en-GB ;
+  skos:broader dcp:dqap ;
+  dcterms:source <https://bitol-io.github.io/open-data-contract-standard/latest/> .
+
+dcp:maturity a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Data maturity"@en-GB ;
+  skos:definition "An organisation's capability around data, self-assessed with the government framework."@en-GB ;
+  skos:altLabel "DMA"@en-GB ;
+  skos:topConceptOf dcp:scheme ;
+  dcterms:source <https://www.gov.uk/government/collections/data-maturity-assessment-for-government> .
+
+dcp:coordinator a skos:Concept ;
+  skos:inScheme dcp:scheme ;
+  skos:prefLabel "Lead policy coordinator"@en-GB ;
+  skos:definition "The person each organisation nominates to coordinate DAM Policy adoption and the return, and to sit on the Working Group."@en-GB ;
+  skos:altLabel "policy coordinator"@en-GB ;
+  skos:broader dcp:role .
