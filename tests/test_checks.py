@@ -494,6 +494,15 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'compass' / 'index.html', 'dam.html#requirements', 'dam.html#requirementz', count=99)
         self.fails('c35_estate_compass')
 
+    def test_c35_compass_stores_raw_form_value(self):
+        # CodeQL js/xss-through-dom (PR 11): the change handler must not store e.target.value as it is
+        edit(self.s / 'compass' / 'index.html', 'const v=q&&opt(q.id,e.target.value);if(!v)return;ans[q.id]=v;', 'ans[e.target.name]=e.target.value;')
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_escape_misses_apostrophe(self):
+        edit(self.s / 'compass' / 'index.html', ",\"'\":'&#39;'", '')
+        self.fails('c35_estate_compass')
+
     def test_c35_compass_without_colophon(self):
         edit(self.s / 'compass' / 'index.html', 'aria-label="QR code linking to', 'aria-label="Picture of')
         self.fails('c35_estate_compass')

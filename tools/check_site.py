@@ -836,6 +836,13 @@ def c35_estate_compass(site, repo, pages):
                        ('aria-label="Barcode of build identifier', 'barcode colophon'), ('aria-label="QR code linking to', 'QR colophon'), ('contact form', 'contact form')):
         if need not in html:
             errs.append(f'compass: no {what}')
+    # CodeQL js/xss-through-dom on PR 11: values read from the page must be matched to the data, never stored or rendered as they are
+    for bad, why in ((r'=\s*e\.target\.value\b', 'stores a form value as it is'), (r'=\s*b\.dataset\.route\b', 'stores a data attribute as it is'),
+                     (r"x\.id===\$\('#area'\)\.value", 'looks up the area by the text of the select')):
+        if re.search(bad, html):
+            errs.append(f'compass: script {why}; match it to the compass data first')
+    if '"\'":\'&#39;\'' not in html:
+        errs.append('compass: the escape function does not escape apostrophes')
     m = re.search(r'<script type="application/json" id="data">(.*?)</script>', html, re.S)
     if not m:
         return errs + ['compass: no data']
