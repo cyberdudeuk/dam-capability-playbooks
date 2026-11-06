@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__: __SUBTITLE__</title>
-<meta name="description" content="Not sure where to start? Answer four questions and the compass suggests a route across the DAM capability playbooks, the Data Quality Commons, the GitHub Repos Asset Catalogue and DCAT-UK AP, with why each step matters and what you get.">
+<meta name="description" content="Not sure where to start? Answer four questions and the compass suggests a route across the DAM capability playbooks, the Data Quality Commons, the GitHub Repos Asset Catalogue and DCAT-AP-UK, with why each step matters and what you get.">
 <link rel="canonical" href="__URL__">
 <meta name="artefact:version" content="__VERSION__">
 <meta name="artefact:as-of" content="__ASOF__">
@@ -190,7 +190,7 @@ __SPRITE__
 
 <section role="tabpanel" id="lineage" aria-labelledby="tab-lineage" tabindex="0" hidden>
 <h2><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>Follow a data management area</h2>
-<p>Pick a data management area from the DAMA wheel to follow it across the portals: what the DAM Policy asks, how the Commons helps you do it, what public code shows, and how DCAT-UK AP describes it. The Commons, catalogue and DCAT-UK AP mappings are this compass's suggestions; the DAM capabilities come from the DAM playbooks' capability model.</p>
+<p>Pick a data management area from the DAMA wheel to follow it across the portals: what the DAM Policy asks, how the Commons helps you do it, what public code shows, and how DCAT-AP-UK describes it. The Commons, catalogue and DCAT-AP-UK mappings are this compass's suggestions; the DAM capabilities come from the DAM playbooks' capability model.</p>
 <label for="area"><strong>Data management area</strong></label><br>
 <select id="area"></select>
 <p id="areadesc" aria-live="polite"></p>
@@ -248,7 +248,7 @@ function render(){
  const pre=used.map(p=>`<div class="tip" style="${cv(p)}"><h3>${ic(P[p].icon)}${esc(P[p].short)}</h3><p>${esc(P[p].needs)}</p><p class="hint">${esc(P[p].binding)}.</p></div>`).join('');
  const roleq=D.questions.find(x=>x.id==='role').options.find(x=>x.id===ans.role);
  let tips='';
- if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each portal</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li><li><a href="${esc(url('ap','roles.html'))}">DCAT-UK AP: routes for your role</a></li></ul></div>`;}
+ if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each portal</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li><li><a href="${esc(url('ap','roles.html'))}">DCAT-AP-UK: routes for your role</a></li></ul></div>`;}
  if(ans.skill==='new')tips+=`<div class="tip" style="${cv('cat')}"><h3>${ic('git-branch')}New to GitHub?</h3><p>You don't need to code. Read <a href="${esc(url('cat','#home'))}">GitHub in two minutes</a> in the catalogue, or <a href="${esc(url('dqc','github.html'))}">the Commons' plain-English introduction</a>.</p></div>`;
  if(ans.skill==='daily')tips+=`<div class="tip" style="${cv('dqc')}"><h3>${ic('code-xml')}Working in code?</h3><p>The Commons has a toolkit you can run and an API (<a href="${esc(url('dqc','reuse.html'))}">use the Commons your way</a>). The DAM playbooks publish open data and a reference server for AI assistants (<a href="${esc(url('dam','reuse.html'))}">use and reuse</a>).</p></div>`;
  if(ans.scope==='mandatory'&&steps[0].p!=='dam')tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('landmark')}Your organisation is covered by the DAM Policy</h3><p>If this work touches a critical data asset, read <a href="${esc(url('dam','dam.html#requirements'))}">what the policy requires</a> before you finish, so the work counts towards it.</p></div>`;

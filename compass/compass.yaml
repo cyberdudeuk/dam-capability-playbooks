@@ -4,7 +4,7 @@
 meta:
   title: Estate compass
   subtitle: Find your bearing across four portals for data in the public sector
-  version: 1.1.0
+  version: 1.1.1
   as_of: '2026-11-06'
   url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
   host_note: Hosted in the DAM capability playbooks repository for now, but it belongs to none of the four portals and favours none.
@@ -109,8 +109,8 @@ portals:
   metaphor: The ground
   metaphor_line: The description. Nothing can be found, governed or improved until it is described the same way everywhere.
   icon: layers
-  name: DCAT-UK Application Profile
-  short: DCAT-UK AP
+  name: DCAT Application Profile for the UK
+  short: DCAT-AP-UK
   data_as_of: '2026-11-06'
   url: https://cyberdudeuk.github.io/dcat-uk-ap/
   question: How do we describe it so others can find it?
@@ -139,7 +139,7 @@ precedence:
 - {icon: landmark, title: Obligation before practice, text: "If your organisation is covered by the DAM Policy, read what it asks first. It sets the bar, the deadline and who is accountable, so the work you do next counts towards it."}
 - {icon: search, title: Look before you build, text: "Before commissioning, buying or building, check what already exists in public code. Someone may have built it, bought it or hit the same problem."}
 - {icon: wrench, title: Practice to deliver, text: "Use the Commons' tools and methods to do the work: check data, score issues, compare tools and learn from peers."}
-- {icon: layers, title: Describe it once, the same way, text: "Record what you have to DCAT-UK AP, so catalogues, central discovery and returns all read the same record. Check it before you publish."}
+- {icon: layers, title: Describe it once, the same way, text: "Record what you have to DCAT-AP-UK, so catalogues, central discovery and returns all read the same record. Check it before you publish."}
 - {icon: refresh-cw, title: Back to the policy to report and sustain, text: "Close the loop in the DAM playbooks: record what changed, report it and keep it going through the yearly cycle."}
 - {icon: info, title: The exception, text: "Purely technical or discovery questions (who builds what, which API exists) start in the catalogue, and may never need the other two."}
 
@@ -237,7 +237,7 @@ routes:
     - {p: cat, title: API catalogue, path: '#apis', ask: "Is there an API you can call instead?", why: "An API keeps one source of truth.", gets: "Government APIs you can reuse."}
     - {p: dam, title: "Is it a critical data asset?", path: cataloguing.html#method, ask: "Will your service hold data the policy covers?", why: "Critical assets need an owner and a record.", gets: "A quick test of scope.", scope: policy}
     - {p: dqc, title: Describe the data once, path: weaver.html, ask: "How do you describe it for every catalogue that needs it?", why: "Describe once, publish everywhere.", gets: "One record, output in several metadata standards."}
-    - {p: ap, title: Check it conforms, path: validate.html, ask: "Will central discovery be able to harvest it?", why: "A record that conforms can be found across catalogues.", gets: "A check against DCAT-UK AP, in your browser."}
+    - {p: ap, title: Check it conforms, path: validate.html, ask: "Will central discovery be able to harvest it?", why: "A record that conforms can be found across catalogues.", gets: "A check against DCAT-AP-UK, in your browser."}
   legacy:
     title: Leave legacy behind
     outcome: A costed exit plan with data quality gates
@@ -299,6 +299,6 @@ links_today:
 - [dqc, dam, "Continue in a sister portal on 13 pages; wheel areas and roles link to the same area and role here; a cross-reference manifest (from Commons 2.10.0)"]
 - [cat, dam, "README Related portals section (merged 5 November 2026); links inside the page are roadmap item RM-27"]
 - [cat, dqc, "README Related portals section (merged 5 November 2026); links inside the page are roadmap item RM-27"]
-- [ap, dam, "Estate page and xref.json; the critical data asset rules cite the DAM Policy (from DCAT-UK AP 1.0.0-rc.1)"]
-- [ap, dqc, "Estate page; records link quality reports through a quality annotation (from DCAT-UK AP 1.0.0-rc.1)"]
-- [ap, cat, "Estate page; the organisations list is reused from the catalogue (from DCAT-UK AP 1.0.0-rc.1)"]
+- [ap, dam, "Estate page and xref.json; the critical data asset rules cite the DAM Policy (from DCAT-AP-UK 1.0.0-rc.1)"]
+- [ap, dqc, "Estate page; records link quality reports through a quality annotation (from DCAT-AP-UK 1.0.0-rc.1)"]
+- [ap, cat, "Estate page; the organisations list is reused from the catalogue (from DCAT-AP-UK 1.0.0-rc.1)"]
