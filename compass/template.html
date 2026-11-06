@@ -219,8 +219,9 @@ const D=JSON.parse(document.getElementById('data').textContent),P={};D.portals.f
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 /* Values read from the page (radio values, data attributes, the address) are never used as they are: each is matched to the compass data and the data's own value is used (CodeQL js/xss-through-dom). */
 const opt=(qid,v)=>{const q=D.questions.find(x=>x.id===qid);const o=q&&q.options.find(x=>x.id===v);return o?o.id:undefined;};
-const ic=(n,cls)=>`<svg class="i${cls?' '+cls:''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
-const cv=p=>`--c:var(--${p});--cbg:var(--${p}-bg)`;
+/* The compass data is read from the page (a JSON script element), so every value from it is escaped before it reaches HTML, including icon names and portal ids. */
+const ic=(n,cls)=>`<svg class="i${cls?' '+esc(cls):''}" aria-hidden="true"><use href="#i-${esc(n)}"/></svg>`;
+const cv=p=>`--c:var(--${esc(p)});--cbg:var(--${esc(p)}-bg)`;
 const url=(p,path)=>P[p].url+path;
 /* tabs */
 const tabs=[...document.querySelectorAll('[role=tab]')];
@@ -228,7 +229,7 @@ function sel(t,focus){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selec
 tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();const nt=tabs[(i+n+tabs.length)%tabs.length];sel(nt,true);syncHash();}});});
 /* wayfinder */
 const ans={};
-$('#wayfinder').innerHTML=D.questions.map((q,qi)=>`<fieldset><legend><span class="num" aria-hidden="true">${qi+1}</span>${ic(q.icon)}${esc(q.ask)}</legend><p class="hint">${esc(q.help)}</p><div class="opts">`+q.options.map(o=>`<label><input type="radio" name="${q.id}" value="${o.id}"> <span>${esc(o.label)}</span></label>`).join('')+'</div></fieldset>').join('');
+$('#wayfinder').innerHTML=D.questions.map((q,qi)=>`<fieldset><legend><span class="num" aria-hidden="true">${qi+1}</span>${ic(q.icon)}${esc(q.ask)}</legend><p class="hint">${esc(q.help)}</p><div class="opts">`+q.options.map(o=>`<label><input type="radio" name="${esc(q.id)}" value="${esc(o.id)}"> <span>${esc(o.label)}</span></label>`).join('')+'</div></fieldset>').join('');
 const ROT={N:0,E:90,S:180,W:270};
 function needle(p){const n=document.getElementById('needle');if(!n)return;const deg=p?ROT[P[p].bearing]:45;n.style.transform=`rotate(${deg}deg)`;
  $('#bearing-now').textContent=p?`Bearing: ${P[p].bearing_name}. Start in ${P[p].short}`:'Answer the questions to take a bearing';}
@@ -259,7 +260,7 @@ function trail(steps){const n=steps.length,W=Math.max(760,150*n+240),H=290,lanes
  lanes.forEach(p=>{s+=`<rect x="0" y="${ly(p)-26}" width="${W}" height="52" fill="var(--${p}-bg)"/><rect x="0" y="${ly(p)-26}" width="6" height="52" fill="var(--${p})"/><text x="14" y="${ly(p)+5}" font-size="13" font-weight="700">${esc(P[p].short)}</text>`;});
  const d=steps.map((st,i)=>`${i?'L':'M'}${x(i)} ${ly(st.p)}`).join(' ');
  s+=`<path d="${d}" fill="none" stroke="var(--trail)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>`;
- steps.forEach((st,i)=>{s+=`<g><circle cx="${x(i)}" cy="${ly(st.p)}" r="19" fill="var(--card)" stroke="var(--${st.p})" stroke-width="3"/><svg x="${x(i)-10}" y="${ly(st.p)-10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--${st.p})" aria-hidden="true">${ic(P[st.p].icon).replace(/<svg[^>]*>|<\/svg>/g,'')}</svg><text x="${x(i)}" y="${ly(st.p)-25}" text-anchor="middle" font-size="12" font-weight="700">${i+1}</text></g>`;});
+ steps.forEach((st,i)=>{s+=`<g><circle cx="${x(i)}" cy="${ly(st.p)}" r="19" fill="var(--card)" stroke="var(--${esc(st.p)})" stroke-width="3"/><svg x="${x(i)-10}" y="${ly(st.p)-10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--${esc(st.p)})" aria-hidden="true">${ic(P[st.p].icon).replace(/<svg[^>]*>|<\/svg>/g,'')}</svg><text x="${x(i)}" y="${ly(st.p)-25}" text-anchor="middle" font-size="12" font-weight="700">${i+1}</text></g>`;});
  s+=`<text x="${x(n-1)}" y="${H-8}" text-anchor="middle" font-size="12">Destination</text></svg>`;return s;}
 $('#wayfinder').addEventListener('change',e=>{const q=D.questions.find(x=>x.id===e.target.name);const v=q&&opt(q.id,e.target.value);if(!v)return;ans[q.id]=v;render();syncHash();});
 /* hash: tab and answers */
@@ -286,7 +287,7 @@ document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',
 /* when */
 $('#whencards').innerHTML=D.portals.map(p=>{const w=D.when[p.id];return `<article class="wc" style="${cv(p.id)}"><h3>${ic(p.icon)}${esc(p.name)}</h3><p class="yes">${ic('circle-check')}Go there when</p><ul>${w.use.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="no">${ic('info')}You can skip it when</p><ul>${w.skip.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article>`;}).join('');
 /* lineage */
-$('#area').innerHTML=D.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+$('#area').innerHTML=D.areas.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');
 function area(){const a=D.areas[$('#area').selectedIndex]||D.areas[0];$('#areadesc').innerHTML=`<strong>${esc(a.name)}:</strong> ${esc(a.desc)} <span class="hint">Records management counterpart: ${esc(a.im)}</span>`;
  const col=(p,title,items,empty)=>`<section class="col" style="${cv(p)}"><h3 class="pn">${ic(P[p].icon)}${esc(P[p].short)}: ${esc(title)}</h3>${items.length?'<ul>'+items.map(([t,u])=>`<li><a href="${esc(u)}">${esc(t)}</a></li>`).join('')+'</ul>':`<p class="gap">${esc(empty)}</p>`}</section>`;
  $('#lin').innerHTML=col('dam','what the policy asks',a.dam,'')+col('dqc','do the work',a.dq,'No dedicated page yet.')+col('cat','evidence in public code',a.cat,'')+col('ap','how to describe it',a.ap,'No dedicated page.');}
