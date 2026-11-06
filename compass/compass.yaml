@@ -1,13 +1,13 @@
-# Estate compass: one neutral page that orients people across three distinct portals.
+# Estate compass: one neutral page that orients people across four distinct portals.
 # Source for compass/index.html, built by tools/compass.py with the DAM playbooks build. Edit here, never the built page.
 # Every fact about a portal is that portal's own (README, theory of change or personas, read 5 November 2026). Links only; no copied text.
 meta:
   title: Estate compass
-  subtitle: Find your bearing across three portals for data in the public sector
-  version: 1.0.0
-  as_of: '2026-11-05'
+  subtitle: Find your bearing across four portals for data in the public sector
+  version: 1.1.0
+  as_of: '2026-11-06'
   url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
-  host_note: Hosted in the DAM capability playbooks repository for now, but it belongs to none of the three portals and favours none.
+  host_note: Hosted in the DAM capability playbooks repository for now, but it belongs to none of the four portals and favours none.
   contact: https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html
 
 portals:
@@ -103,11 +103,43 @@ portals:
   - Reusable APIs and components, with who looks after them
   start: {title: Welcome, path: '#home'}
 
+- id: ap
+  bearing: S
+  bearing_name: South
+  metaphor: The ground
+  metaphor_line: The description. Nothing can be found, governed or improved until it is described the same way everywhere.
+  icon: layers
+  name: DCAT-UK Application Profile
+  short: DCAT-UK AP
+  data_as_of: '2026-11-06'
+  url: https://cyberdudeuk.github.io/dcat-uk-ap/
+  question: How do we describe it so others can find it?
+  purpose: A proposed UK application profile of DCAT 3, aligned with DCAT-AP 3.0.1, that evolves the UK Cross-Government Metadata Exchange Model (xGov MEM) and resolves its backlog.
+  mission: Every catalogue describes UK public sector data the same way, so it can be found, judged and shared across catalogues and the National Data Library.
+  outcomes:
+  - Records that harvest into central discovery services without rework
+  - Critical data asset records that the DAM return can be built from
+  - xGov MEM records converted, not rewritten
+  for_whom: Catalogue managers, data owners and stewards, engineers building harvesters, suppliers of catalogue software, and leaders deciding on adoption
+  owner_model: Proposed by the author of the xGov MEM for review by the Metadata Implementation Working Group; an owning team is still needed
+  binding: Proposed, not endorsed. The xGov MEM remains the endorsed model until the Data Standards Authority decides
+  licence: Content and profile Open Government Licence v3.0; code MIT
+  needs: A web browser. The record builder and validator run in the browser, with nothing uploaded.
+  layout: The profile, tools, what changed, strategy, roles, knowledge, downloads and governance
+  stages: [The profile, Build a record, Check records, What's changed, Downloads]
+  gets:
+  - Every class and property with its obligation, definition and lineage from the xGov MEM
+  - A record builder and validator, including conversion from xGov MEM records
+  - SHACL shapes, JSON Schema, JSON-LD context and SKOS codelists
+  - How every xGov MEM backlog item was dealt with
+  start: {title: Home, path: index.html}
+
 # The order of precedence when a journey crosses portals
 precedence:
 - {icon: landmark, title: Obligation before practice, text: "If your organisation is covered by the DAM Policy, read what it asks first. It sets the bar, the deadline and who is accountable, so the work you do next counts towards it."}
 - {icon: search, title: Look before you build, text: "Before commissioning, buying or building, check what already exists in public code. Someone may have built it, bought it or hit the same problem."}
 - {icon: wrench, title: Practice to deliver, text: "Use the Commons' tools and methods to do the work: check data, score issues, compare tools and learn from peers."}
+- {icon: layers, title: Describe it once, the same way, text: "Record what you have to DCAT-UK AP, so catalogues, central discovery and returns all read the same record. Check it before you publish."}
 - {icon: refresh-cw, title: Back to the policy to report and sustain, text: "Close the loop in the DAM playbooks: record what changed, report it and keep it going through the yearly cycle."}
 - {icon: info, title: The exception, text: "Purely technical or discovery questions (who builds what, which API exists) start in the catalogue, and may never need the other two."}
 
@@ -123,6 +155,7 @@ questions:
   - {id: reuse, label: "We're about to build something and want to reuse what exists"}
   - {id: legacy, label: "We're modernising a system or leaving legacy behind"}
   - {id: estate, label: "I need to understand an organisation's data or code estate"}
+  - {id: describe, label: "We need to describe our data so others can find, judge and share it"}
   - {id: learn, label: "I want to learn, or build my team's skills"}
 - id: role
   icon: users-round
@@ -163,9 +196,20 @@ routes:
     - {p: dam, title: What the DAM Policy requires, path: dam.html#requirements, ask: "Do you know which requirements are must and which are should?", why: "The policy sets the bar and the dates.", gets: "The requirements, their strength and who is accountable."}
     - {p: dam, title: Your role's route, path: role, ask: "What is your part in this?", why: "Each role has different duties.", gets: "Your steps and learning modules, in order."}
     - {p: dam, title: "Cataloguing: find and record critical assets", path: cataloguing.html#method, ask: "Do you know which of your data assets are critical?", why: "The return is built from catalogue records.", gets: "A method to find, designate and describe them."}
+    - {p: ap, title: Record critical data assets to one profile, path: class-dataset.html#cda, ask: "Does each record carry what the policy's metadata guidance asks for?", why: "Returns built from catalogue records need consistent records.", gets: "The properties that become mandatory for a critical data asset."}
     - {p: cat, title: Your organisation's profile, path: '#orgs', ask: "What does your organisation already run?", why: "Catalogue platforms and data tools may already be in your code.", gets: "Evidence to build on, not start from scratch."}
     - {p: dqc, title: Size a quality baseline, path: baseline.html, ask: "How much quality work can you do by the deadline?", why: "A proportionate baseline beats an impossible one.", gets: "A baseline sized to your assets and dates."}
     - {p: dam, title: The yearly cycle, path: together.html#cycle, ask: "How will you keep it going after the first return?", why: "The policy expects an annual review.", gets: "One cycle for governance, cataloguing and quality."}
+  describe:
+    title: Describe data so others can find it
+    outcome: Records that conform to one profile, harvestable by central discovery and ready for the DAM return
+    steps:
+    - {p: ap, title: The profile at a glance, path: profile.html, ask: "Which properties must every record have?", why: "One profile means one meaning across every catalogue.", gets: "Classes, properties and obligations, filterable."}
+    - {p: dam, title: "Cataloguing: find and record critical assets", path: cataloguing.html#method, ask: "Which of your assets are critical under the policy?", why: "Critical data assets need more in their records.", gets: "A method to find, designate and describe them.", scope: policy}
+    - {p: ap, title: Build a record, path: builder.html, ask: "Can you describe one asset completely?", why: "A worked record shows the gaps in your catalogue.", gets: "A record in JSON, JSON-LD or Turtle, checked as you type."}
+    - {p: cat, title: Catalogue platforms in code, path: '#standards', ask: "Which catalogue tools and standards do peers already use?", why: "Reuse an implementation rather than build one.", gets: "Catalogue platforms and metadata standards seen in public code."}
+    - {p: dqc, title: Describe once in every standard, path: weaver.html, ask: "Do your records also need other standards, such as schema.org?", why: "Describe once, publish everywhere.", gets: "One record output in several metadata standards."}
+    - {p: ap, title: Check records, path: validate.html, ask: "Do your exported records conform?", why: "Harvesters reject records that do not.", gets: "Errors and recommendations for each record, and xGov MEM records converted."}
   quality:
     title: Fix or prove data quality
     outcome: A scored action plan, tied to the policy step it meets where the policy applies
@@ -193,6 +237,7 @@ routes:
     - {p: cat, title: API catalogue, path: '#apis', ask: "Is there an API you can call instead?", why: "An API keeps one source of truth.", gets: "Government APIs you can reuse."}
     - {p: dam, title: "Is it a critical data asset?", path: cataloguing.html#method, ask: "Will your service hold data the policy covers?", why: "Critical assets need an owner and a record.", gets: "A quick test of scope.", scope: policy}
     - {p: dqc, title: Describe the data once, path: weaver.html, ask: "How do you describe it for every catalogue that needs it?", why: "Describe once, publish everywhere.", gets: "One record, output in several metadata standards."}
+    - {p: ap, title: Check it conforms, path: validate.html, ask: "Will central discovery be able to harvest it?", why: "A record that conforms can be found across catalogues.", gets: "A check against DCAT-UK AP, in your browser."}
   legacy:
     title: Leave legacy behind
     outcome: A costed exit plan with data quality gates
@@ -228,6 +273,7 @@ scenarios:
 - {icon: search, who: Service owner, situation: "We're about to commission an appointment booking service.", start: cat, then: [dam, dqc], route: reuse, why: "Someone may have built it already. If your service will hold critical data, the DAM playbooks say what to record."}
 - {icon: construction, who: Programme lead, situation: "We're replacing a 20-year-old case management system.", start: cat, then: [dam, dqc], route: legacy, why: "See the legacy first, plan the exit from the critical assets it holds, then set data quality gates for the migration."}
 - {icon: target, who: Chief data officer, situation: "The board wants to know how good our data management is compared with peers.", start: cat, then: [dam, dqc], route: estate, why: "Evidence from code, then the policy's capability model, then data quality maturity in depth."}
+- {icon: layers, who: Catalogue manager, situation: "Central discovery wants our records, and we used the xGov MEM.", start: ap, then: [dam, cat, dqc], route: describe, why: "See what changed and convert your records first, then check what the policy adds for critical assets, what peers run, and how to publish in other standards."}
 - {icon: graduation-cap, who: New data steward, situation: "I've just been given responsibility for three datasets.", start: dam, then: [dqc, cat], route: learn, why: "Learn what the role means under the policy, then build data quality skills, then get comfortable with GitHub."}
 
 # When you need each portal, and when you don't
@@ -242,6 +288,10 @@ when:
     use: [You are about to build or commission something, You want to see what any public body publishes, You need evidence of tools, standards or legacy in use, You are new to GitHub and want plain English]
     skip: [You need guidance on what to do, You need to run checks on your data]
 
+  ap:
+    use: [You keep a data catalogue or export records to central services, You need to describe a critical data asset, You build a harvester or catalogue software, You are converting records from the xGov MEM]
+    skip: [You need to know what the policy makes mandatory for your organisation, You need to measure or improve the data itself]
+
 links_today:
 - [dam, dqc, "About 6 links in the text, plus Related elsewhere on 7 pages (from 1.8.1)"]
 - [dam, cat, "Related elsewhere on 6 pages (from 1.8.1)"]
@@ -249,3 +299,6 @@ links_today:
 - [dqc, dam, "Continue in a sister portal on 13 pages; wheel areas and roles link to the same area and role here; a cross-reference manifest (from Commons 2.10.0)"]
 - [cat, dam, "README Related portals section (merged 5 November 2026); links inside the page are roadmap item RM-27"]
 - [cat, dqc, "README Related portals section (merged 5 November 2026); links inside the page are roadmap item RM-27"]
+- [ap, dam, "Estate page and xref.json; the critical data asset rules cite the DAM Policy (from DCAT-UK AP 1.0.0-rc.1)"]
+- [ap, dqc, "Estate page; records link quality reports through a quality annotation (from DCAT-UK AP 1.0.0-rc.1)"]
+- [ap, cat, "Estate page; the organisations list is reused from the catalogue (from DCAT-UK AP 1.0.0-rc.1)"]

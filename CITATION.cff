@@ -4,8 +4,8 @@ title: Data Asset Management (DAM) capability playbooks
 type: software
 authors:
   - name: DAM capability playbooks contributors
-version: 1.10.0
-date-released: 2026-11-05
+version: 1.10.1
+date-released: 2026-11-06
 license: MIT
 repository-code: https://github.com/cyberdudeuk/dam-capability-playbooks
 url: https://cyberdudeuk.github.io/dam-capability-playbooks/

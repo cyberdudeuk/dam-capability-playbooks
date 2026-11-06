@@ -820,7 +820,7 @@ def c34_sister_portals(site, repo, pages):
 
 
 def c35_estate_compass(site, repo, pages):
-    """Rule (version 1.8.2): the estate compass is self-contained and cannot call the network, links only to the three portals, every link into this portal lands on a page and anchor that exist, every situation has a route across at least two portals, and it carries the usual footer."""
+    """Rule (version 1.8.2): the estate compass is self-contained and cannot call the network, links only to the four portals, every link into this portal lands on a page and anchor that exist, every situation has a route across at least two portals, and it carries the usual footer."""
     import yaml
     errs = []
     f = site / 'compass' / 'index.html'
@@ -846,14 +846,14 @@ def c35_estate_compass(site, repo, pages):
             errs.append(f'compass: route {r["title"]} stays in one portal')
         urls += [bases[s['p']] + s['path'] for s in r['steps'] if s['path'] != 'role']
     urls += [bases['dam'] + o['dam'] for o in d['questions'][1]['options']]
-    urls += [u for a in d['areas'] for k in ('dam', 'dq', 'cat') for _, u in a[k]]
+    urls += [u for a in d['areas'] for k in ('dam', 'dq', 'cat', 'ap') for _, u in a.get(k, [])]
     urls += [bases[p['id']] + p['start']['path'] for p in d['portals']]
     for o in d['questions'][0]['options']:
         if o['id'] not in d['routes']:
             errs.append(f'compass: situation {o["id"]} has no route')
     for u in sorted(set(urls)):
         if not any(u.startswith(b) for b in bases.values()):
-            errs.append(f'compass: link {u} goes outside the three portals'); continue
+            errs.append(f'compass: link {u} goes outside the four portals'); continue
         if u.startswith(bases['dam']):
             page, _, frag = u[len(bases['dam']):].partition('#')
             page = page or 'index.html'
