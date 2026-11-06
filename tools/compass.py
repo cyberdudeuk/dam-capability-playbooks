@@ -1,4 +1,4 @@
-"""Estate compass (version 1.0): a neutral page that orients people across three distinct portals.
+"""Estate compass (version 1.1): a neutral page that orients people across four distinct portals.
 
 Built from compass/compass.yaml and compass/template.html into site/compass/index.html by the DAM playbooks build,
 with the DAMA areas and capabilities taken from this repository's own content. Checked by C-35 and by the browser checks.
@@ -37,6 +37,19 @@ CATMAP = {'DM-GOV': [('Data and metadata management', 'dam'), ('How well code is
           'DM-META': [('Data catalogues and standards', 'standards'), ('Knowledge layer', 'knowledge')],
           'DM-DQ': [('Data tools and suppliers', 'suppliers')]}
 
+# DCAT-UK AP pages for each DAMA knowledge area (version 1.1; this compass's own mapping, labelled so on the page)
+APMAP = {'DM-GOV': [('Responsible roles, not names', 'class-attribution.html'), ('How the profile is governed and changed', 'governance.html#change')],
+         'DM-ARC': [('How the classes connect', 'profile.html#model'), ('Where the profile sits in a pan-UK infrastructure', 'strategy.html#layers')],
+         'DM-MOD': [('Every property', 'properties.html'), ('Shapes, schema and data dictionary', 'downloads.html#files')],
+         'DM-OPS': [],
+         'DM-SEC': [('Security classification', 'properties.html#p-securityClassification'), ('Personal data', 'properties.html#p-personalData')],
+         'DM-INT': [('Alignment with DCAT-AP', 'changes.html#dcatap'), ('Downloads and API', 'downloads.html')],
+         'DM-DOC': [('Documentation property', 'properties.html#p-documentation')],
+         'DM-REF': [('Codelists', 'codelists.html'), ('GOV.UK organisations', 'codelists.html#orgs')],
+         'DM-BI': [],
+         'DM-META': [('The profile at a glance', 'profile.html'), ('Build a record', 'builder.html'), ('Check records', 'validate.html')],
+         'DM-DQ': [('Data quality annotation', 'properties.html#p-qualityAnnotation')]}
+
 
 def load():
     return yaml.safe_load((SRC / 'compass.yaml').read_text(encoding='utf-8'))
@@ -45,8 +58,8 @@ def load():
 def validate(c, d):
     errs = []
     P = {p['id']: p for p in c['portals']}
-    if {p['bearing'] for p in c['portals']} != {'N', 'E', 'W'}:
-        errs.append('compass: portals must take the bearings N, E and W')
+    if {p['bearing'] for p in c['portals']} != {'N', 'E', 'W', 'S'}:
+        errs.append('compass: portals must take the bearings N, E, W and S')
     sit = [o['id'] for o in c['questions'][0]['options']]
     for s in sit:
         if s not in c['routes']:
@@ -64,7 +77,7 @@ def validate(c, d):
         if x['route'] not in c['routes'] or x['start'] not in P or any(p not in P for p in x['then']):
             errs.append(f'compass: example "{x["situation"][:40]}" refers to an unknown route or portal')
     areas = {a['id'] for a in d['dama']['areas']}
-    if set(DQMAP) != areas or set(CATMAP) != areas:
+    if set(DQMAP) != areas or set(CATMAP) != areas or set(APMAP) != areas:
         errs.append('compass: the area mappings must cover every DAMA area in the content')
     blob = json.dumps(c)
     if re.search(r'[\w.+-]+' + chr(64) + r'[\w-]+\.[\w.]+', blob):
@@ -84,12 +97,13 @@ def areas(c, d):
         out.append({'id': a['id'], 'name': a['name'], 'desc': a['desc'], 'im': a['im'],
                     'dam': [['DAMA wheel: ' + a['name'], P['dam']['url'] + 'capability-model.html#' + a['id'].lower()]] + [[f'{i} {n}', P['dam']['url'] + 'capability-model.html#' + i] for i, n in caps],
                     'dq': [[t, P['dqc']['url'] + u] for t, u in DQMAP[a['id']]],
-                    'cat': [[t, P['cat']['url'] + '#' + h] for t, h in CATMAP[a['id']]] + [['Data management wheel', P['cat']['url'] + '#dama']]})
+                    'cat': [[t, P['cat']['url'] + '#' + h] for t, h in CATMAP[a['id']]] + [['Data management wheel', P['cat']['url'] + '#dama']],
+                    'ap': [[t, P['ap']['url'] + u] for t, u in APMAP[a['id']]]})
     return out
 
 
 def rose(c):
-    """The compass rose: three portals on their bearings, you at the centre, and a needle the page turns to your starting portal."""
+    """The compass rose: four portals on their bearings, you at the centre, and a needle the page turns to your starting portal."""
     P = {p['bearing']: p for p in c['portals']}
     pts = ''
     for k, r in (('N', 0), ('E', 90), ('S', 180), ('W', 270)):
@@ -102,10 +116,9 @@ def rose(c):
         p = P[b]
         return (f'<g><circle cx="{x}" cy="{y}" r="17" fill="#0b2545" stroke="#f2c14e" stroke-width="2"/>'
                 f'<svg x="{x - 10}" y="{y - 10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-{p["icon"]}"/></svg></g>')
-    labels = lab('N', 150, 10 + 8, 'middle') + lab('E', 282, 150, 'start') + lab('W', 18, 150, 'end')
-    you = ('<g><circle cx="150" cy="282" r="17" fill="#0b2545" stroke="#f2c14e" stroke-width="2"/>'
-           '<svg x="140" y="272" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-map-pin"/></svg></g>')
-    desc = 'Compass rose. North: ' + P['N']['name'] + '. East: ' + P['E']['name'] + '. West: ' + P['W']['name'] + '. South, at the centre: you. The needle turns to the portal where your route starts.'
+    labels = lab('N', 150, 10 + 8, 'middle') + lab('E', 282, 150, 'start') + lab('W', 18, 150, 'end') + lab('S', 150, 282, 'middle')
+    you = ''  # version 1.1: South is DCAT-UK AP; you stand at the centre, where the needle pivots
+    desc = 'Compass rose. North: ' + P['N']['name'] + '. East: ' + P['E']['name'] + '. West: ' + P['W']['name'] + '. South: ' + P['S']['name'] + '. You are at the centre. The needle turns to the portal where your route starts.'
     return (f'<svg class="rose" viewBox="-8 -8 316 316" role="img" aria-label="{desc}">'
             '<circle cx="150" cy="150" r="140" fill="#102f57" stroke="#f2c14e" stroke-width="3"/><circle cx="150" cy="150" r="118" fill="none" stroke="#3b5577" stroke-width="1"/>'
             f'{ticks}{pts}<circle cx="150" cy="150" r="60" fill="none" stroke="#3b5577" stroke-dasharray="3 5"/>'

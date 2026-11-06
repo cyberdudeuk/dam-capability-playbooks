@@ -308,7 +308,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.10.0', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', 'version: 1.10.1', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -431,7 +431,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c31_navigation_aids')
 
     def test_c32_mcp_version_mismatch(self):
-        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.10.0'", "'version': '0.0.1'")
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.10.1'", "'version': '0.0.1'")
         self.fails('c32_mcp_server')
 
     def test_c32_mcp_tool_undescribed(self):
@@ -492,6 +492,15 @@ class Vaccination(unittest.TestCase):
 
     def test_c35_compass_link_to_missing_anchor(self):
         edit(self.s / 'compass' / 'index.html', 'dam.html#requirements', 'dam.html#requirementz', count=99)
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_stores_raw_form_value(self):
+        # CodeQL js/xss-through-dom (PR 11): the change handler must not store e.target.value as it is
+        edit(self.s / 'compass' / 'index.html', 'const v=q&&opt(q.id,e.target.value);if(!v)return;ans[q.id]=v;', 'ans[e.target.name]=e.target.value;')
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_escape_misses_apostrophe(self):
+        edit(self.s / 'compass' / 'index.html', ",\"'\":'&#39;'", '')
         self.fails('c35_estate_compass')
 
     def test_c35_compass_without_colophon(self):

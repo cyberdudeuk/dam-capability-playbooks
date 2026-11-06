@@ -5,16 +5,16 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__: __SUBTITLE__</title>
-<meta name="description" content="Not sure where to start? Answer four questions and the compass suggests a route across the DAM capability playbooks, the Data Quality Commons and the GitHub Repos Asset Catalogue, with why each step matters and what you get.">
+<meta name="description" content="Not sure where to start? Answer four questions and the compass suggests a route across the DAM capability playbooks, the Data Quality Commons, the GitHub Repos Asset Catalogue and DCAT-UK AP, with why each step matters and what you get.">
 <link rel="canonical" href="__URL__">
 <meta name="artefact:version" content="__VERSION__">
 <meta name="artefact:as-of" content="__ASOF__">
 <style>
 :root{--ink:#0b0c0c;--quiet:#454a4f;--bg:#fbfaf7;--card:#ffffff;--panel:#f1efe9;--line:#b1b4b6;--rule:#dcd8cf;--link:#1a5f9e;--focus:#ffdd00;
 --navy:#0b2545;--gold:#f2c14e;--trail:#6b5d43;
---dam:#1d70b8;--dam-bg:#eaf2fa;--dqc:#00703c;--dqc-bg:#e9f5ee;--cat:#6a1b9a;--cat-bg:#f5ecf9}
+--dam:#1d70b8;--dam-bg:#eaf2fa;--dqc:#00703c;--dqc-bg:#e9f5ee;--cat:#6a1b9a;--cat-bg:#f5ecf9;--ap:#8a4b0f;--ap-bg:#fbefe4}
 @media (prefers-color-scheme:dark){:root{--ink:#f3f2f1;--quiet:#c4c6c8;--bg:#111315;--card:#1a1d20;--panel:#202428;--line:#6f777b;--rule:#33383d;--link:#8cc2f0;--trail:#c9b38a;
---dam:#8cc2f0;--dam-bg:#14263a;--dqc:#7fd3a4;--dqc-bg:#11291e;--cat:#d7a6ee;--cat-bg:#2a1736}}
+--dam:#8cc2f0;--dam-bg:#14263a;--dqc:#7fd3a4;--dqc-bg:#11291e;--cat:#d7a6ee;--cat-bg:#2a1736;--ap:#f2b27a;--ap-bg:#33230f}}
 *{box-sizing:border-box}
 body{margin:0;font:1rem/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--bg)}
 a{color:var(--link);text-underline-offset:.15em}a:hover{text-decoration-thickness:3px}
@@ -141,19 +141,19 @@ __SPRITE__
 <header>
 <div class="mast">
 <div>
-<p class="eyebrow">Three portals, one compass</p>
+<p class="eyebrow">Four portals, one compass</p>
 <h1><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>__TITLE__</h1>
 <p>__SUBTITLE__. Not sure which portal you need, or in what order? Answer four quick questions and the compass points the way, step by step, with why each step matters and what you get from it.</p>
-<p>North is the policy, east is the practice, west is what already exists. You are at the centre.</p>
+<p>North is the policy, east is the practice, west is what already exists, south is how it is described so others can find it. You are at the centre.</p>
 </div>
 <div class="rose-wrap">__ROSE__<p class="bearing-now" id="bearing-now" aria-live="polite">Answer the questions to take a bearing</p></div>
 </div>
-<div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to three separate portals, each with its own owner, purpose and status. Every link opens the real page. __HOSTNOTE__</div></div>
+<div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to four separate portals, each with its own owner, purpose and status. Every link opens the real page. __HOSTNOTE__</div></div>
 </header>
 <main id="main" tabindex="-1">
 <div role="tablist" aria-label="Ways to find your way">
 <button role="tab" id="tab-bearing" aria-controls="bearing" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg>Find your bearing</button>
-<button role="tab" id="tab-portals" aria-controls="portals" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The three portals</button>
+<button role="tab" id="tab-portals" aria-controls="portals" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four portals</button>
 <button role="tab" id="tab-examples" aria-controls="examples" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</button>
 <button role="tab" id="tab-when" aria-controls="when" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</button>
 <button role="tab" id="tab-lineage" aria-controls="lineage" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>By data management area</button>
@@ -171,8 +171,8 @@ __SPRITE__
 </section>
 
 <section role="tabpanel" id="portals" aria-labelledby="tab-portals" tabindex="0" hidden>
-<h2><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The three portals</h2>
-<p class="lede">Three portals, three questions. Each is complete on its own; together they cover what the policy asks, how to do it well and what already exists.</p>
+<h2><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four portals</h2>
+<p class="lede">Four portals, four questions. Each is complete on its own; together they cover what the policy asks, how to do it well, what already exists and how to describe it so others can find it.</p>
 <div class="cards" id="pcards"></div>
 </section>
 
@@ -190,7 +190,7 @@ __SPRITE__
 
 <section role="tabpanel" id="lineage" aria-labelledby="tab-lineage" tabindex="0" hidden>
 <h2><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>Follow a data management area</h2>
-<p>Pick a data management area from the DAMA wheel to follow it across the portals: what the DAM Policy asks, how the Commons helps you do it, and what public code shows. The Commons and catalogue mappings are this compass's suggestions; the DAM capabilities come from the DAM playbooks' capability model.</p>
+<p>Pick a data management area from the DAMA wheel to follow it across the portals: what the DAM Policy asks, how the Commons helps you do it, what public code shows, and how DCAT-UK AP describes it. The Commons, catalogue and DCAT-UK AP mappings are this compass's suggestions; the DAM capabilities come from the DAM playbooks' capability model.</p>
 <label for="area"><strong>Data management area</strong></label><br>
 <select id="area"></select>
 <p id="areadesc" aria-live="polite"></p>
@@ -205,7 +205,7 @@ __SPRITE__
 </main>
 <footer>
 <div class="cols">
-<div><h2>About this compass</h2><p>A neutral guide to three separate, open projects. It was made with help from an AI assistant (Claude) and checked by automated tests; a person reviews each release. Facts about each portal come from that portal's own pages, read on __ASOF__. None is an official GOV.UK service. Where they repeat GOV.UK guidance, GOV.UK is the authority.</p><p>Content: Open Government Licence v3.0. Icons: Lucide (ISC). No tracking, no cookies, and the page cannot make network requests.</p></div>
+<div><h2>About this compass</h2><p>A neutral guide to four separate, open projects. It was made with help from an AI assistant (Claude) and checked by automated tests; a person reviews each release. Facts about each portal come from that portal's own pages, read on __ASOF__. None is an official GOV.UK service. Where they repeat GOV.UK guidance, GOV.UK is the authority.</p><p>Content: Open Government Licence v3.0. Icons: Lucide (ISC). No tracking, no cookies, and the page cannot make network requests.</p></div>
 <div><h2>Contact</h2><p>Use the <a href="__CONTACT__">contact form</a>. No email address is published.</p>
 <details class="selfcheck"><summary id="sc-sum">Self-check</summary><ul id="sc-list"></ul></details>
 <p>Version __VERSION__, as of __ASOF__.</p></div>
@@ -216,9 +216,12 @@ __SPRITE__
 <script>
 (function(){
 const D=JSON.parse(document.getElementById('data').textContent),P={};D.portals.forEach(p=>P[p.id]=p);
-const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const ic=(n,cls)=>`<svg class="i${cls?' '+cls:''}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
-const cv=p=>`--c:var(--${p});--cbg:var(--${p}-bg)`;
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* Values read from the page (radio values, data attributes, the address) are never used as they are: each is matched to the compass data and the data's own value is used (CodeQL js/xss-through-dom). */
+const opt=(qid,v)=>{const q=D.questions.find(x=>x.id===qid);const o=q&&q.options.find(x=>x.id===v);return o?o.id:undefined;};
+/* The compass data is read from the page (a JSON script element), so every value from it is escaped before it reaches HTML, including icon names and portal ids. */
+const ic=(n,cls)=>`<svg class="i${cls?' '+esc(cls):''}" aria-hidden="true"><use href="#i-${esc(n)}"/></svg>`;
+const cv=p=>`--c:var(--${esc(p)});--cbg:var(--${esc(p)}-bg)`;
 const url=(p,path)=>P[p].url+path;
 /* tabs */
 const tabs=[...document.querySelectorAll('[role=tab]')];
@@ -226,7 +229,7 @@ function sel(t,focus){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selec
 tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();const nt=tabs[(i+n+tabs.length)%tabs.length];sel(nt,true);syncHash();}});});
 /* wayfinder */
 const ans={};
-$('#wayfinder').innerHTML=D.questions.map((q,qi)=>`<fieldset><legend><span class="num" aria-hidden="true">${qi+1}</span>${ic(q.icon)}${esc(q.ask)}</legend><p class="hint">${esc(q.help)}</p><div class="opts">`+q.options.map(o=>`<label><input type="radio" name="${q.id}" value="${o.id}"> <span>${esc(o.label)}</span></label>`).join('')+'</div></fieldset>').join('');
+$('#wayfinder').innerHTML=D.questions.map((q,qi)=>`<fieldset><legend><span class="num" aria-hidden="true">${qi+1}</span>${ic(q.icon)}${esc(q.ask)}</legend><p class="hint">${esc(q.help)}</p><div class="opts">`+q.options.map(o=>`<label><input type="radio" name="${esc(q.id)}" value="${esc(o.id)}"> <span>${esc(o.label)}</span></label>`).join('')+'</div></fieldset>').join('');
 const ROT={N:0,E:90,S:180,W:270};
 function needle(p){const n=document.getElementById('needle');if(!n)return;const deg=p?ROT[P[p].bearing]:45;n.style.transform=`rotate(${deg}deg)`;
  $('#bearing-now').textContent=p?`Bearing: ${P[p].bearing_name}. Start in ${P[p].short}`:'Answer the questions to take a bearing';}
@@ -245,24 +248,24 @@ function render(){
  const pre=used.map(p=>`<div class="tip" style="${cv(p)}"><h3>${ic(P[p].icon)}${esc(P[p].short)}</h3><p>${esc(P[p].needs)}</p><p class="hint">${esc(P[p].binding)}.</p></div>`).join('');
  const roleq=D.questions.find(x=>x.id==='role').options.find(x=>x.id===ans.role);
  let tips='';
- if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each portal</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li></ul></div>`;}
+ if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each portal</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li><li><a href="${esc(url('ap','roles.html'))}">DCAT-UK AP: routes for your role</a></li></ul></div>`;}
  if(ans.skill==='new')tips+=`<div class="tip" style="${cv('cat')}"><h3>${ic('git-branch')}New to GitHub?</h3><p>You don't need to code. Read <a href="${esc(url('cat','#home'))}">GitHub in two minutes</a> in the catalogue, or <a href="${esc(url('dqc','github.html'))}">the Commons' plain-English introduction</a>.</p></div>`;
  if(ans.skill==='daily')tips+=`<div class="tip" style="${cv('dqc')}"><h3>${ic('code-xml')}Working in code?</h3><p>The Commons has a toolkit you can run and an API (<a href="${esc(url('dqc','reuse.html'))}">use the Commons your way</a>). The DAM playbooks publish open data and a reference server for AI assistants (<a href="${esc(url('dam','reuse.html'))}">use and reuse</a>).</p></div>`;
  if(ans.scope==='mandatory'&&steps[0].p!=='dam')tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('landmark')}Your organisation is covered by the DAM Policy</h3><p>If this work touches a critical data asset, read <a href="${esc(url('dam','dam.html#requirements'))}">what the policy requires</a> before you finish, so the work counts towards it.</p></div>`;
- $('#route').innerHTML=`<div class="route-head"><div><p class="eyebrow" style="color:var(--trail)">Your route</p><h2>${ic('route')}${esc(r.title)}</h2></div><button type="button" class="btn secondary" id="copy">${ic('share-2')}Copy a link to this route</button></div><p class="outcome">${ic('flag')}<span><strong>Where it takes you:</strong> ${esc(r.outcome)}.</span></p><p id="copy-status" class="hint" aria-live="polite"></p><div class="trail-wrap" role="region" aria-label="Your route as a trail across the three portals" tabindex="0">${svg}</div><ol class="steps">${list}</ol><h3>${ic('circle-check')}What you need before you set off</h3><div class="tips">${pre}</div>${tips?`<h3>${ic('lightbulb')}Tips for you</h3><div class="tips">${tips}</div>`:''}`;
+ $('#route').innerHTML=`<div class="route-head"><div><p class="eyebrow" style="color:var(--trail)">Your route</p><h2>${ic('route')}${esc(r.title)}</h2></div><button type="button" class="btn secondary" id="copy">${ic('share-2')}Copy a link to this route</button></div><p class="outcome">${ic('flag')}<span><strong>Where it takes you:</strong> ${esc(r.outcome)}.</span></p><p id="copy-status" class="hint" aria-live="polite"></p><div class="trail-wrap" role="region" aria-label="Your route as a trail across the four portals" tabindex="0">${svg}</div><ol class="steps">${list}</ol><h3>${ic('circle-check')}What you need before you set off</h3><div class="tips">${pre}</div>${tips?`<h3>${ic('lightbulb')}Tips for you</h3><div class="tips">${tips}</div>`:''}`;
  $('#copy').addEventListener('click',()=>{const done=ok=>$('#copy-status').textContent=ok?'Link copied.':'Could not copy. Select the address bar and copy it.';if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(()=>done(true),()=>done(false));else done(false);});
 }
-function trail(steps){const n=steps.length,W=Math.max(760,150*n+240),H=230,lanes=['dam','dqc','cat'],ly=p=>({dam:56,dqc:116,cat:176})[p],x=i=>200+i*((W-260)/(n-1||1));
+function trail(steps){const n=steps.length,W=Math.max(760,150*n+240),H=290,lanes=['dam','dqc','cat','ap'],ly=p=>({dam:56,dqc:116,cat:176,ap:236})[p],x=i=>200+i*((W-260)/(n-1||1));
  let s=`<svg class="trail" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Your route: ${n} steps across ${new Set(steps.map(z=>z.p)).size} portals. The same steps are listed below.">`;
  lanes.forEach(p=>{s+=`<rect x="0" y="${ly(p)-26}" width="${W}" height="52" fill="var(--${p}-bg)"/><rect x="0" y="${ly(p)-26}" width="6" height="52" fill="var(--${p})"/><text x="14" y="${ly(p)+5}" font-size="13" font-weight="700">${esc(P[p].short)}</text>`;});
  const d=steps.map((st,i)=>`${i?'L':'M'}${x(i)} ${ly(st.p)}`).join(' ');
  s+=`<path d="${d}" fill="none" stroke="var(--trail)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>`;
- steps.forEach((st,i)=>{s+=`<g><circle cx="${x(i)}" cy="${ly(st.p)}" r="19" fill="var(--card)" stroke="var(--${st.p})" stroke-width="3"/><svg x="${x(i)-10}" y="${ly(st.p)-10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--${st.p})" aria-hidden="true">${ic(P[st.p].icon).replace(/<svg[^>]*>|<\/svg>/g,'')}</svg><text x="${x(i)}" y="${ly(st.p)-25}" text-anchor="middle" font-size="12" font-weight="700">${i+1}</text></g>`;});
+ steps.forEach((st,i)=>{s+=`<g><circle cx="${x(i)}" cy="${ly(st.p)}" r="19" fill="var(--card)" stroke="var(--${esc(st.p)})" stroke-width="3"/><svg x="${x(i)-10}" y="${ly(st.p)-10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--${esc(st.p)})" aria-hidden="true">${ic(P[st.p].icon).replace(/<svg[^>]*>|<\/svg>/g,'')}</svg><text x="${x(i)}" y="${ly(st.p)-25}" text-anchor="middle" font-size="12" font-weight="700">${i+1}</text></g>`;});
  s+=`<text x="${x(n-1)}" y="${H-8}" text-anchor="middle" font-size="12">Destination</text></svg>`;return s;}
-$('#wayfinder').addEventListener('change',e=>{ans[e.target.name]=e.target.value;render();syncHash();});
+$('#wayfinder').addEventListener('change',e=>{const q=D.questions.find(x=>x.id===e.target.name);const v=q&&opt(q.id,e.target.value);if(!v)return;ans[q.id]=v;render();syncHash();});
 /* hash: tab and answers */
 function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');history.replaceState(null,'','#'+t.getAttribute('aria-controls')+(a.replace(/,/g,'')?'/'+a:''));}
-(function(){const h=location.hash.slice(1).split('/');const t=tabs.find(x=>x.getAttribute('aria-controls')===h[0]);if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];if(q&&v&&q.options.some(o=>o.id===v)){ans[q.id]=v;const r=document.querySelector(`input[name="${q.id}"][value="${v}"]`);if(r)r.checked=true;}});render();}})();
+(function(){const h=location.hash.slice(1).split('/');const t=tabs.find(x=>x.getAttribute('aria-controls')===h[0]);if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}})();
 /* precedence */
 $('#prec').innerHTML=D.precedence.map((x,i)=>`<li><h3>${ic(x.icon)}${i+1}. ${esc(x.title)}</h3><p>${esc(x.text)}</p></li>`).join('');
 /* portals */
@@ -279,15 +282,15 @@ $('#pcards').innerHTML=D.portals.map(p=>`<article class="pcard" style="${cv(p.id
 <dt>${ic('circle-check')}What you need</dt><dd>${esc(p.needs)}</dd></dl>
 <p><a class="btn" href="${esc(url(p.id,p.start.path))}">${ic('navigation')}Go to ${esc(p.start.title)} in ${esc(p.short)}</a></p></div></article>`).join('');
 /* examples */
-$('#scen').innerHTML=D.scenarios.map((x,i)=>{const seq=[x.start,...x.then];return `<article class="sc"><p class="who">${esc(x.who)}</p><h3>${ic(x.icon)}${esc(x.situation)}</h3><ol class="path" aria-label="Order to follow">${seq.map((p,j)=>`<li style="${cv(p)}">${ic(P[p].icon)}${j+1}. ${esc(P[p].short)}</li>`).join('')}</ol><p>${esc(x.why)}</p><p><button type="button" class="btn secondary" data-route="${x.route}">${ic('navigation')}Follow this route: ${esc(D.routes[x.route].title)}</button></p></article>`;}).join('');
-document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{ans.why=b.dataset.route;const r=document.querySelector(`input[name="why"][value="${b.dataset.route}"]`);if(r)r.checked=true;render();sel(tabs[0]);syncHash();const h=document.querySelector('#route h2');if(h){h.setAttribute('tabindex','-1');h.focus();}}));
+$('#scen').innerHTML=D.scenarios.map((x,i)=>{const seq=[x.start,...x.then];return `<article class="sc"><p class="who">${esc(x.who)}</p><h3>${ic(x.icon)}${esc(x.situation)}</h3><ol class="path" aria-label="Order to follow">${seq.map((p,j)=>`<li style="${cv(p)}">${ic(P[p].icon)}${j+1}. ${esc(P[p].short)}</li>`).join('')}</ol><p>${esc(x.why)}</p><p><button type="button" class="btn secondary" data-route="${esc(x.route)}" data-i="${i}">${ic('navigation')}Follow this route: ${esc(D.routes[x.route].title)}</button></p></article>`;}).join('');
+document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{const sc=D.scenarios[Number(b.dataset.i)];const v=sc&&opt('why',sc.route);if(!v)return;ans.why=v;const r=document.querySelector(`input[name="why"][value="${v}"]`);if(r)r.checked=true;render();sel(tabs[0]);syncHash();const h=document.querySelector('#route h2');if(h){h.setAttribute('tabindex','-1');h.focus();}}));
 /* when */
 $('#whencards').innerHTML=D.portals.map(p=>{const w=D.when[p.id];return `<article class="wc" style="${cv(p.id)}"><h3>${ic(p.icon)}${esc(p.name)}</h3><p class="yes">${ic('circle-check')}Go there when</p><ul>${w.use.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="no">${ic('info')}You can skip it when</p><ul>${w.skip.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article>`;}).join('');
 /* lineage */
-$('#area').innerHTML=D.areas.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
-function area(){const a=D.areas.find(x=>x.id===$('#area').value);$('#areadesc').innerHTML=`<strong>${esc(a.name)}:</strong> ${esc(a.desc)} <span class="hint">Records management counterpart: ${esc(a.im)}</span>`;
+$('#area').innerHTML=D.areas.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');
+function area(){const a=D.areas[$('#area').selectedIndex]||D.areas[0];$('#areadesc').innerHTML=`<strong>${esc(a.name)}:</strong> ${esc(a.desc)} <span class="hint">Records management counterpart: ${esc(a.im)}</span>`;
  const col=(p,title,items,empty)=>`<section class="col" style="${cv(p)}"><h3 class="pn">${ic(P[p].icon)}${esc(P[p].short)}: ${esc(title)}</h3>${items.length?'<ul>'+items.map(([t,u])=>`<li><a href="${esc(u)}">${esc(t)}</a></li>`).join('')+'</ul>':`<p class="gap">${esc(empty)}</p>`}</section>`;
- $('#lin').innerHTML=col('dam','what the policy asks',a.dam,'')+col('dqc','do the work',a.dq,'No dedicated page yet.')+col('cat','evidence in public code',a.cat,'');}
+ $('#lin').innerHTML=col('dam','what the policy asks',a.dam,'')+col('dqc','do the work',a.dq,'No dedicated page yet.')+col('cat','evidence in public code',a.cat,'')+col('ap','how to describe it',a.ap,'No dedicated page.');}
 $('#area').addEventListener('change',area);area();
 /* links */
 $('#linktable').innerHTML='<table><caption class="vh">How the portals link to each other</caption><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Links</th></tr></thead><tbody>'+D.links_today.map(([f,t,n])=>`<tr><td class="pn">${ic(P[f].icon)}${esc(P[f].short)}</td><td><span class="pn">${ic(P[t].icon)}${esc(P[t].short)}</span></td><td>${esc(n)}</td></tr>`).join('')+'</tbody></table>';
@@ -299,7 +302,7 @@ ck('Every route step names a known portal',allSteps.every(s=>P[s.p]),allSteps.le
 ck('Every situation has a route',D.questions[0].options.every(o=>D.routes[o.id]),D.questions[0].options.length+' situations');
 ck('Every worked example follows a known route',D.scenarios.every(x=>D.routes[x.route]&&P[x.start]&&x.then.every(p=>P[p])),D.scenarios.length+' examples');
 ck('Every portal has a compass bearing',D.portals.every(p=>p.bearing in ROT),'');
-ck('Links go only to the three portals',D.areas.flatMap(a=>[...a.dam,...a.dq,...a.cat].map(x=>x[1])).every(u=>bases.some(b=>u.startsWith(b))),'');
+ck('Links go only to the four portals',D.areas.flatMap(a=>[...a.dam,...a.dq,...a.cat,...a.ap].map(x=>x[1])).every(u=>bases.some(b=>u.startsWith(b))),'');
 const csp=(document.querySelector('meta[http-equiv=Content-Security-Policy]')||{}).content||'';
 ck('The page cannot make network requests',/default-src 'none'/.test(csp)&&!/connect-src/.test(csp),'Content Security Policy');
 const ages=D.portals.map(p=>[p.short,Math.round((Date.now()-Date.parse(p.data_as_of||D.meta.as_of))/864e5)]);

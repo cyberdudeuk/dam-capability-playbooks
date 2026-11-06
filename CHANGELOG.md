@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.10.1 (2026-11-06)
+- Estate compass 1.1.0: a fourth bearing. South is the DCAT-UK Application Profile (DCAT-UK AP), the proposed successor to the xGov MEM: how to describe data so others can find it. It has a portal card, a "describe data so others can find it" situation and route, steps in the policy and reuse routes, a worked example, when to use it, links for each DAMA area, a lane on the route trail, and its links in the link table. North, east and west are unchanged. DCAT-UK AP is proposed, not endorsed, and the card says so.
+
 ## 1.10.0 (2026-11-05)
 - Boards, councils and networks (`bodies.html`, under Frameworks): 7 boards and groups that decide or advise (CDO Council, DSA Steering Board, Peer Review Group, Open Standards Board, the data and technology architecture design authority, Taxonomy Oversight Group, and the Data Steering Group, marked status unclear) and 10 communities and networks, each with purpose, aims, expected outcomes, link to the DAM Policy, how to take part and whether terms of reference are published; how standards and decisions flow; and where to take each kind of issue. Checked on GOV.UK and data.gov.uk on 5 November 2026. No email addresses are listed.
 - Get involved (`involve.html`): nine ways to take part, rules of engagement, how to improve the content, champions and ambassadors, a toolkit of ready-made text (email, Microsoft Teams, Slack, Viva Engage, intranet news, a 15 minute walk-through and an email signature line) with copy buttons, and six badges (Explorer, Tester, Contributor, Reviewer, Champion, Ambassador) as SVG and PNG with code for GitHub profiles, web pages and email signatures. Badges are claimed through a new public form that shows a GitHub username only.

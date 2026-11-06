@@ -2,7 +2,7 @@
 
 Generated from `content/` by `tools/build.py`. Do not edit by hand.
 
-Version 1.10.0, as of 2026-11-05.
+Version 1.10.1, as of 2026-11-06.
 
 **Brief.** Bring together the playbook material for data governance, data cataloguing and data quality in one interactive portal, organised around the people who use it and how they learn; then add the capabilities the DAM Policy relies on, the maturity model, professions and skills, sector supplements and delivery and change guidance.
 
