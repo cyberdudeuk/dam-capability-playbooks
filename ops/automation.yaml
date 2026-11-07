@@ -1,0 +1,50 @@
+# Automation policy for the DAM capability playbooks (the estate contract; reference: DCAT-AP-UK ADR 0017).
+# Every workflow in .github/workflows is listed here with its tier, so a person can see at a glance what runs, when,
+# and what it is allowed to change. tests/test_automation.py fails if a workflow is missing from this file.
+#
+# Tiers of autonomy, from the estate automation pattern:
+#   0 observe   reads and reports only: issues, labels, the Status page. Never changes content.
+#   1 maintain  changes derived data on its own, only after every check passes. Easy to undo: one revert.
+#   2 propose   prepares a change for a person: a pull request or an issue with the evidence. A person decides.
+#   3 person    never automated: releases (a person pushes a version tag), settings, deletions, anything sent outside
+#               the repository, claims.
+#
+# This repository has no tier 1 routine that changes content. The labels routine is the only tier 1 routine besides
+# publishing, and it honours the kill switch: set the repository variable AUTOMATION to "off" (Settings, Secrets and
+# variables, Actions, Variables) and it reports what it would have done and changes nothing.
+
+kill_switch: {variable: AUTOMATION, off_value: 'off'}
+oversight:
+  digest: Every Monday the digest routine opens one issue (label digest) listing the Status page's verdict, what routines committed, what failed and what needs a person. It closes last week's.
+  undo: Publishing rebuilds from main, so reverting a commit on main undoes what was published.
+  audit: Workflow run logs are kept by GitHub for 90 days; the digest links to failed runs.
+
+routines:
+  - {id: pages, workflow: pages.yml, tier: 1, when: 'every push to main, every pull request, Mondays 06:17 UTC, on request', does: 'Builds the site, runs the health run, the static and browser checks and their deliberate breaks, and publishes main.', changes: 'The published site only (gh-pages), after every check passes.'}
+  - {id: health-issue, workflow: pages.yml, tier: 0, when: 'Mondays, on request', does: 'Opens or comments on an issue labelled health when the health run finds a problem.', changes: 'Issues only.'}
+  - {id: release, workflow: release.yml, tier: 3, when: 'a person pushes a version tag', does: 'Builds and checks the tagged version and attaches the site to a GitHub release.', changes: 'A GitHub release. Only a person starts it.'}
+  - {id: triage, workflow: triage.yml, tier: 0, when: 'weekdays 07:23 UTC, on request', does: 'Labels contact, content, accessibility, feedback and testing issues that have waited too long for a reply (needs-reply) or a decision (overdue).', changes: 'Labels on issues only.'}
+  - {id: digest, workflow: digest.yml, tier: 0, when: 'Mondays 08:13 UTC, on request', does: 'Writes the weekly operations digest for the owner: the Status page, routine commits, failed runs, issues waiting and pull requests open.', changes: 'One issue a week (label digest); closes the previous one.'}
+  - {id: labels, workflow: labels.yml, tier: 1, when: 'when .github/labels.yml changes on main, on request', does: 'Creates or updates the labels listed in .github/labels.yml. Never deletes a label.', changes: 'Labels only. Honours the kill switch.'}
+  - {id: codeql, workflow: codeql.yml, tier: 0, when: 'every push to main, every pull request, Wednesdays', does: 'Scans the code for security problems with the pinned, digest-checked CodeQL bundle.', changes: 'Security alerts only.'}
+  - {id: scorecard, workflow: scorecard.yml, tier: 0, when: 'Mondays, on request, when branch rules change', does: 'OpenSSF Scorecard: an independent check of how the repository is run.', changes: 'Security alerts only.'}
+  - {id: dependency-review, workflow: dependency-review.yml, tier: 0, when: 'every pull request', does: 'Stops a pull request that adds a dependency with a known moderate or worse vulnerability.', changes: 'Nothing; fails the pull request.'}
+
+# Trials (test flights, estate contract; ADR 0018 in dcat-ap-uk). tools/trials.py check fails the tests if a trial is
+# missing a field, touches anything kept for a person, runs longer than 90 days or has passed its end date. A workflow
+# running a trial calls `python tools/trials.py gate --id <id>` first and stops unless it passes. Each trial has its own
+# kill switch, the repository variable TRIAL_<ID>; AUTOMATION=off stops them all.
+trials: []
+
+occurrences:
+  label: occurrence
+  how: 'Anyone, person or routine, reports a near miss or a surprise with the occurrence issue form. No blame: the report asks what happened and what would have stopped it, never who.'
+  follow_up: 'Every occurrence closes with either a check that would have caught it or a recorded reason why none is needed.'
+
+never:
+  - Change repository settings, rulesets, secrets or the kill switch.
+  - Delete a branch, tag, release, issue, label or file a person made.
+  - Send anything outside the repository (pull requests or issues elsewhere, email, posts).
+  - Change the playbooks, the registers or any page content written by a person.
+  - Claim conformance, endorsement or approval.
+  - Merge a pull request.

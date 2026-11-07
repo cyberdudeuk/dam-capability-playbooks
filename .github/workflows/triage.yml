@@ -1,0 +1,28 @@
+name: Triage
+# Tier 0 routine (ops/automation.yaml, estate contract). Every working day, labels issues that have waited too long for
+# a maintainer's reply (needs-reply) or a decision (overdue). Adds labels only; never closes, edits or deletes anything.
+# Plain commands only: the repository allows no third-party actions (D-018).
+on:
+  schedule: [{cron: '23 7 * * 1-5'}]   # weekdays 07:23 UTC
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the commit (plain git; the repository allows no third-party actions)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch -q --depth 1 origin "${GITHUB_SHA}"
+          git checkout -q FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: Label issues waiting for a reply or a decision
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/triage.py

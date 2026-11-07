@@ -1,0 +1,42 @@
+name: Labels
+# Keeps the repository labels in line with .github/labels.yml. Creates or updates; never deletes a label.
+# Plain commands only: the repository allows no third-party actions (D-018).
+on:
+  push:
+    branches: [main]
+    paths: ['.github/labels.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the commit (plain git; the repository allows no third-party actions)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch -q --depth 1 origin "${GITHUB_SHA}"
+          git checkout -q FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: Create or update labels (never deletes)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AUTOMATION: ${{ vars.AUTOMATION }}
+        run: |
+          python3 - <<'PY'
+          import os, re, subprocess
+          off = os.environ.get('AUTOMATION') == 'off'
+          if off:
+              print('Kill switch is off: reporting only, changing nothing.')
+          for line in open('.github/labels.yml', encoding='utf-8'):
+              m = re.match(r"^- \{name: (.+?), color: '([0-9a-f]{6})', description: (.+)\}\s*$", line)
+              if m and off:
+                  print(f'Would create or update: {m[1]}')
+              elif m:
+                  subprocess.run(['gh', 'label', 'create', m[1], '--color', m[2], '--description', m[3], '--force'], check=True)
+          PY
