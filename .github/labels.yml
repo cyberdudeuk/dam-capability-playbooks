@@ -1,0 +1,9 @@
+# Labels as code (estate contract). The labels workflow creates or updates these; it never deletes a label.
+# Existing labels used by the issue forms are left as they are.
+- {name: routine, color: '5694ca', description: Proposed or raised by an automated routine for a person to decide (ops/automation.yaml)}
+- {name: digest, color: '0b0c0c', description: The weekly operations digest (digest routine)}
+- {name: health, color: '00703c', description: Raised by the weekly health run}
+- {name: review due, color: 'b58840', description: The content review date is near}
+- {name: owner action, color: '0b0c0c', description: Only the repository owner can do this}
+- {name: needs-reply, color: 'f47738', description: Waiting longer than it should for a maintainer reply (triage routine)}
+- {name: overdue, color: 'd4351c', description: Waiting longer than it should for a decision (triage routine)}
