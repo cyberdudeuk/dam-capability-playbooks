@@ -19,7 +19,7 @@ import sys
 import urllib.parse
 import urllib.request
 
-WAITING_LABELS = ['owner action', 'review due', 'health', 'routine', 'overdue', 'needs-reply', 'content', 'contact']
+WAITING_LABELS = ['owner action', 'review due', 'health', 'routine', 'overdue', 'needs-reply', 'content', 'contact', 'occurrence', 'trial']
 TITLE = 'Operations digest, week from {day}'
 
 

@@ -20,8 +20,9 @@ POLICY = yaml.safe_load((ROOT / 'ops' / 'automation.yaml').read_text(encoding='u
 sys.path.insert(0, str(ROOT / 'tools'))
 import check_site  # noqa: E402
 import triage  # noqa: E402
+import trials  # noqa: E402
 
-CONTRACT_LABELS = {'routine', 'digest', 'health', 'review due', 'owner action', 'needs-reply', 'overdue'}
+CONTRACT_LABELS = {'routine', 'digest', 'health', 'review due', 'owner action', 'needs-reply', 'overdue', 'occurrence', 'trial'}
 
 
 class Policy(unittest.TestCase):
@@ -93,6 +94,42 @@ class Triage(unittest.TestCase):
 
     def test_negative_a_new_issue_is_not_labelled(self):
         self.assertEqual(triage.decide(issue(['contact'], created='2026-11-19T09:00:00Z'), [], {'owner'}, NOW), [])
+
+
+GOOD = {'id': 'demo', 'hypothesis': 'A weekly link check finds broken links sooner', 'envelope': ['issues labelled trial'],
+        'measure': 'broken links found per week', 'abort': 'more than 2 false alarms a week', 'started': '2026-11-07',
+        'ends': '2026-12-07', 'owner': 'repository owner', 'tier': 0}
+
+
+class Trials(unittest.TestCase):
+    """Trials are test flights with an envelope, an end date and a kill switch (ADR 0018 in dcat-ap-uk)."""
+
+    def test_declared_trials_are_in_order(self):
+        self.assertEqual(trials.problems(POLICY.get('trials') or []), [])
+
+    def test_a_good_trial_can_run(self):
+        self.assertTrue(trials.gate('demo', [GOOD], {}, dt.date(2026, 11, 10))[0])
+
+    def test_negative_each_guardrail_fails_when_it_should(self):
+        today = dt.date(2026, 11, 10)
+        cases = {'missing abort': (dict(GOOD, abort=''), 'missing abort'), 'too long': (dict(GOOD, ends='2027-03-01'), 'the limit is 90'),
+                 'expired': (dict(GOOD, ends='2026-11-08'), 'ended'), 'touches merge': (dict(GOOD, envelope=['merge pull requests']), 'merge'),
+                 'tier 1': (dict(GOOD, tier=1), 'only observe')}
+        for name, (trial, needle) in cases.items():
+            with self.subTest(case=name):
+                self.assertTrue(any(needle in x for x in trials.problems([trial], today)))
+                self.assertFalse(trials.gate(trial['id'], [trial], {}, today)[0])
+
+    def test_negative_kill_switches_stop_a_trial(self):
+        today = dt.date(2026, 11, 10)
+        self.assertFalse(trials.gate('demo', [GOOD], {'TRIAL_DEMO': 'off'}, today)[0])
+        self.assertFalse(trials.gate('demo', [GOOD], {'AUTOMATION': 'off'}, today)[0])
+
+    def test_occurrences_are_reportable_without_blame(self):
+        form = yaml.safe_load((ROOT / '.github' / 'ISSUE_TEMPLATE' / 'occurrence.yml').read_text(encoding='utf-8'))
+        self.assertEqual(form['labels'], ['occurrence'])
+        self.assertNotIn('email', str(form).lower())
+        self.assertIn("'occurrence'", (ROOT / 'tools' / 'digest.py').read_text(encoding='utf-8'))
 
 
 if __name__ == '__main__':

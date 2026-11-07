@@ -7,3 +7,5 @@
 - {name: owner action, color: '0b0c0c', description: Only the repository owner can do this}
 - {name: needs-reply, color: 'f47738', description: Waiting longer than it should for a maintainer reply (triage routine)}
 - {name: overdue, color: 'd4351c', description: Waiting longer than it should for a decision (triage routine)}
+- {name: occurrence, color: 'f47738', description: A near miss or surprise reported without blame, so the next defect is prevented}
+- {name: trial, color: '28a197', description: A time-limited experiment with its own envelope and kill switch (ops/automation.yaml trials)}
