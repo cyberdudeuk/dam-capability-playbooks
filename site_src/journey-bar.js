@@ -18,7 +18,7 @@
   st.i = at; try { localStorage.setItem("dqp-journey", JSON.stringify(st)); } catch (e) {}
   var n = st.steps.length, nx = st.steps[at + 1], pv = st.steps[at - 1];
   var esc = function (x) { return String(x).replace(/[&<>"]/g, function (c) { return {"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]; }); };
-  // Styles are set on the elements themselves (not a <style> tag), so pages whose security policy blocks inline
+  // Styles are set on the elements themselves (not a style element), so pages whose security policy blocks inline
   // style sheets still show the bar properly.
   var dark = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches;
   var C = dark ? {bg: "#172129", fg: "#e5ecef", line: "#9aa9b3", acc: "#7cc9c4", accFg: "#0b1418"} : {bg: "#ffffff", fg: "#17212b", line: "#56636e", acc: "#0d6b6e", accFg: "#ffffff"};
