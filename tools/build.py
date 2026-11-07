@@ -858,6 +858,7 @@ class Site:
 <script src="assets/search-index.js"></script>
 {extra}
 <script src="assets/app.js"></script>
+<script src="assets/journey-bar.js"></script>
 </body>
 </html>
 '''
@@ -969,7 +970,7 @@ class Site:
             shutil.rmtree(self.out)
         (self.out / 'assets').mkdir(parents=True)
         (self.out / 'data').mkdir()
-        for f in ('style.css', 'app.js', 'favicon.svg'):
+        for f in ('style.css', 'app.js', 'journey-bar.js', 'favicon.svg'):
             shutil.copy(ROOT / 'site_src' / f, self.out / 'assets' / f)
         make_images(self.out / 'assets', m)
         wk = self.out / '.well-known'

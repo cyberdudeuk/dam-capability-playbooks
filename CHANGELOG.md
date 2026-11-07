@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Journeys across the three portals: every page now loads `assets/journey-bar.js`, so a journey started on the Data Quality Commons ("Three portals, one journey") shows its step and a link to the next one here too. The script is the same file the Commons publishes, needs no styles or libraries, sends nothing anywhere and shows nothing unless you started a journey (Commons BL-34).
 - Estate compass 1.1.1: South is now called DCAT-AP-UK, the DCAT Application Profile for the UK, as the profile renamed itself after other national DCAT-AP profiles (DCAT-AP-NO, -SE, -NL) in its release 1.2.0-rc.1. Its address is unchanged until its owner renames the repository.
 
 ## 1.10.1 (2026-11-06)
