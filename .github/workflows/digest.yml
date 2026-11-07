@@ -1,0 +1,30 @@
+name: Digest
+# Tier 0 routine (ops/automation.yaml, estate contract): the owner's one place to look each week. Lists the Status
+# page's verdict, what routines committed, which runs failed and what is waiting for a person, then closes last week's
+# digest. Reads and reports only. Plain commands only: the repository allows no third-party actions (D-018).
+on:
+  schedule: [{cron: '13 8 * * 1'}]   # Mondays 08:13 UTC, after the weekly health run
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+  actions: read
+  pull-requests: read
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the commit (plain git; the repository allows no third-party actions)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch -q --depth 1 origin "${GITHUB_SHA}"
+          git checkout -q FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: Write the digest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/digest.py

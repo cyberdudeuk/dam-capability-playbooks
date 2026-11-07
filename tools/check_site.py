@@ -494,7 +494,8 @@ def c24_actions_pinned(site, repo, pages):
     return errs
 
 
-EXPECTED_WORKFLOWS = {'pages.yml', 'codeql.yml', 'release.yml', 'dependency-review.yml', 'scorecard.yml'}  # last two: ADR 0005
+EXPECTED_WORKFLOWS = {'pages.yml', 'codeql.yml', 'release.yml', 'dependency-review.yml', 'scorecard.yml',  # last two: ADR 0005
+                      'digest.yml', 'triage.yml', 'labels.yml'}  # estate contract, declared in ops/automation.yaml
 
 
 def c25_workflow_inventory(site, repo, pages):
