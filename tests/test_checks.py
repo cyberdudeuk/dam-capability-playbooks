@@ -452,6 +452,35 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'contact.html', 'id="private-feedback"', 'id="feedback-x"')
         self.fails('c33_tooling_and_feedback')
 
+    # Private form wiring (version 1.10.2): the form used to open blank from every page and task.
+    def test_c33_private_form_page_not_filled_in(self):
+        edit(self.s / 'governance.html', 'Data%20governance%20%28governance.html%29', 'Data%20governance', count=99)
+        self.fails('c33_tooling_and_feedback')
+
+    def test_c33_private_form_task_not_marked_as_task(self):
+        f = self.s / 'test.html'
+        h = f.read_text(encoding='utf-8')
+        i = h.index('id="T-04"')
+        f.write_text(h[:i] + h[i:].replace('%22Feedback%20on%20a%20test%20task%22', '%22A%20question%22', 1), encoding='utf-8')
+        self.fails('c33_tooling_and_feedback')
+
+    def test_c33_private_form_link_elsewhere(self):
+        edit(self.s / 'quality.html', 'href="https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=', 'href="https://example.org/form?id=', count=99)
+        self.fails('c33_tooling_and_feedback')
+
+    def test_c33_private_form_bad_question_id(self):
+        edit(self.r / 'content' / 'frameworks.yaml', 'where: r3660656614cc47b499a593f8ceb06013', 'where: question3')
+        self.fails('c33_tooling_and_feedback')
+
+    def test_c33_private_form_privacy_missing(self):
+        edit(self.s / 'about.html', 'id="privacy-feedback-form"', 'id="privacy-x"')
+        self.fails('c33_tooling_and_feedback')
+
+    def test_build_rejects_unknown_private_form_topic(self):
+        s = build.Site(build.load(self.r / 'content' / 'playbooks.yaml'), self.s)
+        with self.assertRaises(build.ContentError):
+            s.ms_form_link('x', 'not-a-topic')
+
     def test_c34_related_link_to_other_site(self):
         f = self.s / 'quality.html'
         h = f.read_text(encoding='utf-8')

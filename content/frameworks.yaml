@@ -4344,8 +4344,28 @@ tours:
     text: Six steps and the RFI questions, downloadable as CSV.
 ms_form:
   url: https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2OgGVkJSDelPgquubNu4dJpUNjc2Ukw2N1hMTTc1WE5DQTE5QkZEMkVWSi4u
-  title: Feedback form (Microsoft Forms)
-  note: 'A private route: responses go only to the people maintaining this prototype, and no GitHub account is needed. You may be asked to sign in with a Microsoft work account; if the form does not open for you, use the contact form instead.'
+  title: Give feedback privately (Microsoft Forms)
+  note: 'A private route: only the people maintaining this prototype see your answers, you do not need to sign in or have a GitHub account, and your response is anonymous unless you choose to give your email address and organisation, for example to ask for a reply or a copy of your answers. It takes 3 to 5 minutes, and the page or task you came from is filled in for you.'
+  # Pre-fill (version 1.10.2). Microsoft Forms "Get pre-filled URL" was switched on and these
+  # question identifiers were read from the live form on 8 November 2026. Choice answers are
+  # passed as a JSON string ("..."), text answers as plain text. Each topic value must match a
+  # choice in question 1 exactly, or Forms ignores it.
+  prefill:
+    where: r3660656614cc47b499a593f8ceb06013
+    topic: r97d3f7fae84f4d3ab28473ec4148a7e2
+    topics:
+      question: A question
+      problem: Something is wrong or out of date
+      accessibility: An accessibility problem
+      idea: An idea or improvement
+      task: Feedback on a test task
+      other: Something else
+  privacy:
+  - Everything except your role and your feedback is optional.
+  - Your response is anonymous unless you choose to give your email address and organisation. Microsoft Forms does not record your name or account, because the form does not ask you to sign in.
+  - If you give your email address, we use it only to reply about that feedback or to send you a copy of your answers, as you asked. We do not share it, publish it or add it to a mailing list.
+  - Only the people maintaining this prototype can see responses. They are held in Microsoft Forms, in the government Microsoft 365 account the maintainers work in.
+  - How long responses and contact details are kept, and who is the data controller, are to be confirmed with the data protection officer (open item OR-02). Until then, if you gave your email address and want it deleted, send the form again with "delete my details" and the same email address, and we will.
 reuse:
   intro: The portal is built to be reused. Pick the approach that fits how your organisation shares knowledge, from a simple link on your intranet to your own branded copy, an AI assistant or an integration
     through the Model Context Protocol (MCP). Content is published under the Open Government Licence and code under the MIT licence.
