@@ -847,7 +847,7 @@ class Site:
 {self.edit_links(key, title)}
 </main>
 </div>
-{self.footer()}
+{self.footer(key, title)}
 <div class="palette" id="palette" hidden role="dialog" aria-modal="true" aria-labelledby="palette-title">
 <div class="palette-box"><h2 id="palette-title" class="visually-hidden">Search the playbooks</h2>
 <label for="palette-input" class="visually-hidden">Search</label>
@@ -872,7 +872,9 @@ class Site:
         fb = urllib.parse.urlencode({'template': 'feedback.yml', 'title': f'[Feedback] {title}', 'page': m['site_url'] + f'{key}.html'})
         meta = (f'<p class="page-meta">{icon("info")}Page owner: the portal\'s service owner (a role) · Published 5 November 2026 · '
                 f'Last updated {E(m["as_of"])} · Next review {E(m["review"])}</p>')
-        return (meta + f'<p class="useful"><a href="{gh}/issues/new?{E(fb)}">{icon("message-square-text")}Was this page useful? Tell us</a></p>'
+        priv = (f' <a class="private" href="{E(self.ms_form_link(self.ms_where(key, title)))}" rel="noopener" data-ms-form>{icon("lock-keyhole")}Tell us privately, without GitHub</a>'
+                if self.ms_form_url() else '')
+        return (meta + f'<p class="useful"><a href="{gh}/issues/new?{E(fb)}">{icon("message-square-text")}Was this page useful? Tell us</a>{priv}</p>'
                 f'<nav class="edit-links" aria-label="Help improve this page">'
                 f'<a href="{gh}/issues/new?{E(q)}">{icon("message-square-text")}Report a problem with this page</a>'
                 f'<a href="{gh}/edit/main/content/playbooks.yaml">{icon("pencil-line")}Suggest a change</a>'
@@ -928,16 +930,48 @@ class Site:
     def ms_form_url(self):
         return (self.d.get('ms_form') or {}).get('url') or ''
 
-    def ms_form_block(self):
+    def ms_form_link(self, where='', topic=''):
+        """The private form, opened with the page or task filled in (version 1.10.2). Microsoft Forms reads
+        r<question id>=<answer>; a choice answer must be a JSON string matching the choice exactly."""
+        url = self.ms_form_url()
+        if not url:
+            return ''
+        p = (self.d.get('ms_form') or {}).get('prefill') or {}
+        q = []
+        if topic and p.get('topic'):
+            if topic not in (p.get('topics') or {}):
+                raise ContentError(f'ms_form.prefill: unknown topic {topic}')
+            q.append((p['topic'], json.dumps(p['topics'][topic], ensure_ascii=False)))
+        if where and p.get('where'):
+            q.append((p['where'], where))
+        return url + ''.join(f'&{k}={urllib.parse.quote(v, safe="")}' for k, v in q)
+
+    def ms_where(self, key, title):
+        """What the form's 'which page' question is filled in with: the page title and its file, so a response can be traced to a page."""
+        return f'{title} ({"index" if key == "index" else key}.html)'
+
+    def ms_form_block(self, key='', title='', topic=''):
         """The private feedback route. Shown only when a form address is set, so an empty setting never leaves a dead link."""
         f, url = self.d.get('ms_form') or {}, self.ms_form_url()
         if not url:
             return ''
+        link = self.ms_form_link(self.ms_where(key, title) if key else '', topic)
+        priv = ''.join(f'<li>{E(x)}</li>' for x in f.get('privacy', []))
         return (f'<div class="notice-box ms-form" id="private-feedback">{icon("lock-keyhole")}<div><h2 class="fs-h">Prefer not to use GitHub?</h2>'
-                f'<p>{E(f["note"])}</p><p><a class="btn secondary" href="{E(url)}" rel="noopener">{icon("message-square-text")}{E(f["title"])}</a></p>'
-                f'<p class="hint">Do not include your name, colleagues\' names, personal data or anything above OFFICIAL.</p></div></div>')
+                f'<p>{E(f["note"])}</p><p><a class="btn secondary" href="{E(link)}" rel="noopener" data-ms-form>{icon("message-square-text")}{E(f["title"])}</a></p>'
+                + (f'<details><summary>How we use your answers and any contact details</summary><ul>{priv}</ul></details>' if priv else '')
+                + f'<p class="hint">Apart from your own contact details, if you choose to give them, do not include names, personal data or anything above OFFICIAL.</p></div></div>')
 
-    def footer(self):
+    def ms_privacy_html(self):
+        """The private feedback form's privacy wording on About > Privacy, which the form itself links to (version 1.10.2)."""
+        f = self.d.get('ms_form') or {}
+        if not self.ms_form_url() or not f.get('privacy'):
+            return ''
+        return (f'<h3 id="privacy-feedback-form">{icon("lock-keyhole")} The private feedback form</h3>'
+                f'<p>The <a href="{E(self.ms_form_link())}" rel="noopener" data-ms-form>private feedback form</a> is a Microsoft form. It opens with the page or task you came from filled in.</p>'
+                f'<ul>{"".join(f"<li>{E(x)}</li>" for x in f["privacy"])}</ul>')
+
+    def footer(self, key='', title=''):
         m = self.m
         return f'''<footer class="site" id="colophon">
 <div class="cols">
@@ -946,7 +980,7 @@ class Site:
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
 <ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="involve.html">Get involved, champions and badges</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Estate compass: find your way across four portals</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
-<p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>{f'<p>Or <a href="{E(self.ms_form_url())}" rel="noopener">use the private feedback form</a> (Microsoft Forms, no GitHub account needed).</p>' if self.ms_form_url() else ''}
+<p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>{f'<p>Or <a href="{E(self.ms_form_link(self.ms_where(key, title) if key else ""))}" rel="noopener" data-ms-form>give feedback privately about this page</a> (Microsoft Forms, no sign-in or GitHub account needed).</p>' if self.ms_form_url() else ''}
 <p>{E(m["contact_note"])}</p></div>
 <div><h2>{icon("file-text")} Licence and version</h2>
 <p>Content: <a href="{E(m["licence_content_url"])}">{E(m["licence_content"])}</a>, except where stated. Code: {E(m["licence_code"])}. Icons: Lucide (ISC).</p>
@@ -1506,7 +1540,7 @@ class Site:
 <p><button type="submit" class="btn">{icon("send")}Continue to send on GitHub</button></p>
 <p class="hint">You will see your message on GitHub before you send it.</p></form>
 <noscript><p><a href="{E(m["contact_form"])}">Open the contact form on GitHub</a>.</p></noscript>
-{self.ms_form_block()}
+{self.ms_form_block('contact', 'Contact form')}
 <h2 id="privacy-notice">{icon("lock-keyhole")} Privacy notice</h2>
 <p>This form does not store anything. It opens GitHub with your message filled in. When you send it, GitHub publishes it as a public issue under your GitHub account, and GitHub's own privacy statement applies. Only include what is needed to answer you.</p>'''
         return self.page('contact', 'Contact form', body, None, crumbs=['Contact'])
@@ -1689,7 +1723,7 @@ class Site:
 <p>This portal aims to meet WCAG 2.2 at level AA. Each release is checked automatically with axe-core in a real browser, for keyboard use, for sideways scrolling from 320 to 1920 pixels wide, and in light and dark modes. You can change text size, line spacing and colours in Display options.</p>
 <p>Known limitations: it has not been tested in person with disabled users or with assistive technology users (OR-09). The knowledge graph is a visual aid; the same relationships are in tables on the policy and capability pages. Progress tracking needs scripts; every page can be read without them.</p>
 <p>If you find a problem, use the <a href="contact.html">contact form</a>. If you cannot use it, ask a colleague to send it for you. If you are not happy with the response, contact the Equality Advisory and Support Service (EASS).</p>
-<h2 id="privacy">{icon("lock-keyhole")} Privacy</h2><p>The portal sets no cookies and loads nothing from other sites. Your display choices and progress are kept only in your own browser and can be cleared from the home page. The contact form opens GitHub, where messages are public. Ideas and votes are GitHub Discussions, which are public too. If you sign up for user research, a separate private form collects your contact details; <a href="research.html#privacy">see how we look after them</a>.</p>
+<h2 id="privacy">{icon("lock-keyhole")} Privacy</h2><p>The portal sets no cookies and loads nothing from other sites. Your display choices and progress are kept only in your own browser and can be cleared from the home page. The contact form opens GitHub, where messages are public. Ideas and votes are GitHub Discussions, which are public too. If you sign up for user research, a separate private form collects your contact details; <a href="research.html#privacy">see how we look after them</a>.</p>{self.ms_privacy_html()}
 <h2 id="build">{icon("badge-check")} Build and checks</h2><p>Build {E(self.build_id)}. Generated from one content file. Each release runs structural, link, provenance, email, language, accessibility and layout checks. Each check is shown to fail on a deliberate break before it is trusted. Defects and the checks that now prevent each one are recorded in the repository, with the build report and the full register of open items: <a href="https://github.com/{E(m["repo"])}/tree/main/docs">repository documents</a>.</p>'''
         drawer = [{'label': 'About', 'icon': 'info', 'items': [
             {'id': 'intent', 'label': 'Purpose', 'icon': 'target'},
@@ -2156,11 +2190,13 @@ class Site:
             data_roles = 'all ' + ' '.join(pers) if 'all' in x['roles'] else ' '.join(x['roles'])
             cards += (f'<li class="cr-card test-task" id="{x["id"]}" data-item data-role="{data_roles}"><div class="cr-head"><span class="lv-n">{E(x["id"][2:])}</span><div><p class="caption">{E(x["id"])} · {E(who)}</p><h3>{E(x["title"])}</h3></div></div>'
                       f'<p><strong>Done when:</strong> {E(x["done"])}</p>'
-                      f'<p class="sa-actions"><a class="btn secondary" href="{E(x["start"])}">{icon("play")}Start this task</a> <a class="btn secondary" href="{E(fb)}">{icon("message-square-text")}Tell us how it went</a> {mark_done("test:" + x["id"], "Done")}</p></li>')
+                      f'<p class="sa-actions"><a class="btn secondary" href="{E(x["start"])}">{icon("play")}Start this task</a> <a class="btn secondary" href="{E(fb)}">{icon("message-square-text")}Tell us how it went</a> '
+                      + (f'<a class="btn secondary" href="{E(self.ms_form_link(x["id"] + ": " + x["title"], "task"))}" rel="noopener" data-ms-form>{icon("lock-keyhole")}Tell us privately</a> ' if self.ms_form_url() else '')
+                      + f'{mark_done("test:" + x["id"], "Done")}</p></li>')
         opts = ''.join(f'<option value="{p["id"]}">{E(p["title"])}</option>' for p in d['personas'])
         ids = ['test:' + x['id'] for x in t['tasks']]
         body = self.hero('play', 'Help us test', 'Help us test this portal', E(t['intro']),
-                         brief=['Pick the tasks closest to your role.', 'Try each one without help, then tell us how it went.', 'Task feedback is public on GitHub' + (', or use the private feedback form' if self.ms_form_url() else '') + '. Do not include names or sensitive information.'],
+                         brief=['Pick the tasks closest to your role.', 'Try each one without help, then tell us how it went.', 'Task feedback is public on GitHub' + (', or tell us privately with the Microsoft form, which needs no sign-in' if self.ms_form_url() else '') + '. Do not include names or sensitive information.'],
                          meta=[('list-checks', f'{len(t["tasks"])} tasks'), ('clock', 'About 20 minutes'), ('users-round', f'{len(d["personas"])} roles')])
         body += f'''<h2 id="how">{icon("route")} How to take part</h2>
 <ol><li>Choose your role below to see the tasks for it.</li><li>Select <strong>Start this task</strong>. Try to finish it without asking anyone.</li>
@@ -2172,7 +2208,7 @@ class Site:
 <ul class="cr-list two" id="task-list">{cards}</ul>
 <h2 id="after">{icon("message-square-text")} What happens to your feedback</h2>
 <p>Feedback is read by the people maintaining this prototype, grouped by task and role, and used to decide what to change. Changes are listed on <a href="whats-new.html">What's new</a>.</p>
-<p>The task feedback links open GitHub, where messages are public and you need a free account.</p>{self.ms_form_block()}
+<p>The task feedback links open GitHub, where messages are public and you need a free account. <strong>Tell us privately</strong> opens a Microsoft form instead, with the task filled in; you do not need to sign in.</p>{self.ms_form_block('test', 'Help us test', 'task')}
 <h2 id="other">{icon("circle-help")} Anything else</h2><p>For anything not covered by a task, use the <a href="contact.html">contact form</a> or the "was this page useful?" link at the bottom of every page.</p>'''
         drawer = [{'label': 'Testing', 'icon': 'play', 'items': [{'id': 'how', 'label': 'How to take part', 'icon': 'route', 'count': 4},
                                                                   {'id': 'tasks', 'label': 'Tasks', 'icon': 'list-checks', 'count': len(t['tasks'])},
@@ -2833,7 +2869,7 @@ class Site:
                  f'<div class="panel"><h3>{icon("award")} What you get</h3>{ul(C["gets"], cls="ticks")}</div>'
                  f'<div class="panel"><h3>{icon("users-round")} What an ambassador does</h3>{ul(C["ambassador"])}</div></div>'
                  f'<p><a class="btn" href="{gh}/issues/new?template=badge-claim.yml&amp;title=%5BBadge%5D%20Champion">{icon("megaphone")}Become a champion</a> '
-                 + (f'<a class="btn secondary" href="{E(self.ms_form_url())}" rel="noopener">{icon("lock-keyhole")}Tell us privately instead</a>' if self.ms_form_url() else '') + '</p>')
+                 + (f'<a class="btn secondary" href="{E(self.ms_form_link("Get involved: becoming a champion (involve.html#champions)", "idea"))}" rel="noopener" data-ms-form>{icon("lock-keyhole")}Tell us privately instead</a>' if self.ms_form_url() else '') + '</p>')
         tk = ''
         for t in I['toolkit']:
             txt = t['text'].rstrip()

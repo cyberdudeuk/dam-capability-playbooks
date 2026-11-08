@@ -768,6 +768,55 @@ def c33_tooling_and_feedback(site, repo, pages):
             errs.append(f'{name}: private feedback block does not link to the form')
     if url and not re.match(r'https://forms\.(office\.com|cloud\.microsoft)/', url):
         errs.append('ms_form.url must be an https Microsoft Forms address')
+    errs += _private_form_wiring(site, d, url, pages)
+    return errs
+
+
+def _private_form_wiring(site, d, url, pages):
+    """Rule (version 1.10.2): every page opens the private form with that page filled in, every test task opens it
+    as task feedback with the task filled in, and pre-fill identifiers are well formed. Exists because, before
+    8 November 2026, the form opened blank from everywhere, so a response could not be traced to a page or task,
+    and Microsoft Forms silently ignores a pre-fill whose question id or choice text is wrong."""
+    import html as _h
+    import urllib.parse as _u
+    errs = []
+    if not url:
+        return errs
+    P = (d.get('ms_form') or {}).get('prefill') or {}
+    for k in ('where', 'topic'):
+        if not re.fullmatch(r'r[0-9a-f]{32}', P.get(k) or ''):
+            errs.append(f'ms_form.prefill.{k} is not a Microsoft Forms question id')
+    if 'task' not in (P.get('topics') or {}):
+        errs.append('ms_form.prefill.topics has no task choice')
+
+    def links(html):
+        out = []
+        for a in re.findall(r'<a [^>]*href="([^"]+)"[^>]*data-ms-form', html):
+            a = _h.unescape(a)
+            if not a.startswith(url):
+                out.append(('BAD', a))
+                continue
+            out.append(('OK', dict(_u.parse_qsl(_u.urlparse(a).query))))
+        return out
+    for name in pages:
+        if name == '404.html':
+            continue
+        html = (site / name).read_text(encoding='utf-8')
+        found = links(html)
+        if any(s == 'BAD' for s, _ in found):
+            errs.append(f'{name}: a private form link goes somewhere other than the form')
+        wheres = [q.get(P.get('where'), '') for s, q in found if s == 'OK']
+        if not any(w.endswith(f'({name})') for w in wheres):
+            errs.append(f'{name}: no private form link with this page filled in')
+    t = (site / 'test.html').read_text(encoding='utf-8') if (site / 'test.html').exists() else ''
+    topic = json.dumps((P.get('topics') or {}).get('task', ''), ensure_ascii=False)
+    for tid, body in re.findall(r'<li class="cr-card test-task" id="(T-\d+)"(.*?)</li>\s*(?=<li class="cr-card test-task"|</ul>)', t, re.S):
+        qs = [q for s, q in links(body) if s == 'OK']
+        if not any(q.get(P.get('topic')) == topic and q.get(P.get('where'), '').startswith(tid + ': ') for q in qs):
+            errs.append(f'{tid}: no private form link with the task filled in as task feedback')
+    about = (site / 'about.html').read_text(encoding='utf-8') if (site / 'about.html').exists() else ''
+    if (d.get('ms_form') or {}).get('privacy') and 'id="privacy-feedback-form"' not in about:
+        errs.append('about.html: the private form privacy wording is missing')
     return errs
 
 
