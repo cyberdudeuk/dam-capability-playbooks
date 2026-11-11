@@ -93,6 +93,25 @@ def write_ods(path, sheets):
             zi.compress_type = method
             z.writestr(zi, data)
 
+
+ERD_CARD = {'one to one': '||--||', 'one to many': '||--o{', 'many to one': '}o--||', 'many to many': '}o--o{'}
+
+
+def erd_mermaid(rows):
+    """Version 1.12.0 (issue #18): draw a Mermaid entity relationship diagram from an entity and relationship list,
+    so the diagram is generated from the list and cannot drift from it. GitHub renders Mermaid natively."""
+    seen, out = set(), ['erDiagram']
+    for x in rows:
+        if x['id'] not in seen:
+            seen.add(x['id'])
+            out.append(f'    {x["id"]} {{')
+            out.append(f'        string key "{x["entity"]}"')
+            out.append('    }')
+    for x in rows:
+        if x.get('to'):
+            out.append(f'    {x["id"]} {ERD_CARD[x["card"]]} {x["to"]} : "{x["rel"]}"')
+    return '\n'.join(out) + '\n'
+
 def validate(d):
     errs, ids = [], {}
 
@@ -110,6 +129,38 @@ def validate(d):
             reg(t['id'], 'templates')
             if t.get('mode') not in TEMPLATE_MODES:
                 errs.append(f"{t['id']}: mode must be one of {', '.join(TEMPLATE_MODES)}")
+    # D-034 (version 1.12.0): unquoted commas in YAML flow lists had split template fields such as
+    # "Ownership option (IAO, data owner or hybrid)" in two since the template was written. Brackets must balance.
+    for c in d['capabilities']:
+        for t in c.get('templates', []):
+            for f in t['fields']:
+                if f.count('(') != f.count(')'):
+                    errs.append(f"{t['id']}: field '{f}' has unbalanced brackets; quote any field that contains a comma")
+    # Version 1.12.0: MVP assessment entries must name real DAMA areas and a known verdict.
+    dama_ids = {a['id'] for a in d.get('dama', {}).get('areas', [])}
+    M = (d.get('research') or {}).get('mvp') or {}
+    for x in (d.get('research') or {}).get('backlog', []):
+        if 'mvp' in x:
+            if x['mvp'].get('verdict') not in (M.get('verdicts') or {}):
+                errs.append(f"{x['id']}: unknown MVP verdict {x['mvp'].get('verdict')}")
+            for a in x.get('dama', []):
+                if a not in dama_ids:
+                    errs.append(f"{x['id']}: unknown DAMA area {a}")
+            if not x.get('dama') or not x['mvp'].get('usability') or not x['mvp'].get('condition'):
+                errs.append(f"{x['id']}: an MVP verdict needs DAMA areas, a usability note and a condition")
+    rcodes = {r['code'] for r in d.get('roles', [])}
+    L = d.get('governance_layers', [])
+    if L and [x['n'] for x in L] != list(range(1, len(L) + 1)):
+        errs.append('governance_layers: layers must be numbered 1 upwards in order')
+    if len(L) > 5:
+        errs.append('governance_layers: the layer stack is styled for at most five layers')
+    for x in L + d.get('governance_advisers', []):
+        for r in x['roles']:
+            if r not in rcodes:
+                errs.append(f'governance layers: unknown role {r}')
+    for x in d.get('erd_example', []):
+        if x.get('to') and (x['to'] not in {y['id'] for y in d['erd_example']} or x.get('card') not in ERD_CARD):
+            errs.append(f"erd_example {x['id']}: unknown related entity or cardinality")
     for c in d['capabilities']:
         if 'metadata' not in c:
             continue
@@ -502,7 +553,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 39)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 40)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -998,6 +1049,46 @@ class Site:
     def ms_form_url(self):
         return (self.d.get('ms_form') or {}).get('url') or ''
 
+    def mvp_assessment(self, items):
+        """Version 1.12.0: backlog items placed on the DAMA wheel and judged for the DAM Policy rollout MVP, on feasibility (from the
+        backlog score) and usability (an expert judgement until research runs). Core areas are the three DAM capabilities."""
+        M = self.d['research'].get('mvp')
+        if not M:
+            return ''
+        areas = {a['id']: a['name'] for a in self.d['dama']['areas']}
+        crit = {c['id']: c for c in self.d['research']['criteria']}
+        rows = []
+        for x in (y for y in items if y.get('mvp')):
+            ring = ' '.join(f'<span class="pill {"dama-core" if a in M["core"] else "dama-adj"}">{E(areas[a])}</span>' for a in x['dama'])
+            feas = crit['feasibility']['scale'][x['assess']['feasibility']]
+            rows.append([f'<a href="#bl-{x["id"]}">{E(x["id"])}</a> {E(x["title"])}', ring, f'{x["score"]}', E(feas), E(x['mvp']['usability']),
+                         f'<strong>{E(M["verdicts"][x["mvp"]["verdict"]])}</strong><br>{E(x["mvp"]["condition"])}'])
+        core = ', '.join(areas[a] for a in M['core'])
+        return (f'<h3 id="mvp">{icon("target")} MVP assessment against the DAMA wheel{prov("O")}</h3>'
+                f'<p><strong>The MVP:</strong> {E(M["definition"])}</p>'
+                f'<p>Items in the core of the wheel ({E(core)}, the three DAM capabilities) are judged first for the MVP; items in other knowledge areas need a reason tied to the return. '
+                f'Score is the backlog score above; feasibility is its feasibility rating. See the <a href="capability-model.html#cm-dama">DAMA wheel</a>.</p>'
+                + table('t-mvp', 'Pilot backlog items assessed for the DAM Policy rollout MVP', ['Item', 'DAMA knowledge areas', 'Score', 'Feasibility', 'Usability', 'Verdict and condition'], rows)
+                + f'<p><strong>Limits of this assessment:</strong></p>{ul([E(c) for c in M["caveats"]], raw=True)}')
+
+    def layers_html(self):
+        """Version 1.12.0 (issue #21): governance layers, from direction down to use, with what each may and may not change.
+        Proposed by this portal (O); a team can adapt the layers to its own model."""
+        L = self.d.get('governance_layers') or []
+        if not L:
+            return ''
+        rn = {r['code']: r['name'] for r in self.d['roles']}
+        bars = ''.join(f'<li class="layer layer-{i + 1}"><span class="layer-n">{x["n"]}</span> <strong>{E(x["name"])}</strong> '
+                       f'<span class="hint">{E(", ".join(rn[r] for r in x["roles"]))}</span></li>' for i, x in enumerate(L))
+        rows = [[f'{x["n"]}. {E(x["name"])}', E(', '.join(rn[r] for r in x['roles'])), ul([E(m) for m in x['may']], raw=True), ul([E(m) for m in x['may_not']], raw=True)] for x in L]
+        adv = ''.join(f'<li><strong>{E(", ".join(rn[r] for r in a["roles"]))}:</strong> {E(a["text"])}</li>' for a in self.d.get('governance_advisers', []))
+        return (f'<h2 id="layers">{icon("layers")} Governance layers and what each may change{prov("O")}</h2>'
+                '<p>Five layers, from setting direction down to using the data. Each layer can change only what its row allows; anything else goes up to the layer above. '
+                'Adapt the layers to your own governance model: what matters is that every role knows what it may and may not change.</p>'
+                f'<ol class="layer-stack" aria-label="Governance layers from top to bottom">{bars}</ol>'
+                + table('t-layers', 'What each governance layer may and may not change', ['Layer', 'Roles', 'May', 'May not'], rows)
+                + f'<p>Alongside every layer:</p><ul>{adv}</ul><p><a href="data/governance-layers.csv">{icon("download")}Download the layers (CSV)</a></p>')
+
     def refs_by_group(self, refs):
         """Version 1.11.0: supplements list their obligations grouped by kind (legislation, standards, health and care and so on),
         not as one undifferentiated list of policy references."""
@@ -1050,6 +1141,8 @@ class Site:
         else:
             body = ul(t['fields'], cls='fields')
             dl = f'<a href="data/templates/{t["id"]}.csv">{icon("download")}Download this template (CSV)</a>'
+        if t.get('examples'):
+            dl += (' · Worked example: ' + ' · '.join(f'<a href="data/{E(x)}">{"relationship diagram (Mermaid, opens in Mermaid Live or diagrams.net)" if x.endswith(".mmd") else "entity and relationship list (CSV)"}</a>' for x in t['examples']))
         return (f'<section class="template" id="{t["id"]}"><h3>{icon("file-text")} {E(t["name"])} <small>({E(t["id"])})</small></h3><p>{mode}</p>{note}{body}'
                 f'<p>{dl} · <a href="data/templates.csv">All templates (CSV)</a></p></section>')
 
@@ -1422,7 +1515,7 @@ class Site:
 <h2 id="links">{icon("workflow")} How it joins the other two</h2><ul class="hand-offs">{il_html}</ul>
 <h2 id="learn">{icon("graduation-cap")} Learn it</h2><ul class="link-list">{mod_html}</ul>'''),
             ('method', 'Step by step', f'<h2 id="stages">{icon("route")} {E(c["method_name"])}{prov(c["method_prov"])}</h2><p>{E(c["method_intro"])}</p>{self.sector_callout(cid)}{self.step_by_step(c)}{extra_method}'),
-            ('roles', 'Roles', f'<h2 id="role-list">{icon("users")} Roles</h2><ul class="icon-list">{roles}</ul><h2 id="raci">{icon("list-checks")} Who does what</h2>{self.raci_table(c, "t-raci-" + cid)}'),
+            ('roles', 'Roles', f'<h2 id="role-list">{icon("users")} Roles</h2><ul class="icon-list">{roles}</ul><h2 id="raci">{icon("list-checks")} Who does what</h2>{self.raci_table(c, "t-raci-" + cid)}' + (self.layers_html() if cid == 'gov' else '')),
             ('templates', 'Templates', f'<h2 id="template-list">{icon("file-text")} Templates</h2><p>Blank structures to copy into your own tools.</p>{self.template_privacy()}{self.template_modes_note()}{tmpl}'),
             ('escalation', 'Measures', f'<h2 id="measures">{icon("chart-column")} Measures</h2>{table("t-meas-" + cid, "Measures for " + c["name"].lower(), ["Measure", "Target"], meas_rows)}'
              + (f'<div class="warning" role="note">{icon("triangle-alert")}<span>Finding F-01: Table 4 of the GOV.UK issues framework gives 96.75% as the High band start for a 97.5% target, but its own rule gives 96.25%. These playbooks follow the rule. <a href="about.html#F-01">Read the finding</a>.</span></div>' if cid == 'dq' else '')
@@ -2224,6 +2317,8 @@ class Site:
              ['templates.csv'] + [f for c in d['capabilities'] for t in c.get('templates', []) for f in
                                   ([f'templates/{t["id"]}.ods'] + [f'templates/{t["id"]}-{slug(sh["name"])}.csv' for sh in t['sheets']] if t.get('sheets') else [f'templates/{t["id"]}.csv'])],
              ['templates']),
+            ('governance-layers', 'Governance layers', 'Five governance layers with the roles in each and what each may and may not change. Proposed by this portal.', ['governance-layers.csv'], ['governance']),
+            ('erd-example', 'Entity and relationship example', 'A synthetic worked entity and relationship list and the Mermaid relationship diagram drawn from it.', ['templates/T-CAT-4-example.csv', 'templates/T-CAT-4-example.mmd'], ['cataloguing']),
             ('sector-rules', 'Sector data quality rules', f'{sum(len(x["rules"]) for x in d.get("supplements", []))} starter quality rules for {len(d.get("supplements", []))} kinds of data, runnable with the Data Quality Commons kit.',
              ['sector-rules.csv'] + [f'rules/{x["id"].lower()}.yaml' for x in d.get('supplements', [])], ['data quality', 'rules', 'dqkit']),
             ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
@@ -2239,7 +2334,7 @@ class Site:
         ]
         return [dict(id=a, title=b, desc=c, files=[f for f in fs if (self.out / 'data' / f).exists() or f == 'status.json' and self.status], kw=k) for a, b, c, fs, k in ds]
 
-    MEDIA = {'.csv': 'text/csv', '.ods': 'application/vnd.oasis.opendocument.spreadsheet', '.json': 'application/json', '.jsonld': 'application/ld+json', '.ttl': 'text/turtle', '.yaml': 'application/yaml'}
+    MEDIA = {'.csv': 'text/csv', '.mmd': 'text/vnd.mermaid', '.ods': 'application/vnd.oasis.opendocument.spreadsheet', '.json': 'application/json', '.jsonld': 'application/ld+json', '.ttl': 'text/turtle', '.yaml': 'application/yaml'}
 
     def write_catalogue(self, out):
         """A DCAT 3 catalogue of the portal's own datasets, as JSON-LD and Turtle, for harvesters such as CKAN and data.gov.uk."""
@@ -2844,7 +2939,8 @@ class Site:
                    f'Download it as <a href="data/backlog.csv">CSV</a> or <a href="data/backlog.json">JSON</a>.</p>'
                    f'<div class="filters" data-filter="bl-body" role="group" aria-label="Filter the backlog"><div><label for="bl-status">Status</label><select id="bl-status" name="status"><option value="">All</option>{sopt}</select></div>'
                    f'<div><label for="bl-type">Type</label><select id="bl-type" name="type"><option value="">All</option>{topt}</select></div><p class="count-out" aria-live="polite"></p></div>'
-                   + table('t-backlog', 'Product backlog', ['ID', 'Story', 'Type', 'Came from', 'Status', 'Score', 'Fits'], rows, row_attrs=attrs, tbody_id='bl-body'))
+                   + table('t-backlog', 'Product backlog', ['ID', 'Story', 'Type', 'Came from', 'Status', 'Score', 'Fits'], rows, row_attrs=attrs, tbody_id='bl-body')
+                   + self.mvp_assessment(items))
 
         # Ideas ----------------------------------------------------------------
         I = R['ideas']
@@ -3399,6 +3495,14 @@ class Site:
                                                           'ideas': {'available': self.ideas.get('available', False), 'as_of': self.ideas.get('as_of', ''), 'count': len(self.ideas.get('ideas', []))}},
                                                          indent=1, ensure_ascii=False), encoding='utf-8')
         self.write_ontology(out)
+        rn = {r['code']: r['name'] for r in d['roles']}
+        write_csv('governance-layers.csv', ['layer', 'name', 'roles', 'may', 'may_not'],
+                  [[x['n'], x['name'], '; '.join(rn[r] for r in x['roles']), '; '.join(x['may']), '; '.join(x['may_not'])] for x in d.get('governance_layers', [])])
+        # Version 1.12.0 (issue #18): a worked entity and relationship list and the Mermaid diagram drawn from it.
+        ex = d.get('erd_example') or []
+        write_csv('templates/T-CAT-4-example.csv', ['entity_id', 'Entity', 'Description', 'Related entity', 'Relationship', 'Cardinality'],
+                  [[x['id'], x['entity'], x['desc'], x.get('to', ''), x.get('rel', ''), x.get('card', '')] for x in ex])
+        (out / 'templates' / 'T-CAT-4-example.mmd').write_text(erd_mermaid(ex), encoding='utf-8')
         det = {x['prop']: x for x in self.caps['cat']['metadata_detail']}
         write_csv('metadata-dictionary.csv', ['property', 'mem_slot', 'obligation', 'rule', 'type', 'format', 'cardinality', 'value_list', 'example'],
                   [[x['prop'], x['mem'], x['obligation'], x['rule'], det[x['prop']]['type'], det[x['prop']]['format'], det[x['prop']]['card'],
