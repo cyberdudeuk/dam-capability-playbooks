@@ -638,6 +638,10 @@ class Vaccination(unittest.TestCase):
         edit(self.r / '.github' / 'workflows' / 'pages.yml', 'for attempt in', 'for x in')
         self.fails('c25_workflow_inventory')
 
+    def test_c25_browser_install_without_time_limit_d036(self):
+        edit(self.r / '.github' / 'workflows' / 'pages.yml', 'if timeout 600 python -m playwright', 'if python -m playwright')
+        self.fails('c25_workflow_inventory')
+
     def test_build_rejects_unknown_dama_area(self):
         edit(self.r / 'content' / 'frameworks.yaml', 'dama: [DM-ARC, DM-MOD]', 'dama: [DM-XYZ]')
         with self.assertRaises(build.ContentError):

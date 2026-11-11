@@ -512,8 +512,11 @@ def c25_workflow_inventory(site, repo, pages):
     pg = wf / 'pages.yml'
     if pg.exists():
         t = pg.read_text(encoding='utf-8')
-        if 'playwright install --with-deps' in t and not ('for attempt in' in t and re.search(r'^\s+python -m playwright install chromium\s*$', t, re.M)):
-            errs.append('pages.yml: the browser install has no retry and fallback (D-036)')
+        if 'playwright install --with-deps' in t:
+            if not ('for attempt in' in t and re.search(r'^\s+timeout \d+ python -m playwright install chromium\s*$', t, re.M)):
+                errs.append('pages.yml: the browser install has no retry and fallback (D-036)')
+            if re.search(r'^(?!.*timeout \d+ ).*python -m playwright install', t, re.M):
+                errs.append('pages.yml: a browser install attempt has no time limit, so a hung mirror can stall the build for hours (D-036)')
     return errs
 
 

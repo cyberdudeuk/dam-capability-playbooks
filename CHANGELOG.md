@@ -12,7 +12,7 @@
   - Verdict: after the MVP. These are new backlog items BL-35 and BL-36.
 - New check C-40, with ten deliberate breaks and four build-time rejections.
 - Fixed (D-035): the menu links to the three playbooks showed an empty tooltip on every page.
-- Fixed (D-036): the build failed before any check ran when Ubuntu's package mirror was unreachable. The browser install now retries, then falls back, and C-25 checks that the retry stays.
+- Fixed (D-036): the build failed before any check ran when Ubuntu's package mirror was unreachable. The browser install now retries with a 10-minute limit on each attempt, then falls back, and C-25 checks that the retry and the limits stay.
 - Backlog issues #18 to #22 from the Project Compass pilot:
   - #18 Data architecture and models: a new sector supplement (SUP-ARC, theme DD-15) reached from the sector finder, and a worked entity and relationship list with a Mermaid relationship diagram the build draws from it, so the two cannot drift. Data architecture is a supplement, not a fourth capability, to keep the three DAM capabilities intact.
   - #19 Retention: retention schedule, period, disposal action, review date and who approved longer retention in the ownership register (T-GOV-2); retention period and disposal action in the catalogue record (T-CAT-2). REC-01 now says the period comes from your schedule.
