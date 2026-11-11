@@ -387,10 +387,24 @@ capabilities:
   - {name: Policies with an owner and an in-date review, target: 100%}
   - {name: Open exceptions past their expiry date, target: '0'}
   templates:
-  - {id: T-GOV-1, name: Governance charter, fields: [Purpose, Scope and exclusions, Authority and sponsor, Membership, Decision rights, Review cadence, Sign-off (role and date)]}
-  - {id: T-GOV-2, name: Data ownership register entry, fields: [Asset identifier, Asset title, Ownership option (IAO, data owner or hybrid), Data owner (role), Information asset owner (role), Data steward (role), Data custodian (role), Successor (role), Effective date, Training completed, Next review]}
-  - {id: T-GOV-3, name: Decision log entry, fields: [Decision ID, Date, Decision, Decided by (role or forum), Rationale, Assets affected, Review trigger]}
-  - {id: T-GOV-4, name: Exception register entry, fields: [Exception ID, Policy deviated from, Rationale, Owner (role), Risk accepted by (role), Start date, Expiry date, Review outcome]}
+  - {id: T-GOV-1, mode: Both, name: Governance charter, fields: [Purpose, Scope and exclusions, Authority and sponsor, Membership, Decision rights, Review cadence, Sign-off (role and date)]}
+  - {id: T-GOV-2, mode: BAU, name: Data ownership register entry, fields: [Asset identifier, Asset title, Ownership option (IAO, data owner or hybrid), Data owner (role), Information asset owner (role), Data steward (role), Data custodian (role), Successor (role), Effective date, Training completed, Next review]}
+  - {id: T-GOV-3, mode: Both, name: Decision log entry, fields: [Decision ID, Date, Decision, Decided by (role or forum), Rationale, Assets affected, Review trigger]}
+  - {id: T-GOV-4, mode: Both, name: Exception register entry, fields: [Exception ID, Policy deviated from, Rationale, Owner (role), Risk accepted by (role), Start date, Expiry date, Review outcome]}
+  # Version 1.11.0: requested by a pilot team (Project Compass, 11 November 2026) so day-to-day logs live in one workbook.
+  # The separate templates above stay the definition of each log; this workbook gathers them on tabs.
+  - id: T-GOV-5
+    mode: Both
+    name: Day-to-day management workbook
+    note: "One workbook with a tab for each log, for teams that manage risks, assumptions, issues, dependencies, decisions, actions and exceptions together. Each tab keeps the fields of its own log, so you can still report each one on its own."
+    sheets:
+    - {name: Risks, fields: [Risk ID, Date raised, Description, Cause, Effect, Likelihood (1-5), Impact (1-5), Score, Owner (role), Response, Status, Review date]}
+    - {name: Assumptions, fields: [Assumption ID, Date raised, Assumption, Why we believe it, How and when we will test it, Owner (role), Status]}
+    - {name: Issues, fields: [Issue ID, Date raised, Description, Impact, Priority, Owner (role), Action, Target date, Status]}
+    - {name: Dependencies, fields: [Dependency ID, Date raised, We depend on, For what, Needed by, Owner (role), Status]}
+    - {name: Decisions, from: T-GOV-3}
+    - {name: Actions, fields: [Action ID, Date raised, Action, From (meeting, decision or issue), Owner (role), Due date, Status]}
+    - {name: Exceptions, from: T-GOV-4}
 
 - id: cat
   in_brief:
@@ -567,15 +581,41 @@ capabilities:
   - {prop: mediaType, mem: Distribution.mediaType, obligation: should, rule: IANA media type, such as text/csv}
   - {prop: expires, mem: none in MEM (gap), obligation: listed, rule: How long this version is valid}
   - {prop: supersededBy, mem: none in MEM (gap), obligation: listed, rule: The newer version that replaces this one}
+  # Version 1.11.0: technical detail requested by a pilot team (Project Compass, 11 November 2026).
+  # type: the value the property takes, following the range of the DCAT or Dublin Core term (K).
+  # card: how many values a record holds - proposed by this portal (O); the MEM and the guidance do not set it.
+  # values: a controlled value list on the Knowledge page. example: illustrative and synthetic.
+  metadata_detail:
+  - {prop: title, type: Text, format: "Plain English, up to about 100 characters", card: "1", example: "Outpatient attendances, England"}
+  - {prop: alternativeTitle, type: Text, format: Plain text, card: "0 or more", example: "OPA monthly"}
+  - {prop: description, type: Text, format: Plain English paragraphs, card: "1", example: "Monthly counts of outpatient attendances by provider and specialty."}
+  - {prop: identifier, type: Text, format: "Your system's identifier, or a random UUID", card: "0 or 1", example: "3f6c1d2e-8a4b-4c1e-9d7f-2b5a6e0c9a41"}
+  - {prop: creator, type: Organisation, format: Link to an organisation in a published list, card: "1 or more", values: organisations, example: "https://www.gov.uk/government/organisations/department-of-health-and-social-care"}
+  - {prop: dateCreated, type: Date, format: "ISO 8601 date (YYYY-MM-DD) or date and time", card: "0 or 1", example: "2024-04-01"}
+  - {prop: temporalCoverage, type: Period of time, format: "ISO 8601 start and end dates, written start/end", card: "0 or more", example: "2024-04-01/2025-03-31"}
+  - {prop: conformsTo, type: Standard, format: Link to the standard or schema, card: "0 or more", example: "A link to the NHS data set specification the extract follows"}
+  - {prop: accessRights, type: Controlled value, format: One value from the list, card: "0 or 1", values: access-rights, example: "internal"}
+  - {prop: securityClassification, type: Controlled value, format: One value from the list, card: "1", values: classification, example: "OFFICIAL"}
+  - {prop: licence, type: Licence, format: Link to the licence or agreement, card: "0 or 1", example: "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"}
+  - {prop: mediaType, type: Media type, format: IANA media type, card: "0 or 1 for each distribution", values: media-types, example: "text/csv"}
+  - {prop: expires, type: Date, format: "ISO 8601 date (YYYY-MM-DD)", card: "0 or 1", example: "2026-03-31"}
+  - {prop: supersededBy, type: Link, format: Link to the record that replaces this one, card: "0 or 1", example: "A link to the 2026 version's catalogue record"}
+  value_lists:
+  - {id: access-rights, name: Access rights, prov: V, values: [open, commercial, internal], note: "From the GOV.UK metadata guidance. Add any handling caveat in the description."}
+  - {id: classification, name: Security classification, prov: K, values: [OFFICIAL, SECRET, TOP SECRET], note: "The Government Security Classifications. Assets in scope of the DAM Policy are OFFICIAL.", url: "https://www.gov.uk/government/publications/government-security-classifications"}
+  - {id: organisations, name: Organisations, prov: K, values: [], note: "Use a published list of organisations, such as the GOV.UK organisations list, and link to the organisation's page.", url: "https://www.gov.uk/government/organisations"}
+  - {id: media-types, name: Media types, prov: K, values: [text/csv, application/json, application/vnd.oasis.opendocument.spreadsheet, text/turtle], note: "Use the IANA register of media types. The values shown are common examples.", url: "https://www.iana.org/assignments/media-types/media-types.xhtml"}
   measures:
   - {name: Designated assets with a catalogue record, target: 100%}
   - {name: Records reviewed in the last 12 months, target: 100%}
   - {name: Records with access rights, licence and classification, target: 100%}
   - {name: Records harvestable as DCAT, target: Rising each quarter}
   templates:
-  - {id: T-CAT-1, name: Candidate and designation log, fields: [Candidate, Found in (catalogue, IAR or sharing register), Provided to or acquired from, Purpose (one or more of seven), Scope tests passed, Designated (yes or no), Reason, Decided by (role), Date]}
-  - {id: T-CAT-2, name: Critical data asset catalogue record, fields: [title, alternativeTitle, description, identifier, creator, dateCreated, temporalCoverage, conformsTo, accessRights, securityClassification, licence, mediaType, expires, supersededBy, Owner (role), Contact point (team or form), Purpose, Last reviewed, Next review]}
-  - {id: T-CAT-3, name: Annual record review, fields: [Asset, Date, Still critical (and why), Owner and successor confirmed, Metadata checked against the guidance, Changes made, Signed off by (role)]}
+  - {id: T-CAT-1, mode: BAU, name: Candidate and designation log, fields: [Candidate, Found in (catalogue, IAR or sharing register), Provided to or acquired from, Purpose (one or more of seven), Scope tests passed, Designated (yes or no), Reason, Decided by (role), Date]}
+  - {id: T-CAT-2, mode: BAU, name: Critical data asset catalogue record, fields: [title, alternativeTitle, description, identifier, creator, dateCreated, temporalCoverage, conformsTo, accessRights, securityClassification, licence, mediaType, expires, supersededBy, Owner (role), Contact point (team or form), Purpose, Last reviewed, Next review]}
+  - {id: T-CAT-3, mode: BAU, name: Annual record review, fields: [Asset, Date, Still critical (and why), Owner and successor confirmed, Metadata checked against the guidance, Changes made, Signed off by (role)]}
+  # Version 1.11.0: an interim home for relationship artefacts until a data architecture playbook exists (backlog).
+  - {id: T-CAT-4, mode: Both, name: Entity and relationship list, note: "A plain list of the entities in a data asset and how they relate, so a relationship diagram can be drawn from it. Interim until a data architecture playbook exists.", fields: [Entity, Description, Key attributes, Related entity, Relationship (for example, places), Cardinality (one to one, one to many or many to many), Optional or mandatory, Source system, Data dictionary link]}
 
 - id: dq
   in_brief:
@@ -760,9 +800,9 @@ capabilities:
   - {name: Critical issues resolved within timescale, target: 100%}
   - {name: Assets with quality information on the catalogue record, target: 100%}
   templates:
-  - {id: T-DQ-1, name: Data quality rule, fields: [Rule ID, Data element, Plain-English rule, Dimension, Test, Importance (1-4), Impact (1-4), Combined score, Target (%), Owner (role), Date agreed]}
-  - {id: T-DQ-2, name: Issue log entry, fields: [Issue ID, Date found, Rule ID, Records affected, Users or groups affected, Performance and target, Band, Priority, Target resolution date, Root cause, Action and owner (role), Status]}
-  - {id: T-DQ-3, name: Data quality statement, fields: [Asset and version, Date, Summary in plain English, Scores by dimension and trend, Known issues, Quality by group where lawful, Fit for, Not fit for, How to report a problem (form)]}
+  - {id: T-DQ-1, mode: Both, name: Data quality rule, fields: [Rule ID, Data element, Plain-English rule, Dimension, Test, Importance (1-4), Impact (1-4), Combined score, Target (%), Owner (role), Date agreed]}
+  - {id: T-DQ-2, mode: Both, name: Issue log entry, fields: [Issue ID, Date found, Rule ID, Records affected, Users or groups affected, Performance and target, Band, Priority, Target resolution date, Root cause, Action and owner (role), Status]}
+  - {id: T-DQ-3, mode: BAU, name: Data quality statement, fields: [Asset and version, Date, Summary in plain English, Scores by dimension and trend, Known issues, Quality by group where lawful, Fit for, Not fit for, How to report a problem (form)]}
   tools:
   - {name: Check a CSV file in the browser, url: https://cyberdudeuk.github.io/dq-commons/check.html}
   - {name: Score issues with the issues framework, url: https://cyberdudeuk.github.io/dq-commons/guidance.html}
@@ -911,6 +951,7 @@ defects:
 - {id: D-030, found: "Visual inspection (version 1.10.0)", defect: "The Open data page said '1 files' and offered downloads for only a few datasets, because it was built before the data files were written.", cause: "The page filters each dataset's files by whether they exist, and the data files are written after the pages.", check: "The page is built again after the data files are written. C-28 now fails if any file in the catalogue has no download link on the Open data page."}
 - {id: D-031, found: "Visual inspection (version 1.10.0)", defect: "What's new showed raw Markdown backticks around file names, such as `research.html`.", cause: "Changelog lines were escaped as plain text.", check: "Backticks are shown as code on What's new and in the releases feed. C-37 fails if a backtick appears in the visible text of What's new."}
 - {id: D-032, found: "Form set-up review (version 1.10.2)", defect: "The private Microsoft feedback form opened blank from every page and test task, so a response could not be traced to the page or task it was about, and the portal said the form might ask people to sign in when it does not.", cause: "Links used the bare form address, pre-filled answers were switched off in Microsoft Forms, and the form note was written before the response setting was chosen.", check: "Pre-filled answers are on, and every link is built with the page or task filled in. C-33 now fails if any page lacks a link with that page filled in, if any test task is not filled in as task feedback, if a pre-fill question id is malformed, if a form link goes elsewhere or if the privacy wording is missing from About; the build rejects an unknown topic."}
+- {id: D-033, found: "Development (version 1.11.0, before publishing)", defect: "A data dictionary format with a comma in it was split into a stray key with no value, so the title's format lost its second half without any error.", cause: "Unquoted commas inside a YAML flow mapping start a new key.", check: "The build now rejects any dictionary entry with unexpected or empty keys and says to quote values that contain a comma; a test proves it."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1598,6 +1639,11 @@ design:
   - {id: FR-15, kind: Functional, moscow: Should, text: "Signpost the sister portals where they help, naming each and its status, without merging their journeys or copying their content.", features: [quality, tooling, reuse], checks: [C-34]}
   - {id: FR-16, kind: Functional, moscow: Should, text: "Help people who work across the three portals choose where to start, in what order and why, without merging the portals.", features: [reuse], checks: [C-35, B-17]}
   - {id: FR-17, kind: Functional, moscow: Must, text: "Let users take part in research privately, suggest and vote for ideas, and see the roadmap, backlog and how each item is prioritised against government strategy, in the open.", features: [research], checks: [C-36, C-04, B-01]}
+  # Version 1.11.0: from the Project Compass pilot session (11 November 2026).
+  - {id: FR-18, kind: Functional, moscow: Must, text: "Let teams name people and work email addresses in their own copies of templates, and keep them out of anything published.", features: [governance, cataloguing, quality, library], checks: [C-38, C-04]}
+  - {id: FR-19, kind: Functional, moscow: Should, text: "Say whether each template is for business as usual, change or both, offer each template on its own, and offer logs used together as one tabbed workbook.", features: [governance, cataloguing, quality, library, data], checks: [C-38, C-28]}
+  - {id: FR-20, kind: Functional, moscow: Should, text: "Give the data type, format, cardinality, controlled values and an example for every catalogue record property.", features: [knowledge, cataloguing], checks: [C-38, T-VAL]}
+  - {id: FR-21, kind: Functional, moscow: Should, text: "Group each sector supplement's legislation, standards and frameworks by kind, and show how sector standards meet the catalogue standard.", features: [sectors, knowledge], checks: [C-38]}
   - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services (Pages, issue forms, Discussions, Actions and releases), plus an optional Microsoft Forms route for private feedback.", features: [contact, status, whats-new], checks: [C-05, C-33, HL-01]}
   architecture:
     components:
@@ -1684,6 +1730,8 @@ supplements:
   - "Record the legal basis for each use, the common law duty of confidentiality position and whether the national data opt-out applies."
   - "Check the organisation's latest Data Security and Protection Toolkit assessment covers the systems that hold the asset."
   - "Apply the Caldicott principles when deciding what each user of the asset needs: the minimum necessary, justified for each purpose."
+  - "Record the clinical terminology and exchange standards the asset follows, such as SNOMED CT, dm+d and HL7 FHIR UK Core, in conformsTo, so the MEM record points to the sector standard."
+  - "Where a health IT system holds the asset, record its clinical safety position: DCB0129 for the supplier and DCB0160 for the organisation that deploys it."
   cat:
   - {prop: legalBasis, term: "dpv:hasLegalBasis", rule: "The lawful basis and, for health data, the special category condition"}
   - {prop: optOutApplied, term: "local extension", rule: "Whether the national data opt-out has been applied to this distribution (yes, no or not applicable)"}
@@ -1710,7 +1758,7 @@ supplements:
   - "Legal basis, confidentiality position and opt-out status are recorded on the catalogue record"
   - "NHS number validity and completeness rules are in the DQAP"
   - "Quality is broken down by ethnic group where lawful"
-  refs: [RB-CALD, RB-DSPT, RB-DPA]
+  refs: [RB-CALD, RB-DSPT, RB-DPA, RB-FHIRUK, RB-SNOMED, RB-DCB0129, RB-DCB0160]
 - id: SUP-SOC
   dd: DD-02
   title: Adult and children's social care data
@@ -1816,6 +1864,7 @@ supplements:
   - "Check each flow against the Data (Use and Access) Act 2025 changes to UK GDPR at the next review."
   - "Use a data sharing agreement for routine sharing, as the ICO code recommends, even where it is not mandatory."
   - "Name the owner on both sides of every flow, by role."
+  - "If the flow uses a Part 5 power in the Digital Economy Act 2017, check the agreement is on the published register."
   cat:
   - {prop: accessRights, term: "dcterms:accessRights", rule: "Restricted, with the agreement reference"}
   - {prop: legalGateway, term: "local extension", rule: "The statutory power or legal basis for the flow"}
@@ -1833,7 +1882,7 @@ supplements:
   - "A sharing decision record exists for each flow, with a review date"
   - "Agreement references appear on the catalogue record and in each extract"
   - "Flows were reviewed against the Data (Use and Access) Act 2025 changes"
-  refs: [RB-DUAA, RB-DEA, RB-ICOSHARE, RB-DPA]
+  refs: [RB-DUAA, RB-DEA, RB-DEAREG, RB-ICOSHARE, RB-DPA]
 - id: SUP-AI
   dd: DD-06
   title: AI-ready data
@@ -1986,6 +2035,7 @@ supplements:
   - "Record the retention schedule and disposal action for each asset in the ownership register."
   - "Agree with the records manager when an asset is retired, archived or transferred."
   - "Keep catalogue records for retired assets, marked as retired, so dependants can see what changed."
+  - "When an asset needs to be kept longer than its schedule allows, record the reason and who approved it in the exception register (T-GOV-4), with a review date."
   cat:
   - {prop: retention, term: "local extension", rule: "Retention period and disposal action"}
   - {prop: isReplacedBy, term: "dcterms:isReplacedBy", rule: "What replaces a retired asset"}
@@ -1995,10 +2045,11 @@ supplements:
   example: "Illustrative, synthetic: a case management extract kept for seven years. REC-01 flags records past retention, which the owner agrees to dispose of through the records management process."
   risks:
   - "Data kept past its retention period is a data protection risk; data destroyed early is a records risk."
+  - "There is no single government-wide retention period. The National Archives describes short, medium and long periods and each organisation sets its own schedule, so check yours before using an example such as seven years."
   checklist:
   - "Retention and disposal are on the ownership register"
   - "Retired assets keep a marked catalogue record"
-  refs: [RB-TNA]
+  refs: [RB-TNA, RB-TNARET, RB-TNAIM, RB-PRA]
 - id: SUP-DEV
   dd: DD-12
   title: Devolved governments and local government

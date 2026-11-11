@@ -481,6 +481,72 @@ class Vaccination(unittest.TestCase):
         with self.assertRaises(build.ContentError):
             s.ms_form_link('x', 'not-a-topic')
 
+    # Version 1.11.0: what the Project Compass pilot asked for (C-38).
+    def test_c38_old_template_wording_returns(self):
+        edit(self.s / 'quality.html', 'Blank structures to copy into your own tools.', 'Record roles, never named individuals or personal email addresses.')
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_template_privacy_note_missing(self):
+        edit(self.s / 'governance.html', 'id="template-privacy"', 'id="tp-x"')
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_template_without_mode(self):
+        edit(self.s / 'cataloguing.html', 'class="pill mode-bau"', 'class="pill"')
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_template_download_missing(self):
+        (self.s / 'data' / 'templates' / 'T-DQ-2.csv').unlink()
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_workbook_mimetype_compressed(self):
+        import zipfile
+        f = self.s / 'data' / 'templates' / 'T-GOV-5.ods'
+        with zipfile.ZipFile(f) as z:
+            parts = [(i.filename, z.read(i.filename)) for i in z.infolist()]
+        with zipfile.ZipFile(f, 'w', zipfile.ZIP_DEFLATED) as z:
+            for n, b in parts:
+                z.writestr(n, b)
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_workbook_missing_tab(self):
+        import zipfile
+        f = self.s / 'data' / 'templates' / 'T-GOV-5.ods'
+        with zipfile.ZipFile(f) as z:
+            parts = [(i, z.read(i.filename)) for i in z.infolist()]
+        with zipfile.ZipFile(f, 'w') as z:
+            for i, b in parts:
+                if i.filename == 'content.xml':
+                    b = b.replace(b'table:name="Dependencies"', b'table:name="Deps"')
+                z.writestr(i, b)
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_dictionary_without_type(self):
+        edit(self.s / 'knowledge.html', '<td class="c-sm">Period of time</td>', '<td class="c-sm"></td>')
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_value_list_missing(self):
+        edit(self.s / 'knowledge.html', 'id="vl-classification"', 'id="vl-x"')
+        self.fails('c38_pilot_requirements')
+
+    def test_c38_supplement_obligations_ungrouped(self):
+        edit(self.s / 'sectors.html', 'class="ref-groups"', 'class="refs"')
+        self.fails('c38_pilot_requirements')
+
+    def test_build_rejects_stray_dictionary_key(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'format: "Plain English, up to about 100 characters"', 'format: Plain English, up to about 100 characters')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_template_without_mode(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '{id: T-DQ-3, mode: BAU, ', '{id: T-DQ-3, ')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_workbook_tab_from_unknown_template(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '{name: Decisions, from: T-GOV-3}', '{name: Decisions, from: T-GOV-9}')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
     def test_c34_related_link_to_other_site(self):
         f = self.s / 'quality.html'
         h = f.read_text(encoding='utf-8')

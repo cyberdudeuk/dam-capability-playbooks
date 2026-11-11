@@ -1,6 +1,19 @@
 # Changelog
 
 ## Unreleased
+- From the Project Compass pilot session (11 November 2026), built now:
+  - Templates: names and work email addresses may be kept in a team's own working copies; only what is published, on GitHub or anywhere public, must name roles alone. The old line read as banning named people from a team's own RACI.
+  - Every template says whether it is for business as usual, change programmes or both, and the Library can filter by it. Each template downloads on its own as a CSV header row (`data/templates/`), as well as all together.
+  - New T-GOV-5 day-to-day management workbook: one OpenDocument spreadsheet with tabs for risks, assumptions, issues, dependencies, decisions, actions and exceptions. Decisions and exceptions reuse the fields of T-GOV-3 and T-GOV-4, so each log is still defined once.
+  - New T-CAT-4 entity and relationship list, an interim home for relationship artefacts until a data architecture playbook exists.
+  - Data dictionary: data type, format, how many values, controlled value lists you can click through to, and a synthetic example for every catalogue property; the same columns in `data/metadata-dictionary.csv`.
+  - Health and care supplement: HL7 FHIR UK Core, SNOMED CT, DCB0129 and DCB0160 signposted, with steps to record them in `conformsTo` and to record clinical safety. Every supplement now groups its legislation, standards and frameworks by kind.
+  - Retention: how to approve keeping an asset longer through the exception register, and The National Archives' advice that there is no single government-wide period, so "seven years" is an example to check against your own schedule.
+  - Data sharing: check Part 5 Digital Economy Act agreements against the published register.
+  - Service assessments (change item CH-02): show the panel that data was considered; templates stay the team's working record.
+  - The proposed DCAT Application Profile for the UK is signposted from Cataloguing, labelled proposed, not endorsed.
+- New check C-38 with nine deliberate breaks and three build-time rejections.
+- Fixed (D-033): an unquoted comma in a YAML value silently split the data dictionary's title format; the build now rejects stray or empty keys.
 - Private feedback form, finished and wired in: every page's footer and "Was this page useful?" line, the contact page, Get involved and each Help us test task now open the Microsoft form with the page or task already filled in (tasks are also marked as task feedback), so each response can be traced to where it came from. Anyone can respond without signing in; contact details are optional and asked for only to reply or to email a copy of the answers. About > Privacy now says how the form uses answers and contact details. Open item OR-02 is narrowed to what the data protection officer still has to confirm.
 - In the form itself (8 November 2026): a new introduction linking back to the portal and its privacy wording, a "Something else" topic, labelled 1 to 7 ease scale, guidance on what to tell us and where the correct information is, new optional questions (what would make it better, browser and assistive technology, organisation type, whether to contact you or email a copy, email address, organisation), a reworded privacy confirmation, a thank-you message pointing to What's new, and a solid blue theme closer to the portal's own colours.
 - Fixed (D-032): the private form opened blank from everywhere and the portal said it might ask people to sign in. C-33 now checks the wiring on every page and task, proved by five deliberate breaks and a build-time rejection.

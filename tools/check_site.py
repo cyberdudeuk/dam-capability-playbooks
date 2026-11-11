@@ -1098,6 +1098,72 @@ def c37_involvement_and_reuse(site, repo, pages):
     return errs
 
 
+
+def c38_pilot_requirements(site, repo, pages):
+    """Rule (version 1.11.0): what a pilot team (Project Compass, 11 November 2026) asked for stays in place. Template pages say names and work
+    emails may be kept in working copies but not published, and never again say they must not be recorded; every template shows whether it is for
+    business as usual, change or both, and has its own download that exists; every workbook is a valid OpenDocument spreadsheet with one tab per
+    sheet; the data dictionary gives a type, format, cardinality and example for every property, and every value list it links to is on the page;
+    and every sector supplement groups its obligations by kind. Exists because the old template wording read as banning named people from a
+    team's own RACI, and the dictionary had no technical detail."""
+    import html as _h
+    import yaml
+    import zipfile
+    errs = []
+    P = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    old = 'never named individuals or personal email addresses'
+    for name in pages:
+        if old in (site / name).read_text(encoding='utf-8'):
+            errs.append(f'{name}: still says never to record named individuals')
+    for c in P['capabilities']:
+        page = {'gov': 'governance', 'cat': 'cataloguing', 'dq': 'quality'}[c['id']] + '.html'
+        h = (site / page).read_text(encoding='utf-8')
+        if 'id="template-privacy"' not in h:
+            errs.append(f'{page}: no note on names and email addresses in templates')
+        for t in c.get('templates', []):
+            i = h.find(f'<section class="template" id="{t["id"]}">')
+            if i < 0:
+                errs.append(f'{page}: {t["id"]} missing'); continue
+            sec = h[i:h.find('</section>', i)]
+            if 'class="pill mode-' not in sec:
+                errs.append(f'{t["id"]}: does not say whether it is for business as usual, change or both')
+            own = [_h.unescape(x) for x in re.findall(r'href="(data/templates/[^"]+)"', sec)]
+            if not own:
+                errs.append(f'{t["id"]}: no download of its own')
+            for f in own:
+                if not (site / f).exists():
+                    errs.append(f'{t["id"]}: {f} does not exist')
+            if t.get('sheets'):
+                f = site / 'data' / 'templates' / f'{t["id"]}.ods'
+                try:
+                    z = zipfile.ZipFile(f)
+                    first = z.infolist()[0]
+                    if first.filename != 'mimetype' or first.compress_type != zipfile.ZIP_STORED or z.read('mimetype') != b'application/vnd.oasis.opendocument.spreadsheet':
+                        errs.append(f'{f.name}: mimetype must be the first, uncompressed entry')
+                    tabs = re.findall(r'<table:table table:name="([^"]+)"', z.read('content.xml').decode('utf-8'))
+                    if tabs != [sh['name'] for sh in t['sheets']]:
+                        errs.append(f'{f.name}: tabs {tabs} do not match the template')
+                except (OSError, KeyError, zipfile.BadZipFile, IndexError) as e:
+                    errs.append(f'{f.name}: not a readable spreadsheet ({e})')
+    k = (site / 'knowledge.html').read_text(encoding='utf-8')
+    i = k.find('id="t-dict"')
+    body = k[i:k.find('</table>', i)] if i >= 0 else ''
+    if not body:
+        errs.append('knowledge.html: data dictionary missing')
+    for row in re.findall(r'<tr>(.*?)</tr>', body, re.S)[1:]:
+        cells = [re.sub(r'<[^>]+>', '', x).strip() for x in re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>', row, re.S)]
+        if len(cells) != 8 or not all(cells[3:7]):
+            errs.append(f'data dictionary row {cells[:1]}: needs type, format, how many and example')
+    for ref in set(re.findall(r'href="#(vl-[a-z-]+)"', k)):
+        if f'id="{ref}"' not in k:
+            errs.append(f'knowledge.html: value list #{ref} is linked but missing')
+    sec = (site / 'sectors.html').read_text(encoding='utf-8')
+    for sup in P['supplements']:
+        i = sec.find(f'<section class="module supplement" id="{sup["id"]}"')
+        if i < 0 or 'class="ref-groups"' not in sec[i:sec.find('</section>', i)]:
+            errs.append(f'{sup["id"]}: obligations are not grouped by kind')
+    return errs
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -1105,7 +1171,8 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c22_signposts_verified, c23_repository_metadata, c24_actions_pinned,
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
-          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse]
+          c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
+          c38_pilot_requirements]
 
 
 def run(site, repo, only=None, quiet=False):

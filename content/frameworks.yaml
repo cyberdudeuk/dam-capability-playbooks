@@ -75,6 +75,70 @@ rulebook_more:
   - gov
   - cat
   why: Spend control is the point at which central teams see new digital and technology spend, and so a natural checkpoint for DAM evidence.
+# Version 1.11.0: added after the Project Compass pilot session (11 November 2026). Found by web search on that date (S).
+- id: RB-FHIRUK
+  group: Health and care
+  title: HL7 FHIR UK Core
+  publisher: NHS England (NHS Standards Directory)
+  url: https://data.standards.nhs.uk/published-standards/hl7-fhir-uk-core
+  updated: null
+  prov: S
+  caps: [cat]
+  why: API standards that use FHIR Release 4 to exchange health and care data consistently across England, Scotland, Wales and Northern Ireland. UK Core uses SNOMED CT, dm+d and the NHS Data Model and Dictionary for terminology.
+- id: RB-SNOMED
+  group: Health and care
+  title: SNOMED CT
+  publisher: NHS England (NHS Standards Directory)
+  url: https://data.standards.nhs.uk/current-standards/snomed-ct
+  updated: null
+  prov: S
+  caps: [cat, dq]
+  why: The information standard for clinical terminology (SCCI0034). Record it in conformsTo when an asset holds coded clinical data.
+- id: RB-DCB0129
+  group: Health and care
+  title: 'DCB0129: Clinical risk management in the manufacture of health IT systems'
+  publisher: NHS England (NHS Standards Directory)
+  url: https://data.standards.nhs.uk/current-standards/nhsd-clinical-risk-management-its-application-in-the-manufacture-of-health-it-systems
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Clinical risk management that suppliers of health IT must follow, including a clinical safety officer. Under national review with DCB0160.
+- id: RB-DCB0160
+  group: Health and care
+  title: 'DCB0160: Clinical risk management in the deployment and use of health IT systems'
+  publisher: NHS England (NHS Standards Directory)
+  url: https://standards.nhs.uk/published-standards/clinical-risk-management-its-application-in-the-deployment-and-use-of-health-it-systems
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Clinical risk management that health and care organisations must follow when they deploy and use health IT. A national review consulted until 11 September 2026.
+- id: RB-TNARET
+  group: Records and information management
+  title: Advice on retention
+  publisher: The National Archives
+  url: https://www.nationalarchives.gov.uk/information-management/manage-information/policy-process/disposal/advice-on-retention/
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Sets out short (up to two years), medium (up to eight years) and long retention categories, and says the model retention schedules are no longer maintained. Each organisation sets its own schedule.
+- id: RB-DCATGOV
+  group: Standards
+  title: Using metadata to describe data assets in a data catalogue
+  publisher: GOV.UK (recommended open standards)
+  url: https://www.gov.uk/government/publications/recommended-open-standards-for-government/using-metadata-to-describe-data-assets-in-a-data-catalogue
+  updated: '2023-09-28'
+  prov: S
+  caps: [cat]
+  why: Recommends DCAT version 3 for describing data sets and data services in a catalogue, in support of the UK Cross-Government Metadata Exchange Model.
+- id: RB-DEAREG
+  group: Legislation
+  title: Register of information sharing agreements under the Digital Economy Act 2017
+  publisher: GOV.UK (data.gov.uk)
+  url: https://www.digital-economy-act-register.data.gov.uk/
+  updated: null
+  prov: S
+  caps: [gov, cat]
+  why: The public register of agreements made under the public service delivery, debt, fraud and civil registration powers in Part 5 of the Act.
 - id: RB-SVCASSESS
   group: Delivery, change and investment
   title: Service assessments and applying the Service Standard
@@ -2929,6 +2993,7 @@ change:
     actions:
     - 'Add three questions to internal spend control: which assets, who owns them, are they catalogued.'
     - At alpha, show the planned metadata and quality rules; at beta, the catalogue entry and DQAP.
+    - "Show the panel that data was considered: who owns each asset, how it is described and quality-planned, the DPIA, and that data professionals and users were involved. You do not need to hand in every template; keep them as your team's working record."
     - Record the answers so the next return reuses them.
     evidence:
     - Spend control submission notes
@@ -4800,12 +4865,20 @@ related:
     status: Specialist evidence tool
     nature: What public bodies publish as code on GitHub, explained for technical and non-technical readers.
     licence: Code MIT; content and data Open Government Licence v3.0
+  # Version 1.11.0: the proposed UK DCAT profile, signposted from cataloguing after the Project Compass pilot asked how the MEM meets sector standards.
+  - id: ap
+    name: DCAT Application Profile for the UK (DCAT-AP-UK)
+    url: https://cyberdudeuk.github.io/dcat-uk-ap/
+    status: Proposed, not endorsed
+    nature: A proposed UK application profile of DCAT 3 that evolves the xGov MEM. The MEM remains the endorsed model until the Data Standards Authority decides.
+    licence: Content Open Government Licence v3.0; code MIT
   placements:
     quality:
     - {portal: dqc, title: Check a CSV file, path: check.html, why: Run quality rules on a file in your browser; nothing is uploaded.}
     - {portal: dqc, title: Issues framework calculator, path: guidance.html, why: Score an issue's priority and time to fix with the GOV.UK issues framework.}
     - {portal: dqc, title: Data quality management playbook, path: playbook.html, why: The community's eight-stage practice guide, for more depth than the policy steps here.}
     cataloguing:
+    - {portal: ap, title: The proposed UK profile of DCAT, path: index.html, why: "How the MEM may evolve: every property with its obligation and lineage from the MEM, and a record builder. Proposed, not endorsed."}
     - {portal: cat, title: Data catalogues and standards, path: '#standards', why: Which public bodies' code shows a catalogue platform or applies DCAT, SKOS or the Metadata Exchange Model.}
     - {portal: dqc, title: Metadata weaver, path: weaver.html, why: Describe a dataset once and output it in several metadata standards, with its metadata quality as DQV.}
     - {portal: dqc, title: Standards catalogue, path: 'interop.html#catalogue', why: 'Open standards for data, digital, cyber and technology with their GOV.UK status, including DCAT, the Metadata Exchange Model and DQV.'}
