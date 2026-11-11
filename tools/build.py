@@ -42,9 +42,56 @@ def load(path):
         d.update(f)
     anchors = path.parent / 'source-anchors.json'
     d['_anchors'] = json.loads(anchors.read_text())['anchors'] if anchors.exists() else {}
+    resolve_workbooks(d)
     validate(d)
     return d
 
+
+TEMPLATE_MODES = {'BAU': 'Business as usual', 'Change': 'Change programmes', 'Both': 'Business as usual and change'}
+
+
+def resolve_workbooks(d):
+    """A workbook template (version 1.11.0) is a set of tabs. A tab either lists its own fields or reuses another
+    template's fields with 'from', so a log defined once is never retyped. Its flat field list is 'Tab: field'."""
+    tm = {t['id']: t for c in d['capabilities'] for t in c.get('templates', [])}
+    for t in tm.values():
+        if not t.get('sheets'):
+            continue
+        for sh in t['sheets']:
+            if 'from' in sh:
+                if sh['from'] not in tm or tm[sh['from']].get('sheets'):
+                    raise ContentError(f"{t['id']}: tab {sh['name']} reuses unknown or workbook template {sh['from']}")
+                sh['fields'] = list(tm[sh['from']]['fields'])
+            if not sh.get('fields'):
+                raise ContentError(f"{t['id']}: tab {sh['name']} has no fields")
+        t['fields'] = [f"{sh['name']}: {f}" for sh in t['sheets'] for f in sh['fields']]
+
+
+
+def write_ods(path, sheets):
+    """A minimal OpenDocument spreadsheet (version 1.11.0): one tab per sheet with a header row, written
+    without third-party libraries and with fixed timestamps, so the same content always gives the same bytes."""
+    import zipfile
+    from xml.sax.saxutils import escape as xesc
+
+    def row(cells):
+        return '<table:table-row>' + ''.join(f'<table:table-cell office:value-type="string"><text:p>{xesc(c)}</text:p></table:table-cell>' for c in cells) + '</table:table-row>'
+    tables = ''.join(f'<table:table table:name="{xesc(name, {chr(34): "&quot;"})}"><table:table-column table:number-columns-repeated="{len(fields)}"/>{row(fields)}</table:table>' for name, fields in sheets)
+    ns = ('xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" '
+          'xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"')
+    content = f'<?xml version="1.0" encoding="UTF-8"?><office:document-content {ns} office:version="1.3"><office:body><office:spreadsheet>{tables}</office:spreadsheet></office:body></office:document-content>'
+    styles = f'<?xml version="1.0" encoding="UTF-8"?><office:document-styles {ns} office:version="1.3"/>'
+    manifest = ('<?xml version="1.0" encoding="UTF-8"?><manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0" manifest:version="1.3">'
+                '<manifest:file-entry manifest:full-path="/" manifest:media-type="application/vnd.oasis.opendocument.spreadsheet"/>'
+                '<manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/>'
+                '<manifest:file-entry manifest:full-path="styles.xml" manifest:media-type="text/xml"/></manifest:manifest>')
+    with zipfile.ZipFile(path, 'w') as z:
+        for name, data, method in [('mimetype', 'application/vnd.oasis.opendocument.spreadsheet', zipfile.ZIP_STORED),
+                                   ('content.xml', content, zipfile.ZIP_DEFLATED), ('styles.xml', styles, zipfile.ZIP_DEFLATED),
+                                   ('META-INF/manifest.xml', manifest, zipfile.ZIP_DEFLATED)]:
+            zi = zipfile.ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))
+            zi.compress_type = method
+            z.writestr(zi, data)
 
 def validate(d):
     errs, ids = [], {}
@@ -59,7 +106,28 @@ def validate(d):
     for c in d['capabilities']:
         reg('cap:' + c['id'], 'capabilities')
         for st in c['stages']: reg(f"{c['id']}.{st['id']}", 'stages')
-        for t in c.get('templates', []): reg(t['id'], 'templates')
+        for t in c.get('templates', []):
+            reg(t['id'], 'templates')
+            if t.get('mode') not in TEMPLATE_MODES:
+                errs.append(f"{t['id']}: mode must be one of {', '.join(TEMPLATE_MODES)}")
+    for c in d['capabilities']:
+        if 'metadata' not in c:
+            continue
+        det = {x['prop']: x for x in c.get('metadata_detail', [])}
+        vls = {v['id'] for v in c.get('value_lists', [])}
+        for x in c['metadata']:
+            if x['prop'] not in det:
+                errs.append(f"metadata {x['prop']}: no data dictionary detail (type, format, cardinality, example)")
+        for k, x in det.items():
+            # An unquoted comma in a YAML flow mapping silently makes a stray key with no value (found while writing 1.11.0).
+            stray = set(x) - {'prop', 'type', 'format', 'card', 'values', 'example'}
+            missing = {'type', 'format', 'card', 'example'} - set(x)
+            if stray or missing or any(v in (None, '') for v in x.values()):
+                errs.append(f"metadata_detail {k}: unexpected keys {sorted(stray)} or missing {sorted(missing)}; quote any value that contains a comma")
+            if k not in {m['prop'] for m in c['metadata']}:
+                errs.append(f"metadata_detail {k}: not a metadata property")
+            if x.get('values') and x['values'] not in vls:
+                errs.append(f"metadata_detail {k}: unknown value list {x['values']}")
     for c in d['concepts']: reg('c:' + c['id'], 'concepts')
     for l in d['library']: reg(l['id'], 'library')
     for x in d['interlocks']: reg(x['id'], 'interlocks')
@@ -434,7 +502,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 38)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 39)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -930,6 +998,61 @@ class Site:
     def ms_form_url(self):
         return (self.d.get('ms_form') or {}).get('url') or ''
 
+    def refs_by_group(self, refs):
+        """Version 1.11.0: supplements list their obligations grouped by kind (legislation, standards, health and care and so on),
+        not as one undifferentiated list of policy references."""
+        groups = {}
+        for r in refs:
+            groups.setdefault(self.rb[r]['group'], []).append(r)
+        return '<dl class="ref-groups">' + ''.join(f'<dt>{E(g)}</dt>' + ''.join(f'<dd>{self.rb_link(r)}</dd>' for r in rs) for g, rs in groups.items()) + '</dl>'
+
+    def dictionary_rows(self):
+        """Version 1.11.0: the dictionary shows type, format, cardinality, controlled values and an example for each property."""
+        cat = self.caps['cat']
+        det = {x['prop']: x for x in cat['metadata_detail']}
+        vl = {v['id']: v for v in cat['value_lists']}
+        rows = []
+        for x in cat['metadata']:
+            t = det[x['prop']]
+            typ = E(t['type']) + (f' <a href="#vl-{t["values"]}">({E(vl[t["values"]]["name"].lower())} list)</a>' if t.get('values') else '')
+            rows.append([f'<code id="dict-{x["prop"]}">{E(x["prop"])}</code>', E(x['mem']), E(x['obligation']), typ, E(t['format']), E(t['card']), f'<code>{E(t["example"])}</code>', E(x['rule'])])
+        return rows
+
+    def value_lists_html(self):
+        out = ''
+        for v in self.caps['cat']['value_lists']:
+            vals = (ul([f"<code>{E(x)}</code>" for x in v["values"]], raw=True) if v['values'] else '')
+            link = f' <a href="{E(v["url"])}">{E(v["name"])} source</a>' if v.get('url') else ''
+            used = ', '.join(f'<a href="#dict-{x["prop"]}"><code>{E(x["prop"])}</code></a>' for x in self.caps['cat']['metadata_detail'] if x.get('values') == v['id'])
+            out += f'<section id="vl-{v["id"]}"><h4>{E(v["name"])}{prov(v["prov"])}</h4><p>{E(v["note"])}{link}</p>{vals}<p class="hint">Used by {used}.</p></section>'
+        return f'<h3 id="value-lists">{icon("list-checks")} Controlled value lists</h3>{out}'
+
+    def template_privacy(self):
+        """Version 1.11.0: the old line said never to record named individuals or personal email addresses, which read as
+        banning names from a team's own working copies. The rule is about publishing, not recording."""
+        return (f'<div class="notice-box" id="template-privacy">{icon("lock-keyhole")}<p><strong>Names and email addresses.</strong> Your own working copies can name the '
+                'people who hold each role and give their work email addresses, handled under your organisation\'s data protection rules. Do not publish them: '
+                'anything you put on GitHub or anywhere public should name roles only.</p></div>')
+
+    def template_modes_note(self):
+        return ('<p class="hint">Each template says whether it is for business as usual, change programmes or both. Artefacts that only change programmes need, '
+                'such as project governance and design authority inputs, are on the <a href="change.html">Change</a> page.</p>')
+
+    def template_html(self, t):
+        mode = f'<span class="pill mode-{t["mode"].lower()}">{E(TEMPLATE_MODES[t["mode"]])}</span>'
+        note = f'<p>{E(t["note"])}</p>' if t.get('note') else ''
+        if t.get('sheets'):
+            body = ''.join(f'<details><summary>{E(sh["name"])} tab ({len(sh["fields"])} fields)'
+                           + (f' <span class="hint">same fields as {E(sh["from"])}</span>' if sh.get('from') else '') + f'</summary>{ul(sh["fields"], cls="fields")}</details>'
+                           for sh in t['sheets'])
+            dl = (f'<a href="data/templates/{t["id"]}.ods">{icon("download")}Download the workbook (OpenDocument spreadsheet, {len(t["sheets"])} tabs)</a> · '
+                  + ' · '.join(f'<a href="data/templates/{t["id"]}-{slug(sh["name"])}.csv">{E(sh["name"])} (CSV)</a>' for sh in t['sheets']))
+        else:
+            body = ul(t['fields'], cls='fields')
+            dl = f'<a href="data/templates/{t["id"]}.csv">{icon("download")}Download this template (CSV)</a>'
+        return (f'<section class="template" id="{t["id"]}"><h3>{icon("file-text")} {E(t["name"])} <small>({E(t["id"])})</small></h3><p>{mode}</p>{note}{body}'
+                f'<p>{dl} · <a href="data/templates.csv">All templates (CSV)</a></p></section>')
+
     def ms_form_link(self, where='', topic=''):
         """The private form, opened with the page or task filled in (version 1.10.2). Microsoft Forms reads
         r<question id>=<answer>; a choice answer must be a JSON string matching the choice exactly."""
@@ -1259,7 +1382,7 @@ class Site:
         reqs = [r for r in d['requirements'] if r['cap'] == cid]
         req_rows = [[f'<a href="dam.html#{r["id"]}">{E(r["id"])}</a>', f'<span class="strength {r["strength"]}">{E(r["strength"])}</span>', E(r['text']) + prov(r['prov'])] for r in reqs]
         roles = ''.join(f'<li id="{cid}-role-{r}">{tile(ROLE_ICONS[r], "sm")}<div><strong>{E(self.roles[r]["name"])}</strong> ({E(r)}){prov(self.roles[r]["prov"])}<br>{E(self.roles[r]["text"])}</div></li>' for r in c['roles'])
-        tmpl = ''.join(f'<section class="template" id="{t["id"]}"><h3>{icon("file-text")} {E(t["name"])} <small>({E(t["id"])})</small></h3>{ul(t["fields"], cls="fields")}<p><a href="data/templates.csv">{icon("download")}Download all templates (CSV)</a></p></section>' for t in c.get('templates', []))
+        tmpl = ''.join(self.template_html(t) for t in c.get('templates', []))
         esc_rows = [[E(e['level']), E(e['who']), E(e['trigger']), E(e['when'])] for e in c.get('escalation', [])]
         meas_rows = [[E(x['name']), E(x['target'])] for x in c['measures']]
         srcs = sorted({s['id'] for s in d['sources'] if cid in s['caps']})
@@ -1275,6 +1398,8 @@ class Site:
             extra_method = (f'<h2 id="metadata">{icon("tag")} Metadata properties</h2>'
                             f'<p>From {self.src_link("SRC-MD")}, mapped to the {self.src_link("SRC-MEM")}. The guidance does not give one mandatory or recommended column, so the obligation follows the wording of each section. "Listed" means it appears in the list of information to record without a stated strength.</p>'
                             + table('t-meta', 'Metadata to record for each critical data asset', ['Property', 'Obligation', 'MEM slot', 'How to record it'], mrows)
+                            + f'<p><a href="knowledge.html#dict">{icon("database")}See the data dictionary</a> for each property\'s data type, format, how many values it takes, its controlled value list and an example. '
+                              f'For the entities and relationships inside a data asset, use the <a href="#T-CAT-4">entity and relationship list</a>.</p>'
                             + f'<h3 id="mem-proposal">Proposed terms for the four properties missing from the MEM{prov("K")}</h3><p>A proposal to close finding F-04, not an agreed standard (OR-06).</p>'
                             + table('t-memprop', 'Proposed crosswalk for guidance properties with no MEM slot', ['Property', 'Proposed term', 'Note'],
                                     [[f'<code>{E(x["prop"])}</code>', f'<code>{E(x["term"])}</code>', E(x['note'])] for x in self.d['mem_proposal']])
@@ -1298,7 +1423,7 @@ class Site:
 <h2 id="learn">{icon("graduation-cap")} Learn it</h2><ul class="link-list">{mod_html}</ul>'''),
             ('method', 'Step by step', f'<h2 id="stages">{icon("route")} {E(c["method_name"])}{prov(c["method_prov"])}</h2><p>{E(c["method_intro"])}</p>{self.sector_callout(cid)}{self.step_by_step(c)}{extra_method}'),
             ('roles', 'Roles', f'<h2 id="role-list">{icon("users")} Roles</h2><ul class="icon-list">{roles}</ul><h2 id="raci">{icon("list-checks")} Who does what</h2>{self.raci_table(c, "t-raci-" + cid)}'),
-            ('templates', 'Templates', f'<h2 id="template-list">{icon("file-text")} Templates</h2><p>Blank structures to copy into your own tools. Record roles, never named individuals or personal email addresses.</p>{tmpl}'),
+            ('templates', 'Templates', f'<h2 id="template-list">{icon("file-text")} Templates</h2><p>Blank structures to copy into your own tools.</p>{self.template_privacy()}{self.template_modes_note()}{tmpl}'),
             ('escalation', 'Measures', f'<h2 id="measures">{icon("chart-column")} Measures</h2>{table("t-meas-" + cid, "Measures for " + c["name"].lower(), ["Measure", "Target"], meas_rows)}'
              + (f'<div class="warning" role="note">{icon("triangle-alert")}<span>Finding F-01: Table 4 of the GOV.UK issues framework gives 96.75% as the High band start for a 97.5% target, but its own rule gives 96.25%. These playbooks follow the rule. <a href="about.html#F-01">Read the finding</a>.</span></div>' if cid == 'dq' else '')
              + (f'<h2 id="ladder">{icon("triangle-alert")} Escalation</h2><p>{E(c["escalation_note"])}</p>{table("t-esc-" + cid, "Escalation for " + c["name"].lower(), ["Level", "Who", "Trigger", "Timescale"], esc_rows)}' if esc_rows
@@ -1562,15 +1687,20 @@ class Site:
 <div><label for="l-q">Contains</label><input id="l-q" type="search" name="q"></div>
 <p class="count-out" aria-live="polite"></p></div>'''
         tbl = table('t-lib', 'Playbook material for the three capabilities, wherever it lives', ['Title', 'Type', 'Capability', 'Status', 'For', 'Where'], rows, row_attrs=attrs, tbody_id='lib-table')
-        tm = [[f'<a href="{CAP_PAGE[c["id"]]}.html#{t["id"]}">{E(t["name"])}</a>', f'<span class="pill {c["id"]}">{E(c["short"])}</span>', str(len(t['fields'])), '<a href="data/templates.csv">CSV</a>']
-              for c in d['capabilities'] for t in c.get('templates', [])]
+        tlist = [(c, t) for c in d['capabilities'] for t in c.get('templates', [])]
+        tm = [[f'<a href="{CAP_PAGE[c["id"]]}.html#{t["id"]}">{E(t["name"])}</a>', f'<span class="pill {c["id"]}">{E(c["short"])}</span>', E(TEMPLATE_MODES[t['mode']]), str(len(t['fields'])),
+               (f'<a href="data/templates/{t["id"]}.ods">ODS</a>' if t.get('sheets') else f'<a href="data/templates/{t["id"]}.csv">CSV</a>')] for c, t in tlist]
+        tm_attrs = [f' data-item data-mode="{"bau change" if t["mode"] == "Both" else t["mode"].lower()}" data-cap="{c["id"]}"' for c, t in tlist]
+        tfilt = ('<div class="filters" data-filter="tmpl-table" role="group" aria-label="Filter templates"><div><label for="t-mode">Used in</label><select id="t-mode" name="mode">'
+                 '<option value="">All</option><option value="bau">Business as usual</option><option value="change">Change programmes</option></select></div>'
+                 '<p class="count-out" aria-live="polite"></p></div>')
         dl = [('data/playbooks.json', 'Full content (JSON)'), ('data/requirements.csv', 'Requirements (CSV)'), ('data/templates.csv', 'Templates (CSV)'),
               ('data/glossary.csv', 'Glossary (CSV)'), ('data/vocabulary.ttl', 'Vocabulary (SKOS, Turtle)'), ('data/vocabulary.jsonld', 'Vocabulary (SKOS, JSON-LD)'),
               ('data/catalogue.jsonld', 'Catalogue of sources (DCAT, JSON-LD)'), ('data/metadata-dictionary.csv', 'Metadata data dictionary (CSV)')]
         body = self.hero('library', 'Library', 'Library', 'All playbook material for the three capabilities: published GOV.UK guidance, standards, tools, and practitioner material not yet published. Published items link to their authoritative source.',
-                         brief=['Filter by capability, type or status.', 'Templates are blank structures to copy into your own tools.', 'Everything on this portal is also available as open data.'])
+                         brief=['Filter by capability, type or status.', 'Templates are blank structures to copy into your own tools, one at a time or all together.', 'Everything on this portal is also available as open data.'])
         body += f'''<h2 id="library">{icon("library")} All material</h2>{filt}{tbl}
-<h2 id="templates">{icon("file-text")} Templates</h2>{table("t-tmpl", "Templates in the three playbooks", ["Template", "Capability", "Fields", "Download"], tm)}
+<h2 id="templates">{icon("file-text")} Templates</h2>{self.template_privacy()}{self.template_modes_note()}{tfilt}{table("t-tmpl", "Templates in the three playbooks", ["Template", "Capability", "Used in", "Fields", "Download"], tm, row_attrs=tm_attrs, tbody_id="tmpl-table")}
 <h2 id="sectors">{icon("layers")} Sector supplements</h2>
 <p>Extra governance, catalogue fields and quality rules for {len(d["supplements"])} kinds of data are in the <a href="sectors.html">Sectors</a> section, and signposted from each capability playbook.</p>
 <h2 id="data">{icon("download")} Open data</h2><p>Everything on this portal is also published as open data, described in a catalogue other portals can harvest. See <a href="data.html">Open data</a> for every dataset, its formats and licence.</p>'''
@@ -1678,14 +1808,20 @@ class Site:
                 return ''
             return '<ul>' + ''.join(f'<li><a href="#c-{k["id"]}">{E(k["term"])}</a>{tree(k["id"])}</li>' for k in kids) + '</ul>'
         svg, gdata = self.graph()
-        mrows = [[f'<code>{E(x["prop"])}</code>', E(x['mem']), E(x['obligation']), E(x['rule'])] for x in self.caps['cat']['metadata']]
+        mrows = self.dictionary_rows()
         tabs = [
             ('glossary', 'Glossary', f'<h2 id="gl">{icon("book-open")} Glossary and thesaurus</h2><p>Every term, with other names it goes by (the thesaurus) and its broader term (the taxonomy).</p>{filt}{gl}'),
             ('taxonomy', 'Taxonomy', f'<h2 id="tax">{icon("network")} Taxonomy</h2><p>Terms arranged from broader to narrower meaning.</p><div class="tree">{tree(None)}</div>'),
             ('graph-tab', 'Knowledge graph', f'<h2 id="kg">{icon("network")} Knowledge graph</h2><p>Capabilities, their steps, the requirements they meet and the sources behind them. Select a shape to see what it connects to. The same information is in the tables on the policy and capability pages.</p>'
              f'<p class="legend"><span class="lg-cap">Capability (large circle)</span><span class="lg-stage">Step (square)</span><span class="lg-req">Requirement (diamond)</span><span class="lg-src">Source (small circle)</span></p>'
              f'<div class="graph-wrap" id="graph">{svg}</div><p><button type="button" class="btn secondary" id="graph-clear">{icon("x")}Clear selection</button></p><div id="graph-detail" aria-live="polite">Select a shape to see what it connects to.</div>'),
-            ('dictionary', 'Data dictionary', f'<h2 id="dict">{icon("database")} Data dictionary</h2><p>The fields of a critical data asset catalogue record.</p>{table("t-dict", "Catalogue record fields", ["Property", "MEM slot", "Obligation", "Rule"], mrows)}'
+            ('dictionary', 'Data dictionary', f'<h2 id="dict">{icon("database")} Data dictionary</h2><p>The fields of a critical data asset catalogue record: what each holds, in what format, how many values a record can have, and an example.</p>'
+             f'<p class="hint">Type follows the range of the DCAT or Dublin Core term{prov("K")}. "How many" is proposed by this portal; the MEM and the GOV.UK guidance do not set it{prov("O")}. Examples are illustrative and synthetic.</p>'
+             f'{table("t-dict", "Catalogue record fields", ["Property", "MEM slot", "Obligation", "Type", "Format", "How many", "Example", "Rule"], mrows)}'
+             f'<div class="notice-box" id="dict-standards">{icon("signpost")}<p><strong>Catalogue standard and sector standards work together.</strong> The {self.src_link("SRC-MEM")} describes the asset in a catalogue, '
+             f'using DCAT as {self.rb_link("RB-DCATGOV")} recommends. Sector standards, such as {self.rb_link("RB-FHIRUK")} and {self.rb_link("RB-SNOMED")} for health, describe the data inside it: record them in <code>conformsTo</code>. '
+             f'A UK application profile of DCAT that evolves the MEM has been proposed but not endorsed; it is <a href="cataloguing.html#related-cataloguing">signposted on the Cataloguing page</a>, and the MEM remains the endorsed model. Sector-specific fields are in the <a href="sectors.html">sector supplements</a>.</p></div>'
+             f'{self.value_lists_html()}'
              f'<p>Ontology: the <a href="data/vocabulary.ttl">SKOS vocabulary</a> uses <code>skos:prefLabel</code>, <code>skos:altLabel</code>, <code>skos:broader</code> and <code>skos:definition</code>, with <code>dcterms:source</code> for provenance.</p>'),
         ]
         tablist = ''.join(f'<button type="button" role="tab" id="tab-{k}" aria-controls="{k}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}">{E(l)}</button>' for i, (k, l, _) in enumerate(tabs))
@@ -1781,7 +1917,7 @@ class Site:
 {ids_html}{extra}
 <div class="tip">{icon("lightbulb")}<p><strong>Worked example.</strong> {E(x["example"])}</p></div>
 <h4>{icon("list-checks")} Checklist</h4>{progress_widget(cl_ids, "Checklist done")}<ol class="questions">{checklist}</ol>
-<h4>{icon("scale")} Related rulebook</h4><ul>{"".join(f"<li>{self.rb_link(r)}</li>" for r in x["refs"])}</ul></section>'''
+<h4>{icon("scale")} Legislation, standards and frameworks that apply</h4>{self.refs_by_group(x["refs"])}</section>'''
         rule_tbl = table('t-allrules', 'Every sector quality rule', ['ID', 'Supplement', 'Data element', 'Rule', 'Dimension', 'Check'],
                          [r[0] for r in all_rules], row_attrs=[f' data-item data-sup="{r[1]}" data-dim="{r[2]}"' for r in all_rules], tbody_id='rule-table')
         sup_opts = ''.join(f'<option value="{x["id"]}">{E(x["title"])}</option>' for x in d['supplements'])
@@ -2084,7 +2220,10 @@ class Site:
             ('maturity-structure', 'Data maturity model structure', 'Topics, themes and row counts of the Data Maturity Assessment for Government, with links to each topic. Structure only; the framework text is not copied.', ['maturity-structure.csv'], ['data maturity']),
             ('vocabulary', 'Data asset management vocabulary', 'Glossary and thesaurus as SKOS concepts, with definitions, alternative labels and broader terms.', ['vocabulary.ttl', 'vocabulary.jsonld', 'glossary.csv'], ['glossary', 'SKOS', 'thesaurus']),
             ('metadata-dictionary', 'Metadata data dictionary', 'The metadata properties to record for critical data assets, with obligation and Metadata Exchange Model slot.', ['metadata-dictionary.csv'], ['metadata', 'DCAT']),
-            ('templates', 'Playbook templates', 'Fields of every template in the three playbooks.', ['templates.csv'], ['templates']),
+            ('templates', 'Playbook templates', 'Fields of every template in the three playbooks, all together and one template at a time; workbooks also as tabbed spreadsheets.',
+             ['templates.csv'] + [f for c in d['capabilities'] for t in c.get('templates', []) for f in
+                                  ([f'templates/{t["id"]}.ods'] + [f'templates/{t["id"]}-{slug(sh["name"])}.csv' for sh in t['sheets']] if t.get('sheets') else [f'templates/{t["id"]}.csv'])],
+             ['templates']),
             ('sector-rules', 'Sector data quality rules', f'{sum(len(x["rules"]) for x in d.get("supplements", []))} starter quality rules for {len(d.get("supplements", []))} kinds of data, runnable with the Data Quality Commons kit.',
              ['sector-rules.csv'] + [f'rules/{x["id"].lower()}.yaml' for x in d.get('supplements', [])], ['data quality', 'rules', 'dqkit']),
             ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
@@ -2100,7 +2239,7 @@ class Site:
         ]
         return [dict(id=a, title=b, desc=c, files=[f for f in fs if (self.out / 'data' / f).exists() or f == 'status.json' and self.status], kw=k) for a, b, c, fs, k in ds]
 
-    MEDIA = {'.csv': 'text/csv', '.json': 'application/json', '.jsonld': 'application/ld+json', '.ttl': 'text/turtle', '.yaml': 'application/yaml'}
+    MEDIA = {'.csv': 'text/csv', '.ods': 'application/vnd.oasis.opendocument.spreadsheet', '.json': 'application/json', '.jsonld': 'application/ld+json', '.ttl': 'text/turtle', '.yaml': 'application/yaml'}
 
     def write_catalogue(self, out):
         """A DCAT 3 catalogue of the portal's own datasets, as JSON-LD and Turtle, for harvesters such as CKAN and data.gov.uk."""
@@ -3207,8 +3346,18 @@ class Site:
             (out / name).write_text(buf.getvalue(), encoding='utf-8')
         write_csv('requirements.csv', ['id', 'capability', 'strength', 'requirement', 'source', 'source_url', 'provenance'],
                   [[r['id'], r['cap'], r['strength'], r['text'], self.src[r['src']]['title'], self.src[r['src']]['url'], r['prov']] for r in d['requirements']])
-        write_csv('templates.csv', ['template_id', 'template', 'capability', 'field_order', 'field'],
-                  [[t['id'], t['name'], c['id'], i + 1, f] for c in d['capabilities'] for t in c.get('templates', []) for i, f in enumerate(t['fields'])])
+        write_csv('templates.csv', ['template_id', 'template', 'capability', 'field_order', 'field', 'mode'],
+                  [[t['id'], t['name'], c['id'], i + 1, f, t['mode']] for c in d['capabilities'] for t in c.get('templates', []) for i, f in enumerate(t['fields'])])
+        # Version 1.11.0: each template on its own, as a header row ready to fill in, and workbooks as tabbed spreadsheets.
+        (out / 'templates').mkdir(exist_ok=True)
+        for c in d['capabilities']:
+            for t in c.get('templates', []):
+                if t.get('sheets'):
+                    write_ods(out / 'templates' / f'{t["id"]}.ods', [(sh['name'], sh['fields']) for sh in t['sheets']])
+                    for sh in t['sheets']:
+                        write_csv(f'templates/{t["id"]}-{slug(sh["name"])}.csv', sh['fields'], [])
+                else:
+                    write_csv(f'templates/{t["id"]}.csv', t['fields'], [])
         write_csv('glossary.csv', ['id', 'term', 'alt_labels', 'broader', 'definition', 'capabilities', 'provenance'],
                   [[c['id'], c['term'], '; '.join(c.get('alt') or []), c['broader'] or '', c['def'], ' '.join(c['caps']), c['prov']] for c in d['concepts']])
         write_csv('traceability.csv', ['requirement', 'kind', 'moscow', 'text', 'features', 'checks'],
@@ -3250,8 +3399,10 @@ class Site:
                                                           'ideas': {'available': self.ideas.get('available', False), 'as_of': self.ideas.get('as_of', ''), 'count': len(self.ideas.get('ideas', []))}},
                                                          indent=1, ensure_ascii=False), encoding='utf-8')
         self.write_ontology(out)
-        write_csv('metadata-dictionary.csv', ['property', 'mem_slot', 'obligation', 'rule'],
-                  [[x['prop'], x['mem'], x['obligation'], x['rule']] for x in self.caps['cat']['metadata']])
+        det = {x['prop']: x for x in self.caps['cat']['metadata_detail']}
+        write_csv('metadata-dictionary.csv', ['property', 'mem_slot', 'obligation', 'rule', 'type', 'format', 'cardinality', 'value_list', 'example'],
+                  [[x['prop'], x['mem'], x['obligation'], x['rule'], det[x['prop']]['type'], det[x['prop']]['format'], det[x['prop']]['card'],
+                    det[x['prop']].get('values', ''), det[x['prop']]['example']] for x in self.caps['cat']['metadata']])
         base = m['site_url'] + 'vocab#'
 
         def lit(s):

@@ -662,3 +662,8 @@ ol.flow li:not(:last-child)::after{content:"\2192";position:absolute;right:-1.3r
 .snip{margin:.5rem 0}.snip summary{cursor:pointer;font-weight:700}
 .flag-check{font-size:.95rem}
 .notice-box>span{display:block}
+
+/* Version 1.11.0: sector obligations grouped by kind */
+.ref-groups { margin: 0 0 1.5rem; }
+.ref-groups dt { font-weight: 700; margin-top: .75rem; }
+.ref-groups dd { margin: .25rem 0 0 1rem; }
