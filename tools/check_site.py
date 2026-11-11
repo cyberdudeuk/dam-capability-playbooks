@@ -508,6 +508,12 @@ def c25_workflow_inventory(site, repo, pages):
         t = f.read_text(encoding='utf-8')
         if re.search(r'jekyll|source:\s*\./?\s*$', t, re.I | re.M):
             errs.append(f'{f.name}: builds or publishes the repository root, not the generated site/ folder')
+    # D-036: the browser install depends on an outside package mirror, so it must retry and fall back rather than fail at once
+    pg = wf / 'pages.yml'
+    if pg.exists():
+        t = pg.read_text(encoding='utf-8')
+        if 'playwright install --with-deps' in t and not ('for attempt in' in t and re.search(r'^\s+python -m playwright install chromium\s*$', t, re.M)):
+            errs.append('pages.yml: the browser install has no retry and fallback (D-036)')
     return errs
 
 
@@ -1228,6 +1234,123 @@ def c39_backlog_18_22(site, repo, pages):
             errs.append(f'sectors.html: health supplement step "{step}" missing')
     return errs
 
+def c40_tooltips_and_standards(site, repo, pages):
+    """Rule (version 1.13.0): tooltips and standards links reach the whole portal. Glossary terms and named frameworks,
+    methodologies and standards are linked with a tooltip in body text on pages well beyond the three playbooks; no tooltip
+    link sits inside a heading, button, code, summary, table header or another link; every tooltip has text; each
+    capability's Overview lists its frameworks, methodologies and standards by kind, and every step names the ones that
+    apply; and the DAMA wheel drills down to playbook steps and publishes what a fuller drill-down and a data
+    architecture playbook would take. Exists because the owner asked for tooltips and contextual standards links
+    across the portal (11 November 2026)."""
+    import yaml
+    from html.parser import HTMLParser
+    errs = []
+    fw = yaml.safe_load((repo / 'content' / 'frameworks.yaml').read_text(encoding='utf-8'))
+    P = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    rb = {x['id']: x for x in P['rulebook'] + fw['rulebook_more']}
+    bad_parents = {'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'a', 'button', 'code', 'summary', 'th'}
+    void = {'br', 'img', 'input', 'meta', 'hr', 'link', 'wbr', 'source', 'col', 'area', 'base', 'embed', 'track', 'path', 'circle', 'rect', 'line'}
+
+    class Walk(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.stack, self.found, self.bad, self.empty, self.in_main = [], {'term': 0, 'std': 0}, [], 0, 0
+
+        def handle_starttag(self, tag, attrs):
+            a = dict(attrs)
+            if tag == 'main':
+                self.in_main += 1
+            if tag == 'a' and a.get('class') in ('term', 'std'):
+                if self.in_main:
+                    self.found[a['class']] += 1
+                par = [t for t in self.stack if t in bad_parents]
+                if par:
+                    self.bad.append(f'{a["class"]} link to {a.get("href")} inside <{par[-1]}>')
+                if not (a.get('data-tip') or '').strip():
+                    self.empty += 1
+            elif 'data-tip' in a and not (a['data-tip'] or '').strip():
+                self.empty += 1
+            if tag not in void:
+                self.stack.append(tag)
+
+        def handle_endtag(self, tag):
+            if tag == 'main':
+                self.in_main -= 1
+            if tag in self.stack:
+                while self.stack and self.stack.pop() != tag:
+                    pass
+
+    seen = {}
+    for name in pages:
+        w = Walk()
+        w.feed((site / name).read_text(encoding='utf-8'))
+        seen[name] = w.found
+        errs += [f'{name}: {b}' for b in w.bad[:3]]
+        if w.empty:
+            errs.append(f'{name}: {w.empty} tooltip(s) with no text')
+    for name in ('index.html', 'dam.html', 'sectors.html', 'together.html', 'personas.html', 'notices.html', 'learning.html', 'capability-model.html', 'about.html'):
+        if name in seen and not seen[name]['term']:
+            errs.append(f'{name}: no glossary tooltips in the page text')
+    for name in ('whats-new.html', 'data.html', 'reuse.html', 'bodies.html', 'about.html'):
+        if name in seen and not seen[name]['std']:
+            errs.append(f'{name}: no framework or standard linked in the page text')
+    if sum(v['term'] for v in seen.values()) < 150:
+        errs.append('fewer than 150 glossary tooltips across the portal')
+    if sum(v['std'] for v in seen.values()) < 30:
+        errs.append('fewer than 30 framework and standard links across the portal')
+    sm = fw['standards_map']
+    urls = {E_(x['url']) for x in rb.values()}
+    for c in P['capabilities']:
+        page = {'gov': 'governance.html', 'cat': 'cataloguing.html', 'dq': 'quality.html'}[c['id']]
+        h = (site / page).read_text(encoding='utf-8')
+        i = h.find('id="frameworks-standards"')
+        if i < 0:
+            errs.append(f'{page}: no frameworks, methodologies and standards section on the Overview')
+        else:
+            sec = h[i:h.find('</div></div>', i) + 12]
+            kinds = set(re.findall(r'data-kind="(\w+)"', sec))
+            for k in ('law', 'standard', 'framework', 'methodology'):
+                if k not in kinds:
+                    errs.append(f'{page}: no {k} entries in the frameworks and standards section')
+        for st in c['stages']:
+            j = h.find(f'id="{c["id"]}-{st["id"]}"')
+            k = h.find('class="meets std-refs"', j)
+            nxt = h.find('class="sbs-step', j + 10)
+            if j < 0 or k < 0 or (nxt > 0 and k > nxt):
+                errs.append(f'{page}: step {st["id"]} does not name the frameworks and standards that apply')
+                continue
+            seg = h[k:h.find('</p>', k)]
+            hrefs = re.findall(r'href="([^"]+)"', seg)
+            want = sm['stages'][f'{c["id"]}.{st["id"]}']
+            if len(hrefs) != len(want) or any(x not in urls for x in hrefs):
+                errs.append(f'{page}: step {st["id"]} standards do not match the content file')
+    cm = (site / 'capability-model.html').read_text(encoding='utf-8')
+    for t in ('id="drilldown"', 't-drill-levels', 't-arc-playbook', 'id="arc-playbook"'):
+        if t not in cm:
+            errs.append(f'capability-model.html: drill-down assessment missing {t}')
+    for a in fw['dama']['areas']:
+        i = cm.find(f'id="{a["id"].lower()}"')
+        if i < 0 or 'Drill down' not in cm[i:cm.find('</section>', i)]:
+            errs.append(f'capability-model.html: area {a["id"]} has no drill-down')
+    for cid, aid in fw['dama']['cap_area'].items():
+        i = cm.find(f'id="{aid.lower()}"')
+        card = cm[i:cm.find('</section>', i)]
+        c = next(x for x in P['capabilities'] if x['id'] == cid)
+        for st in c['stages']:
+            if f'#{cid}-{st["id"]}"' not in card:
+                errs.append(f'capability-model.html: {aid} does not drill down to step {cid}.{st["id"]}')
+    rs = (site / 'research.html').read_text(encoding='utf-8')
+    for b in fw['dama']['drilldown']['backlog']:
+        if f'id="{b}"' not in rs:
+            errs.append(f'research.html: backlog item {b} from the drill-down assessment missing')
+    return errs
+
+
+def E_(s):
+    import html
+    return html.escape(s, quote=True)
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -1236,7 +1359,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards]
 
 
 def run(site, repo, only=None, quiet=False):

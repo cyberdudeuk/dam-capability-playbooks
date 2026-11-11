@@ -580,6 +580,64 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'research.html', '<strong>After the MVP</strong>', '<strong>Pending</strong>')
         self.fails('c39_backlog_18_22')
 
+    # version 1.13.0: tooltips, standards links and the DAMA drill-down (C-40)
+    def test_c40_tooltip_inside_heading(self):
+        edit(self.s / 'governance.html', '<h2 id="policy">', '<h2 id="policy"><a class="term" href="knowledge.html#c-data-asset" data-tip="Data asset: x">x</a>')
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_empty_menu_tooltip_d035(self):
+        edit(self.s / 'index.html', '<a href="index.html" data-tip="', '<a href="index.html" data-tip="" data-old="')
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_page_text_loses_tooltips(self):
+        edit(self.s / 'dam.html', 'class="term"', 'class="x"', -1)
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_page_text_loses_standards_links(self):
+        edit(self.s / 'whats-new.html', 'class="std"', 'class="x"', -1)
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_overview_loses_standards_section(self):
+        edit(self.s / 'quality.html', 'id="frameworks-standards"', 'id="fs"')
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_overview_loses_a_kind(self):
+        edit(self.s / 'cataloguing.html', 'data-kind="methodology"', 'data-kind="guidance"', -1)
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_step_loses_standards(self):
+        edit(self.s / 'cataloguing.html', 'class="meets std-refs"', 'class="meets"')
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_step_standards_drift_from_content(self):
+        edit(self.r / 'content' / 'frameworks.yaml', 'dq.review: [RB-MAGENTA, RB-DMAHUB]', 'dq.review: [RB-MAGENTA, RB-DMAHUB, RB-AQUA]')
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_drilldown_assessment_missing(self):
+        edit(self.s / 'capability-model.html', 'id="drilldown"', 'id="dd"')
+        self.fails('c40_tooltips_and_standards')
+
+    def test_c40_area_loses_step_drilldown(self):
+        edit(self.s / 'capability-model.html', 'quality.html#dq-baseline"', 'quality.html"', -1)
+        self.fails('c40_tooltips_and_standards')
+
+    def test_build_rejects_unknown_stage_standards(self):
+        self._rejects('    dq.review: [RB-MAGENTA', '    dq.revue: [RB-MAGENTA')
+
+    def test_build_rejects_duplicate_standard_alias(self):
+        self._rejects('    RB-SKOS: [SKOS]', '    RB-SKOS: [SKOS, DCAT]')
+
+    def test_build_rejects_short_standard_alias(self):
+        self._rejects('    RB-SDMX: [SDMX]', '    RB-SDMX: [SDM]')
+
+    def test_build_rejects_bad_drilldown_effort(self):
+        self._rejects('Mapped to each step", effort: S}', 'Mapped to each step", effort: XL}')
+
+    def test_c25_browser_install_without_retry_d036(self):
+        edit(self.r / '.github' / 'workflows' / 'pages.yml', 'for attempt in 1 2 3', 'for attempt in')
+        edit(self.r / '.github' / 'workflows' / 'pages.yml', 'for attempt in', 'for x in')
+        self.fails('c25_workflow_inventory')
+
     def test_build_rejects_unknown_dama_area(self):
         edit(self.r / 'content' / 'frameworks.yaml', 'dama: [DM-ARC, DM-MOD]', 'dama: [DM-XYZ]')
         with self.assertRaises(build.ContentError):
