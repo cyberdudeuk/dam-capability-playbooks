@@ -40,7 +40,19 @@ jobs:
         run: |
           pip install -r requirements.txt
           npm ci
-          python -m playwright install --with-deps chromium
+          # D-036: Ubuntu's package mirrors can be unreachable for minutes at a time. Retry with a pause, then fall back to the
+          # browser alone (the runner image already has most of its libraries); the browser checks still fail if it cannot start.
+          # Each attempt is capped at 10 minutes: on 11 November 2026 the step ran for over 90 minutes without finishing or failing.
+          ok=0
+          for attempt in 1 2 3; do
+            if timeout 600 python -m playwright install --with-deps chromium; then ok=1; break; fi
+            echo "::warning::Installing the browser and its system packages failed (attempt $attempt); retrying in 60 seconds"
+            sleep 60
+          done
+          if [ "$ok" != 1 ]; then
+            echo "::warning::System packages could not be installed; installing the browser alone"
+            timeout 600 python -m playwright install chromium
+          fi
       - name: Build (first pass, for page weights)
         run: python tools/build.py
       - name: Health run (sources, review date, page weight)

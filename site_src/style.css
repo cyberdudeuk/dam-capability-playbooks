@@ -667,3 +667,13 @@ ol.flow li:not(:last-child)::after{content:"\2192";position:absolute;right:-1.3r
 .ref-groups { margin: 0 0 1.5rem; }
 .ref-groups dt { font-weight: 700; margin-top: .75rem; }
 .ref-groups dd { margin: .25rem 0 0 1rem; }
+
+/* Version 1.12.0: governance layers as a stacked pyramid */
+.layer-stack { list-style: none; padding: 0; margin: 1rem 0 1.5rem; max-width: 44em; }
+.layer-stack .layer { max-width: none; box-sizing: border-box; margin: 0 auto .35rem; padding: .5rem .75rem; border: 2px solid currentColor; border-radius: 6px; text-align: center; }
+.layer-stack .layer-n { display: inline-block; min-width: 1.5em; font-weight: 700; }
+.layer-stack .layer-1 { width: 52%; } .layer-stack .layer-2 { width: 64%; } .layer-stack .layer-3 { width: 76%; } .layer-stack .layer-4 { width: 88%; } .layer-stack .layer-5 { width: 100%; }
+@media (max-width: 40rem) { .layer-stack .layer { width: 100% !important; } }
+/* Version 1.12.0: DAMA wheel position in the MVP assessment */
+.pill.dama-core { font-weight: 700; }
+.pill.dama-adj { border-style: dashed; }

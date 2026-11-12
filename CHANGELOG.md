@@ -1,6 +1,15 @@
 # Changelog
 
 ## Unreleased
+- Backlog issues #18 to #22 from the Project Compass pilot:
+  - #18 Data architecture and models: a new sector supplement (SUP-ARC, theme DD-15) reached from the sector finder, and a worked entity and relationship list with a Mermaid relationship diagram the build draws from it, so the two cannot drift. Data architecture is a supplement, not a fourth capability, to keep the three DAM capabilities intact.
+  - #19 Retention: retention schedule, period, disposal action, review date and who approved longer retention in the ownership register (T-GOV-2); retention period and disposal action in the catalogue record (T-CAT-2). REC-01 now says the period comes from your schedule.
+  - #20 Data sharing: T-GOV-6 data sharing agreement, built from what the ICO data sharing code says an agreement should cover; SUP-SHR points to it and to section 251.
+  - #21 Governance layers: five layers, from direction to use, with the roles in each and what each may and may not change, on the Governance page's Roles tab and as `data/governance-layers.csv`. Proposed by this portal for teams to adapt.
+  - #22 Health and care: section 251 and the Health Service (Control of Patient Information) Regulations 2002, the Medical Devices Regulations 2002 and the MHRA's software guidance, with steps to record each. Further DHSC and MedTech items wait for the pilot's feedback.
+- New check C-39 with eight deliberate breaks and four build-time rejections.
+- MVP assessment against the DAMA wheel on the Research page (Backlog tab): each pilot backlog item (BL-30 to BL-34) placed on the wheel and judged for the DAM Policy rollout MVP on feasibility and usability, with a stated MVP definition and the limits of the assessment.
+- Fixed (D-034): five template fields split at unquoted commas since they were written; the build now rejects unbalanced brackets in any field.
 - From the Project Compass pilot session (11 November 2026), built now:
   - Templates: names and work email addresses may be kept in a team's own working copies; only what is published, on GitHub or anywhere public, must name roles alone. The old line read as banning named people from a team's own RACI.
   - Every template says whether it is for business as usual, change programmes or both, and the Library can filter by it. Each template downloads on its own as a CSV header row (`data/templates/`), as well as all together.

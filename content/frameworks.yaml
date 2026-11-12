@@ -139,6 +139,43 @@ rulebook_more:
   prov: S
   caps: [gov, cat]
   why: The public register of agreements made under the public service delivery, debt, fraud and civil registration powers in Part 5 of the Act.
+# Version 1.12.0 (issues #20 and #22): found by web search on 11 November 2026 (S).
+- id: RB-ICODSA
+  group: Data protection
+  title: 'Data sharing: a code of practice - data sharing agreements'
+  publisher: Information Commissioner's Office
+  url: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/data-sharing-agreements/
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Says a data sharing agreement is good practice and lists what it should cover, including the parties, purpose, lawful basis, data items, formats, rights, retention, ending the sharing and review.
+- id: RB-S251
+  group: Health and care
+  title: 'Confidential patient information and section 251'
+  publisher: Health Research Authority
+  url: https://www.hra.nhs.uk/about-us/committees-and-services/confidentiality-advisory-group/confidential-patient-information-and-regulations/
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Section 251 of the NHS Act 2006 and the Health Service (Control of Patient Information) Regulations 2002 let the common law duty of confidentiality be set aside for medical purposes, with Confidentiality Advisory Group support. Data protection law still applies.
+- id: RB-UKMDR
+  group: Health and care
+  title: The Medical Devices Regulations 2002
+  publisher: legislation.gov.uk
+  url: https://www.legislation.gov.uk/uksi/2002/618/contents/made
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Govern medical devices in Great Britain, including software and AI used for a medical purpose. The MHRA is reforming them.
+- id: RB-MHRASW
+  group: Health and care
+  title: 'Medical devices: software applications (apps)'
+  publisher: Medicines and Healthcare products Regulatory Agency
+  url: https://www.gov.uk/government/publications/medical-devices-software-applications-apps
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Helps decide whether software, including an app or AI, is a medical device. A product is a medical device only if its manufacturer intends a medical purpose.
 - id: RB-SVCASSESS
   group: Delivery, change and investment
   title: Service assessments and applying the Service Standard
@@ -4940,6 +4977,20 @@ research:
     list_url: discussions/categories/ideas
     note: Ideas are public GitHub Discussions, so do not include your name, colleagues' names or anything above OFFICIAL. Vote by upvoting an idea; comments add evidence.
   wip_limit: 5
+  # Version 1.12.0: the MVP assessment frame (proposed by this portal, O). The repository had no written MVP definition.
+  mvp:
+    definition: "The smallest set of guidance that lets an in-scope organisation make its January 2027 baseline return and finish Phase 1, internal transformation, by the end of December 2026: identify its critical data assets, name their owners, describe them in a catalogue and plan their quality."
+    core: [DM-GOV, DM-META, DM-DQ]
+    verdicts:
+      in: In the MVP
+      optional: In the MVP, optional
+      lite: In the MVP as signposts only
+      after: After the MVP
+    caveats:
+    - "Evidence of demand is one pilot team. No research with users has run yet (OR-04), so usability is an expert judgement."
+    - "The baseline return template, not this portal, sets what organisations must report. Nothing here adds to the return."
+    - "Records, security, integration and architecture belong to other teams; their verdicts need those teams' agreement."
+    - "New sources found by web search on 11 November 2026 are marked S and need checking before the MVP is promoted."
   criteria:
   - {id: demand, name: User demand, weight: 25, icon: users-round, ask: "How many people need it, and how strong is the evidence?", scale: [No evidence, One source, Several sources or 5+ votes, Research finding or 15+ votes]}
   - {id: policy, name: DAM Policy, weight: 20, icon: landmark, ask: "Does it help organisations meet the DAM Policy?", scale: [No link, Indirect, Supports a should, Supports a must]}
@@ -4980,8 +5031,17 @@ research:
   - {id: BL-27, type: feature, title: Get involved and champions toolkit, story: "As a champion in my organisation, I need ready-made posts, emails and a walk-through, so that I can bring my team in without extra work.", source: Owner request, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 2}}
   - {id: BL-28, type: feature, title: Badges for taking part, story: "As someone who helps improve the portal, I want a badge for my profile and signature, so that my contribution is recognised.", source: Owner request, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 2, policy: 0, strategy: 1, feasibility: 3, capacity: 3, inclusion: 1}}
   - {id: BL-29, type: content, title: Welsh language summaries, story: "As someone in a Welsh public body, I need key pages summarised in Welsh, so that we can meet our language duties.", source: BL-24, status: later, strategy: [rmdg], assess: {demand: 0, policy: 1, strategy: 1, feasibility: 1, capacity: 0, inclusion: 3}}
+  # Version 1.12.0: the Project Compass pilot backlog (GitHub issues 18 to 22), with where each sits on the DAMA wheel and an
+  # MVP verdict for the DAM Policy rollout (assessed 11 November 2026; usability is an expert review, not yet tested with users).
+  - {id: BL-30, type: feature, title: Governance layers and what each may change, story: "As a data owner, I need to know what each governance layer may and may not change, so that decisions go to the right place and survive a team handover.", source: "Project Compass pilot (issue 21)", status: done, release: 1.12.0, strategy: [dam], assess: {demand: 1, policy: 3, strategy: 2, feasibility: 3, capacity: 3, inclusion: 1}, dama: [DM-GOV], mvp: {verdict: in, usability: "One section on the Roles tab and a CSV; uses the 19 role names people already know.", condition: "Align with the GDS Data Ownership Model before it is promoted; until then it stays labelled as proposed."}}
+  - {id: BL-31, type: content, title: Retention fields in the ownership register and catalogue record, story: "As a data owner, I need retention and disposal recorded with each asset, so that data is neither kept too long nor destroyed early.", source: "Project Compass pilot (issue 19)", status: done, release: 1.12.0, strategy: [dam], assess: {demand: 1, policy: 1, strategy: 1, feasibility: 3, capacity: 3, inclusion: 0}, dama: [DM-DOC, DM-GOV, DM-META], mvp: {verdict: optional, usability: "Adds five fields to the ownership register and two to the catalogue record, which adds burden if made required.", condition: "Keep the fields optional and out of the return template; agree read-across to records schedules with the government knowledge and information management team."}}
+  - {id: BL-32, type: content, title: Data sharing agreement template and gateways, story: "As a data owner, I need a data sharing agreement that covers the lawful basis and legal gateway, so that shared critical assets are on a sound footing.", source: "Project Compass pilot (issue 20)", status: done, release: 1.12.0, strategy: [dam, ndl], assess: {demand: 1, policy: 2, strategy: 2, feasibility: 2, capacity: 2, inclusion: 0}, dama: [DM-SEC, DM-INT, DM-GOV], mvp: {verdict: lite, usability: "A 20-field template for owners and data protection officers, not for every user; reached from the data sharing supplement.", condition: "Have the government data protection team review it before it is promoted; a gateway lookup waits until after the MVP."}}
+  - {id: BL-33, type: content, title: Data architecture and models supplement, story: "As a data architect, I need to describe a critical asset's entities, relationships and authoritative source, so that others can build on it and returns do not count it twice.", source: "Project Compass pilot (issue 18)", status: done, release: 1.12.0, strategy: [blueprint], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 0}, dama: [DM-ARC, DM-MOD], mvp: {verdict: after, usability: "Useful to architects and design authorities; most owners and coordinators will not need it for the baseline return.", condition: "Only the authoritative source question belongs in the MVP, because it helps apply the policy's source data test; the rest follows the baseline return."}}
+  - {id: BL-34, type: content, title: Health and care obligations from DHSC and MedTech, story: "As a health or care body, I need the laws, standards and frameworks that apply to our data assets in one place, so that we meet them alongside the DAM Policy.", source: "Project Compass pilot (issue 22)", status: now, strategy: [dam], assess: {demand: 1, policy: 2, strategy: 1, feasibility: 1, capacity: 2, inclusion: 1}, dama: [DM-GOV, DM-SEC, DM-META], mvp: {verdict: lite, usability: "Signposts sit in the health supplement that health and care bodies already reach from the sector finder.", condition: "Signposts now; complete with the pilot's feedback and an expert review (BL-14) before implementation begins in January 2027."}}
   - {id: BL-25, type: feature, title: A chatbot hosted by this portal, story: "As a reader, I would like to chat with the guidance.", source: Reuse decision, status: out, reason: "Out of scope: the portal runs no server and sends nothing anywhere. Assistants your organisation approves can use its open data and MCP server instead (Use and reuse).", strategy: [rmdg], assess: {demand: 1, policy: 0, strategy: 2, feasibility: 0, capacity: 0, inclusion: 0}}
   decisions:
+  - {date: '2026-11-11', item: BL-34, decision: "Health and care obligations stay in Now", why: "The score says Later because demand is one pilot team and the rest depends on its feedback. Signposts were released in 1.12.0, and finishing needs only that feedback and the expert review (BL-14), so it should not wait behind unrelated work."}
+  - {date: '2026-11-11', item: BL-33, decision: "Data architecture judged After the MVP even though it is built", why: "It sits outside the three DAM capabilities on the DAMA wheel and most organisations will not need it for the baseline return; only its authoritative source question is pulled forward."}
   - {date: '2026-11-05', item: BL-05, decision: Research, roadmap and ideas published in the open, why: "Working in the open lets users see and shape priorities; modelled on the data.gov.uk roadmap."}
   - {date: '2026-11-05', item: BL-25, decision: A hosted chatbot is out of scope, why: "No server, nothing sent anywhere; open data and the MCP server serve approved assistants instead."}
   - {date: '2026-11-05', item: BL-10, decision: "Round 1 waits until Round 0 has recruited for every role", why: "Usability sessions need 5 to 8 people per role, including disabled people."}

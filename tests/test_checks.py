@@ -251,7 +251,7 @@ class Vaccination(unittest.TestCase):
 
     def test_build_rejects_unknown_rulebook_ref(self):
         y = self.r / 'content' / 'playbooks.yaml'
-        edit(y, 'DD-11: [RB-TNA]', 'DD-11: [RB-NOPE]')
+        edit(y, 'DD-11: [RB-TNA, RB-TNARET]', 'DD-11: [RB-NOPE, RB-TNARET]')
         with self.assertRaises(build.ContentError):
             build.load(y)
 
@@ -544,6 +544,59 @@ class Vaccination(unittest.TestCase):
 
     def test_build_rejects_workbook_tab_from_unknown_template(self):
         edit(self.r / 'content' / 'playbooks.yaml', '{name: Decisions, from: T-GOV-3}', '{name: Decisions, from: T-GOV-9}')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    # Version 1.12.0: backlog issues #18 to #22 (C-39) and D-034.
+    def test_c39_architecture_supplement_missing(self):
+        edit(self.s / 'sectors.html', 'id="SUP-ARC"', 'id="SUP-X"')
+        self.fails('c39_backlog_18_22')
+
+    def test_c39_diagram_drifts_from_list(self):
+        edit(self.s / 'data' / 'templates' / 'T-CAT-4-example.mmd', 'APPOINTMENT }o--|| CASE : "is held for"', 'APPOINTMENT }o--|| PERSON : "is held for"')
+        self.fails('c39_backlog_18_22')
+
+    def test_c39_sharing_agreement_loses_gateway(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'Lawful basis for each party, Legal gateway or power,', 'Lawful basis for each party,')
+        self.fails('c39_backlog_18_22')
+
+    def test_c39_retention_fields_removed(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'Next review, Retention period, Disposal action]}', 'Next review]}')
+        self.fails('c39_backlog_18_22')
+
+    def test_c39_layer_missing_from_page(self):
+        edit(self.s / 'governance.html', '<li class="layer layer-4">', '<li class="layer">')
+        self.fails('c39_backlog_18_22')
+
+    def test_c39_health_loses_section_251(self):
+        edit(self.s / 'sectors.html', 'sets aside the duty of confidentiality', 'applies')
+        self.fails('c39_backlog_18_22')
+
+    def test_c39_health_loses_medical_device_step(self):
+        edit(self.s / 'sectors.html', 'check whether it is a medical device', 'consider it')
+        self.fails('c39_backlog_18_22')
+
+    def test_c39_mvp_verdict_missing(self):
+        edit(self.s / 'research.html', '<strong>After the MVP</strong>', '<strong>Pending</strong>')
+        self.fails('c39_backlog_18_22')
+
+    def test_build_rejects_unknown_dama_area(self):
+        edit(self.r / 'content' / 'frameworks.yaml', 'dama: [DM-ARC, DM-MOD]', 'dama: [DM-XYZ]')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_split_template_field(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '"Ownership option (IAO, data owner or hybrid)"', 'Ownership option (IAO, data owner or hybrid)')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_unknown_layer_role(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '{n: 4, name: Custody and operation, roles: [CUS]', '{n: 4, name: Custody and operation, roles: [XYZ]')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_erd_relationship_to_unknown_entity(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'to: PERSON, rel: "is about"', 'to: CLIENT, rel: "is about"')
         with self.assertRaises(build.ContentError):
             build.load(self.r / 'content' / 'playbooks.yaml')
 

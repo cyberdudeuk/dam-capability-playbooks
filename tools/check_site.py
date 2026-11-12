@@ -1164,6 +1164,70 @@ def c38_pilot_requirements(site, repo, pages):
             errs.append(f'{sup["id"]}: obligations are not grouped by kind')
     return errs
 
+
+def c39_backlog_18_22(site, repo, pages):
+    """Rule (version 1.12.0): what backlog issues #18 to #22 added stays in place. A data architecture supplement exists and the
+    sector finder can reach it; the worked relationship diagram is drawn from the worked entity list and matches it line for line;
+    the data sharing agreement template carries the lawful basis, legal gateway, retention and ending the sharing; the ownership
+    register and catalogue record carry retention fields; the governance page shows every layer with what it may and may not
+    change; and the health supplement signposts section 251 and the medical devices rules. Exists because each was raised by a
+    pilot team and none had a home before."""
+    import yaml
+    errs = []
+    P = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    sec = (site / 'sectors.html').read_text(encoding='utf-8')
+    if 'id="SUP-ARC"' not in sec:
+        errs.append('sectors.html: data architecture supplement missing')
+    if not any('SUP-ARC' in q['sups'] for q in P['applicability']):
+        errs.append('sector finder: no question leads to the data architecture supplement')
+    ex = P.get('erd_example') or []
+    mmd = (site / 'data' / 'templates' / 'T-CAT-4-example.mmd')
+    text = mmd.read_text(encoding='utf-8') if mmd.exists() else ''
+    if not text.startswith('erDiagram'):
+        errs.append('T-CAT-4-example.mmd: not a Mermaid entity relationship diagram')
+    for x in ex:
+        if f'    {x["id"]} {{' not in text:
+            errs.append(f'T-CAT-4-example.mmd: entity {x["id"]} missing')
+        if x.get('to') and not re.search(rf'^    {x["id"]} \S+ {x["to"]} : "{re.escape(x["rel"])}"$', text, re.M):
+            errs.append(f'T-CAT-4-example.mmd: relationship {x["id"]} to {x["to"]} missing')
+    tm = {t['id']: t for c in P['capabilities'] for t in c.get('templates', [])}
+    need = {'T-GOV-6': ['Lawful basis for each party', 'Legal gateway or power', 'Retention and deletion of shared data', 'Ending the sharing (deletion or return of data)'],
+            'T-GOV-2': ['Retention schedule reference', 'Retention period', 'Disposal action (destroy, review or transfer to archive)'],
+            'T-CAT-2': ['Retention period', 'Disposal action']}
+    for tid, fields in need.items():
+        for f in fields:
+            if f not in (tm.get(tid) or {}).get('fields', []):
+                errs.append(f'{tid}: field "{f}" missing')
+    g = (site / 'governance.html').read_text(encoding='utf-8')
+    i = g.find('id="t-layers"')
+    body = g[i:g.find('</table>', i)] if i >= 0 else ''
+    for x in P.get('governance_layers', []):
+        if f'{x["n"]}. {x["name"]}' not in body:
+            errs.append(f'governance.html: layer {x["n"]} ({x["name"]}) missing from the table')
+    if len(re.findall(r'<li class="layer layer-\d">', g)) != len(P.get('governance_layers', [])):
+        errs.append('governance.html: the layer stack does not show every layer')
+    # The MVP assessment (version 1.12.0) shows every assessed item with its DAMA areas and verdict.
+    import yaml as _y
+    F = _y.safe_load((repo / 'content' / 'frameworks.yaml').read_text(encoding='utf-8'))
+    r = (site / 'research.html').read_text(encoding='utf-8')
+    i = r.find('id="t-mvp"')
+    mvp = r[i:r.find('</table>', i)] if i >= 0 else ''
+    for x in F['research']['backlog']:
+        if x.get('mvp'):
+            row = re.search(rf'<a href="#bl-{x["id"]}">.*?</tr>', mvp, re.S)
+            if not row or F['research']['mvp']['verdicts'][x['mvp']['verdict']] not in row.group(0) or 'class="pill dama-' not in row.group(0):
+                errs.append(f'research.html: {x["id"]} missing from the MVP assessment, or without its verdict or DAMA areas')
+    i = sec.find('id="SUP-HLT"')
+    hlt = sec[i:sec.find('</section>', i)]
+    for rb in ('RB-S251', 'RB-UKMDR'):
+        if rb not in [r for s_ in P['supplements'] if s_['id'] == 'SUP-HLT' for r in s_['refs']]:
+            errs.append(f'SUP-HLT: {rb} not referenced')
+    # The steps themselves, not the reference titles, which also contain 'section 251' (found by this check's deliberate-break test).
+    for step in ('sets aside the duty of confidentiality', 'check whether it is a medical device'):
+        if step not in hlt:
+            errs.append(f'sectors.html: health supplement step "{step}" missing')
+    return errs
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -1172,7 +1236,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements]
+          c38_pilot_requirements, c39_backlog_18_22]
 
 
 def run(site, repo, only=None, quiet=False):
