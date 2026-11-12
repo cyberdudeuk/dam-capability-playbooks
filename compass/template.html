@@ -747,7 +747,7 @@ function directoryRender(){const rs=dirRows();$('#dir').innerHTML=rs.slice(0,sho
 $('#dq-q').addEventListener('input',()=>{shown=24;directoryRender();});
 $('#dq-more').addEventListener('click',()=>{shown+=24;directoryRender();});
 $('#dq-reset').addEventListener('click',()=>{['#dq-kind','#dq-where','#dq-aud','#dq-topic','#dq-area'].forEach(s=>$(s).selectedIndex=0);$('#dq-q').value='';shown=24;directoryRender();});
-$('#dq-csv').addEventListener('click',()=>download('compass-directory.csv',['Kind,Title,Where,Publisher,Topic,Address,Description'].concat(dirRows().map(e=>[e.kind,e.title,WHERE[e.where],e.by,e.topic,e.url,e.desc].map(csvCell).join(','))).join('\n'),$('#dq-count')));
+$('#dq-csv').addEventListener('click',()=>download('compass-directory.csv',['Kind,Title,Where,Publisher,Topic,Address,Description'].concat(dirRows().map(e=>[e.kind,e.title,WHERE[e.where],e.by,e.topic,e.url,e.desc].map(csvCell).join(','))).join('\n')));
 /* professions */
 $('#aud-grid').innerHTML=(D.audiences||[]).map(a=>`<li><button type="button" class="audbtn" data-aud="${esc(a.id)}" aria-pressed="false">${ic(a.icon)}<strong>${esc(a.name)}</strong><span>${esc(a.who)}</span></button></li>`).join('');
 let curAud=null;

@@ -7,7 +7,7 @@ Pass --break NAME to apply a deliberate break and prove the matching check fails
 import argparse
 import functools
 import http.server
-import json, re
+import re
 import socketserver
 import sys
 import threading
