@@ -1783,6 +1783,7 @@ supplements:
   - "Where a health IT system holds the asset, record its clinical safety position: DCB0129 for the supplier and DCB0160 for the organisation that deploys it."
   - "If confidential patient information is used without consent, record the legal basis that sets aside the duty of confidentiality, such as section 251 support, separately from the data protection lawful basis."
   - "If software or AI that uses the asset has a medical purpose, check whether it is a medical device under the Medical Devices Regulations 2002, using the MHRA's guidance."
+  - "If NHS health and social care data in the asset is used for research or analysis beyond direct care, give access through a secure data environment, as DHSC's secure data environment policy guidelines require, and record which environment in the catalogue record."
   cat:
   - {prop: legalBasis, term: "dpv:hasLegalBasis", rule: "The lawful basis and, for health data, the special category condition"}
   - {prop: optOutApplied, term: "local extension", rule: "Whether the national data opt-out has been applied to this distribution (yes, no or not applicable)"}
@@ -1809,7 +1810,8 @@ supplements:
   - "Legal basis, confidentiality position and opt-out status are recorded on the catalogue record"
   - "NHS number validity and completeness rules are in the DQAP"
   - "Quality is broken down by ethnic group where lawful"
-  refs: [RB-CALD, RB-DSPT, RB-DPA, RB-FHIRUK, RB-SNOMED, RB-DCB0129, RB-DCB0160, RB-S251, RB-UKMDR, RB-MHRASW]
+  - "Access for research and analysis goes through a secure data environment, recorded on the catalogue record"
+  refs: [RB-CALD, RB-DSPT, RB-DPA, RB-FHIRUK, RB-SNOMED, RB-DCB0129, RB-DCB0160, RB-S251, RB-UKMDR, RB-MHRASW, RB-DSL, RB-SDE, RB-DAPU]
 - id: SUP-SOC
   dd: DD-02
   title: Adult and children's social care data

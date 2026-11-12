@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Health and care supplement (issue #22): DHSC's Data saves lives strategy, the secure data environment policy guidelines and the data access policy update are signposted, with a step and a checklist item to give research and analysis access through a secure data environment and record which one.
 - Data portals compass 1.3 (formerly the estate compass):
   - Renamed after an assessment shown on the page: "estate" is shorthand many readers do not know; "data portals" says what it covers, and the compass picture stays. The address is unchanged.
   - Says plainly what it is, who it is for, what it helps you do and what it is not, at the top of the page, without repeating the masthead.
