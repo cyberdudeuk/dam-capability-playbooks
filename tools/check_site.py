@@ -949,6 +949,9 @@ def c35_estate_compass(site, repo, pages):
     for need in ('id="drawer"', 'id="wn"', 'id="dnav"', 'class="subtabs"', 'id="menu-btn"'):
         if need not in html:
             errs.append(f'compass: menu or sub-tab part {need} missing')
+    # CodeQL alerts 44 and 45: menu items were built as HTML from text read off the page; they must be built as DOM nodes
+    if re.search(r"\$\('#(?:dnav|wn)'\)\.innerHTML|insertAdjacentHTML", html):
+        errs.append('compass: the menu is built from page text as HTML; build it with DOM nodes (CodeQL 44, 45)')
     wn = (d.get('whats_new') or {}).get('items', [])
     if not wn or any(x.get('flag') not in ('new', 'updated') for x in wn):
         errs.append('compass: the menu must flag what is new or updated')
@@ -1414,7 +1417,7 @@ def c41_knowledge_areas(site, repo, pages):
     """Rule (version 1.14.0, BL-35): every DAMA knowledge area drills down to activities. Areas without a DAM playbook have
     activities at each adoption stage on the Knowledge areas page; each activity shows its steps, evidence, who is accountable,
     the DAM requirements it supports and its standards; the capability model and the compass reach every activity."""
-    import yaml, json
+    import yaml
     errs = []
     f = site / 'areas.html'
     if not f.exists():

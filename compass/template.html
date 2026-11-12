@@ -499,11 +499,18 @@ const SUBTAB={};document.querySelectorAll('.subpanel').forEach(s=>{SUBTAB[s.id]=
 (function(){const W=D.whats_new||{items:[]};const TL={};tabs.forEach(x=>TL[x.getAttribute('aria-controls')]=x);
  const FL={new:'New',updated:'Updated'};
  const best={};W.items.forEach(x=>{if(TL[x.tab]&&best[x.tab]!=='new')best[x.tab]=x.flag;});
- Object.entries(best).forEach(([k,f])=>{TL[k].insertAdjacentHTML('beforeend',`<span class="flag-n ${f}">${FL[f]}</span>`);});
+ const flagEl=f=>{const s=document.createElement('span');s.className='flag-n '+(f==='new'?'new':'updated');s.textContent=FL[f==='new'?'new':'updated'];return s;};
+ Object.entries(best).forEach(([k,f])=>{TL[k].appendChild(flagEl(f));});
  $('#wn-date').textContent=W.as_of?'('+W.as_of+')':'';
- $('#wn').innerHTML=W.items.map(x=>`<li><span class="flag-n ${x.flag}">${FL[x.flag]}</span> ${x.tab==='menu'?esc(x.label):`<a href="#${esc(x.tab)}" data-tabgo="${esc(x.tab)}">${esc(x.label)}</a>`}</li>`).join('');
- $('#dnav').innerHTML=tabs.map(x=>{const id=x.getAttribute('aria-controls');const subs=[...document.querySelectorAll(`#${id} .subtabs [role=tab]`)];
-  return `<li><a href="#${id}" data-tabgo="${id}">${esc(x.childNodes[1]?x.childNodes[1].textContent:x.textContent)}</a>${best[id]?` <span class="flag-n ${best[id]}">${FL[best[id]]}</span>`:''}`+(subs.length?`<ul>${subs.map(s=>`<li><a href="#${id}" data-tabgo="${id}" data-sub="${s.getAttribute('aria-controls')}">${esc(s.textContent)}</a></li>`).join('')}</ul>`:'')+'</li>';}).join('');
+ const mk=(tag,txt)=>{const e=document.createElement(tag);if(txt!=null)e.textContent=txt;return e;};
+ const link=(tab,txt,sub)=>{const a=mk('a',txt);a.href='#'+tab;a.dataset.tabgo=tab;if(sub)a.dataset.sub=sub;return a;};
+ const wn=$('#wn');W.items.forEach(x=>{const li=mk('li');li.appendChild(flagEl(x.flag));li.append(' ');li.appendChild(TL[x.tab]?link(x.tab,x.label):mk('span',x.label));wn.appendChild(li);});
+ /* every tab and sub-tab id comes from the page's own known set, never from free text (C-35) */
+ const SUBIDS=new Set(Object.keys(SUBTAB));const dn=$('#dnav');
+ tabs.forEach(x=>{const id=Object.keys(TL).find(k=>TL[k]===x);if(!id)return;const li=mk('li');li.appendChild(link(id,x.childNodes[1]?x.childNodes[1].textContent:x.textContent));if(best[id]){li.append(' ');li.appendChild(flagEl(best[id]));}
+  const subs=[...x.ownerDocument.querySelectorAll('.subtabs [role=tab]')].filter(s=>SUBTAB[s.getAttribute('aria-controls')]===id&&SUBIDS.has(s.getAttribute('aria-controls')));
+  if(subs.length){const ul=mk('ul');subs.forEach(s=>{const sid=[...SUBIDS].find(k=>k===s.getAttribute('aria-controls'));const l2=mk('li');l2.appendChild(link(id,s.textContent,sid));ul.appendChild(l2);});li.appendChild(ul);}
+  dn.appendChild(li);});
  const mb=$('#menu-btn'),dr=$('#drawer');mb.addEventListener('click',()=>{const o=mb.getAttribute('aria-expanded')!=='true';mb.setAttribute('aria-expanded',o);dr.classList.toggle('open',o);if(o){const f=dr.querySelector('a,button,summary');if(f)f.focus();}});
  dr.addEventListener('keydown',e=>{if(e.key==='Escape'&&dr.classList.contains('open')){dr.classList.remove('open');mb.setAttribute('aria-expanded','false');mb.focus();}});
 })();
