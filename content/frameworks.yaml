@@ -176,6 +176,33 @@ rulebook_more:
   prov: S
   caps: [gov]
   why: Helps decide whether software, including an app or AI, is a medical device. A product is a medical device only if its manufacturer intends a medical purpose.
+- id: RB-DSL
+  group: Health and care
+  title: 'Data saves lives: reshaping health and social care with data'
+  publisher: Department of Health and Social Care
+  url: https://www.gov.uk/government/publications/data-saves-lives-reshaping-health-and-social-care-with-data
+  updated: '2022-06-15'
+  prov: V
+  caps: [gov, cat, dq]
+  why: DHSC's data strategy for health and social care in England, which commits to secure data environments as the default way to access NHS data for research and analysis.
+- id: RB-SDE
+  group: Health and care
+  title: Secure data environment for NHS health and social care data - policy guidelines
+  publisher: Department of Health and Social Care
+  url: https://www.gov.uk/government/publications/secure-data-environment-policy-guidelines
+  updated: '2022-12-23'
+  prov: V
+  caps: [gov]
+  why: Twelve guidelines that organisations hosting NHS health and social care data for research and analysis must adopt.
+- id: RB-DAPU
+  group: Health and care
+  title: Data access policy update
+  publisher: Department of Health and Social Care
+  url: https://www.gov.uk/government/publications/data-access-policy-update
+  updated: null
+  prov: V
+  caps: [gov]
+  why: Builds on the secure data environment guidelines with the policy decisions made so far on 'data access as default' for secondary uses of NHS data.
 - id: RB-SVCASSESS
   group: Delivery, change and investment
   title: Service assessments and applying the Service Standard
