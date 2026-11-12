@@ -100,6 +100,16 @@ def wheel(c, d, pb):
     for x in d['maturity']['strands']:
         add('MS-' + x['id'], 'Maturity strand', 'Assess', f'Assess: {x["name"]}', dam + 'capability-model.html#strands',
             [f'Level {i + 1}: {lv}' for i, lv in enumerate(x['levels'])], x['cr'])
+    # version 1.14.0: the knowledge area implementation guide, so every area drills down to activities and steps
+    G = d.get('area_guide') or {'areas': [], 'stages': []}
+    stage_name = {s['id']: f'{s["name"]}: {s["when"].lower()}' for s in G['stages']}
+    an = {a['id']: a['name'] for a in d['dama']['areas']}
+    for ga in G['areas']:
+        for x in ga['activities']:
+            add(x['id'], 'Knowledge area activity', an[ga['id']], x['title'], dam + 'areas.html#' + x['id'], x['steps'], x['caps'],
+                {'goal': x['goal'], 'reqs': [[r, dam + 'dam.html#' + r] for r in x['reqs']], 'raci': x['raci'], 'stage': stage_name[x['stage']],
+                 'area': ga['id']})
+    guided = {ga['id'] for ga in G['areas']}
     # where each area is in the other portals (the area mappings above)
     ar = {a['id']: a for a in areas(c, d)}
     out_areas = []
@@ -107,6 +117,7 @@ def wheel(c, d, pb):
         cids = sorted(k for k, v in caps.items() if a['id'] in v['areas'])
         out_areas.append({'id': a['id'], 'name': a['name'], 'desc': a['desc'], 'im': a['im'], 'uses': a.get('uses', {}),
                           'wheel': dam + 'capability-model.html#' + a['id'].lower(), 'caps': cids,
+                          'guide': dam + 'areas.html#' + a['id'] if a['id'] in guided else None,
                           'dq': ar[a['id']]['dq'], 'cat': ar[a['id']]['cat'], 'ap': ar[a['id']]['ap']})
     return {'hub': d['dama']['hub'], 'areas': out_areas, 'caps': caps, 'acts': acts, 'roles': ROLE_NAMES, 'role_map': ROLE_MAP, 'raci_map': RACI_MAP,
             'raci_names': {r['code']: r['name'] for r in pb.get('roles', [])}}

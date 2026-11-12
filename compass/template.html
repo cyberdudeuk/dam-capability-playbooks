@@ -480,7 +480,7 @@ const HUES=['#b9d6f2','#c5e5cf','#f6d7a7','#e3c9ef','#f5c6c0','#cfe3e8','#e8dfc0
 const sel={area:W.hub,cap:null,act:null};
 const pw=[];
 const myRaci=()=>(W.raci_map[ans.role]||[]);const myRole=()=>W.role_map[ans.role];
-const KT={'Playbook recipe':'A stage of a DAM playbook recipe, with its steps and the requirements it meets','Change and programmes':'What to do when a programme, contract or legacy exit touches a critical data asset','Perspective':'What the policy means seen from another profession, such as cyber or commercial','Maturity strand':'How to assess where you are, from level 1 to level 5'};
+const KT={'Playbook recipe':'A stage of a DAM playbook recipe, with its steps and the requirements it meets','Change and programmes':'What to do when a programme, contract or legacy exit touches a critical data asset','Perspective':'What the policy means seen from another profession, such as cyber or commercial','Maturity strand':'How to assess where you are, from level 1 to level 5','Knowledge area activity':'An activity in a data management area beyond the three DAM playbooks, with its stage, steps and who does what'};
 const KL=x=>x.kind==='Playbook recipe'?x.group+' recipe':x.kind;
 const leads=a=>a.raci?myRaci().filter(r=>/[RA]/.test(a.raci[r]||'')):[];
 /* the wheel */
@@ -517,7 +517,7 @@ const crumb=(t,fn,cur)=>`<li>${cur?`<span aria-current="location">${esc(t)}</spa
 function addBtn(type,id){const on=pw.some(p=>p.t===type&&p.id===id);return `<button type="button" class="addpw" data-pw="${esc(type)}:${esc(id)}" aria-pressed="${on}">${on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway'}</button>`;}
 function actCard(x,open){const my=leads(x);const steps=x.steps.map(s=>`<li>${esc(s)}</li>`).join('');
  return `<details class="act${sel.act===x.id?' sel':''}" id="act-${esc(x.id)}"${open?' open':''}><summary><span class="pill2" data-tip="${esc(KT[x.kind]||'')}">${esc(KL(x))}</span>${esc(x.title)}${my.length?` <span class="mine">Your role: ${esc(my.map(r=>x.raci[r]).join('/'))}</span>`:''}</summary><div class="bd">`+
- (x.goal?`<p>${esc(x.goal)}</p>`:'')+`<p class="hint">${x.steps.length} steps (the lowest level of activity):</p><ol>${steps}</ol>`+
+ (x.stage?`<p><span class="chip">${esc(x.stage)}</span></p>`:'')+(x.goal?`<p>${esc(x.goal)}</p>`:'')+`<p class="hint">${x.steps.length} steps (the lowest level of activity):</p><ol>${steps}</ol>`+
  (x.reqs&&x.reqs.length?`<p><strong>Meets:</strong> ${x.reqs.map(([t,u])=>`<a href="${esc(u)}">${esc(t)}</a>`).join(', ')}</p>`:'')+
  (x.raci&&Object.keys(x.raci).length?`<p class="hint">Who (R responsible, A accountable, C consulted, I informed): ${Object.entries(x.raci).map(([r,v])=>esc(W.raci_names[r]||r)+' '+esc(v)).join(' · ')}</p>`:'')+
  `<p><a href="${esc(x.url)}">${ic('landmark')}Open in the DAM playbooks</a> ${addBtn('a',x.id)} <button type="button" class="addpw" data-trace="${esc(x.id)}">${ic('git-branch')}Show its lineage</button></p></div></details>`;}
@@ -621,7 +621,7 @@ $('#mx-csv').addEventListener('click',()=>{download('compass-traceability.csv',[
 /* pathway */
 function togglePw(t,id){if(!id)return;const i=pw.findIndex(p=>p.t===t&&p.id===id);if(i>=0)pw.splice(i,1);else pw.push({t,id});refreshPw();}
 function pwItem(p){return p.t==='a'?ACT[p.id]:p.t==='r'?(D.directory||[]).find(e=>e.id===p.id):CAP[p.id];}
-function rank(p){const x=pwItem(p);if(p.t==='r')return 2000+['Portal','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'].indexOf(x.kind);if(p.t==='c')return 1000+Number(x.id.slice(3));const k={'Playbook recipe':0,'Maturity strand':200,'Change and programmes':300,'Perspective':400}[x.kind];return k+(x.order||0)+(x.kind==='Change and programmes'?Number(x.id.slice(3)):0);}
+function rank(p){const x=pwItem(p);if(p.t==='r')return 2000+['Portal','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'].indexOf(x.kind);if(p.t==='c')return 1000+Number(x.id.slice(3));const k={'Playbook recipe':0,'Knowledge area activity':100,'Maturity strand':200,'Change and programmes':300,'Perspective':400}[x.kind];return k+(x.order||0)+(x.kind==='Change and programmes'?Number(x.id.slice(3)):0);}
 function refreshPw(){
  document.querySelectorAll('.addpw[data-pw]').forEach(b=>{const i=b.dataset.pw.indexOf(':');const t=b.dataset.pw.slice(0,i),id=b.dataset.pw.slice(i+1);const on=pw.some(p=>p.t===t&&p.id===id);b.setAttribute('aria-pressed',on);b.innerHTML=on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway';});
  const tab=document.getElementById('tab-pathway');if(tab)tab.querySelector('.pwc').textContent=pw.length?` (${pw.length})`:'';

@@ -1401,6 +1401,52 @@ def c40_tooltips_and_standards(site, repo, pages):
     return errs
 
 
+def c41_knowledge_areas(site, repo, pages):
+    """Rule (version 1.14.0, BL-35): every DAMA knowledge area drills down to activities. Areas without a DAM playbook have
+    activities at each adoption stage on the Knowledge areas page; each activity shows its steps, evidence, who is accountable,
+    the DAM requirements it supports and its standards; the capability model and the compass reach every activity."""
+    import yaml, json
+    errs = []
+    f = site / 'areas.html'
+    if not f.exists():
+        return ['areas.html missing']
+    html = f.read_text(encoding='utf-8')
+    G = yaml.safe_load((repo / 'content' / 'areas.yaml').read_text(encoding='utf-8'))
+    fw = yaml.safe_load((repo / 'content' / 'frameworks.yaml').read_text(encoding='utf-8'))
+    covered = set(fw['dama'].get('cap_area', {}).values()) | {a['id'] for a in G['areas'] if not a.get('playbook')}
+    for a in fw['dama']['areas']:
+        if a['id'] not in covered:
+            errs.append(f'areas: knowledge area {a["id"]} has neither a playbook nor activities')
+    cm = (site / 'capability-model.html').read_text(encoding='utf-8')
+    cp = site / 'compass' / 'index.html'
+    cdata = json.loads(re.search(r'<script type="application/json" id="data">(.*?)</script>', cp.read_text(encoding='utf-8'), re.S).group(1)) if cp.exists() else {}
+    cacts = {x['id'] for x in cdata.get('wheel', {}).get('acts', [])}
+    for a in G['areas']:
+        if f'id="{a["id"]}"' not in html:
+            errs.append(f'areas.html: no section for {a["id"]}')
+        for x in a['activities']:
+            k = html.find(f'<li class="cr-card area-act" id="{x["id"]}"')
+            if k < 0:
+                errs.append(f'areas.html: activity {x["id"]} missing'); continue
+            ends = [e for e in (html.find('<li class="cr-card area-act"', k + 10), html.find('</section>', k)) if e > 0]
+            card = html[k:min(ends)] if ends else html[k:]
+            if card.count('<li>') < len(x['steps']) or '<ol>' not in card:
+                errs.append(f'areas.html: {x["id"]} does not show all its steps')
+            for need in ('Evidence it is done', 'Accountable:', 'Standards and guidance'):
+                if need not in card:
+                    errs.append(f'areas.html: {x["id"]} does not show "{need}"')
+            for r in x['reqs']:
+                if f'href="dam.html#{r}"' not in card:
+                    errs.append(f'areas.html: {x["id"]} does not link requirement {r}')
+            if f'href="areas.html#{x["id"]}"' not in cm:
+                errs.append(f'capability-model.html: the DAMA wheel does not drill down to {x["id"]}')
+            if cdata and x['id'] not in cacts:
+                errs.append(f'compass: the DAMA wheel does not reach {x["id"]}')
+    if 'DAMA International' not in html or 'Draft' not in html:
+        errs.append('areas.html: must say it is a draft and that DAMA-DMBOK text is not copied')
+    return errs
+
+
 def E_(s):
     import html
     return html.escape(s, quote=True)
@@ -1414,7 +1460,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas]
 
 
 def run(site, repo, only=None, quiet=False):

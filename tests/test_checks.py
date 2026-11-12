@@ -19,7 +19,7 @@ def fresh():
     tmp = Path(tempfile.mkdtemp(prefix='dcp-'))
     repo = tmp / 'repo'
     (repo / 'content').mkdir(parents=True)
-    for f in ('playbooks.yaml', 'frameworks.yaml', 'source-anchors.json'):
+    for f in ('playbooks.yaml', 'frameworks.yaml', 'areas.yaml', 'source-anchors.json'):
         shutil.copy(ROOT / 'content' / f, repo / 'content' / f)
     for f in ('README.md', 'LICENSE', 'CITATION.cff'):
         shutil.copy(ROOT / f, repo / f)
@@ -579,6 +579,35 @@ class Vaccination(unittest.TestCase):
     def test_c39_mvp_verdict_missing(self):
         edit(self.s / 'research.html', '<strong>After the MVP</strong>', '<strong>Pending</strong>')
         self.fails('c39_backlog_18_22')
+
+    # version 1.14.0: knowledge area activities (C-41)
+    def test_c41_activity_missing_from_page(self):
+        edit(self.s / 'areas.html', 'id="SEC-5"', 'id="SEC-X"')
+        self.fails('c41_knowledge_areas')
+
+    def test_c41_activity_loses_evidence(self):
+        edit(self.s / 'areas.html', 'Evidence it is done', 'Proof', count=1)
+        self.fails('c41_knowledge_areas')
+
+    def test_c41_wheel_does_not_drill_to_activity(self):
+        edit(self.s / 'capability-model.html', 'href="areas.html#REF-2"', 'href="areas.html#REF-X"')
+        self.fails('c41_knowledge_areas')
+
+    def test_c41_compass_does_not_reach_activity(self):
+        edit(self.s / 'compass' / 'index.html', '"id": "BI-4"', '"id": "BI-X"')
+        self.fails('c41_knowledge_areas')
+
+    def test_build_rejects_area_activity_with_unknown_requirement(self):
+        y = self.r / 'content' / 'areas.yaml'
+        edit(y, 'reqs: [DAM-R01, DAM-R12]', 'reqs: [DAM-R99, DAM-R12]')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_area_without_every_stage(self):
+        y = self.r / 'content' / 'areas.yaml'
+        edit(y, "      - id: DOC-3\n        stage: embed", "      - id: DOC-3\n        stage: build")
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
 
     # version 1.13.0: tooltips, standards links and the DAMA drill-down (C-40)
     def test_c40_tooltip_inside_heading(self):
