@@ -29,7 +29,8 @@ header{background:var(--navy);color:#fff}
 .mast h1 .i{color:var(--gold);width:1.1em;height:1.1em}
 .mast p{margin:.4rem 0;max-width:44rem;color:#e6e9ee}
 .eyebrow{color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.85rem;margin:0}
-.rose-wrap{width:min(19rem,80vw)}
+.rose-wrap{width:min(30rem,92vw)}
+.rose-link:hover .rose-name,.rose-link:focus .rose-name{text-decoration:underline}.rose-link:focus{outline:none}.rose-link:focus-visible circle{stroke:#ffdd00;stroke-width:5}
 .rose{width:100%;height:auto;display:block}
 .needle{transform-origin:150px 150px;transition:transform .9s cubic-bezier(.2,.8,.2,1)}
 @media (prefers-reduced-motion:reduce){.needle{transition:none}}
@@ -122,7 +123,7 @@ select{font:inherit;padding:.4rem;min-height:44px;border:2px solid var(--ink);ba
 .col h3{margin:0 0 .5rem;font-size:1rem}
 .col ul{margin:0;padding-left:1.1rem}.col li{margin:.2rem 0}
 .gap{font-weight:700}
-  .tablewrap{overflow-x:auto}
+  .tablewrap{overflow-x:auto;position:relative}
 table{border-collapse:collapse;width:100%;margin:.5rem 0}th,td{border-bottom:1px solid var(--rule);text-align:left;padding:.5rem;vertical-align:top}th{background:var(--panel)}
 .pn{display:inline-flex;gap:.35rem;align-items:center;font-weight:700}
 footer{border-top:8px solid var(--gold);background:var(--navy);color:#eef1f5;padding:1.25rem;font-size:.92rem}
@@ -133,30 +134,114 @@ footer h2{font-size:1rem;margin:0 0 .35rem;color:#fff}
 .colophon figcaption{font-size:.8rem;color:#cfd6de}
 .selfcheck summary{cursor:pointer;font-weight:700}
 .ok{color:#9be0b6}.bad{color:#ffb4a8}
+/* DAMA wheel drill-down, lineage, traceability and pathway (version 1.2) */
+.finder{max-width:40rem;margin:.75rem 0;position:relative}.finder input,.filters input{font:inherit;padding:.4rem .5rem;min-height:44px;border:2px solid var(--ink);background:var(--card);color:var(--ink);width:100%}
+.wq-out{list-style:none;padding:0;margin:.25rem 0 0;border:1px solid var(--rule);background:var(--card)}.wq-out:empty{display:none}
+.wq-out button{font:inherit;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--rule);padding:.45rem .6rem;cursor:pointer;color:var(--link);min-height:44px}
+.wq-out .k{font-size:.8rem;font-weight:700;color:var(--quiet);margin-right:.4rem}
+.dama-grid{display:grid;gap:1.25rem;grid-template-columns:minmax(0,26rem) minmax(0,1fr);align-items:start;margin-top:1rem}
+@media (max-width:60rem){.dama-grid{grid-template-columns:minmax(0,1fr)}}
+.wheel-wrap{position:sticky;top:.5rem}@media (max-width:60rem){.wheel-wrap{position:static}}
+#wheel svg{width:100%;height:auto;display:block}
+.wedge path{stroke:var(--bg);stroke-width:2;cursor:pointer;transition:transform .25s ease,filter .25s}
+.wlabels text{fill:#0b0c0c;font-weight:700}
+.wedge:hover path,.wedge:focus path{filter:brightness(.92)}
+.wedge.on path{stroke:var(--selc,#0b2545);stroke-width:4}
+@media (prefers-color-scheme:dark){.wedge.on path{--selc:#f2c14e}#wheel .hub path{stroke:#f2c14e}}
+.wedge:focus{outline:none}.wedge:focus-visible path{stroke:#0b0c0c;stroke-width:5}
+.wedge.on{transform-origin:200px 200px}
+.wlabels .cnt{fill:#0b2545}.wlabels .cntt{fill:#fff;font-size:11px}
+@media (prefers-reduced-motion:reduce){.wedge path{transition:none}}
+.cntkey{display:inline-grid;place-items:center;width:1.3rem;height:1.3rem;border-radius:50%;background:#0b2545;color:#fff;font-size:.75rem;font-weight:700}
+.legend{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:.3rem .9rem;font-size:.85rem}.legend li{display:flex;gap:.35rem;align-items:center}
+.sw{display:inline-block;width:.9rem;height:.9rem;border:2px solid var(--ink)}
+.cov-c{background:#00703c}.cov-p{background:#f2c14e}.cov-n{background:var(--card);border-style:dashed}
+.crumbs{list-style:none;padding:0;margin:0 0 .5rem;display:flex;flex-wrap:wrap;gap:.2rem;font-size:.95rem}
+.crumbs li+li::before{content:"\203A";margin:0 .35rem;color:var(--quiet)}
+.crumbs button{font:inherit;background:none;border:0;color:var(--link);text-decoration:underline;cursor:pointer;padding:.2rem;min-height:36px}
+.crumbs [aria-current]{font-weight:700}
+.drill-h{display:flex;gap:.6rem;align-items:center;margin:.2rem 0}.drill-h h3{margin:0;font-size:1.3rem}
+.capgrid{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fill,minmax(min(15rem,100%),1fr));margin:.6rem 0;padding:0;list-style:none}
+.capbtn{font:inherit;text-align:left;width:100%;height:100%;background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--covc,#b1b4b6);padding:.55rem .7rem;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:.2rem}
+.capbtn:hover{background:var(--panel)}.capbtn .id{font-size:.8rem;font-weight:700;color:var(--quiet)}.capbtn .nm{font-weight:700;color:var(--link)}
+.capbtn .meta{font-size:.82rem;color:var(--quiet)}
+.c-Covered{--covc:#00703c}.c-Partial{--covc:#f2c14e}.c-New{--covc:#b1b4b6}
+.pill2{display:inline-block;font-size:.78rem;font-weight:700;border:1px solid var(--line);padding:0 .4rem;margin:.1rem .25rem .1rem 0;background:var(--bg)}
+.act{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--dam);margin:.5rem 0}
+.act>summary{cursor:pointer;padding:.55rem .7rem;display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;font-weight:700;list-style:none}
+.act>summary::-webkit-details-marker{display:none}.act>summary::before{content:"\25B8";color:var(--trail)}.act[open]>summary::before{content:"\25BE"}
+.act .bd{padding:0 .8rem .7rem}.act ol{margin:.3rem 0;padding-left:1.4rem}.act ol li{margin:.15rem 0}
+.act.sel{box-shadow:0 0 0 3px var(--gold)}
+.mine{background:#00703c;color:#fff;font-size:.75rem;font-weight:700;padding:0 .4rem}
+.addpw{font:inherit;font-size:.9rem;font-weight:700;background:var(--panel);border:1px solid var(--line);padding:.25rem .55rem;min-height:36px;cursor:pointer;color:var(--ink)}
+.addpw[aria-pressed=true]{background:#00703c;color:#fff;border-color:#00703c}
+.gapnote{border-left:6px solid var(--gold);background:var(--panel);padding:.5rem .8rem}
+.graph-wrap{overflow:auto;border:1px solid var(--rule);background:var(--card);max-height:44rem;margin:.5rem 0}
+.graph-wrap svg text{fill:var(--ink)}.gnode{cursor:pointer}.gnode rect{stroke-width:2}.gnode:focus-visible rect{stroke:#0b0c0c;stroke-width:4}
+.gedge{fill:none;stroke:var(--line);stroke-width:1.5}.gedge.dash{stroke-dasharray:4 5}.gedge.hot{stroke:var(--trail);stroke-width:3}
+.filters{display:flex;flex-wrap:wrap;gap:.6rem;align-items:flex-end;margin:.5rem 0}.filters>div{display:flex;flex-direction:column;min-width:10rem}.filters label{font-weight:700;font-size:.9rem}
+#mx td{font-size:.92rem}#mx td ul{margin:0;padding-left:1rem}
+.pwl{list-style:none;padding:0;margin:.5rem 0;counter-reset:pw}
+.pwl>li{display:grid;grid-template-columns:2.6rem 1fr auto;gap:.6rem;align-items:start;border:1px solid var(--rule);background:var(--card);padding:.6rem;margin:.4rem 0;border-left:6px solid var(--dam)}
+.pwl .n{width:2.3rem;height:2.3rem;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-weight:700}
+.pwl .ctl{display:flex;gap:.25rem;flex-wrap:wrap}.pwl .ctl button{font:inherit;min-width:44px;min-height:44px;background:var(--panel);border:1px solid var(--line);cursor:pointer;color:var(--ink)}
+.pwl h4{margin:0 0 .2rem;font-size:1.02rem}
+@media print{header,footer,[role=tablist],#bearing,#portals,#examples,#when,#lineage,#links,.btn,.pwl .ctl{display:none!important}#pathway{display:block!important}}
+/* tooltips (compass 1.2): on hover and keyboard focus; Escape closes; the tip can be hovered (WCAG 1.4.13) */
+#tip{position:fixed;z-index:20;max-width:22rem;background:#0b0c0c;color:#fff;padding:.45rem .6rem;font-size:.88rem;line-height:1.4;border-left:4px solid #f2c14e;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+#tip[hidden]{display:none}
+.pill2[data-tip],.legend [data-tip]{cursor:help}
+/* about and glossary (compass 1.3) */
+.mast-lede{font-size:1.2rem;color:#fff}
+.about{margin:1rem 0 .5rem}
+.about-grid{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))}
+.ab{background:var(--card);border:1px solid var(--rule);border-top:4px solid var(--gold);padding:.7rem .9rem}
+.ab h3{margin:0 0 .35rem;font-size:1.05rem}.ab p{margin:.3rem 0}.ab ul{margin:.2rem 0;padding-left:1.15rem}
+.namenote{margin:.6rem 0;max-width:52rem}.namenote summary{cursor:pointer;font-weight:700;color:var(--link)}
+.linkish{font:inherit;background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer}
+a.term{color:inherit;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:.22em}
+header a.term{color:#fff}
+.az{list-style:none;padding:0;margin:.5rem 0;display:flex;flex-wrap:wrap;gap:.25rem}.az a{display:inline-grid;place-items:center;min-width:2.2rem;min-height:2.2rem;border:1px solid var(--line);background:var(--card);font-weight:700;text-decoration:none}
+.gloss{display:grid;gap:.5rem;margin:.5rem 0}.gloss>div{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--trail);padding:.6rem .85rem;scroll-margin-top:1rem}
+.gloss dt{font-weight:700;font-size:1.08rem}.gloss dd{margin:.2rem 0 0}.gloss .meta{font-size:.92rem;color:var(--quiet)}
+.gloss>div:target,.gloss>div.flash{box-shadow:0 0 0 3px var(--gold)}
 </style>
 </head>
 <body>
 __SPRITE__
 <a class="skip" href="#main">Skip to main content</a>
 <header>
+<div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to four separate portals, each with its own owner, purpose and status. Every link opens the real page. __HOSTNOTE__</div></div>
 <div class="mast">
 <div>
 <p class="eyebrow">Four portals, one compass</p>
 <h1><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>__TITLE__</h1>
-<p>__SUBTITLE__. Not sure which portal you need, or in what order? Answer four quick questions and the compass points the way, step by step, with why each step matters and what you get from it.</p>
-<p>North is the policy, east is the practice, west is what already exists, south is how it is described so others can find it. You are at the centre.</p>
+<p class="mast-lede">__SUBTITLE__.</p>
+<p>The <a class="term" href="#glossary" data-term="compass">compass</a> shows the four <a class="term" href="#glossary" data-term="portal">portals</a> as four directions. North is the policy, east is the practice, west is what already exists, south is how data is described so others can find it. You are at the centre. Select a portal on the compass to open it.</p>
 </div>
 <div class="rose-wrap">__ROSE__<p class="bearing-now" id="bearing-now" aria-live="polite">Answer the questions to take a bearing</p></div>
 </div>
-<div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to four separate portals, each with its own owner, purpose and status. Every link opens the real page. __HOSTNOTE__</div></div>
 </header>
 <main id="main" tabindex="-1">
+<section class="about" aria-labelledby="about-h">
+<h2 id="about-h" class="vh">About this guide</h2>
+<div class="about-grid">
+<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>What it is</h3><p id="ab-what"></p><p id="ab-estate" class="hint"></p></article>
+<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg>Who it is for</h3><p id="ab-who"></p></article>
+<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-target"/></svg>What it helps you do</h3><ul id="ab-aims"></ul></article>
+<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-circle-x"/></svg>What it is not</h3><ul id="ab-not"></ul></article>
+</div>
+<details class="namenote"><summary>Why is it called the data portals compass?</summary><p id="ab-name"></p></details>
+<p class="hint">New to any of the words here? Dotted words explain themselves when you point at them or move to them with the keyboard, and every term is in <button type="button" class="linkish" data-tabgo="glossary">Words explained</button>.</p>
+</section>
 <div role="tablist" aria-label="Ways to find your way">
 <button role="tab" id="tab-bearing" aria-controls="bearing" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg>Find your bearing</button>
 <button role="tab" id="tab-portals" aria-controls="portals" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four portals</button>
 <button role="tab" id="tab-examples" aria-controls="examples" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</button>
 <button role="tab" id="tab-when" aria-controls="when" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</button>
-<button role="tab" id="tab-lineage" aria-controls="lineage" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>By data management area</button>
+<button role="tab" id="tab-lineage" aria-controls="lineage" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>DAMA wheel and lineage</button>
+<button role="tab" id="tab-pathway" aria-controls="pathway" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>My pathway<span class="pwc"></span></button>
+<button role="tab" id="tab-glossary" aria-controls="glossary" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-book-open"/></svg>Words explained</button>
 <button role="tab" id="tab-links" aria-controls="links" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How they link</button>
 </div>
 
@@ -189,12 +274,60 @@ __SPRITE__
 </section>
 
 <section role="tabpanel" id="lineage" aria-labelledby="tab-lineage" tabindex="0" hidden>
-<h2><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>Follow a data management area</h2>
-<p>Pick a data management area from the DAMA wheel to follow it across the portals: what the DAM Policy asks, how the Commons helps you do it, what public code shows, and how DCAT-AP-UK describes it. The Commons, catalogue and DCAT-AP-UK mappings are this compass's suggestions; the DAM capabilities come from the DAM playbooks' capability model.</p>
-<label for="area"><strong>Data management area</strong></label><br>
-<select id="area"></select>
-<p id="areadesc" aria-live="polite"></p>
+<h2><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>The DAMA wheel: from data management area to activity</h2>
+<p class="lede">Start from a <a class="term" href="#glossary" data-term="area">data management area</a> on the <a class="term" href="#glossary" data-term="dama">DAMA wheel</a>, drill down to the <a class="term" href="#glossary" data-term="capability">capabilities</a> in it and the <a class="term" href="#glossary" data-term="activity">activities</a> under each one, down to the individual <a class="term" href="#glossary" data-term="step">steps</a>, and see exactly where each is in the four portals.</p>
+<p class="hint">Areas come from the DAMA Data Management Body of Knowledge (DMBOK) as the DAM playbooks place them. Which recipe stage serves which capability, and the Commons, catalogue and DCAT-AP-UK links for each area, are this compass's own mappings. Change items, perspectives and maturity strands carry their own capability links from the DAM playbooks.</p>
+<div class="finder"><label for="wq"><strong>Find an area, capability, activity or step</strong></label><input id="wq" type="search" autocomplete="off" placeholder="For example: owner, baseline, metadata, legacy"><ul id="wq-out" class="wq-out" aria-live="polite"></ul></div>
+<div class="dama-grid">
+<div class="wheel-wrap">
+<div id="wheel" role="group" aria-label="DAMA wheel. Data governance is at the centre, with ten knowledge areas around it. Select an area to drill down."></div>
+<p class="hint">Select an area on the wheel, or <label for="area">choose one</label>: <select id="area"></select></p>
+<ul class="legend" aria-label="Key"><li data-tip="The DAM playbooks have steps for this capability"><span class="sw cov-c"></span>Capability covered by the playbooks</li><li><span class="sw cov-p"></span>Partly covered</li><li><span class="sw cov-n"></span>New: guidance still to come</li><li><span class="cntkey" aria-hidden="true">4</span>Number of capabilities in the area</li></ul>
+</div>
+<div class="drill">
+<nav aria-label="Where you are in the wheel"><ol class="crumbs" id="crumbs"></ol></nav>
+<div id="drill" aria-live="polite"></div>
+</div>
+</div>
+<h3><svg class="i" aria-hidden="true"><use href="#i-git-branch"/></svg><a class="term" href="#glossary" data-term="lineage">Lineage</a>: how it traces through the portals</h3>
+<p class="hint">Read from the area outwards. To the right, solid lines follow the DAM playbooks' own content down to capabilities, activities and pages. To the left, dashed lines are this compass's suggestions for the other three portals, made at the level of the data management area. Select any area, capability or activity to follow it.</p>
+<div id="graph" class="graph-wrap" role="region" aria-label="Lineage diagram. The same links are listed in the drill-down above and the traceability table below." tabindex="0"></div>
+<h3><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Where the selected area is in the four portals</h3>
 <div class="lineage" id="lin"></div>
+<h3 id="matrix-h"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg><a class="term" href="#glossary" data-term="traceability">Traceability</a> table</h3>
+<p>Every activity, the capabilities and areas it serves, and where it is. Capabilities with no activities yet are listed too, so gaps are visible.</p>
+<div class="filters" role="group" aria-label="Filter the traceability table">
+<div><label for="mx-area">Area</label><select id="mx-area"></select></div>
+<div><label for="mx-kind">Kind</label><select id="mx-kind"></select></div>
+<div><label for="mx-cov">Coverage</label><select id="mx-cov"></select></div>
+<div><label for="mx-q">Contains</label><input id="mx-q" type="search" autocomplete="off"></div>
+<button type="button" class="btn secondary" id="mx-csv"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download as CSV</button>
+</div>
+<p id="mx-count" class="hint" aria-live="polite"></p>
+<div class="tablewrap" role="region" aria-label="Traceability table" tabindex="0"><table id="mx"><caption class="vh">Traceability from data management area to activity and location</caption><thead><tr><th scope="col">Area</th><th scope="col">Capability</th><th scope="col">Activity</th><th scope="col">Steps</th><th scope="col">In the DAM playbooks</th><th scope="col">Elsewhere (by area)</th><th scope="col"><span class="vh">Pathway</span></th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section role="tabpanel" id="pathway" aria-labelledby="tab-pathway" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>My pathway</h2>
+<p class="lede">Your own <a class="term" href="#glossary" data-term="pathway">pathway</a> through the activities: add them from the DAMA wheel or the traceability table, or start from the recipe stages your role leads.</p>
+<p><button type="button" class="btn" id="pw-role"><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg>Start from my role</button>
+<button type="button" class="btn secondary" id="pw-sort"><svg class="i" aria-hidden="true"><use href="#i-milestone"/></svg>Put in order of precedence</button>
+<button type="button" class="btn secondary" id="pw-copy"><svg class="i" aria-hidden="true"><use href="#i-share-2"/></svg>Copy a link</button>
+<button type="button" class="btn secondary" id="pw-csv"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download</button>
+<button type="button" class="btn secondary" id="pw-print"><svg class="i" aria-hidden="true"><use href="#i-file-text"/></svg>Print</button>
+<button type="button" class="btn secondary" id="pw-clear"><svg class="i" aria-hidden="true"><use href="#i-circle-x"/></svg>Clear</button></p>
+<p id="pw-status" class="hint" aria-live="polite"></p>
+<div id="pw"></div>
+<p class="hint">Your pathway is kept only in this page's address, never sent anywhere. Bookmark or share the link to keep it.</p>
+</section>
+
+<section role="tabpanel" id="glossary" aria-labelledby="tab-glossary" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-book-open"/></svg>Words explained</h2>
+<p class="lede">Every term used in this guide, in plain English, with the other names people use for it (a thesaurus) and the terms it relates to.</p>
+<div class="finder"><label for="gq"><strong>Find a word</strong></label><input id="gq" type="search" autocomplete="off"></div>
+<p id="gcount" class="hint" aria-live="polite"></p>
+<nav aria-label="Jump to a letter"><ul class="az" id="az"></ul></nav>
+<dl class="gloss" id="gloss"></dl>
 </section>
 
 <section role="tabpanel" id="links" aria-labelledby="tab-links" tabindex="0" hidden>
@@ -212,6 +345,7 @@ __SPRITE__
 <div><h2>Colophon</h2><div class="colophon">__CODES__</div></div>
 </div>
 </footer>
+<div id="tip" role="tooltip" hidden></div>
 <script type="application/json" id="data">__DATA__</script>
 <script>
 (function(){
@@ -240,15 +374,17 @@ function render(){
  const scope=ans.scope||'';
  const steps=r.steps.map(s=>({...s,path:s.path==='role'?rolePath():s.path}));
  needle(steps[0].p);
+ const gone=s=>D.sync&&D.sync.bad.includes(url(s.p,s.path))?'<span class="flagnote">This page could not be found at the last automatic check: the link may have moved</span>':'';
  const fmt=s=>s.scope==='policy'&&scope==='none'?'<span class="flagnote">Optional for you: your organisation is not covered by the policy</span>':s.scope==='policy'&&scope==='optional'?'<span class="flagnote">Recommended, not required for public corporations</span>':'';
  let svg=trail(steps);
  let list=steps.map((s,i)=>{const prev=steps[i-1];const cross=prev&&prev.p!==s.p?`<p class="cross">${ic('footprints')}Cross from ${esc(P[prev.p].short)} to ${esc(P[s.p].short)}</p>`:'';
-  return `<li id="wp-${i+1}"><span class="wp" style="${cv(s.p)}" aria-hidden="true">${ic(P[s.p].icon)}</span>${cross}<div class="step${fmt(s)?' dim':''}" style="${cv(s.p)}"><p class="pl">${ic(P[s.p].icon)}Step ${i+1} of ${steps.length}, in ${esc(P[s.p].name)}</p><h3><a href="${esc(url(s.p,s.path))}">${esc(s.title)}</a></h3><p class="ask">Ask yourself: ${esc(s.ask)}</p><dl class="kv"><dt>Why</dt><dd>${esc(s.why)}</dd><dt>You get</dt><dd>${esc(s.gets)}</dd></dl>${fmt(s)}</div></li>`;}).join('');
+  return `<li id="wp-${i+1}"><span class="wp" style="${cv(s.p)}" aria-hidden="true">${ic(P[s.p].icon)}</span>${cross}<div class="step${fmt(s)?' dim':''}" style="${cv(s.p)}"><p class="pl">${ic(P[s.p].icon)}Step ${i+1} of ${steps.length}, in ${esc(P[s.p].name)}</p><h3><a href="${esc(url(s.p,s.path))}">${esc(s.title)}</a></h3><p class="ask">Ask yourself: ${esc(s.ask)}</p><dl class="kv"><dt>Why</dt><dd>${esc(s.why)}</dd><dt>You get</dt><dd>${esc(s.gets)}</dd></dl>${fmt(s)}${gone(s)}</div></li>`;}).join('');
  const used=[...new Set(steps.map(s=>s.p))];
  const pre=used.map(p=>`<div class="tip" style="${cv(p)}"><h3>${ic(P[p].icon)}${esc(P[p].short)}</h3><p>${esc(P[p].needs)}</p><p class="hint">${esc(P[p].binding)}.</p></div>`).join('');
  const roleq=D.questions.find(x=>x.id==='role').options.find(x=>x.id===ans.role);
  let tips='';
  if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each portal</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li><li><a href="${esc(url('ap','roles.html'))}">DCAT-AP-UK: routes for your role</a></li></ul></div>`;}
+ if(D.wheel)tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('network')}Go deeper</h3><p>Follow the DAMA wheel from data management area to capability, activity and step, then build your own pathway from the recipe stages your role leads.</p><p><button type="button" class="btn secondary" data-tabgo="lineage">${ic('network')}Open the DAMA wheel</button> <button type="button" class="btn secondary" data-tabgo="pathway">${ic('footprints')}My pathway</button></p></div>`;
  if(ans.skill==='new')tips+=`<div class="tip" style="${cv('cat')}"><h3>${ic('git-branch')}New to GitHub?</h3><p>You don't need to code. Read <a href="${esc(url('cat','#home'))}">GitHub in two minutes</a> in the catalogue, or <a href="${esc(url('dqc','github.html'))}">the Commons' plain-English introduction</a>.</p></div>`;
  if(ans.skill==='daily')tips+=`<div class="tip" style="${cv('dqc')}"><h3>${ic('code-xml')}Working in code?</h3><p>The Commons has a toolkit you can run and an API (<a href="${esc(url('dqc','reuse.html'))}">use the Commons your way</a>). The DAM playbooks publish open data and a reference server for AI assistants (<a href="${esc(url('dam','reuse.html'))}">use and reuse</a>).</p></div>`;
  if(ans.scope==='mandatory'&&steps[0].p!=='dam')tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('landmark')}Your organisation is covered by the DAM Policy</h3><p>If this work touches a critical data asset, read <a href="${esc(url('dam','dam.html#requirements'))}">what the policy requires</a> before you finish, so the work counts towards it.</p></div>`;
@@ -262,10 +398,188 @@ function trail(steps){const n=steps.length,W=Math.max(760,150*n+240),H=290,lanes
  s+=`<path d="${d}" fill="none" stroke="var(--trail)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>`;
  steps.forEach((st,i)=>{s+=`<g><circle cx="${x(i)}" cy="${ly(st.p)}" r="19" fill="var(--card)" stroke="var(--${esc(st.p)})" stroke-width="3"/><svg x="${x(i)-10}" y="${ly(st.p)-10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--${esc(st.p)})" aria-hidden="true">${ic(P[st.p].icon).replace(/<svg[^>]*>|<\/svg>/g,'')}</svg><text x="${x(i)}" y="${ly(st.p)-25}" text-anchor="middle" font-size="12" font-weight="700">${i+1}</text></g>`;});
  s+=`<text x="${x(n-1)}" y="${H-8}" text-anchor="middle" font-size="12">Destination</text></svg>`;return s;}
-$('#wayfinder').addEventListener('change',e=>{const q=D.questions.find(x=>x.id===e.target.name);const v=q&&opt(q.id,e.target.value);if(!v)return;ans[q.id]=v;render();syncHash();});
+$('#wayfinder').addEventListener('change',e=>{const q=D.questions.find(x=>x.id===e.target.name);const v=q&&opt(q.id,e.target.value);if(!v)return;ans[q.id]=v;render();if(window.compassRole)window.compassRole();syncHash();});
+/* DAMA wheel drill-down, lineage, traceability and pathway (version 1.2). Every value read from the page or address is matched to the data first. */
+const W=D.wheel;
+if(W){
+const AREA={};W.areas.forEach(a=>AREA[a.id]=a);const CAP=W.caps;const ACT={};W.acts.forEach(a=>ACT[a.id]=a);
+const areaId=v=>AREA[v]?AREA[v].id:undefined,capId=v=>CAP[v]?CAP[v].id:undefined,actId=v=>ACT[v]?ACT[v].id:undefined;
+const COV={Covered:'Covered by the playbooks',Partial:'Partly covered',New:'New: guidance still to come'};
+const FLAG={E:'Explicit in the DAM Policy',I:'Implicit in the DAM Policy',N:'Inferred: not in the DAM Policy'};
+const HUES=['#b9d6f2','#c5e5cf','#f6d7a7','#e3c9ef','#f5c6c0','#cfe3e8','#e8dfc0','#d9d4f2','#c9e8d9','#f0d0e2'];
+const sel={area:W.hub,cap:null,act:null};
+const pw=[];
+const myRaci=()=>(W.raci_map[ans.role]||[]);const myRole=()=>W.role_map[ans.role];
+const KT={'Playbook recipe':'A stage of a DAM playbook recipe, with its steps and the requirements it meets','Change and programmes':'What to do when a programme, contract or legacy exit touches a critical data asset','Perspective':'What the policy means seen from another profession, such as cyber or commercial','Maturity strand':'How to assess where you are, from level 1 to level 5'};
+const KL=x=>x.kind==='Playbook recipe'?x.group+' recipe':x.kind;
+const leads=a=>a.raci?myRaci().filter(r=>/[RA]/.test(a.raci[r]||'')):[];
+/* the wheel */
+function polar(r,deg){const t=(deg-90)*Math.PI/180;return [200+r*Math.cos(t),200+r*Math.sin(t)];}
+function wrap(s,n){const w=s.split(' ');const out=[];let l='';w.forEach(x=>{if((l+' '+x).trim().length>n){out.push(l.trim());l=x;}else l+=' '+x;});out.push(l.trim());return out.filter(Boolean);}
+function drawWheel(){
+ const ring=W.areas.filter(a=>a.id!==W.hub),n=ring.length,step=360/n;
+ let s=`<svg viewBox="0 0 400 400" role="presentation">`,labs='';
+ ring.forEach((a,i)=>{const a0=i*step,a1=(i+1)*step,R=195,r=74;const [x0,y0]=polar(R,a0),[x1,y1]=polar(R,a1),[x2,y2]=polar(r,a1),[x3,y3]=polar(r,a0);
+  const mid=a0+step/2,[tx,ty]=polar(146,mid);const nc=a.caps.length;
+  const lines=wrap(a.name,13);const [bx,by]=polar(96,mid);
+  s+=`<g class="wedge${sel.area===a.id?' on':''}" tabindex="0" role="button" data-tip="${esc(a.desc)}" data-area="${esc(a.id)}" aria-pressed="${sel.area===a.id}" aria-label="${esc(a.name)}, ${nc} ${nc===1?'capability':'capabilities'}"><path d="M${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1} L${x2} ${y2} A${r} ${r} 0 0 0 ${x3} ${y3}Z" fill="${HUES[i%HUES.length]}"/></g>`;
+  labs+=lines.map((l,j)=>`<text x="${tx}" y="${ty+(j-(lines.length-1)/2)*12+4}" text-anchor="middle" font-size="10.5">${esc(l)}</text>`).join('')+
+   `<circle class="cnt" cx="${bx}" cy="${by}" r="9"/><text class="cntt" x="${bx}" y="${by+4}" text-anchor="middle">${nc}</text>`;});
+ const h=AREA[W.hub];
+ const hon=sel.area===h.id;
+ s+=`<g class="wedge hub${hon?' on':''}" tabindex="0" role="button" data-tip="${esc(h.desc)} It sits at the centre because every other area depends on it." data-area="${esc(h.id)}" aria-pressed="${hon}" aria-label="${esc(h.name)}, at the centre, ${h.caps.length} capabilities"><path d="M200 128 A72 72 0 1 1 199.9 128Z" fill="#0b2545"/></g>`;
+ labs+=(hon?`<circle cx="200" cy="200" r="66" fill="none" stroke="#f2c14e" stroke-width="5"/><circle cx="200" cy="200" r="78" fill="none" stroke="#f2c14e" stroke-width="2" stroke-dasharray="4 4"/>`:'')+
+  `<text x="200" y="190" text-anchor="middle" font-size="12.5" style="fill:#fff;font-weight:700">Data</text><text x="200" y="205" text-anchor="middle" font-size="12.5" style="fill:#fff;font-weight:700">governance</text>`+
+  (hon?`<text x="200" y="220" text-anchor="middle" font-size="9.5" style="fill:#f2c14e;font-weight:700">SELECTED</text>`:'')+
+  `<circle cx="200" cy="240" r="11" style="fill:#f2c14e"/><text x="200" y="244" text-anchor="middle" font-size="11" style="fill:#0b0c0c;font-weight:700">${h.caps.length}</text>`;
+ s+=`<g class="wlabels" aria-hidden="true" pointer-events="none">${labs}</g></svg>`;
+$('#wheel').innerHTML=s;
+ const ws=[...document.querySelectorAll('#wheel .wedge')];
+ ws.forEach((g,i)=>{g.addEventListener('click',()=>go(areaId(g.dataset.area)));g.addEventListener('keydown',e=>{
+  if(e.key==='Enter'||e.key===' '){e.preventDefault();go(areaId(g.dataset.area));}
+  const d=e.key==='ArrowRight'||e.key==='ArrowDown'?1:e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:0;if(d){e.preventDefault();ws[(i+d+ws.length)%ws.length].focus();}});});
+}
+/* drill-down */
+function go(a,c,x,keepFocus){if(!a&&!c&&!x)return;sel.act=x||null;sel.cap=c||(x?ACT[x].caps[0]:null);sel.area=a||(sel.cap?CAP[sel.cap].areas[0]:sel.area);
+ drawWheel();drill();graph();lin();$('#area').value=sel.area;syncHash();
+ if(sel.act){const el=document.getElementById('act-'+sel.act);if(el){el.open=true;if(!keepFocus)el.scrollIntoView({block:'nearest'});}}}
+const crumb=(t,fn,cur)=>`<li>${cur?`<span aria-current="location">${esc(t)}</span>`:`<button type="button" data-go="${esc(fn)}">${esc(t)}</button>`}</li>`;
+function addBtn(type,id){const on=pw.some(p=>p.t===type&&p.id===id);return `<button type="button" class="addpw" data-pw="${esc(type)}:${esc(id)}" aria-pressed="${on}">${on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway'}</button>`;}
+function actCard(x,open){const my=leads(x);const steps=x.steps.map(s=>`<li>${esc(s)}</li>`).join('');
+ return `<details class="act${sel.act===x.id?' sel':''}" id="act-${esc(x.id)}"${open?' open':''}><summary><span class="pill2" data-tip="${esc(KT[x.kind]||'')}">${esc(KL(x))}</span>${esc(x.title)}${my.length?` <span class="mine">Your role: ${esc(my.map(r=>x.raci[r]).join('/'))}</span>`:''}</summary><div class="bd">`+
+ (x.goal?`<p>${esc(x.goal)}</p>`:'')+`<p class="hint">${x.steps.length} steps (the lowest level of activity):</p><ol>${steps}</ol>`+
+ (x.reqs&&x.reqs.length?`<p><strong>Meets:</strong> ${x.reqs.map(([t,u])=>`<a href="${esc(u)}">${esc(t)}</a>`).join(', ')}</p>`:'')+
+ (x.raci&&Object.keys(x.raci).length?`<p class="hint">Who (R responsible, A accountable, C consulted, I informed): ${Object.entries(x.raci).map(([r,v])=>esc(W.raci_names[r]||r)+' '+esc(v)).join(' · ')}</p>`:'')+
+ `<p><a href="${esc(x.url)}">${ic('landmark')}Open in the DAM playbooks</a> ${addBtn('a',x.id)} <button type="button" class="addpw" data-trace="${esc(x.id)}">${ic('git-branch')}Show its lineage</button></p></div></details>`;}
+function elsewhere(aids){const seen=new Set(),out={dq:[],cat:[],ap:[]};aids.forEach(id=>{const a=AREA[id];['dq','cat','ap'].forEach(k=>a[k].forEach(([t,u])=>{if(!seen.has(u)){seen.add(u);out[k].push([t,u]);}}));});return out;}
+function elsewhereHtml(aids){const e=elsewhere(aids);return `<div class="lineage">`+[['dqc','dq','do the work'],['cat','cat','evidence in public code'],['ap','ap','how to describe it']].map(([p,k,t])=>`<section class="col" style="${cv(p)}"><h4 class="pn">${ic(P[p].icon)}${esc(P[p].short)}: ${esc(t)}</h4>${e[k].length?'<ul>'+e[k].map(([tt,u])=>`<li><a href="${esc(u)}">${esc(tt)}</a></li>`).join('')+'</ul>':'<p class="gap">No dedicated page yet.</p>'}</section>`).join('')+`</div>`;}
+function drill(){const a=AREA[sel.area],c=sel.cap&&CAP[sel.cap];
+ let cr=crumb('DAMA wheel','wheel',false)+crumb(a.name,'area:'+a.id,!c);if(c)cr+=crumb(c.id+' '+c.name,'cap:'+c.id,!sel.act);if(sel.act)cr+=crumb(ACT[sel.act].title,'act:'+sel.act,true);
+ $('#crumbs').innerHTML=cr;
+ let h='';
+ if(!c){const role=myRole();
+  h+=`<div class="drill-h">${ic('network')}<h3>${esc(a.name)}</h3></div><p>${esc(a.desc)}</p><p class="hint">Records management counterpart: ${esc(a.im)}</p>`;
+  if(role&&a.uses[role])h+=`<p class="outcome">${ic('users-round')}<span><strong>For you (${esc(W.roles[role])}):</strong> ${esc(a.uses[role])}</span></p>`;
+  else if(Object.keys(a.uses).length)h+=`<details><summary>What this area means for each role</summary><ul>${Object.entries(a.uses).map(([r,u])=>`<li><strong>${esc(W.roles[r]||r)}:</strong> ${esc(u)}</li>`).join('')}</ul></details>`;
+  h+=`<h4>${a.caps.length} ${a.caps.length===1?'capability':'capabilities'} in this area</h4>`;
+  h+=a.caps.length?`<ul class="capgrid">${a.caps.map(id=>{const k=CAP[id];return `<li><button type="button" class="capbtn c-${esc(k.coverage)}" data-tip="${esc(k.note)}" data-go="cap:${esc(k.id)}"><span class="id">${esc(k.id)} · ${esc(k.cluster)}</span><span class="nm">${esc(k.name)}</span><span class="meta">${esc(COV[k.coverage]||k.coverage)} · ${k.acts.length} ${k.acts.length===1?'activity':'activities'}</span></button></li>`;}).join('')}</ul>`:`<p class="gapnote">No capability in the DAM capability model sits in this area yet. That is a gap in the playbooks, shown here on purpose.</p>`;
+  h+=`<p><a href="${esc(a.wheel)}">${ic('landmark')}This area on the DAM playbooks' DAMA wheel</a></p>`;
+ }else{
+  h+=`<div class="drill-h">${ic('layers')}<h3>${esc(c.id)} ${esc(c.name)}</h3></div><p><span class="pill2" data-tip="The band of the DAM capability model this capability belongs to">${esc(c.cluster)}</span><span class="pill2" data-tip="How far the DAM playbooks cover this capability today">${esc(COV[c.coverage]||c.coverage)}</span><span class="pill2" data-tip="Whether the DAM Policy names this capability (explicit), depends on it (implicit) or it is added as good practice (inferred)">${esc(FLAG[c.flag]||c.flag)}</span></p><p>${esc(c.note)}</p>`;
+  if(c.areas.length>1)h+=`<p class="hint">Also in: ${c.areas.filter(x=>x!==a.id).map(x=>`<button type="button" class="addpw" data-go="area:${esc(x)}">${esc(AREA[x].name)}</button>`).join(' ')}</p>`;
+  if(c.sign.length)h+=`<p class="hint">GOV.UK guidance it rests on: ${c.sign.map(esc).join('; ')} (linked from the capability card).</p>`;
+  h+=`<p><a href="${esc(c.url)}">${ic('landmark')}Capability card</a> · <a href="${esc(c.page)}">Where the playbooks cover it</a> ${addBtn('c',c.id)}</p>`;
+  const xs=c.acts.map(id=>ACT[id]);
+  h+=`<h4>${xs.length} ${xs.length===1?'activity':'activities'}, ${xs.reduce((n,x)=>n+x.steps.length,0)} steps</h4>`;
+  h+=xs.length?xs.map(x=>actCard(x,sel.act===x.id)).join(''):`<p class="gapnote">No activity in the playbooks is linked to this capability yet. The capability card and <a href="${esc(c.page)}">its page</a> say what is covered so far.</p>`;
+  h+=`<h4>Related in the other portals</h4><p class="hint">Suggested by this compass for the capability's data management areas.</p>`+elsewhereHtml(c.areas);
+ }
+ $('#drill').innerHTML=h;
+}
+function route(v){const [k,id]=String(v).split(':');if(k==='wheel')return go(W.hub);if(k==='area'&&areaId(id))return go(areaId(id));if(k==='cap'&&capId(id))return go(null,capId(id));if(k==='act'&&actId(id))return go(null,null,actId(id));}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go],[data-pw],[data-trace]');if(!b||!b.closest('#lineage,#pathway'))return;
+ if(b.dataset.go)route(b.dataset.go);else if(b.dataset.trace){const x=actId(b.dataset.trace);if(x){sel.act=x;sel.cap=CAP[sel.cap]&&ACT[x].caps.includes(sel.cap)?sel.cap:ACT[x].caps[0];graph();$('#graph').scrollIntoView({block:'nearest'});$('#graph').focus();syncHash();}}
+ else{const [t,id]=b.dataset.pw.split(':');togglePw(t==='a'?'a':'c',t==='a'?actId(id):capId(id));}});
+/* lineage graph */
+function pname(u){const f=u.split('/').pop().replace('.html','');return (W.page_names[f]||f)+' page';}
+function graph(){const a=AREA[sel.area],c=sel.cap&&CAP[sel.cap];
+ const cols=[];let edges=[];
+ const areasCol=c?c.areas.map(id=>({k:'area',id,label:AREA[id].name})):[{k:'area',id:a.id,label:a.name}];
+ const capsCol=(c?[c]:a.caps.map(id=>CAP[id])).map(k=>({k:'cap',id:k.id,label:k.id+' '+k.name,cov:k.coverage}));
+ const actsArr=c?c.acts.map(id=>ACT[id]):[];
+ const actsCol=actsArr.map(x=>({k:'act',id:x.id,label:x.title}));
+ const pages=[...new Set((c?actsArr:[].concat(...capsCol.map(k=>CAP[k.id].acts.map(i=>ACT[i])))).map(x=>x.url.split('#')[0]))].map(u=>({k:'page',id:u,label:pname(u)}));
+ const ea=elsewhere(areasCol.map(n=>n.id));
+ const portals=[['dqc','dq'],['cat','cat'],['ap','ap']].filter(([,k])=>ea[k].length).map(([p,k])=>({k:'portal',id:p,label:P[p].short+' ('+ea[k].length+')'}));
+ cols.push(['Other portals (by area)',portals],['Data management area',areasCol],['Capability',capsCol]);if(c)cols.push(['Activity',actsCol]);cols.push(['DAM playbooks page',pages]);
+ areasCol.forEach(n=>{capsCol.forEach(k=>{if(CAP[k.id].areas.includes(n.id))edges.push(['area:'+n.id,'cap:'+k.id,0]);});portals.forEach(p=>edges.push(['portal:'+p.id,'area:'+n.id,1]));});
+ if(c){actsArr.forEach(x=>{edges.push(['cap:'+c.id,'act:'+x.id,0]);edges.push(['act:'+x.id,'page:'+x.url.split('#')[0],0]);});}
+ else capsCol.forEach(k=>CAP[k.id].acts.forEach(i=>edges.push(['cap:'+k.id,'page:'+ACT[i].url.split('#')[0],0])));
+ const seen=new Set();edges=edges.filter(e=>{const key=e.join('|');if(seen.has(key))return false;seen.add(key);return true;});
+ const CW=196,GAP=54,NH=30,VG=8,TOP=34;const pos={};let H=0;
+ cols.forEach(([t,ns],ci)=>{const off=Math.max(0,(Math.max(...cols.map(c2=>c2[1].length))-ns.length)*(NH+VG)/2*(ci<2?0:0));ns.forEach((n,i)=>{pos[n.k+':'+n.id]={x:12+ci*(CW+GAP),y:TOP+off+i*(NH+VG),n};});H=Math.max(H,TOP+ns.length*(NH+VG)+10);});
+ const Wd=12+cols.length*(CW+GAP)-GAP+12;
+ const hot=new Set();if(sel.act){const x=ACT[sel.act];hot.add('cap:'+sel.cap+'|act:'+x.id);hot.add('act:'+x.id+'|page:'+x.url.split('#')[0]);CAP[sel.cap].areas.forEach(id=>{hot.add('area:'+id+'|cap:'+sel.cap);portals.forEach(p=>hot.add('portal:'+p.id+'|area:'+id));});}
+ let s=`<svg viewBox="0 0 ${Wd} ${H}" width="${Wd}" height="${H}" role="group" aria-label="Lineage from ${esc(c?c.id+' '+c.name:a.name)} to activities, pages and portals">`;
+ cols.forEach(([t],ci)=>{s+=`<text x="${12+ci*(CW+GAP)}" y="18" font-size="12" font-weight="700" role="heading" aria-level="4">${esc(t)}</text>`;});
+ edges.forEach(([f,t,d])=>{const A=pos[f],B=pos[t];if(!A||!B)return;const x1=A.x+CW,y1=A.y+NH/2,x2=B.x,y2=B.y+NH/2,mx=(x1+x2)/2;s+=`<path class="gedge${d?' dash':''}${hot.has(f+'|'+t)?' hot':''}" d="M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}"/>`;});
+ const fill={area:'var(--panel)',cap:'var(--card)',act:'var(--dam-bg)',page:'var(--dam-bg)',portal:'var(--card)'};
+ let glabs='';Object.values(pos).forEach(({x,y,n})=>{const lab=n.label.length>29?n.label.slice(0,28)+'…':n.label;const stroke=n.k==='portal'?`var(--${n.id})`:n.k==='cap'?({Covered:'#00703c',Partial:'#c9a23a',New:'#6f777b'})[n.cov]:n.k==='area'?'var(--navy)':'var(--dam)';
+  const on=(n.k==='act'&&sel.act===n.id)||(n.k==='cap'&&sel.cap===n.id)||(n.k==='area'&&sel.area===n.id&&!c);
+  const box=`<rect x="${x}" y="${y}" width="${CW}" height="${NH}" rx="4" fill="${fill[n.k]}" stroke="${stroke}"${on?' stroke-width="4"':''}/>`;
+  glabs+=`<text x="${x+8}" y="${y+19}" font-size="11.5"${on?' font-weight="700"':''}>${esc(lab)}</text>`;
+  if(n.k==='page')s+=`<a href="${esc(n.id)}" class="gnode" data-tip="Open the ${esc(n.label)} in the DAM playbooks" aria-label="${esc(n.label)}">${box}</a>`;
+  else if(n.k==='portal')s+=`<a href="${esc(P[n.id].url)}" class="gnode" data-tip="${esc(P[n.id].question)} Suggested pages are listed above the diagram." aria-label="${esc(n.label)}">${box}</a>`;
+  else s+=`<g class="gnode" tabindex="0" role="button" data-tip="${esc(n.label)}" data-go="${esc(n.k)}:${esc(n.id)}" aria-label="${esc(n.label)}">${box}</g>`;});
+ $('#graph').innerHTML=s+`<g aria-hidden="true" pointer-events="none">${glabs}</g></svg>`;
+ $('#graph').querySelectorAll('g.gnode').forEach(g=>g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();route(g.dataset.go);}}));
+}
+/* the four-portal columns for the selected area (kept from version 1.1) */
+function lin(){const a=D.areas.find(x=>x.id===sel.area)||D.areas[0];
+ const col=(p,title,items,empty)=>`<section class="col" style="${cv(p)}"><h4 class="pn">${ic(P[p].icon)}${esc(P[p].short)}: ${esc(title)}</h4>${items.length?'<ul>'+items.map(([t,u])=>`<li><a href="${esc(u)}">${esc(t)}</a></li>`).join('')+'</ul>':`<p class="gap">${esc(empty)}</p>`}</section>`;
+ $('#lin').innerHTML=col('dam','what the policy asks',a.dam,'')+col('dqc','do the work',a.dq,'No dedicated page yet.')+col('cat','evidence in public code',a.cat,'')+col('ap','how to describe it',a.ap,'No dedicated page.');}
+$('#area').innerHTML=W.areas.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');
+$('#area').addEventListener('change',()=>{const a=W.areas[$('#area').selectedIndex];if(a)go(a.id);});
+/* finder */
+const IDX=[].concat(W.areas.map(a=>({k:'Area',t:a.name,s:a.desc,go:'area:'+a.id})),Object.values(CAP).map(c=>({k:'Capability',t:c.id+' '+c.name,s:c.note,go:'cap:'+c.id})),W.acts.map(x=>({k:KL(x),t:x.title,s:x.steps.join(' ')+' '+(x.goal||''),go:'act:'+x.id})));
+$('#wq').addEventListener('input',()=>{const q=$('#wq').value.toLowerCase().split(/\s+/).filter(w=>w.length>1);if(!q.length){$('#wq-out').innerHTML='';return;}
+ const hits=IDX.map(r=>{const T=r.t.toLowerCase(),S=r.s.toLowerCase();let sc=0;q.forEach(w=>{if(T.includes(w))sc+=3;else if(S.includes(w))sc+=1;else sc-=9;});return [sc,r];}).filter(([s])=>s>0).sort((x,y)=>y[0]-x[0]).slice(0,8);
+ $('#wq-out').innerHTML=hits.length?hits.map(([,r])=>`<li><button type="button" data-go="${esc(r.go)}"><span class="k">${esc(r.k)}</span>${esc(r.t)}</button></li>`).join(''):'<li class="hint">Nothing found. Try another word.</li>';});
+/* traceability table */
+const rows=[];W.acts.forEach(x=>x.caps.forEach(cid=>{const c=CAP[cid];rows.push({x,c,areas:c.areas});}));
+Object.values(CAP).filter(c=>!c.acts.length).forEach(c=>rows.push({x:null,c,areas:c.areas}));
+const kinds=[...new Set(W.acts.map(x=>x.kind))];
+$('#mx-area').innerHTML='<option value="">All</option>'+W.areas.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');
+$('#mx-kind').innerHTML='<option value="">All</option>'+kinds.map(k=>`<option>${esc(k)}</option>`).join('')+'<option value="gap">No activity yet (gaps)</option>';
+$('#mx-cov').innerHTML='<option value="">All</option>'+Object.keys(COV).map(k=>`<option value="${esc(k)}">${esc(COV[k])}</option>`).join('');
+function mxRows(){const fa=areaId($('#mx-area').value),fkSel=$('#mx-kind').selectedIndex,fk=fkSel>0?($('#mx-kind').options[fkSel].value==='gap'?'gap':kinds[fkSel-1]):'',fc=COV[$('#mx-cov').value]?$('#mx-cov').value:'',q=$('#mx-q').value.toLowerCase();
+ return rows.filter(r=>(!fa||r.areas.includes(fa))&&(!fk||(fk==='gap'?!r.x:r.x&&r.x.kind===fk))&&(!fc||r.c.coverage===fc)&&(!q||(r.c.id+' '+r.c.name+' '+(r.x?r.x.title+' '+r.x.steps.join(' '):'')).toLowerCase().includes(q)));}
+function matrix(){const rs=mxRows();
+ $('#mx tbody').innerHTML=rs.map(r=>{const e=elsewhere(r.areas);const els=[['dqc','dq'],['cat','cat'],['ap','ap']].map(([p,k])=>e[k].length?`<li><a href="${esc(P[p].url)}">${esc(P[p].short)}</a>: ${e[k].length}</li>`:'').join('');
+  return `<tr><td>${r.areas.map(id=>`<button type="button" class="addpw" data-go="area:${esc(id)}">${esc(AREA[id].name)}</button>`).join(' ')}</td><td><button type="button" class="addpw" data-go="cap:${esc(r.c.id)}">${esc(r.c.id)}</button> ${esc(r.c.name)}</td>`+
+  (r.x?`<td><span class="pill2">${esc(KL(r.x))}</span><button type="button" class="addpw" data-go="act:${esc(r.x.id)}">${esc(r.x.title)}</button></td><td>${r.x.steps.length}</td><td><a href="${esc(r.x.url)}">${esc(r.x.url.split('/').pop())}</a></td>`:`<td colspan="3" class="gap">No activity yet. See <a href="${esc(r.c.page)}">${esc(r.c.page.split('/').pop())}</a></td>`)+
+  `<td><ul>${els}</ul></td><td>${r.x?addBtn('a',r.x.id):addBtn('c',r.c.id)}</td></tr>`;}).join('');
+ $('#mx-count').textContent=`Showing ${rs.length} of ${rows.length} rows: ${W.acts.length} activities with ${W.acts.reduce((n,x)=>n+x.steps.length,0)} steps across ${Object.keys(CAP).length} capabilities and ${W.areas.length} areas.`;}
+['#mx-area','#mx-kind','#mx-cov','#mx-q'].forEach(s=>$(s).addEventListener(s==='#mx-q'?'input':'change',matrix));
+const csvCell=v=>'"'+String(v).replace(/"/g,'""')+'"';
+function download(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+$('#mx-csv').addEventListener('click',()=>{download('compass-traceability.csv',['Area,Capability,Coverage,Activity kind,Activity,Step,Location'].concat(mxRows().flatMap(r=>{const base=[r.areas.map(id=>AREA[id].name).join('; '),r.c.id+' '+r.c.name,r.c.coverage];return r.x?r.x.steps.map(st=>base.concat([r.x.kind,r.x.title,st,r.x.url]).map(csvCell).join(',')):[base.concat(['','No activity yet','',r.c.page]).map(csvCell).join(',')];})).join('\n'));});
+/* pathway */
+function togglePw(t,id){if(!id)return;const i=pw.findIndex(p=>p.t===t&&p.id===id);if(i>=0)pw.splice(i,1);else pw.push({t,id});refreshPw();}
+function pwItem(p){return p.t==='a'?ACT[p.id]:CAP[p.id];}
+function rank(p){const x=pwItem(p);if(p.t==='c')return 1000+Number(x.id.slice(3));const k={'Playbook recipe':0,'Maturity strand':200,'Change and programmes':300,'Perspective':400}[x.kind];return k+(x.order||0)+(x.kind==='Change and programmes'?Number(x.id.slice(3)):0);}
+function refreshPw(){
+ document.querySelectorAll('.addpw[data-pw]').forEach(b=>{const [t,id]=b.dataset.pw.split(':');const on=pw.some(p=>p.t===t&&p.id===id);b.setAttribute('aria-pressed',on);b.innerHTML=on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway';});
+ const tab=document.getElementById('tab-pathway');if(tab)tab.querySelector('.pwc').textContent=pw.length?` (${pw.length})`:'';
+ if(!pw.length){$('#pw').innerHTML='<p class="gapnote">Your pathway is empty. Add activities from the DAMA wheel, or start from your role.</p>';syncHash();return;}
+ const steps=pw.reduce((n,p)=>n+(p.t==='a'?ACT[p.id].steps.length:0),0);
+ $('#pw').innerHTML=`<p><strong>${pw.length} ${pw.length===1?'item':'items'}, ${steps} steps.</strong></p><ol class="pwl">`+pw.map((p,i)=>{const x=pwItem(p);const isA=p.t==='a';
+  return `<li><span class="n" aria-hidden="true">${i+1}</span><div><p class="hint">${isA?esc(KL(x))+' · '+esc(x.caps.join(', ')):'Capability · '+esc(x.cluster)}</p><h4>${esc(isA?x.title:x.id+' '+x.name)}</h4>`+
+  (isA?`<details><summary>${x.steps.length} steps</summary><ol>${x.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></details><p><a href="${esc(x.url)}">Open in the DAM playbooks</a></p>`:`<p>${esc(x.note)}</p><p><a href="${esc(x.url)}">Capability card</a></p>`)+
+  `</div><div class="ctl"><button type="button" data-mv="${i}:-1" aria-label="Move up">↑</button><button type="button" data-mv="${i}:1" aria-label="Move down">↓</button><button type="button" data-rm="${i}" aria-label="Remove">✕</button></div></li>`;}).join('')+'</ol>';
+ syncHash();}
+$('#pw').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.rm!==undefined){const i=Number(b.dataset.rm);if(pw[i])pw.splice(i,1);}else if(b.dataset.mv){const [i,d]=b.dataset.mv.split(':').map(Number);const j=i+d;if(pw[i]&&pw[j]){[pw[i],pw[j]]=[pw[j],pw[i]];}}refreshPw();});
+$('#pw-role').addEventListener('click',()=>{const rr=myRaci();if(!rr.length){$('#pw-status').textContent='Choose your role in Find your bearing first. For roles that lead no recipe stage, add activities from the DAMA wheel.';return;}
+ W.acts.filter(x=>leads(x).length).forEach(x=>{if(!pw.some(p=>p.t==='a'&&p.id===x.id))pw.push({t:'a',id:x.id});});$('#pw-status').textContent='Added the recipe stages your role is responsible or accountable for.';refreshPw();});
+$('#pw-sort').addEventListener('click',()=>{pw.sort((a,b)=>rank(a)-rank(b));$('#pw-status').textContent='Sorted: playbook recipes in order first, then maturity, change and perspectives.';refreshPw();});
+$('#pw-clear').addEventListener('click',()=>{pw.length=0;refreshPw();});
+$('#pw-print').addEventListener('click',()=>window.print());
+$('#pw-copy').addEventListener('click',()=>{const ok=t=>$('#pw-status').textContent=t?'Link copied.':'Could not copy. Copy the address bar instead.';if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(()=>ok(1),()=>ok(0));else ok(0);});
+$('#pw-csv').addEventListener('click',()=>download('my-pathway.csv',['Order,Kind,Item,Step,Location'].concat(pw.flatMap((p,i)=>{const x=pwItem(p);return p.t==='a'?x.steps.map(s=>[i+1,x.kind,x.title,s,x.url].map(csvCell).join(',')):[[i+1,'Capability',x.id+' '+x.name,'',x.url].map(csvCell).join(',')];})).join('\n')));
+/* state to and from the address */
+window.compassState=()=>[sel.cap?(sel.act?'act:'+sel.act:'cap:'+sel.cap):'area:'+sel.area,pw.map(p=>p.t+'.'+p.id).join('~')];
+window.compassRestore=(s,p)=>{if(p)p.split('~').forEach(t=>{const [k,id]=t.split('.');const v=k==='a'?actId(id):capId(id);if(v&&!pw.some(z=>z.t===k&&z.id===v))pw.push({t:k==='a'?'a':'c',id:v});});
+ if(s){const [k,id]=s.split(':');if(k==='area'&&areaId(id))sel.area=areaId(id);if(k==='cap'&&capId(id)){sel.cap=capId(id);sel.area=CAP[sel.cap].areas[0];}if(k==='act'&&actId(id)){sel.act=actId(id);sel.cap=ACT[sel.act].caps[0];sel.area=CAP[sel.cap].areas[0];}}};
+window.compassInit=()=>{drawWheel();drill();graph();lin();$('#area').value=sel.area;matrix();refreshPw();};
+window.compassRole=()=>{drill();refreshPw();};
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tabgo]');if(!b)return;const tt=tabs.find(x=>x.getAttribute('aria-controls')===b.dataset.tabgo);if(tt){sel(tt,true);syncHash();}});
 /* hash: tab and answers */
-function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');history.replaceState(null,'','#'+t.getAttribute('aria-controls')+(a.replace(/,/g,'')?'/'+a:''));}
-(function(){const h=location.hash.slice(1).split('/');const t=tabs.find(x=>x.getAttribute('aria-controls')===h[0]);if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}})();
+function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');const cs=window.compassState?window.compassState():['',''];
+ const parts=[t.getAttribute('aria-controls'),a.replace(/,/g,'')?a:'',cs[0]==='area:'+(D.wheel?D.wheel.hub:'')?'':cs[0],cs[1]];while(parts.length>1&&!parts[parts.length-1])parts.pop();const nh='#'+parts.join('/');
+ /* never write the address while the page is loading (the browser would then scroll to it, D-035), nor the default view onto a bare address */
+ if(document.readyState==='loading'||(nh==='#bearing'&&!location.hash)||nh===location.hash)return;history.replaceState(null,'',nh);}
+(function(){const h=location.hash.slice(1).split('/');const t=tabs.find(x=>x.getAttribute('aria-controls')===h[0]);if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}if(window.compassRestore)window.compassRestore(h[2],h[3]);if(window.compassInit)window.compassInit();})();
 /* precedence */
 $('#prec').innerHTML=D.precedence.map((x,i)=>`<li><h3>${ic(x.icon)}${i+1}. ${esc(x.title)}</h3><p>${esc(x.text)}</p></li>`).join('');
 /* portals */
@@ -279,21 +593,50 @@ $('#pcards').innerHTML=D.portals.map(p=>`<article class="pcard" style="${cv(p.id
 <dt>${ic('handshake')}Who runs it</dt><dd>${esc(p.owner_model)}</dd>
 <dt>${ic('scale')}How binding</dt><dd>${esc(p.binding)}</dd>
 <dt>${ic('file-text')}Licence</dt><dd>${esc(p.licence)}</dd>
-<dt>${ic('circle-check')}What you need</dt><dd>${esc(p.needs)}</dd></dl>
+<dt>${ic('circle-check')}What you need</dt><dd>${esc(p.needs)}</dd>${D.sync&&D.sync.portals[p.id]&&D.sync.portals[p.id].reached?`<dt>${ic('clock')}Kept up to date</dt><dd>Links checked automatically on ${esc(D.sync.checked)}; the portal last changed on ${esc(D.sync.portals[p.id].last_changed||'an unknown date')}.</dd>`:''}</dl>
 <p><a class="btn" href="${esc(url(p.id,p.start.path))}">${ic('navigation')}Go to ${esc(p.start.title)} in ${esc(p.short)}</a></p></div></article>`).join('');
 /* examples */
 $('#scen').innerHTML=D.scenarios.map((x,i)=>{const seq=[x.start,...x.then];return `<article class="sc"><p class="who">${esc(x.who)}</p><h3>${ic(x.icon)}${esc(x.situation)}</h3><ol class="path" aria-label="Order to follow">${seq.map((p,j)=>`<li style="${cv(p)}">${ic(P[p].icon)}${j+1}. ${esc(P[p].short)}</li>`).join('')}</ol><p>${esc(x.why)}</p><p><button type="button" class="btn secondary" data-route="${esc(x.route)}" data-i="${i}">${ic('navigation')}Follow this route: ${esc(D.routes[x.route].title)}</button></p></article>`;}).join('');
 document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{const sc=D.scenarios[Number(b.dataset.i)];const v=sc&&opt('why',sc.route);if(!v)return;ans.why=v;const r=document.querySelector(`input[name="why"][value="${v}"]`);if(r)r.checked=true;render();sel(tabs[0]);syncHash();const h=document.querySelector('#route h2');if(h){h.setAttribute('tabindex','-1');h.focus();}}));
 /* when */
 $('#whencards').innerHTML=D.portals.map(p=>{const w=D.when[p.id];return `<article class="wc" style="${cv(p.id)}"><h3>${ic(p.icon)}${esc(p.name)}</h3><p class="yes">${ic('circle-check')}Go there when</p><ul>${w.use.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="no">${ic('info')}You can skip it when</p><ul>${w.skip.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article>`;}).join('');
-/* lineage */
-$('#area').innerHTML=D.areas.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('');
-function area(){const a=D.areas[$('#area').selectedIndex]||D.areas[0];$('#areadesc').innerHTML=`<strong>${esc(a.name)}:</strong> ${esc(a.desc)} <span class="hint">Records management counterpart: ${esc(a.im)}</span>`;
- const col=(p,title,items,empty)=>`<section class="col" style="${cv(p)}"><h3 class="pn">${ic(P[p].icon)}${esc(P[p].short)}: ${esc(title)}</h3>${items.length?'<ul>'+items.map(([t,u])=>`<li><a href="${esc(u)}">${esc(t)}</a></li>`).join('')+'</ul>':`<p class="gap">${esc(empty)}</p>`}</section>`;
- $('#lin').innerHTML=col('dam','what the policy asks',a.dam,'')+col('dqc','do the work',a.dq,'No dedicated page yet.')+col('cat','evidence in public code',a.cat,'')+col('ap','how to describe it',a.ap,'No dedicated page.');}
-$('#area').addEventListener('change',area);area();
+
 /* links */
 $('#linktable').innerHTML='<table><caption class="vh">How the portals link to each other</caption><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Links</th></tr></thead><tbody>'+D.links_today.map(([f,t,n])=>`<tr><td class="pn">${ic(P[f].icon)}${esc(P[f].short)}</td><td><span class="pn">${ic(P[t].icon)}${esc(P[t].short)}</span></td><td>${esc(n)}</td></tr>`).join('')+'</tbody></table>';
+/* about and glossary (compass 1.3) */
+if(D.about){const A=D.about;$('#ab-what').textContent=A.what;$('#ab-estate').textContent=A.estate;$('#ab-who').textContent=A.for_whom;
+ $('#ab-aims').innerHTML=A.aims.map(x=>`<li>${esc(x)}</li>`).join('');$('#ab-not').innerHTML=A.not.map(x=>`<li>${esc(x)}</li>`).join('');
+ $('#ab-name').textContent=`Its name was "${A.name.previous}" until version 1.3. ${A.name.why}`;}
+const G={};(D.glossary||[]).forEach(g=>G[g.id]=g);
+const gsorted=(D.glossary||[]).slice().sort((a,b)=>a.term.localeCompare(b.term));
+function gloss(){const q=($('#gq').value||'').toLowerCase();
+ const xs=gsorted.filter(g=>!q||(g.term+' '+g.def+' '+(g.also||[]).join(' ')).toLowerCase().includes(q));
+ $('#gloss').innerHTML=xs.map(g=>`<div id="term-${esc(g.id)}"><dt>${esc(g.term)}</dt><dd>${esc(g.def)}</dd>`+
+  ((g.also||[]).length?`<dd class="meta"><strong>Also called:</strong> ${g.also.map(esc).join(', ')}</dd>`:'')+
+  (g.broader?`<dd class="meta"><strong>Broader term:</strong> ${esc(g.broader)}</dd>`:'')+
+  ((g.related||[]).length?`<dd class="meta"><strong>See also:</strong> ${g.related.filter(r=>G[r]).map(r=>`<a href="#glossary" data-term="${esc(r)}">${esc(G[r].term)}</a>`).join(', ')}</dd>`:'')+`</div>`).join('');
+ $('#gcount').textContent=`${xs.length} of ${gsorted.length} terms`;
+ const letters=[...new Set(xs.map(g=>g.term[0].toUpperCase()))];$('#az').innerHTML=letters.map(l=>{const g=xs.find(x=>x.term[0].toUpperCase()===l);return `<li><a href="#glossary" data-term="${esc(g.id)}">${esc(l)}</a></li>`;}).join('');}
+if(D.glossary){gloss();$('#gq').addEventListener('input',gloss);}
+document.querySelectorAll('[data-term]').forEach(el=>{const g=G[el.dataset.term];if(g&&!el.closest('#gloss,#az'))el.setAttribute('data-tip',g.term+': '+g.def);});
+document.addEventListener('click',e=>{const a=e.target.closest('a[data-term]');if(!a)return;const g=G[a.dataset.term];if(!g)return;e.preventDefault();
+ const tt=tabs.find(x=>x.getAttribute('aria-controls')==='glossary');if($('#gq').value){$('#gq').value='';gloss();}sel(tt);syncHash();
+ const el=document.getElementById('term-'+g.id);if(el){el.scrollIntoView({block:'center'});el.classList.add('flash');el.setAttribute('tabindex','-1');el.focus({preventScroll:true});setTimeout(()=>el.classList.remove('flash'),2500);}});
+/* tooltips */
+(function(){const tip=document.getElementById('tip');let cur=null,timer=null;
+ const show=el=>{clearTimeout(timer);const s=el.getAttribute('data-tip');if(!s)return;cur=el;tip.textContent=s;tip.hidden=false;el.setAttribute('aria-describedby','tip');
+  const r=el.getBoundingClientRect(),w=tip.offsetWidth,h=tip.offsetHeight;let x=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8),y=r.bottom+8;if(y+h>innerHeight-8)y=Math.max(8,r.top-h-8);tip.style.left=x+'px';tip.style.top=y+'px';};
+ const hide=()=>{tip.hidden=true;if(cur)cur.removeAttribute('aria-describedby');cur=null;};
+ const later=()=>{clearTimeout(timer);timer=setTimeout(hide,200);};
+ document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-tip]');if(el)show(el);else if(!e.target.closest('#tip'))later();});
+ document.addEventListener('focusin',e=>{const el=e.target.closest('[data-tip]');if(el)show(el);else hide();});
+ document.addEventListener('focusout',later);
+ tip.addEventListener('mouseenter',()=>clearTimeout(timer));tip.addEventListener('mouseleave',later);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden){hide();}});
+ window.addEventListener('scroll',()=>{if(!tip.hidden)hide();},{passive:true});
+ const TT={tab_bearing:'Answer four questions and get a route across the portals',tab_portals:'What each portal is for, who runs it and how binding it is',tab_examples:'Common situations and where to start',tab_when:'When you need each portal and when you can skip it',tab_lineage:'Drill down from a data management area to capabilities, activities and steps, and see where each is',tab_pathway:'Your own ordered list of activities, kept in the page address',tab_links:'How the portals point to each other',tab_glossary:'Plain-English meanings of every term used here, with other names for them'};
+ Object.entries(TT).forEach(([k,v])=>{const el=document.getElementById(k.replace('_','-'));if(el)el.setAttribute('data-tip',v);});
+})();
 /* self-check, on every load */
 const checks=[],ck=(n,ok,d)=>checks.push({n,ok,d});
 const bases=D.portals.map(p=>p.url);
@@ -303,6 +646,11 @@ ck('Every situation has a route',D.questions[0].options.every(o=>D.routes[o.id])
 ck('Every worked example follows a known route',D.scenarios.every(x=>D.routes[x.route]&&P[x.start]&&x.then.every(p=>P[p])),D.scenarios.length+' examples');
 ck('Every portal has a compass bearing',D.portals.every(p=>p.bearing in ROT),'');
 ck('Links go only to the four portals',D.areas.flatMap(a=>[...a.dam,...a.dq,...a.cat,...a.ap].map(x=>x[1])).every(u=>bases.some(b=>u.startsWith(b))),'');
+if(D.wheel){const Wc=D.wheel;ck('Every capability is on the DAMA wheel',Object.values(Wc.caps).every(c=>c.areas.length),Object.keys(Wc.caps).length+' capabilities');
+ ck('Every activity belongs to a known capability',Wc.acts.every(x=>x.caps.every(c=>Wc.caps[c])),Wc.acts.length+' activities, '+Wc.acts.reduce((n,x)=>n+x.steps.length,0)+' steps');
+ ck('Every activity link goes to the DAM playbooks',Wc.acts.every(x=>x.url.startsWith(P.dam.url)),'');
+ const gaps=Object.values(Wc.caps).filter(c=>!c.acts.length).map(c=>c.id);ck('Capabilities with no activity yet are shown as gaps',true,gaps.length?gaps.join(', '):'none');}
+if(D.sync)ck('Links into the other portals were found at the last automatic check',D.sync.available&&!D.sync.bad.length,D.sync.available?(D.sync.checked+(D.sync.bad.length?': '+D.sync.bad.length+' missing, hidden until fixed':'')):'Not checked in this build');
 const csp=(document.querySelector('meta[http-equiv=Content-Security-Policy]')||{}).content||'';
 ck('The page cannot make network requests',/default-src 'none'/.test(csp)&&!/connect-src/.test(csp),'Content Security Policy');
 const ages=D.portals.map(p=>[p.short,Math.round((Date.now()-Date.parse(p.data_as_of||D.meta.as_of))/864e5)]);

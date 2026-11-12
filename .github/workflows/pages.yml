@@ -5,7 +5,10 @@ on:
   pull_request:
   schedule:
     - cron: '17 6 * * 1'   # weekly health run, Monday morning
+    - cron: '43 5 * * *'   # daily: keep the estate compass in step with the other portals (compass 1.2)
   workflow_dispatch:
+  repository_dispatch:
+    types: [portal-updated]   # a sister portal can ask for a rebuild when it publishes
 # The repository only allows actions owned by its owner and pinned to a commit SHA (D-018), so every step is a plain
 # command: git for checkout, the runner's Python and Node.js, and a push to the gh-pages branch for publishing.
 permissions:
@@ -67,6 +70,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: python tools/ideas.py --out build/ideas.json
+      - name: Estate compass, checked against the other portals (never fails the build)
+        run: python tools/compass_sync.py --out build/compass-sync.json --report build/compass-sync.txt
       - name: Build (with the health report)
         run: python tools/build.py
       - name: Data Quality Commons kit, pinned, for the sector rule run (T-VAL)
@@ -87,7 +92,7 @@ jobs:
         run: python tools/check_browser.py
       - name: Browser check vaccinations
         run: |
-          for b in overflow contrast focusfill consoleerror search tabs filters noscript contact progress display finder selfassess navclip damarole tours compass ask; do
+          for b in overflow contrast focusfill consoleerror search tabs filters noscript contact progress display finder selfassess navclip damarole tours compass compasswheel ask; do
             python tools/check_browser.py --break "$b"
           done
       - name: Open or update a health issue for a person to act on
@@ -98,6 +103,16 @@ jobs:
           body="$(printf 'The weekly health run found problems. Nothing has been changed automatically.\n\n```\n%s\n```\n\nSee the Status page once published. Close this issue when a person has reviewed and fixed each problem.' "$(cat build/health.txt)")"
           existing=$(gh issue list --label health --state open --json number -q '.[0].number')
           if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Health run needs attention" --label health --body "$body"; fi
+      - name: Open or update a compass issue when a portal changed in a way that needs a person
+        if: github.event_name != 'pull_request' && hashFiles('build/compass-sync.txt') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -s build/compass-sync.txt ]; then exit 0; fi
+          gh label create compass-sync --color f2c14e --description "Estate compass needs a mapping decision" --force >/dev/null 2>&1 || true
+          body="$(printf 'The daily estate compass check found changes in the other portals. Missing links are already hidden from the compass, so nobody is sent to a missing page; a person needs to decide the new mapping.\n\n```\n%s\n```\n\nClose this issue when the mapping in tools/compass.py or compass/compass.yaml is updated.' "$(cat build/compass-sync.txt)")"
+          existing=$(gh issue list --label compass-sync --state open --json number -q '.[0].number')
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Estate compass: portal changes to map" --label compass-sync --body "$body"; fi
       - name: Publish to the gh-pages branch (GitHub Pages source - Deploy from a branch, gh-pages, root)
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:

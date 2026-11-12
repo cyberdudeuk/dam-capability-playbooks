@@ -4940,7 +4940,7 @@ related:
   # Version 1.11.0: the proposed UK DCAT profile, signposted from cataloguing after the Project Compass pilot asked how the MEM meets sector standards.
   - id: ap
     name: DCAT Application Profile for the UK (DCAT-AP-UK)
-    url: https://cyberdudeuk.github.io/dcat-uk-ap/
+    url: https://cyberdudeuk.github.io/dcat-ap-uk/
     status: Proposed, not endorsed
     nature: A proposed UK application profile of DCAT 3 that evolves the xGov MEM. The MEM remains the endorsed model until the Data Standards Authority decides.
     licence: Content Open Government Licence v3.0; code MIT

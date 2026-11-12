@@ -1,6 +1,17 @@
 # Changelog
 
 ## Unreleased
+- Data portals compass 1.3 (formerly the estate compass):
+  - Renamed after an assessment shown on the page: "estate" is shorthand many readers do not know; "data portals" says what it covers, and the compass picture stays. The address is unchanged.
+  - Says plainly what it is, who it is for, what it helps you do and what it is not, at the top of the page, without repeating the masthead.
+  - Words explained: 34 terms in plain English, each with other names (thesaurus), a broader term and related terms, searchable and A to Z. Dotted terms on the page show their meaning on hover or keyboard focus and open their entry.
+  - Fixed (D-035): opening the page jumped to the first tab and outlined it, because the address was written while the page loaded.
+- Estate compass 1.2:
+  - The DAMA wheel: Data governance at the centre, selected when the page opens, with the ten other knowledge areas around it. Select an area to drill down to its capabilities, the activities under each (playbook recipe stages, change items, perspectives and maturity strands) and their individual steps, with where each is in the DAM playbooks and the other three portals.
+  - A lineage diagram for whatever is selected, a traceability table of every activity and gap (filter, search, CSV), a search box across areas, capabilities, activities and steps, and My pathway: your own ordered list of activities, started from your role's recipe stages, kept in the page address, with copy link, download and print.
+  - The compass rose names and links the four portals at their bearings; tooltips on the wheel, capabilities, activity kinds, the lineage diagram, the rose and the tabs; the prototype strip moved to the top.
+  - Kept up to date automatically: a daily check reads every link into the other portals, hides any that are gone, shows when each portal last changed, and opens a compass-sync issue for a person. Sister portals can trigger a rebuild with a `portal-updated` repository dispatch. The DAMA wheel itself is rebuilt from the DAM content at every build.
+  - Fixed (D-034): DCAT-AP-UK moved to `dcat-ap-uk`; the compass and the DAM pages' Related links now use the new address.
 - Tooltips and standards links across the whole portal (version 1.13.0):
   - The first time a glossary term appears in the text of any page, it links to its definition and shows a tooltip on hover or keyboard focus. Before, only six places did this. Headings, buttons, code, table headers, pills and existing links are left alone.
   - The first time a page names one of 57 frameworks, methodologies or standards (for example DAMA-DMBOK, DCAT, the Service Standard, the Green Book or the Data Protection Act 2018), it links to the publisher's page with a tooltip saying why it matters. The labels live in `standards_map.aliases` in the content file.

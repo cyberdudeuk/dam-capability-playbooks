@@ -1161,7 +1161,7 @@ class Site:
                     f'in {E(p["name"])} <span class="rel-status">{E(p["status"])}</span></span><br><span class="hint">{E(it["why"])}</span></li>')
         return (f'<aside class="related" id="related-{key}" aria-labelledby="rel-h-{key}"><h2 id="rel-h-{key}">{icon("signpost")} Related elsewhere</h2>'
                 f'<p class="hint">{E(R["intro"])}</p><ul>{lis}</ul>'
-                f'<p class="compass-link">{icon("compass")}Not sure which portal you need, or in what order? <a href="compass/">Take a bearing with the estate compass</a>.</p></aside>')
+                f'<p class="compass-link">{icon("compass")}Not sure which portal you need, or in what order? <a href="compass/">Take a bearing with the data portals compass</a>.</p></aside>')
 
     def write_xref(self):
         """Cross-reference manifest (version 1.8.1): this portal's shared keys and where each lives, for sister portals and tools to link to. Ids only, no copied text."""
@@ -1378,7 +1378,7 @@ class Site:
         sys.path.insert(0, str(ROOT / 'tools'))
         import compass as _compass
         try:
-            self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg)
+            self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg, pb=self.d, page_names={k: l for k, l, _ in NAV})
         except ValueError as e:
             raise ContentError(str(e))
         # The site map is built last, from the registry every other page has filled

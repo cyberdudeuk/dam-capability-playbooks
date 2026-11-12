@@ -717,6 +717,65 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'compass' / 'index.html', 'aria-label="QR code linking to', 'aria-label="Picture of')
         self.fails('c35_estate_compass')
 
+    # compass 1.2: the DAMA wheel drill-down
+    def _wheel(self, fn):
+        import json
+        f = self.s / 'compass' / 'index.html'
+        h = f.read_text(encoding='utf-8')
+        i = h.index('<script type="application/json" id="data">') + len('<script type="application/json" id="data">')
+        j = h.index('</script>', i)
+        d = json.loads(h[i:j].replace('<\\/', '</'))
+        fn(d['wheel'])
+        f.write_text(h[:i] + json.dumps(d).replace('</', '<\\/') + h[j:], encoding='utf-8')
+
+    def test_c35_wheel_activity_to_missing_anchor(self):
+        def br(w):
+            w['acts'][0]['url'] = w['acts'][0]['url'].split('#')[0] + '#no-such-stage'
+        self._wheel(br)
+        self.fails('c35_estate_compass')
+
+    def test_c35_wheel_capability_off_the_wheel(self):
+        def br(w):
+            w['caps']['CR-05']['areas'] = []
+        self._wheel(br)
+        self.fails('c35_estate_compass')
+
+    def test_c35_wheel_activity_without_steps(self):
+        def br(w):
+            w['acts'][3]['steps'] = []
+        self._wheel(br)
+        self.fails('c35_estate_compass')
+
+    def test_c35_d035_address_written_while_loading(self):
+        edit(self.s / 'compass' / 'index.html', "document.readyState==='loading'||", '')
+        self.fails('c35_estate_compass')
+
+    def test_build_rejects_glossary_relation_to_unknown_term(self):
+        import compass
+        c = compass.load()
+        c['glossary'][0]['related'] = ['no-such-term']
+        d = build.load(self.r / 'content' / 'playbooks.yaml')
+        self.assertTrue(any('unknown term' in e for e in compass.validate(c, d)))
+
+    def test_c35_rose_without_portal_link(self):
+        edit(self.s / 'compass' / 'index.html', 'class="rose-link"', 'class="rose-label"', count=1)
+        self.fails('c35_estate_compass')
+
+    def test_c35_wheel_without_lineage_graph(self):
+        edit(self.s / 'compass' / 'index.html', 'id="graph"', 'id="grph"')
+        self.fails('c35_estate_compass')
+
+    def test_build_rejects_unmapped_recipe_stage(self):
+        import compass
+        orig = compass.STAGE_CR['dq'].pop('review')
+        try:
+            d = build.load(self.r / 'content' / 'playbooks.yaml')
+            c = compass.load()
+            errs = compass.validate_wheel(compass.wheel(c, d, d), d, d)
+            self.assertTrue(any('every recipe stage' in e for e in errs), errs)
+        finally:
+            compass.STAGE_CR['dq']['review'] = orig
+
     def test_build_rejects_compass_route_in_one_portal(self):
         y = self.r / 'compass' / 'compass.yaml'
         t = y.read_text(encoding='utf-8')
@@ -923,6 +982,70 @@ class Vaccination(unittest.TestCase):
 
     def test_build_rejects_body_without_terms_status(self):
         self._rejects('    tor: Terms of reference not found published on GOV.UK.\n', "    tor: ''\n")
+
+
+class CompassSync(unittest.TestCase):
+    """Compass 1.2: the daily check of the other portals finds moved pages and missing anchors, never fails when a portal is down,
+    and the build hides links found missing so no wayfinder or pathway sends anyone to a missing page. Exists because the
+    DCAT-AP-UK site moved (D-034) and every compass link to it returned 404 for a week without anything noticing."""
+    def setUp(self):
+        import compass
+        self.c = compass.load()
+        self.d = build.load(ROOT / 'content' / 'playbooks.yaml')
+
+    def fetcher(self, gone=(), noanchor=(), down=()):
+        import urllib.error
+
+        def f(url, timeout=20):
+            if any(url.startswith(x) for x in down):
+                raise urllib.error.URLError('offline')
+            if url in gone or url.endswith('sitemap.xml'):
+                raise urllib.error.HTTPError(url, 404, 'Not found', {}, None)
+            ids = ''.join(f'<a id="{x}"></a>' for x in ('change', 'model', 'layers', 'files', 'orgs', 'dcatap', 'cda', 'p-securityClassification', 'p-personalData', 'p-documentation', 'p-qualityAnnotation') if (url, x) not in noanchor)
+            return 200, f'<html><body>{ids}</body></html>', '2026-11-10'
+        return f
+
+    def test_finds_a_gone_page(self):
+        import compass_sync
+        ap = next(p['url'] for p in self.c['portals'] if p['id'] == 'ap')
+        r = compass_sync.sync(self.c, self.d, self.fetcher(gone={ap + 'codelists.html'}))
+        self.assertEqual(r['links'][ap + 'codelists.html']['state'], 'gone')
+        self.assertIn('codelists.html', compass_sync.report(r))
+
+    def test_finds_a_missing_anchor(self):
+        import compass_sync
+        ap = next(p['url'] for p in self.c['portals'] if p['id'] == 'ap')
+        r = compass_sync.sync(self.c, self.d, self.fetcher(noanchor={(ap + 'codelists.html', 'orgs')}))
+        self.assertEqual(r['links'][ap + 'codelists.html#orgs']['state'], 'anchor-missing')
+
+    def test_unreachable_portal_is_unchecked_not_gone(self):
+        import compass_sync
+        dq = next(p['url'] for p in self.c['portals'] if p['id'] == 'dqc')
+        r = compass_sync.sync(self.c, self.d, self.fetcher(down={dq}))
+        states = {v['state'] for u, v in r['links'].items() if u.startswith(dq)}
+        self.assertEqual(states, {'unchecked'})
+        self.assertNotIn(dq, compass_sync.report(r))
+
+    def test_build_hides_missing_links(self):
+        import json
+        import compass
+        ap = next(p['url'] for p in self.c['portals'] if p['id'] == 'ap')
+        sp = ROOT / 'build' / 'compass-sync.json'
+        keep = sp.read_text(encoding='utf-8') if sp.exists() else None
+        out = Path(tempfile.mkdtemp(prefix='dcp-cs-'))
+        try:
+            sp.parent.mkdir(exist_ok=True)
+            sp.write_text(json.dumps({'available': True, 'checked': '2026-11-12', 'links': {ap + 'codelists.html': {'state': 'gone', 'used_by': ['area DM-REF']}}, 'portals': {}, 'unmapped': {}}), encoding='utf-8')
+            compass.build(out, self.d, build.ICON_SET, build.barcode_svg, build.qr_svg, pb=self.d)
+            h = (out / 'compass' / 'index.html').read_text(encoding='utf-8')
+            data = h[h.index('id="data">') + 10:h.index('</script>', h.index('id="data">'))]
+            areas = json.loads(data.replace('<\\/', '</'))['areas']
+            self.assertFalse(any(u == ap + 'codelists.html' for a in areas for _, u in a['ap']))
+        finally:
+            if keep is None:
+                sp.unlink(missing_ok=True)
+            else:
+                sp.write_text(keep, encoding='utf-8')
 
 
 class IdeasRun(unittest.TestCase):
