@@ -7,7 +7,7 @@ Pass --break NAME to apply a deliberate break and prove the matching check fails
 import argparse
 import functools
 import http.server
-import json
+import json, re
 import socketserver
 import sys
 import threading
@@ -49,6 +49,7 @@ BREAKS = {
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'tours': ('b16_tours_and_share', ""),
     'compasswheel': ('b17_compass', "var w=document.getElementById('wheel');if(w){w.replaceWith(w.cloneNode(true));}"),
+    'compassdir': ('b17_compass', "var q=document.getElementById('dq-q');if(q){q.replaceWith(q.cloneNode(true));}"),
     'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
     'ask': ('b18_ask_and_copy', "var f=document.querySelector('[data-ask]');if(f){f.replaceWith(f.cloneNode(true));}"),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
@@ -351,7 +352,7 @@ def run(site, axe_path, brk=None, pages=None):
         if (site / 'compass' / 'index.html').exists():
             ctx7 = b.new_context(viewport={'width': 1280, 'height': 900}, bypass_csp=bool(brk))
             pg7 = ctx7.new_page()
-            pg7.goto(f'{base}/compass/index.html')
+            pg7.goto(f'{base}/compass/index.html#bearing')
             prep(pg7)
             try:
                 data = pg7.evaluate("JSON.parse(document.getElementById('data').textContent)")
@@ -418,11 +419,44 @@ def run(site, axe_path, brk=None, pages=None):
                 h = pg7.evaluate('location.hash')
                 if '/a.' not in h:
                     fail('b17_compass', f'the pathway is not kept in the address: {h}')
-                pg7.goto(f'{base}/compass/index.html#pathway///{h.split("/")[-1]}')
+                pg7.goto(f'{base}/compass/index.html#pathway///{h.split("/")[3]}')
                 pg7.reload()
                 pg7.wait_for_timeout(200)
                 if pg7.locator('#pw .pwl > li').count() != 1:
                     fail('b17_compass', 'a shared pathway link does not restore the pathway')
+                # compass 2.0: the profession hub fills from the chosen profession, is kept in the address,
+                # and its directory link opens the directory filtered to that profession
+                pg7.goto(f'{base}/compass/index.html#roles')
+                pg7.reload()
+                prep(pg7)
+                pg7.wait_for_timeout(150)
+                pg7.click('[data-aud="metadata"]', timeout=2000)
+                pg7.wait_for_timeout(150)
+                if pg7.is_hidden('#aud-hub') or pg7.locator('#aud-hub [data-pw]').count() == 0:
+                    fail('b17_compass', 'choosing a profession does not show its tasks, areas, guidance and communities')
+                if not pg7.evaluate('location.hash').endswith('/metadata'):
+                    fail('b17_compass', 'the chosen profession is not kept in the address')
+                pg7.click('#aud-all', timeout=2000)
+                pg7.wait_for_timeout(200)
+                if pg7.is_hidden('#directory') or pg7.input_value('#dq-aud') != 'metadata':
+                    fail('b17_compass', 'a profession does not open the directory filtered to it')
+                # the directory filters by text and kind, and every card shown matches
+                pg7.select_option('#dq-aud', '')
+                total = len(data['directory'])
+                pg7.fill('#dq-q', 'catalogue')
+                pg7.wait_for_timeout(200)
+                cards = pg7.locator('#dir .dcard').all_inner_texts()
+                m = re.search(r'of (\d+) matching', pg7.inner_text('#dq-count'))
+                if not cards or not m or int(m.group(1)) >= total or any('catalog' not in c.lower() for c in cards):
+                    fail('b17_compass', f'searching the directory does not narrow it to matching entries ({pg7.inner_text("#dq-count")})')
+                # search everything on the start page finds directory entries
+                pg7.goto(f'{base}/compass/index.html#start')
+                pg7.reload()
+                pg7.wait_for_timeout(150)
+                pg7.fill('#sq', 'metadata')
+                pg7.wait_for_timeout(200)
+                if pg7.locator('#sq-out a, #sq-out button').count() == 0:
+                    fail('b17_compass', 'search everything finds nothing for a common term')
             except Exception as e:
                 fail('b17_compass', f'compass could not be used: {str(e).splitlines()[0]}')
             ctx7.close()

@@ -1,6 +1,12 @@
 # Changelog
 
 ## Unreleased
+- Data portals compass 2.0: a new way in, by profession, and a full directory
+  - Starts with four doors that match how people think about their work: I'm a… (profession), I need to… (task), I'm interested in… (DAMA area) and Show me everything (directory), plus one search across all of it.
+  - By profession: nine professional groups, from senior leaders to sector specialists. Each shows the questions people in that role ask, the tasks they bring, their data management areas, the recipe stages they lead (from the playbooks' responsibility tables), the guidance, standards and laws that matter to them, and the boards and communities they can join. The profession is kept in the page address.
+  - Directory: 266 entries covering the four portals, their key pages, related sites, guidance, standards, laws, boards and communities, filterable by kind, place, profession, topic and DAMA area, with CSV. Any entry can be added to My pathway.
+  - Tabs regrouped from ten to seven: Start, By profession, By task, By topic, Directory, My pathway and Words explained. Old addresses (#portals, #when, #links, #examples) still open the right place.
+  - C-35 now checks every directory entry (unique id, secure link, known professions, links into this portal resolve); B-17 checks the profession hub, the directory search and search everything, with a new deliberate break (compassdir). The build rejects a profession that names an unknown area, route, topic, role or body.
 - Health and care supplement (issue #22): DHSC's Data saves lives strategy, the secure data environment policy guidelines and the data access policy update are signposted, with a step and a checklist item to give research and analysis access through a secure data environment and record which one.
 - Data portals compass 1.3 (formerly the estate compass):
   - Renamed after an assessment shown on the page: "estate" is shorthand many readers do not know; "data portals" says what it covers, and the compass picture stays. The address is unchanged.

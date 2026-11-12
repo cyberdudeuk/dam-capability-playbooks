@@ -765,6 +765,25 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'compass' / 'index.html', 'id="graph"', 'id="grph"')
         self.fails('c35_estate_compass')
 
+    def test_c35_directory_without_search(self):
+        edit(self.s / 'compass' / 'index.html', 'id="dq-q"', 'id="dq-x"')
+        self.fails('c35_estate_compass')
+
+    def test_c35_directory_entry_with_insecure_link(self):
+        f = self.s / 'compass' / 'index.html'
+        t = f.read_text(encoding='utf-8')
+        j = t.index('"url": "https://', t.index('"directory": ['))
+        f.write_text(t[:j] + t[j:].replace('https://', 'http://', 1), encoding='utf-8')
+        self.fails('c35_estate_compass')
+
+    def test_build_rejects_audience_with_unknown_area(self):
+        import compass
+        d = build.load(self.r / 'content' / 'playbooks.yaml')
+        c = compass.load()
+        c['audiences'][0]['areas'].append('DM-NOPE')
+        errs = compass.validate_audiences(c, d, d, None)
+        self.assertTrue(any('unknown area DM-NOPE' in e for e in errs), errs)
+
     def test_build_rejects_unmapped_recipe_stage(self):
         import compass
         orig = compass.STAGE_CR['dq'].pop('review')

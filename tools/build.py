@@ -1378,7 +1378,7 @@ class Site:
         sys.path.insert(0, str(ROOT / 'tools'))
         import compass as _compass
         try:
-            self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg, pb=self.d, page_names={k: l for k, l, _ in NAV})
+            self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg, pb=self.d, page_names={k: l for k, l, _ in NAV}, page_desc=PAGE_DESC)
         except ValueError as e:
             raise ContentError(str(e))
         # The site map is built last, from the registry every other page has filled

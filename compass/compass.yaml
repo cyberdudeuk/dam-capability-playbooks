@@ -4,7 +4,7 @@
 meta:
   title: Data portals compass
   subtitle: Find your bearing across four portals for data in the public sector
-  version: 1.3.0
+  version: 2.0.0
   as_of: '2026-11-12'
   url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
   host_note: Hosted in the DAM capability playbooks repository for now, but it belongs to none of the four portals and favours none.
@@ -358,3 +358,107 @@ glossary:
 - {id: github, term: GitHub, def: "A website where people store, share and work together on code and documents. Two of the portals are built on it; none needs you to code.", also: [repository, repo], related: [code]}
 - {id: code, term: Public code, def: "Software that public bodies publish openly so others can read and reuse it.", also: ["open source code", "open code"], related: [github]}
 - {id: ogl, term: Open Government Licence, def: "A licence that lets anyone copy, adapt and reuse public sector information, as long as they say where it came from.", also: [OGL], related: []}
+
+# Compass 2.0: who uses it, as they think of themselves. Each audience is a way in: the tasks they bring, the data management areas they work in,
+# the recipe stages they lead (RACI codes from the DAM playbooks), the communities they can join and the topics of guidance they need.
+# The matching of audiences to tasks, areas, topics and communities is this compass's own, labelled so on the page.
+audiences:
+- id: leaders
+  name: Leaders and senior owners
+  icon: building-2
+  who: Chief data officers, senior information risk owners, directors of data and senior responsible owners
+  role: leader
+  raci: [CDO, BRD]
+  areas: [DM-GOV]
+  routes: [policy, learn, estate]
+  topics: ["Delivery, change and investment", Skills and professions, Data and AI]
+  bodies: [GB-CDO, GB-DSASB, NW-NEWS]
+  asks: ["What does the DAM Policy require of us, and by when?", "How mature is our data management?", "Where should we invest first?"]
+- id: governance
+  name: Policy and data governance
+  icon: clipboard-list
+  who: DAM Policy coordinators, data governance managers and advisers, programme leads for data
+  role: coordinator
+  raci: [COO, BRD]
+  areas: [DM-GOV, DM-META]
+  routes: [policy, estate, learn]
+  topics: [Standards, Legislation, Data and AI, Content, Accessibility and equality]
+  bodies: [NW-DMC, GB-PRG, GB-DSASB]
+  asks: ["How do we run the yearly governance cycle?", "What goes in the critical data asset return?", "Who signs off what?"]
+- id: owners
+  name: Data owners and stewards
+  icon: key-round
+  who: Data owners, information asset owners, data stewards and custodians
+  role: owner
+  raci: [OWN, IAO, STW, CUS]
+  areas: [DM-GOV, DM-DQ, DM-SEC]
+  routes: [policy, quality]
+  topics: [Records and information management, Data protection, Legislation]
+  bodies: [NW-DMC, NW-GDQC]
+  asks: ["What am I accountable for?", "What happens to my assets when I move role?", "How good does my data need to be?"]
+- id: quality
+  name: Data quality and analysis
+  icon: gauge
+  who: Data quality leads, analysts, statisticians and data scientists
+  role: dq
+  raci: [DQL]
+  areas: [DM-DQ, DM-BI, DM-REF]
+  routes: [quality, learn, reuse]
+  topics: [Statistics, Data and AI]
+  bodies: [NW-GDQC, NW-QCH, NW-DLCN, NW-ETH]
+  asks: ["How do I write a data quality action plan?", "How do I measure and report quality?", "Which issues do I fix first?"]
+- id: metadata
+  name: Catalogues, metadata and records
+  icon: library-big
+  who: Catalogue managers, metadata specialists, information and records managers
+  role: tech
+  raci: [CAT, PUB]
+  areas: [DM-META, DM-DOC, DM-REF, DM-MOD]
+  routes: [describe, estate, buy]
+  topics: [Records and information management, Records, Standards, Geospatial]
+  bodies: [GB-TOG, GB-OSB, NW-GDAC, NW-DMC]
+  asks: ["What must a catalogue record say?", "Which metadata standard do we follow?", "How do records harvest into central discovery?"]
+- id: technology
+  name: Architecture and engineering
+  icon: code-xml
+  who: Data and enterprise architects, data engineers and developers
+  role: tech
+  raci: [STW]
+  areas: [DM-ARC, DM-INT, DM-OPS, DM-MOD]
+  routes: [reuse, legacy, describe]
+  topics: [Technology and architecture, Service delivery and technology, Standards]
+  bodies: [GB-DTADA, NW-API, NW-DENG, NW-GDAC]
+  asks: ["Has someone already built this?", "Which open standards should we use?", "How do we leave a legacy system without losing data?"]
+- id: security
+  name: Security, privacy and legal
+  icon: lock-keyhole
+  who: Security leads, data protection officers, information governance and legal advisers
+  role: other
+  raci: [DPO]
+  areas: [DM-SEC]
+  routes: [policy, legacy]
+  topics: [Cyber and security, Security, Data protection, Legislation]
+  bodies: [NW-DSNE, NW-ETH]
+  asks: ["What is the lawful basis for this use?", "How is the asset classified and protected?", "Can we share it?"]
+- id: commercial
+  name: Commercial, finance and delivery
+  icon: banknote
+  who: Procurement and commercial staff, finance business partners, programme, product and service owners
+  role: commercial
+  raci: []
+  areas: [DM-OPS, DM-ARC]
+  routes: [buy, legacy, reuse]
+  topics: [Commercial and procurement, "Delivery, change and investment", Service delivery and technology]
+  bodies: [NW-API]
+  asks: ["What should a data tool contract say?", "How do we avoid lock-in?", "How do we put data in the business case?"]
+- id: sectors
+  name: Sector specialists
+  icon: heart-handshake
+  who: People working with health and care, local government, children's services, geospatial, statistics or fraud data
+  role: other
+  raci: []
+  areas: [DM-DQ, DM-REF]
+  routes: [policy, quality, describe]
+  topics: [Health and care, Local government, Children and education, Geospatial, Fraud and error, Statistics]
+  bodies: [NW-DLCN, NW-QCH, NW-DSNE]
+  asks: ["Which extra rules apply to data in my sector?", "Which sector standards should our records follow?", "Who else works on this?"]

@@ -945,6 +945,27 @@ def c35_estate_compass(site, repo, pages):
             if any(a not in acts for a in cap['acts']):
                 errs.append(f'compass: capability {cid} lists an unknown activity')
         urls += [a['wheel'] for a in w['areas']] + [u for a in w['areas'] for k in ('dq', 'cat', 'ap') for _, u in a[k]]
+    # compass 2.0: the directory and the profession hub. Every entry has a unique id, a secure link, a known kind and known professions;
+    # entries placed in one of the four portals link into it; links into this portal land on a page and anchor that exist.
+    dr, auds = d.get('directory'), {a['id'] for a in d.get('audiences', [])}
+    if not dr or not auds:
+        errs.append('compass: no directory or no professions')
+    else:
+        for need in ('id="dir"', 'id="dq-q"', 'id="aud-grid"', 'id="aud-hub"', 'id="sq"'):
+            if need not in html:
+                errs.append(f'compass: directory part {need} missing')
+        ids = [e['id'] for e in dr]
+        if len(ids) != len(set(ids)):
+            errs.append('compass: directory entries share an id')
+        for e in dr:
+            if not e['url'].startswith('https://') or not e['title'].strip():
+                errs.append(f'compass: directory entry {e["id"]} has no title or no secure link')
+            if any(a not in auds for a in e.get('aud', [])):
+                errs.append(f'compass: directory entry {e["id"]} names an unknown profession')
+            if e['where'] in bases and not e['url'].startswith(bases[e['where']]):
+                errs.append(f'compass: directory entry {e["id"]} says it is in {e["where"]} but links elsewhere')
+            if e['where'] == 'dam':
+                urls.append(e['url'])
     for o in d['questions'][0]['options']:
         if o['id'] not in d['routes']:
             errs.append(f'compass: situation {o["id"]} has no route')

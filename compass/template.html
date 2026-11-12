@@ -205,6 +205,31 @@ header a.term{color:#fff}
 .gloss{display:grid;gap:.5rem;margin:.5rem 0}.gloss>div{background:var(--card);border:1px solid var(--rule);border-left:6px solid var(--trail);padding:.6rem .85rem;scroll-margin-top:1rem}
 .gloss dt{font-weight:700;font-size:1.08rem}.gloss dd{margin:.2rem 0 0}.gloss .meta{font-size:.92rem;color:var(--quiet)}
 .gloss>div:target,.gloss>div.flash{box-shadow:0 0 0 3px var(--gold)}
+/* compass 2.0: doors, professions, directory */
+:root{--trail-bg:#f6f1e7}@media (prefers-color-scheme:dark){:root{--trail-bg:#2a2418}}
+.doors{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(min(15rem,100%),1fr));margin:1rem 0}
+.door{font:inherit;text-align:left;display:flex;flex-direction:column;gap:.35rem;background:var(--card);color:var(--ink);border:2px solid var(--rule);border-top:6px solid var(--gold);padding:1rem;cursor:pointer;min-height:9rem;transition:transform .15s ease,box-shadow .15s ease}
+.door .i{width:2rem;height:2rem;color:var(--trail)}.door strong{font-size:1.3rem;color:var(--link)}.door span{color:var(--quiet)}
+.door:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}@media (prefers-reduced-motion:reduce){.door{transition:none}.door:hover{transform:none}}
+.finder.big{max-width:none}.finder.big input{font-size:1.1rem}
+#sq-out h4{margin:.8rem 0 .2rem}.sres{display:block;padding:.45rem .6rem;border-bottom:1px solid var(--rule);min-height:44px}
+.pstrip{list-style:none;padding:0;display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))}
+.pstrip li{display:flex;gap:.6rem;align-items:flex-start;background:var(--cbg);border:1px solid var(--rule);border-left:6px solid var(--c);padding:.6rem .7rem}
+.pstrip li.more{background:none;border:0;align-items:center}.pstrip h4{margin:0 0 .2rem}.pstrip p{margin:0}.pstrip .bear{font-size:.82rem;font-weight:700;color:var(--quiet)}
+.aud-grid{list-style:none;padding:0;display:grid;gap:.6rem;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))}
+.audbtn{font:inherit;text-align:left;width:100%;height:100%;display:grid;grid-template-columns:auto 1fr;gap:.15rem .6rem;background:var(--card);color:var(--ink);border:2px solid var(--rule);padding:.7rem;cursor:pointer}
+.audbtn .i{grid-row:span 2;width:1.8rem;height:1.8rem;color:var(--trail)}.audbtn strong{color:var(--link)}.audbtn span{font-size:.88rem;color:var(--quiet)}
+.audbtn[aria-pressed=true]{border-color:var(--navy);background:var(--panel);box-shadow:inset 0 0 0 2px var(--gold)}
+.hub{margin-top:1.2rem;border-top:4px solid var(--trail);padding-top:.8rem}
+.hubgrid{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(min(17rem,100%),1fr))}.hubgrid section{background:var(--card);border:1px solid var(--rule);padding:.6rem .8rem}
+.hubgrid h4,.hub>h4{display:flex;gap:.4rem;align-items:center;margin:.6rem 0 .3rem}.plain{list-style:none;padding:0}.plain li{margin:.3rem 0}
+.chip{font:inherit;font-size:.88rem;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.2rem .7rem;margin:.15rem .25rem .15rem 0;cursor:pointer;color:var(--ink);min-height:36px;text-align:left}
+.chip:hover{border-color:var(--navy)}
+.dir{list-style:none;padding:0;display:grid;gap:.6rem;grid-template-columns:repeat(auto-fill,minmax(min(20rem,100%),1fr))}
+.dcard{background:var(--card);border:1px solid var(--rule);border-top:5px solid var(--c);padding:.6rem .8rem;display:flex;flex-direction:column}
+.dcard h4{margin:.15rem 0 .3rem;font-size:1.02rem}.dcard p{margin:.2rem 0}.dcard .dk{font-size:.82rem;font-weight:700;color:var(--quiet)}.dcard>p:last-child{margin-top:auto}
+.filters .grow{flex:1 1 14rem}
+.sub{margin-top:1.5rem;border-top:2px solid var(--rule);padding-top:.5rem}.subh{font-size:1.25rem}
 </style>
 </head>
 <body>
@@ -235,17 +260,38 @@ __SPRITE__
 <p class="hint">New to any of the words here? Dotted words explain themselves when you point at them or move to them with the keyboard, and every term is in <button type="button" class="linkish" data-tabgo="glossary">Words explained</button>.</p>
 </section>
 <div role="tablist" aria-label="Ways to find your way">
-<button role="tab" id="tab-bearing" aria-controls="bearing" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg>Find your bearing</button>
-<button role="tab" id="tab-portals" aria-controls="portals" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four portals</button>
-<button role="tab" id="tab-examples" aria-controls="examples" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</button>
-<button role="tab" id="tab-when" aria-controls="when" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</button>
-<button role="tab" id="tab-lineage" aria-controls="lineage" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>DAMA wheel and lineage</button>
+<button role="tab" id="tab-start" aria-controls="start" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Start</button>
+<button role="tab" id="tab-roles" aria-controls="roles" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg>By profession</button>
+<button role="tab" id="tab-bearing" aria-controls="bearing" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg>By task</button>
+<button role="tab" id="tab-lineage" aria-controls="lineage" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>By topic</button>
+<button role="tab" id="tab-directory" aria-controls="directory" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-library-big"/></svg>Directory</button>
 <button role="tab" id="tab-pathway" aria-controls="pathway" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>My pathway<span class="pwc"></span></button>
 <button role="tab" id="tab-glossary" aria-controls="glossary" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-book-open"/></svg>Words explained</button>
-<button role="tab" id="tab-links" aria-controls="links" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How they link</button>
 </div>
 
-<section role="tabpanel" id="bearing" aria-labelledby="tab-bearing" tabindex="0">
+<section role="tabpanel" id="start" aria-labelledby="tab-start" tabindex="0">
+<h2><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Where would you like to start?</h2>
+<p class="lede">Pick the way in that matches how you think about your work. You can switch at any time; everything you choose stays on this page.</p>
+<div class="doors">
+<button type="button" class="door" data-tabgo="roles"><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg><strong>I'm a&hellip;</strong><span>Start from your profession: the tasks, areas, activities, guidance and communities that fit your work.</span></button>
+<button type="button" class="door" data-tabgo="bearing"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg><strong>I need to&hellip;</strong><span>Answer four questions and get a step-by-step route across the portals.</span></button>
+<button type="button" class="door" data-tabgo="lineage"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg><strong>I'm interested in&hellip;</strong><span>Explore a data management area on the DAMA wheel, down to the individual steps.</span></button>
+<button type="button" class="door" data-tabgo="directory"><svg class="i" aria-hidden="true"><use href="#i-library-big"/></svg><strong>Show me everything</strong><span id="door-dir">Search and filter every portal, page, guidance, standard, law, board and community.</span></button>
+</div>
+<div class="finder big"><label for="sq"><strong>Or search everything</strong></label><input id="sq" type="search" autocomplete="off" placeholder="For example: data owner, metadata standard, NHS number, procurement"><div id="sq-out" aria-live="polite"></div></div>
+<h3><svg class="i" aria-hidden="true"><use href="#i-map-pin"/></svg>The four portals at a glance</h3>
+<ul class="pstrip" id="pstrip"></ul>
+</section>
+
+<section role="tabpanel" id="roles" aria-labelledby="tab-roles" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg>Start from your profession</h2>
+<p class="lede">Choose the group closest to your job. You get the tasks people like you bring, the data management areas you work in, the recipe stages you lead, the guidance that matters to you and the communities you can join.</p>
+<p class="hint">How professions are matched to tasks, areas, guidance and communities is this compass's own judgement. The recipe stages you lead come from the DAM playbooks' responsibility tables.</p>
+<ul class="aud-grid" id="aud-grid"></ul>
+<div id="aud-hub" aria-live="polite"></div>
+</section>
+
+<section role="tabpanel" id="bearing" aria-labelledby="tab-bearing" tabindex="0" hidden>
 <p class="lede">Four questions about you and your situation. The compass suggests where to start, where to go next and why, and what you'll have at the end.</p>
 <form id="wayfinder" class="qgrid" aria-describedby="wf-hint" novalidate></form>
 <p class="hint" id="wf-hint">Nothing you choose leaves this page. Your answers are kept only in this page's address, so you can share or bookmark the route.</p>
@@ -253,25 +299,18 @@ __SPRITE__
 <h2 id="precedence-h"><svg class="i" aria-hidden="true"><use href="#i-milestone"/></svg>Which way first: the order of precedence</h2>
 <p>When a journey crosses portals, this order usually works best.</p>
 <ol class="prec" id="prec"></ol>
-</section>
-
-<section role="tabpanel" id="portals" aria-labelledby="tab-portals" tabindex="0" hidden>
-<h2><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four portals</h2>
-<p class="lede">Four portals, four questions. Each is complete on its own; together they cover what the policy asks, how to do it well, what already exists and how to describe it so others can find it.</p>
-<div class="cards" id="pcards"></div>
-</section>
-
-<section role="tabpanel" id="examples" aria-labelledby="tab-examples" tabindex="0" hidden>
-<h2><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</h2>
+<section class="sub" id="examples" tabindex="-1">
+<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</h3>
 <p class="lede">Common situations, where to start and why. These are illustrative examples, not real cases.</p>
 <div class="scen" id="scen"></div>
 </section>
-
-<section role="tabpanel" id="when" aria-labelledby="tab-when" tabindex="0" hidden>
-<h2><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</h2>
-<p class="lede">When you need each portal, and when you can skip it.</p>
-<div class="when" id="whencards"></div>
 </section>
+
+
+
+
+
+
 
 <section role="tabpanel" id="lineage" aria-labelledby="tab-lineage" tabindex="0" hidden>
 <h2><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>The DAMA wheel: from data management area to activity</h2>
@@ -307,6 +346,40 @@ __SPRITE__
 <div class="tablewrap" role="region" aria-label="Traceability table" tabindex="0"><table id="mx"><caption class="vh">Traceability from data management area to activity and location</caption><thead><tr><th scope="col">Area</th><th scope="col">Capability</th><th scope="col">Activity</th><th scope="col">Steps</th><th scope="col">In the DAM playbooks</th><th scope="col">Elsewhere (by area)</th><th scope="col"><span class="vh">Pathway</span></th></tr></thead><tbody></tbody></table></div>
 </section>
 
+<section role="tabpanel" id="directory" aria-labelledby="tab-directory" tabindex="0" hidden>
+<h2><svg class="i" aria-hidden="true"><use href="#i-library-big"/></svg>Directory</h2>
+<p class="lede">Everything the four portals point to, in one place: the portals and their main pages, and the GOV.UK guidance, standards, laws, boards and communities around them.</p>
+<p class="hint">Each entry comes from the portals' own content and its source page. Which professions and data management areas an entry suits is this compass's own judgement.</p>
+<div class="filters" role="group" aria-label="Filter the directory">
+<div class="grow"><label for="dq-q">Search</label><input id="dq-q" type="search" autocomplete="off"></div>
+<div><label for="dq-kind">Kind</label><select id="dq-kind"></select></div>
+<div><label for="dq-where">Where</label><select id="dq-where"></select></div>
+<div><label for="dq-aud">For</label><select id="dq-aud"></select></div>
+<div><label for="dq-topic">Topic</label><select id="dq-topic"></select></div>
+<div><label for="dq-area">Data management area</label><select id="dq-area"></select></div>
+<button type="button" class="btn secondary" id="dq-reset"><svg class="i" aria-hidden="true"><use href="#i-circle-x"/></svg>Clear filters</button>
+<button type="button" class="btn secondary" id="dq-csv"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download as CSV</button>
+</div>
+<p id="dq-count" class="hint" aria-live="polite"></p>
+<ul class="dir" id="dir"></ul>
+<p><button type="button" class="btn secondary" id="dq-more" hidden><svg class="i" aria-hidden="true"><use href="#i-arrow-right"/></svg>Show more</button></p>
+<section class="sub" id="portals" tabindex="-1">
+<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four portals</h3>
+<p class="lede">Four portals, four questions. Each is complete on its own; together they cover what the policy asks, how to do it well, what already exists and how to describe it so others can find it.</p>
+<div class="cards" id="pcards"></div>
+</section>
+<section class="sub" id="when" tabindex="-1">
+<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</h3>
+<p class="lede">When you need each portal, and when you can skip it.</p>
+<div class="when" id="whencards"></div>
+</section>
+<section class="sub" id="links" tabindex="-1">
+<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How the portals link to each other</h3>
+<p>How the portals point to each other, as of __ASOF__. Every link says which portal it leads to and what that portal is; the portals stay separate.</p>
+<div id="linktable" class="tablewrap" role="region" aria-label="Links between the portals" tabindex="0"></div>
+</section>
+</section>
+
 <section role="tabpanel" id="pathway" aria-labelledby="tab-pathway" tabindex="0" hidden>
 <h2><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>My pathway</h2>
 <p class="lede">Your own <a class="term" href="#glossary" data-term="pathway">pathway</a> through the activities: add them from the DAMA wheel or the traceability table, or start from the recipe stages your role leads.</p>
@@ -330,11 +403,7 @@ __SPRITE__
 <dl class="gloss" id="gloss"></dl>
 </section>
 
-<section role="tabpanel" id="links" aria-labelledby="tab-links" tabindex="0" hidden>
-<h2><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How the portals link to each other</h2>
-<p>How the portals point to each other, as of __ASOF__. Every link says which portal it leads to and what that portal is; the portals stay separate.</p>
-<div id="linktable" class="tablewrap" role="region" aria-label="Links between the portals" tabindex="0"></div>
-</section>
+
 </main>
 <footer>
 <div class="cols">
@@ -360,6 +429,7 @@ const url=(p,path)=>P[p].url+path;
 /* tabs */
 const tabs=[...document.querySelectorAll('[role=tab]')];
 function sel(t,focus){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on;});if(focus)t.focus();}
+const selTab=(t,f)=>sel(t,f);
 tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();const nt=tabs[(i+n+tabs.length)%tabs.length];sel(nt,true);syncHash();}});});
 /* wayfinder */
 const ans={};
@@ -477,9 +547,9 @@ function drill(){const a=AREA[sel.area],c=sel.cap&&CAP[sel.cap];
  $('#drill').innerHTML=h;
 }
 function route(v){const [k,id]=String(v).split(':');if(k==='wheel')return go(W.hub);if(k==='area'&&areaId(id))return go(areaId(id));if(k==='cap'&&capId(id))return go(null,capId(id));if(k==='act'&&actId(id))return go(null,null,actId(id));}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-go],[data-pw],[data-trace]');if(!b||!b.closest('#lineage,#pathway'))return;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-go],[data-pw],[data-trace]');if(!b||!b.closest('#lineage,#pathway,#roles,#directory,#start'))return;
  if(b.dataset.go)route(b.dataset.go);else if(b.dataset.trace){const x=actId(b.dataset.trace);if(x){sel.act=x;sel.cap=CAP[sel.cap]&&ACT[x].caps.includes(sel.cap)?sel.cap:ACT[x].caps[0];graph();$('#graph').scrollIntoView({block:'nearest'});$('#graph').focus();syncHash();}}
- else{const [t,id]=b.dataset.pw.split(':');togglePw(t==='a'?'a':'c',t==='a'?actId(id):capId(id));}});
+ else{const i=b.dataset.pw.indexOf(':');const t=b.dataset.pw.slice(0,i),id=b.dataset.pw.slice(i+1);if(t==='r')togglePw('r',DIRI[id]?DIRI[id].id:undefined);else togglePw(t==='a'?'a':'c',t==='a'?actId(id):capId(id));}});
 /* lineage graph */
 function pname(u){const f=u.split('/').pop().replace('.html','');return (W.page_names[f]||f)+' page';}
 function graph(){const a=AREA[sel.area],c=sel.cap&&CAP[sel.cap];
@@ -550,14 +620,15 @@ function download(name,text,statusEl){if(framed){const st=statusEl||document.get
 $('#mx-csv').addEventListener('click',()=>{download('compass-traceability.csv',['Area,Capability,Coverage,Activity kind,Activity,Step,Location'].concat(mxRows().flatMap(r=>{const base=[r.areas.map(id=>AREA[id].name).join('; '),r.c.id+' '+r.c.name,r.c.coverage];return r.x?r.x.steps.map(st=>base.concat([r.x.kind,r.x.title,st,r.x.url]).map(csvCell).join(',')):[base.concat(['','No activity yet','',r.c.page]).map(csvCell).join(',')];})).join('\n'),$('#mx-count'));});
 /* pathway */
 function togglePw(t,id){if(!id)return;const i=pw.findIndex(p=>p.t===t&&p.id===id);if(i>=0)pw.splice(i,1);else pw.push({t,id});refreshPw();}
-function pwItem(p){return p.t==='a'?ACT[p.id]:CAP[p.id];}
-function rank(p){const x=pwItem(p);if(p.t==='c')return 1000+Number(x.id.slice(3));const k={'Playbook recipe':0,'Maturity strand':200,'Change and programmes':300,'Perspective':400}[x.kind];return k+(x.order||0)+(x.kind==='Change and programmes'?Number(x.id.slice(3)):0);}
+function pwItem(p){return p.t==='a'?ACT[p.id]:p.t==='r'?(D.directory||[]).find(e=>e.id===p.id):CAP[p.id];}
+function rank(p){const x=pwItem(p);if(p.t==='r')return 2000+['Portal','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'].indexOf(x.kind);if(p.t==='c')return 1000+Number(x.id.slice(3));const k={'Playbook recipe':0,'Maturity strand':200,'Change and programmes':300,'Perspective':400}[x.kind];return k+(x.order||0)+(x.kind==='Change and programmes'?Number(x.id.slice(3)):0);}
 function refreshPw(){
- document.querySelectorAll('.addpw[data-pw]').forEach(b=>{const [t,id]=b.dataset.pw.split(':');const on=pw.some(p=>p.t===t&&p.id===id);b.setAttribute('aria-pressed',on);b.innerHTML=on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway';});
+ document.querySelectorAll('.addpw[data-pw]').forEach(b=>{const i=b.dataset.pw.indexOf(':');const t=b.dataset.pw.slice(0,i),id=b.dataset.pw.slice(i+1);const on=pw.some(p=>p.t===t&&p.id===id);b.setAttribute('aria-pressed',on);b.innerHTML=on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway';});
  const tab=document.getElementById('tab-pathway');if(tab)tab.querySelector('.pwc').textContent=pw.length?` (${pw.length})`:'';
  if(!pw.length){$('#pw').innerHTML='<p class="gapnote">Your pathway is empty. Add activities from the DAMA wheel, or start from your role.</p>';syncHash();return;}
  const steps=pw.reduce((n,p)=>n+(p.t==='a'?ACT[p.id].steps.length:0),0);
  $('#pw').innerHTML=`<p><strong>${pw.length} ${pw.length===1?'item':'items'}, ${steps} steps.</strong></p><ol class="pwl">`+pw.map((p,i)=>{const x=pwItem(p);const isA=p.t==='a';
+  if(p.t==='r')return `<li><span class="n" aria-hidden="true">${i+1}</span><div><p class="hint">${esc(x.kind)} · ${esc(x.by||'')}</p><h4><a href="${esc(x.url)}" rel="noopener">${esc(x.title)}</a></h4><p>${esc(x.desc||'')}</p></div><div class="ctl"><button type="button" data-mv="${i}:-1" aria-label="Move up">\u2191</button><button type="button" data-mv="${i}:1" aria-label="Move down">\u2193</button><button type="button" data-rm="${i}" aria-label="Remove">\u2715</button></div></li>`;
   return `<li><span class="n" aria-hidden="true">${i+1}</span><div><p class="hint">${isA?esc(KL(x))+' · '+esc(x.caps.join(', ')):'Capability · '+esc(x.cluster)}</p><h4>${esc(isA?x.title:x.id+' '+x.name)}</h4>`+
   (isA?`<details><summary>${x.steps.length} steps</summary><ol>${x.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></details><p><a href="${esc(x.url)}">Open in the DAM playbooks</a></p>`:`<p>${esc(x.note)}</p><p><a href="${esc(x.url)}">Capability card</a></p>`)+
   `</div><div class="ctl"><button type="button" data-mv="${i}:-1" aria-label="Move up">↑</button><button type="button" data-mv="${i}:1" aria-label="Move down">↓</button><button type="button" data-rm="${i}" aria-label="Remove">✕</button></div></li>`;}).join('')+'</ol>';
@@ -569,10 +640,83 @@ $('#pw-sort').addEventListener('click',()=>{pw.sort((a,b)=>rank(a)-rank(b));$('#
 $('#pw-clear').addEventListener('click',()=>{pw.length=0;refreshPw();});
 $('#pw-print').addEventListener('click',()=>window.print());
 $('#pw-copy').addEventListener('click',()=>{const ok=t=>$('#pw-status').textContent=t?'Link copied.':'Could not copy. Copy the address bar instead.';if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(()=>ok(1),()=>ok(0));else ok(0);});
-$('#pw-csv').addEventListener('click',()=>download('my-pathway.csv',['Order,Kind,Item,Step,Location'].concat(pw.flatMap((p,i)=>{const x=pwItem(p);return p.t==='a'?x.steps.map(s=>[i+1,x.kind,x.title,s,x.url].map(csvCell).join(',')):[[i+1,'Capability',x.id+' '+x.name,'',x.url].map(csvCell).join(',')];})).join('\n')));
+$('#pw-csv').addEventListener('click',()=>download('my-pathway.csv',['Order,Kind,Item,Step,Location'].concat(pw.flatMap((p,i)=>{const x=pwItem(p);if(p.t==='r')return [[i+1,x.kind,x.title,'',x.url].map(csvCell).join(',')];return p.t==='a'?x.steps.map(s=>[i+1,x.kind,x.title,s,x.url].map(csvCell).join(',')):[[i+1,'Capability',x.id+' '+x.name,'',x.url].map(csvCell).join(',')];})).join('\n')));
+/* Compass 2.0: start doors, professions, directory and search everything */
+const DIR=D.directory||[];const AUD={};(D.audiences||[]).forEach(a=>AUD[a.id]=a);const DIRI={};DIR.forEach(e=>DIRI[e.id]=e);
+const WHERE={dam:P.dam.short,dqc:P.dqc.short,cat:P.cat.short,ap:P.ap.short,ext:'Elsewhere (GOV.UK and others)'};
+const KORD=['Portal','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'];
+const dirId=v=>DIRI[v]?DIRI[v].id:undefined,audId=v=>AUD[v]?AUD[v].id:undefined;
+const seeTab=id=>{const tt=tabs.find(x=>x.getAttribute('aria-controls')===id);if(tt){selTab(tt);syncHash();window.scrollTo({top:document.getElementById(id).offsetTop-8});}};
+$('#door-dir').textContent=`Search and filter all ${DIR.length} portals, pages, guidance, standards, laws, boards and communities.`;
+$('#pstrip').innerHTML=D.portals.map(p=>`<li style="${cv(p.id)}"><span class="badge">${ic(p.icon)}</span><div><p class="bear">${esc(p.bearing_name)}: ${esc(p.metaphor)}</p><h4><a href="${esc(p.url)}">${esc(p.name)}</a></h4><p>${esc(p.question)}</p></div></li>`).join('')+`<li class="more"><button type="button" class="linkish" data-tabgo="directory" data-jump="portals">${ic('arrow-right')}More about each portal, when to use it and how they link</button></li>`;
+/* directory */
+const opts=(el,items)=>{el.innerHTML='<option value="">All</option>'+items.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('');};
+const topics=[...new Set(DIR.map(e=>e.topic))].sort();
+opts($('#dq-kind'),KORD.filter(k=>DIR.some(e=>e.kind===k)).map(k=>[k,k]));opts($('#dq-where'),Object.entries(WHERE));opts($('#dq-aud'),(D.audiences||[]).map(a=>[a.id,a.name]));
+opts($('#dq-topic'),topics.map(x=>[x,x]));opts($('#dq-area'),(W?W.areas:[]).map(a=>[a.id,a.name]));
+let shown=24;
+function dirRows(){const pick=(sel_,list)=>{const i=$(sel_).selectedIndex;return i>0?list[i-1]:'';};
+ const k=pick('#dq-kind',KORD.filter(k=>DIR.some(e=>e.kind===k))),wh=pick('#dq-where',Object.keys(WHERE)),au=pick('#dq-aud',(D.audiences||[]).map(a=>a.id)),tp=pick('#dq-topic',topics),ar=pick('#dq-area',W?W.areas.map(a=>a.id):[]);
+ const q=$('#dq-q').value.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+ return DIR.filter(e=>(!k||e.kind===k)&&(!wh||e.where===wh)&&(!au||!e.aud.length||e.aud.includes(au))&&(!tp||e.topic===tp)&&(!ar||e.areas.includes(ar))&&(!q.length||q.every(w=>(e.title+' '+e.desc+' '+e.by+' '+e.topic).toLowerCase().includes(w))))
+  .sort((a,b)=>KORD.indexOf(a.kind)-KORD.indexOf(b.kind)||a.title.localeCompare(b.title));}
+function dirCard(e){const areas=e.areas.map(a=>W&&W.areas.find(x=>x.id===a)).filter(Boolean);
+ return `<li class="dcard" style="${cv(e.where==='ext'?'trail':e.where)}"><p class="dk"><span class="pill2">${esc(e.kind)}</span>${esc(WHERE[e.where])}${e.by&&e.where==='ext'?' · '+esc(e.by):''}</p><h4><a href="${esc(e.url)}" rel="noopener">${esc(e.title)}</a></h4>${e.desc?`<p>${esc(e.desc)}</p>`:''}`+
+ (e.join?`<p class="hint"><strong>How to take part:</strong> ${esc(e.join)}</p>`:'')+
+ `<p class="chips">${areas.map(a=>`<button type="button" class="chip" data-go="area:${esc(a.id)}" data-tabto="lineage">${esc(a.name)}</button>`).join('')}${e.status?`<span class="hint">${esc(e.status)}</span>`:''}</p><p>${addBtn('r',e.id)}</p></li>`;}
+function directoryRender(){const rs=dirRows();$('#dir').innerHTML=rs.slice(0,shown).map(dirCard).join('')||'<li class="gapnote">Nothing matches. Clear a filter or try other words.</li>';
+ $('#dq-count').textContent=`Showing ${Math.min(shown,rs.length)} of ${rs.length} matching entries (${DIR.length} in all).`;$('#dq-more').hidden=rs.length<=shown;}
+['#dq-kind','#dq-where','#dq-aud','#dq-topic','#dq-area'].forEach(s=>$(s).addEventListener('change',()=>{shown=24;directoryRender();}));
+$('#dq-q').addEventListener('input',()=>{shown=24;directoryRender();});
+$('#dq-more').addEventListener('click',()=>{shown+=24;directoryRender();});
+$('#dq-reset').addEventListener('click',()=>{['#dq-kind','#dq-where','#dq-aud','#dq-topic','#dq-area'].forEach(s=>$(s).selectedIndex=0);$('#dq-q').value='';shown=24;directoryRender();});
+$('#dq-csv').addEventListener('click',()=>download('compass-directory.csv',['Kind,Title,Where,Publisher,Topic,Address,Description'].concat(dirRows().map(e=>[e.kind,e.title,WHERE[e.where],e.by,e.topic,e.url,e.desc].map(csvCell).join(','))).join('\n'),$('#dq-count')));
+/* professions */
+$('#aud-grid').innerHTML=(D.audiences||[]).map(a=>`<li><button type="button" class="audbtn" data-aud="${esc(a.id)}" aria-pressed="false">${ic(a.icon)}<strong>${esc(a.name)}</strong><span>${esc(a.who)}</span></button></li>`).join('');
+let curAud=null;
+function audHub(id){const a=AUD[id];if(!a)return;curAud=a.id;
+ document.querySelectorAll('.audbtn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.aud===a.id));
+ const r=opt('role',a.role);if(r){ans.role=r;const ri=document.querySelector(`input[name="role"][value="${r}"]`);if(ri)ri.checked=true;render();}
+ const roleq=D.questions.find(x=>x.id==='role').options.find(x=>x.id===a.role);
+ const lead=W?W.acts.filter(x=>x.raci&&a.raci.some(c=>/[RA]/.test(x.raci[c]||''))):[];
+ const res=DIR.filter(e=>e.aud.includes(a.id)&&!['Portal','Portal page','Board or group','Community or network'].includes(e.kind)).sort((x,y)=>KORD.indexOf(x.kind)-KORD.indexOf(y.kind)||x.title.localeCompare(y.title));
+ const comm=a.bodies.map(dirId).filter(Boolean).map(i=>DIRI[i]);
+ const sit=D.questions[0].options;
+ $('#aud-hub').innerHTML=`<div class="hub"><div class="drill-h">${ic(a.icon)}<h3>${esc(a.name)}</h3></div><p class="hint">${esc(a.who)}</p>
+ <div class="hubgrid">
+ <section><h4>${ic('circle-help')}Questions people in your role ask</h4><ul>${a.asks.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></section>
+ <section><h4>${ic('navigation')}Tasks you are likely to bring</h4><ul class="plain">${a.routes.map(rid=>{const o=sit.find(s=>s.id===rid);return o?`<li><button type="button" class="chip" data-route2="${esc(o.id)}">${esc(o.label)}</button></li>`:'';}).join('')}</ul><p class="hint">Each opens a step-by-step route across the portals.</p></section>
+ <section><h4>${ic('network')}Your data management areas</h4><p class="chips">${a.areas.map(id=>W&&W.areas.find(x=>x.id===id)).filter(Boolean).map(x=>`<button type="button" class="chip" data-go="area:${esc(x.id)}" data-tabto="lineage">${esc(x.name)}</button>`).join('')}</p></section>
+ <section><h4>${ic('compass')}Your way in to each portal</h4><ul><li><a href="${esc(url('dam',roleq?roleq.dam:'personas.html'))}">DAM playbooks: your role's route</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here</a></li><li><a href="${esc(url('ap','index.html'))}">DCAT-AP-UK: the profile</a></li></ul></section>
+ </div>
+ <h4>${ic('footprints')}Recipe stages you lead (${lead.length})</h4>${lead.length?`<ul class="plain">${lead.map(x=>`<li><button type="button" class="linkish" data-go="act:${esc(x.id)}" data-tabto="lineage">${esc(KL(x))}: ${esc(x.title)}</button> ${addBtn('a',x.id)}</li>`).join('')}</ul><p><button type="button" class="btn secondary" id="aud-addall">${ic('footprints')}Add all to my pathway</button></p>`:'<p class="hint">Your role is not named as responsible or accountable in the playbook recipes. Add activities from the DAMA wheel instead.</p>'}
+ <h4>${ic('handshake')}Communities and boards for you (${comm.length})</h4><ul class="dir">${comm.map(dirCard).join('')}</ul>
+ <h4>${ic('library')}Guidance, standards and laws for you (${res.length})</h4><ul class="dir">${res.slice(0,6).map(dirCard).join('')}</ul>
+ <p><button type="button" class="btn" id="aud-all">${ic('library-big')}See all ${res.length} in the directory</button></p></div>`;
+ const all=$('#aud-addall');if(all)all.addEventListener('click',()=>{lead.forEach(x=>{if(!pw.some(p=>p.t==='a'&&p.id===x.id))pw.push({t:'a',id:x.id});});refreshPw();});
+ $('#aud-all').addEventListener('click',()=>{['#dq-kind','#dq-where','#dq-topic','#dq-area'].forEach(s=>$(s).selectedIndex=0);$('#dq-q').value='';$('#dq-aud').selectedIndex=(D.audiences||[]).findIndex(x=>x.id===a.id)+1;shown=24;directoryRender();seeTab('directory');});
+ drill();refreshPw();syncHash();}
+$('#aud-grid').addEventListener('click',e=>{const b=e.target.closest('[data-aud]');if(b)audHub(audId(b.dataset.aud));});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-route2]');if(b){const v=opt('why',b.dataset.route2);if(!v)return;ans.why=v;const r=document.querySelector(`input[name="why"][value="${v}"]`);if(r)r.checked=true;render();seeTab('bearing');}
+ const t2=e.target.closest('[data-tabto]');if(t2&&!t2.closest('#lineage')){setTimeout(()=>seeTab('lineage'),0);}
+ const j=e.target.closest('[data-jump]');if(j){const s=document.getElementById(j.dataset.jump==='portals'?'portals':'');if(s)setTimeout(()=>{s.scrollIntoView();s.focus({preventScroll:true});},50);}});
+/* search everything */
+const SIDX=[].concat((D.audiences||[]).map(a=>({g:'Professions',t:a.name,s:a.who,act:()=>{seeTab('roles');audHub(a.id);}})),
+ D.questions[0].options.map(o=>({g:'Tasks',t:o.label,s:'',act:()=>{ans.why=o.id;const r=document.querySelector(`input[name="why"][value="${o.id}"]`);if(r)r.checked=true;render();seeTab('bearing');}})),
+ IDX.map(r=>({g:'Areas, capabilities and activities',t:r.t,s:r.s,act:()=>{route(r.go);seeTab('lineage');}})),
+ DIR.map(e=>({g:'Directory',t:e.title,s:e.desc+' '+e.by+' '+e.topic,url:e.url,k:e.kind})),
+ (D.glossary||[]).map(g=>({g:'Words explained',t:g.term,s:g.def+' '+(g.also||[]).join(' '),act:()=>{seeTab('glossary');const el=document.getElementById('term-'+g.id);if(el)el.scrollIntoView({block:'center'});}})));
+let sHits=[];
+$('#sq').addEventListener('input',()=>{const q=$('#sq').value.toLowerCase().split(/\s+/).filter(w=>w.length>1);if(!q.length){$('#sq-out').innerHTML='';sHits=[];return;}
+ sHits=SIDX.map(r=>{const T=r.t.toLowerCase(),S=(r.s||'').toLowerCase();let sc=0;q.forEach(w=>{if(T.includes(w))sc+=3;else if(S.includes(w))sc+=1;else sc-=9;});return [sc,r];}).filter(([s])=>s>0).sort((a,b)=>b[0]-a[0]).map(x=>x[1]);
+ const groups=[...new Set(sHits.map(r=>r.g))];
+ $('#sq-out').innerHTML=sHits.length?groups.map(g=>{const hs=sHits.filter(r=>r.g===g).slice(0,5);return `<h4>${esc(g)}</h4><ul class="wq-out">`+hs.map(r=>`<li>${r.url?`<a class="sres" href="${esc(r.url)}" rel="noopener"><span class="k">${esc(r.k)}</span>${esc(r.t)}</a>`:`<button type="button" data-sq="${sHits.indexOf(r)}"><span class="k">${esc(g)}</span>${esc(r.t)}</button>`}</li>`).join('')+'</ul>';}).join(''):'<p class="hint">Nothing found. Try another word, or browse the Directory.</p>';});
+$('#sq-out').addEventListener('click',e=>{const b=e.target.closest('[data-sq]');if(!b)return;const r=sHits[Number(b.dataset.sq)];if(r&&r.act)r.act();});
+window.compassAud=()=>curAud;window.compassAudSet=v=>{const a=audId(v);if(a)audHub(a);};
+directoryRender();
 /* state to and from the address */
 window.compassState=()=>[sel.cap?(sel.act?'act:'+sel.act:'cap:'+sel.cap):'area:'+sel.area,pw.map(p=>p.t+'.'+p.id).join('~')];
-window.compassRestore=(s,p)=>{if(p)p.split('~').forEach(t=>{const [k,id]=t.split('.');const v=k==='a'?actId(id):capId(id);if(v&&!pw.some(z=>z.t===k&&z.id===v))pw.push({t:k==='a'?'a':'c',id:v});});
+window.compassRestore=(s,p)=>{if(p)p.split('~').forEach(t=>{const i=t.indexOf('.');const k=t.slice(0,i),id=t.slice(i+1);const dr=(D.directory||[]).find(e=>e.id===id);const v=k==='a'?actId(id):k==='r'?(dr&&dr.id):capId(id);const kk=k==='a'?'a':k==='r'?'r':'c';if(v&&!pw.some(z=>z.t===kk&&z.id===v))pw.push({t:kk,id:v});});
  if(s){const [k,id]=s.split(':');if(k==='area'&&areaId(id))sel.area=areaId(id);if(k==='cap'&&capId(id)){sel.cap=capId(id);sel.area=CAP[sel.cap].areas[0];}if(k==='act'&&actId(id)){sel.act=actId(id);sel.cap=ACT[sel.act].caps[0];sel.area=CAP[sel.cap].areas[0];}}};
 if(framed){const pr=$('#pw-print');if(pr)pr.hidden=true;}
 window.compassInit=()=>{drawWheel();drill();graph();lin();$('#area').value=sel.area;matrix();refreshPw();};
@@ -581,10 +725,11 @@ window.compassRole=()=>{drill();refreshPw();};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tabgo]');if(!b)return;const tt=tabs.find(x=>x.getAttribute('aria-controls')===b.dataset.tabgo);if(tt){sel(tt,true);syncHash();}});
 /* hash: tab and answers */
 function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');const cs=window.compassState?window.compassState():['',''];
- const parts=[t.getAttribute('aria-controls'),a.replace(/,/g,'')?a:'',cs[0]==='area:'+(D.wheel?D.wheel.hub:'')?'':cs[0],cs[1]];while(parts.length>1&&!parts[parts.length-1])parts.pop();const nh='#'+parts.join('/');
+ const parts=[t.getAttribute('aria-controls'),a.replace(/,/g,'')?a:'',cs[0]==='area:'+(D.wheel?D.wheel.hub:'')?'':cs[0],cs[1],window.compassAud&&window.compassAud()||''];while(parts.length>1&&!parts[parts.length-1])parts.pop();const nh='#'+parts.join('/');
  /* never write the address while the page is loading (the browser would then scroll to it, D-035), nor the default view onto a bare address */
- if(document.readyState==='loading'||(nh==='#bearing'&&!location.hash)||nh===location.hash)return;history.replaceState(null,'',nh);}
-(function(){const h=location.hash.slice(1).split('/');const t=tabs.find(x=>x.getAttribute('aria-controls')===h[0]);if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}if(window.compassRestore)window.compassRestore(h[2],h[3]);if(window.compassInit)window.compassInit();})();
+ if(document.readyState==='loading'||(nh==='#start'&&!location.hash)||nh===location.hash)return;history.replaceState(null,'',nh);}
+(function(){const h=location.hash.slice(1).split('/');const ALIAS={portals:'directory',when:'directory',links:'directory',examples:'bearing'};const t=tabs.find(x=>x.getAttribute('aria-controls')===(ALIAS[h[0]]||h[0]));if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}if(window.compassRestore)window.compassRestore(h[2],h[3]);if(window.compassInit)window.compassInit();if(h[4]&&window.compassAudSet)window.compassAudSet(h[4]);
+ if(ALIAS[h[0]]){const s=document.getElementById(h[0]);if(s)setTimeout(()=>s.scrollIntoView(),0);}})();
 /* precedence */
 $('#prec').innerHTML=D.precedence.map((x,i)=>`<li><h3>${ic(x.icon)}${i+1}. ${esc(x.title)}</h3><p>${esc(x.text)}</p></li>`).join('');
 /* portals */
@@ -639,7 +784,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('a[data-term]');i
  tip.addEventListener('mouseenter',()=>clearTimeout(timer));tip.addEventListener('mouseleave',later);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden){hide();}});
  window.addEventListener('scroll',()=>{if(!tip.hidden)hide();},{passive:true});
- const TT={tab_bearing:'Answer four questions and get a route across the portals',tab_portals:'What each portal is for, who runs it and how binding it is',tab_examples:'Common situations and where to start',tab_when:'When you need each portal and when you can skip it',tab_lineage:'Drill down from a data management area to capabilities, activities and steps, and see where each is',tab_pathway:'Your own ordered list of activities, kept in the page address',tab_links:'How the portals point to each other',tab_glossary:'Plain-English meanings of every term used here, with other names for them'};
+ const TT={tab_start:'Choose how to find your way, or search everything',tab_roles:'Tasks, areas, guidance and communities picked for your profession',tab_directory:'Every portal, page, guidance, standard, law, board and community in one searchable list',tab_bearing:'Answer four questions and get a route across the portals',tab_portals:'What each portal is for, who runs it and how binding it is',tab_examples:'Common situations and where to start',tab_when:'When you need each portal and when you can skip it',tab_lineage:'Drill down from a data management area to capabilities, activities and steps, and see where each is',tab_pathway:'Your own ordered list of activities, kept in the page address',tab_links:'How the portals point to each other',tab_glossary:'Plain-English meanings of every term used here, with other names for them'};
  Object.entries(TT).forEach(([k,v])=>{const el=document.getElementById(k.replace('_','-'));if(el)el.setAttribute('data-tip',v);});
 })();
 /* self-check, on every load */

@@ -132,6 +132,115 @@ def validate_wheel(w, d, pb):
     return errs
 
 
+# Compass 2.0: a directory of the four portals and the sites, guidance, standards, laws, boards and communities around them.
+CAP_AREA = {'gov': 'DM-GOV', 'cat': 'DM-META', 'dq': 'DM-DQ'}
+KINDS = ['Portal', 'Portal page', 'Policy and strategy', 'Guidance', 'Standard', 'Legislation', 'Board or group', 'Community or network']
+
+
+def rb_kind(r):
+    g, t = r['group'], r['title'].lower()
+    if g == 'Legislation' or ' act ' in f' {t} ' or 'regulations' in t:
+        return 'Legislation'
+    if g == 'Standards' or 'standard' in t or g == 'Technology and architecture' and 'principles' not in t:
+        return 'Standard'
+    if any(w in t for w in ('strategy', 'roadmap', 'policy', 'blueprint', 'plan ')):
+        return 'Policy and strategy'
+    return 'Guidance'
+
+
+def directory(c, d, pb, page_names, page_desc):
+    P = {p['id']: p for p in c['portals']}
+    aud = c.get('audiences', [])
+    by_topic = {}
+    for a in aud:
+        for tp in a['topics']:
+            by_topic.setdefault(tp, []).append(a['id'])
+    by_area = {}
+    for a in aud:
+        for ar in a['areas']:
+            by_area.setdefault(ar, []).append(a['id'])
+    out = []
+
+    def add(e):
+        e.setdefault('areas', [])
+        e['aud'] = sorted(set(e.get('aud') or [x for ar in e['areas'] for x in by_area.get(ar, [])]))
+        out.append(e)
+    for p in c['portals']:
+        add({'id': 'P-' + p['id'], 'kind': 'Portal', 'title': p['name'], 'url': p['url'], 'where': p['id'], 'by': p['owner_model'], 'topic': 'The four portals',
+             'desc': p['purpose'], 'status': p['binding'], 'areas': [], 'aud': [a['id'] for a in aud]})
+    dam = P['dam']['url']
+    for key, desc in (page_desc or {}).items():
+        if key in ('404',):
+            continue
+        add({'id': 'DAM-' + key, 'kind': 'Portal page', 'title': (page_names or {}).get(key, key.replace('-', ' ').capitalize()), 'url': dam + ('' if key == 'index' else key + '.html'),
+             'where': 'dam', 'by': 'DAM capability playbooks', 'topic': 'DAM playbooks', 'desc': desc, 'status': P['dam']['binding'], 'areas': []})
+    seen = {e['url'] for e in out}
+    ar = {a['id']: a for a in areas(c, d)}
+    for aid, a in ar.items():
+        for k, pid in (('dq', 'dqc'), ('cat', 'cat'), ('ap', 'ap')):
+            for title, u in a[k]:
+                if u in seen:
+                    for e in out:
+                        if e['url'] == u and aid not in e['areas']:
+                            e['areas'].append(aid)
+                    continue
+                seen.add(u)
+                add({'id': f'{pid}-{len(out)}', 'kind': 'Portal page', 'title': title, 'url': u, 'where': pid, 'by': P[pid]['name'], 'topic': P[pid]['short'],
+                     'desc': f"In {P[pid]['short']}, for {a['name'].lower()}.", 'status': P[pid]['binding'], 'areas': [aid]})
+    for pg, items in (d.get('related', {}).get('placements') or {}).items():
+        for x in items:
+            u = P[x['portal']]['url'] + x['path'] if x['portal'] in P else ''
+            if not u or u in seen:
+                continue
+            seen.add(u)
+            add({'id': f'{x["portal"]}-{len(out)}', 'kind': 'Portal page', 'title': x['title'], 'url': u, 'where': x['portal'], 'by': P[x['portal']]['name'],
+                 'topic': P[x['portal']]['short'], 'desc': x['why'], 'status': P[x['portal']]['binding'], 'areas': []})
+    for s in pb.get('sources', []):
+        if s['url'] in seen:
+            continue
+        seen.add(s['url'])
+        add({'id': s['id'], 'kind': 'Policy and strategy' if 'polic' in s['title'].lower() else 'Guidance', 'title': s['title'], 'url': s['url'], 'where': 'ext',
+             'by': s.get('publisher', ''), 'topic': 'DAM Policy and its guidance', 'desc': s.get('note') or '', 'status': 'GOV.UK guidance',
+             'areas': sorted({CAP_AREA[x] for x in s.get('caps', []) if x in CAP_AREA}), 'aud': ['leaders', 'governance', 'owners', 'metadata', 'quality']})
+    for r in pb.get('rulebook', []) + d.get('rulebook_more', []):
+        if r['url'] in seen:
+            continue
+        seen.add(r['url'])
+        add({'id': r['id'], 'kind': rb_kind(r), 'title': r['title'], 'url': r['url'], 'where': 'ext', 'by': r.get('publisher', ''), 'topic': r['group'], 'desc': r.get('why', ''),
+             'status': {'V': 'Checked against the source', 'S': 'Signposted'}.get(r.get('prov'), ''), 'areas': sorted({CAP_AREA[x] for x in r.get('caps', []) if x in CAP_AREA}),
+             'aud': sorted(set(by_topic.get(r['group'], [])))})
+    for b in d.get('bodies', {}).get('items', []):
+        if b['url'] in seen and b['id'].startswith('NW-'):
+            pass
+        add({'id': b['id'], 'kind': 'Board or group' if b['id'].startswith('GB-') else 'Community or network', 'title': b['name'], 'url': b['url'], 'where': 'ext',
+             'by': b.get('host', ''), 'topic': 'Boards and networks', 'desc': b['purpose'], 'status': b.get('kind', ''),
+             'areas': sorted({CAP_AREA[x] for x in b.get('caps', []) if x in CAP_AREA}), 'aud': [a['id'] for a in aud if b['id'] in a['bodies']],
+             'join': b.get('engage', '')})
+    return out
+
+
+def validate_audiences(c, d, pb, w):
+    errs = []
+    routes, areas_ = set(c['routes']), {a['id'] for a in d['dama']['areas']}
+    roles = {o['id'] for o in c['questions'][1]['options']}
+    bodies = {b['id'] for b in d.get('bodies', {}).get('items', [])}
+    groups = {r['group'] for r in pb.get('rulebook', []) + d.get('rulebook_more', [])}
+    codes = {r['code'] for r in pb.get('roles', [])}
+    for a in c.get('audiences', []):
+        for k, ok in (('routes', routes), ('areas', areas_), ('bodies', bodies), ('topics', groups), ('raci', codes)):
+            for x in a[k]:
+                if x not in ok:
+                    errs.append(f'compass audience {a["id"]}: unknown {k[:-1]} {x}')
+        if a['role'] not in roles:
+            errs.append(f'compass audience {a["id"]}: unknown wayfinder role {a["role"]}')
+        if not a.get('asks'):
+            errs.append(f'compass audience {a["id"]}: say what they typically ask')
+    covered = {g for a in c.get('audiences', []) for g in a['topics']}
+    for g in sorted(groups - covered):
+        errs.append(f'compass: no audience is offered guidance on {g}')
+    return errs
+
+
 def load():
     return yaml.safe_load((SRC / 'compass.yaml').read_text(encoding='utf-8'))
 
@@ -245,22 +354,24 @@ def sprite(names, icon_set):
             + '</defs></svg>')
 
 
-def build(out, d, icon_set, barcode_svg, qr_svg, pb=None, page_names=None):
+def build(out, d, icon_set, barcode_svg, qr_svg, pb=None, page_names=None, page_desc=None):
     c = load()
     errs = validate(c, d)
     w = wheel(c, d, pb) if pb else None
     if w:
-        errs += validate_wheel(w, d, pb)
+        errs += validate_wheel(w, d, pb) + validate_audiences(c, d, pb, w)
     if errs:
         raise ValueError('\n'.join(errs))
     t = (SRC / 'template.html').read_text(encoding='utf-8')
-    data = {k: c[k] for k in ('meta', 'portals', 'precedence', 'questions', 'routes', 'scenarios', 'when', 'links_today', 'about', 'glossary')}
+    data = {k: c[k] for k in ('meta', 'portals', 'precedence', 'questions', 'routes', 'scenarios', 'when', 'links_today', 'about', 'glossary', 'audiences')}
     data['areas'] = areas(c, d)
     if w:
         w['page_names'] = page_names or {}
         data['wheel'] = w
     # compass 1.2: the latest automatic check of the other portals (tools/compass_sync.py, run in CI before the build).
     # Links found missing are dropped from the area mappings and flagged on routes, so no wayfinder or pathway sends anyone to a missing page.
+    if pb:
+        data['directory'] = directory(c, d, pb, page_names, page_desc)
     sp = ROOT / 'build' / 'compass-sync.json'
     sync = json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else {'available': False}
     bad = sorted(u for u, v in sync.get('links', {}).items() if v.get('state') in ('gone', 'anchor-missing'))
@@ -270,6 +381,7 @@ def build(out, d, icon_set, barcode_svg, qr_svg, pb=None, page_names=None):
         for a in data['areas'] + (w['areas'] if w else []):
             for k in ('dq', 'cat', 'ap'):
                 a[k] = [x for x in a[k] if x[1] not in bad]
+        data['directory'] = [e for e in data.get('directory', []) if e['url'] not in bad]
     blob = json.dumps(data, ensure_ascii=False)
     used = set(re.findall(r'#i-([a-z0-9-]+)', t)) | set(re.findall(r"ic\('([a-z0-9-]+)'", t))
     used |= {p['icon'] for p in c['portals']} | {x['icon'] for x in c['precedence']} | {q['icon'] for q in c['questions']} | {x['icon'] for x in c['scenarios']} | {'map-pin'}
