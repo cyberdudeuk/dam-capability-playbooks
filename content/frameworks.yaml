@@ -139,6 +139,43 @@ rulebook_more:
   prov: S
   caps: [gov, cat]
   why: The public register of agreements made under the public service delivery, debt, fraud and civil registration powers in Part 5 of the Act.
+# Version 1.12.0 (issues #20 and #22): found by web search on 11 November 2026 (S).
+- id: RB-ICODSA
+  group: Data protection
+  title: 'Data sharing: a code of practice - data sharing agreements'
+  publisher: Information Commissioner's Office
+  url: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/data-sharing-agreements/
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Says a data sharing agreement is good practice and lists what it should cover, including the parties, purpose, lawful basis, data items, formats, rights, retention, ending the sharing and review.
+- id: RB-S251
+  group: Health and care
+  title: 'Confidential patient information and section 251'
+  publisher: Health Research Authority
+  url: https://www.hra.nhs.uk/about-us/committees-and-services/confidentiality-advisory-group/confidential-patient-information-and-regulations/
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Section 251 of the NHS Act 2006 and the Health Service (Control of Patient Information) Regulations 2002 let the common law duty of confidentiality be set aside for medical purposes, with Confidentiality Advisory Group support. Data protection law still applies.
+- id: RB-UKMDR
+  group: Health and care
+  title: The Medical Devices Regulations 2002
+  publisher: legislation.gov.uk
+  url: https://www.legislation.gov.uk/uksi/2002/618/contents/made
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Govern medical devices in Great Britain, including software and AI used for a medical purpose. The MHRA is reforming them.
+- id: RB-MHRASW
+  group: Health and care
+  title: 'Medical devices: software applications (apps)'
+  publisher: Medicines and Healthcare products Regulatory Agency
+  url: https://www.gov.uk/government/publications/medical-devices-software-applications-apps
+  updated: null
+  prov: S
+  caps: [gov]
+  why: Helps decide whether software, including an app or AI, is a medical device. A product is a medical device only if its manufacturer intends a medical purpose.
 - id: RB-SVCASSESS
   group: Delivery, change and investment
   title: Service assessments and applying the Service Standard
@@ -4100,6 +4137,41 @@ dama:
   - RB-ISO23081
   - RB-KIM
   - RB-PKSB
+  cap_area: {gov: DM-GOV, cat: DM-META, dq: DM-DQ}
+  supplement_area: {SUP-ARC: [DM-ARC, DM-MOD]}
+  drilldown:
+    intro: "Today a slice opens the card for its knowledge area further down this page, and the three areas the DAM Policy covers list their playbook steps. A full drill-down would take every reader from a knowledge area to its activities, and from an activity to its tasks, roles, templates, measures and standards, as the three DAM playbooks already do. This is an assessment by this portal, not a commitment."
+    effort_key: "Effort: S is days, M is one to two weeks, L depends on other teams. These are this portal's estimates, not measured."
+    levels:
+    - {n: 1, name: Knowledge area, now: "Built for all 11 areas: DAM capabilities, maturity topics, the records counterpart and how each role uses it.", needs: "Nothing more for the MVP."}
+    - {n: 2, name: Activities, now: "Built for data governance, metadata management and data quality, whose playbook steps are listed on their cards. Data architecture and data modelling have a supplement but no steps. The other 6 areas have none.", needs: "An activity list for each of the other 8 areas, written in this portal's own words and checked by the profession that owns the area."}
+    - {n: 3, name: Tasks and products, now: "Built for the three DAM playbooks: each step has tasks, outputs, a checklist, the requirements it meets and the standards that apply.", needs: "Tasks, outputs, roles, templates and measures for each new activity: about the size of one DAM playbook for each area."}
+    - {n: 4, name: Standards and evidence, now: "Built: the rulebook, and the standards that apply at each step of the three DAM playbooks.", needs: "Standards mapped to each new activity, with their sources checked."}
+    wheel_needs:
+    - "One page or panel for each knowledge area, generated from the content file like the playbooks, so a new area needs content rather than code."
+    - "The same route without the picture: each slice links to its area, and a list beside the wheel gives keyboard and screen reader users every area, activity and task."
+    - "An owner for each area from the profession that does the work (security, records, architecture, integration, analysis). This is the largest dependency."
+    - "Copyright: DAMA-DMBOK is DAMA International's copyrighted work. The portal can name the knowledge areas and link to DAMA, but activity lists must be written fresh or licensed."
+    - "Edition risk: DAMA International started a 3.0 edition in 2025. Its project page gives no publication date, and secondary sources say 2027. The areas may change, so their names stay in the content file, not in code."
+    - "Effort: about one release for the drill-down structure and data architecture, then about one DAM playbook's worth of writing and expert review for each of the other 7 areas."
+    arc:
+      summary: "Data architecture can become a fourth capability playbook, built the same way as the other three. The data architecture and models supplement and the entity and relationship list (T-CAT-4) are a start, but they answer one question, the structure and authoritative source of a critical asset, not the whole capability."
+      parts:
+      - {part: Purpose and scope, now: "The supplement's summary", needs: "The question the playbook answers, what is in and out of scope, and how it relates to the DAM Policy, which does not require it", effort: S}
+      - {part: Step by step, now: None, needs: "5 to 8 steps from the current data landscape to a target architecture and keeping it up to date, written fresh because DAMA-DMBOK cannot be copied", effort: M}
+      - {part: Roles and who does what, now: "The design authority, named in the supplement", needs: "Roles and a RACI that use the architect roles in the Government Digital and Data Profession Capability Framework", effort: S}
+      - {part: Templates, now: "T-CAT-4, the entity and relationship list", needs: "Templates for a data landscape, data flows, a register of authoritative sources and architecture decision records", effort: M}
+      - {part: Measures and escalation, now: None, needs: "Measures, such as the share of critical assets with a named authoritative source, and escalation through the governance ladder", effort: S}
+      - {part: Standards, now: "API, reference architecture, open standards and Technology Code of Practice entries in the rulebook", needs: "Mapped to each step", effort: S}
+      - {part: Learning, now: None, needs: "At least one learning module with an exercise", effort: M}
+      - {part: Checks and tests, now: "The supplement's checks", needs: "Build validation, a site check and deliberate-break tests, as for the other playbooks", effort: S}
+      - {part: Ownership and review, now: None, needs: "Architecture leads, such as a design authority or the architecture community, agree to own and review it. This portal cannot set architecture standards.", effort: L}
+    phasing: "After the MVP. Phase 1 and the January 2027 baseline return need only governance, metadata and data quality. Start with data architecture in Phase 2, from January 2027, because the policy's source data test already links it to the DAM Policy. Add other areas only where the profession that owns them agrees to own the content."
+    risks:
+    - "Scope creep away from the DAM Policy, adding burden for organisations that only need to make the return."
+    - "Guidance in areas other teams own may conflict with theirs. Signpost first, and write only with them."
+    - "Every new playbook adds content to review each year."
+    backlog: [BL-35, BL-36]
 joinup:
   intro: Data asset management needs data, records and information, security, digital, technology, analysis, commercial and delivery professionals to act on the same assets. These recommendations turn that
     into shared artefacts, routines and networks, each with a tangible outcome you can check.
@@ -4940,6 +5012,20 @@ research:
     list_url: discussions/categories/ideas
     note: Ideas are public GitHub Discussions, so do not include your name, colleagues' names or anything above OFFICIAL. Vote by upvoting an idea; comments add evidence.
   wip_limit: 5
+  # Version 1.12.0: the MVP assessment frame (proposed by this portal, O). The repository had no written MVP definition.
+  mvp:
+    definition: "The smallest set of guidance that lets an in-scope organisation make its January 2027 baseline return and finish Phase 1, internal transformation, by the end of December 2026: identify its critical data assets, name their owners, describe them in a catalogue and plan their quality."
+    core: [DM-GOV, DM-META, DM-DQ]
+    verdicts:
+      in: In the MVP
+      optional: In the MVP, optional
+      lite: In the MVP as signposts only
+      after: After the MVP
+    caveats:
+    - "Evidence of demand is one pilot team. No research with users has run yet (OR-04), so usability is an expert judgement."
+    - "The baseline return template, not this portal, sets what organisations must report. Nothing here adds to the return."
+    - "Records, security, integration and architecture belong to other teams; their verdicts need those teams' agreement."
+    - "New sources found by web search on 11 November 2026 are marked S and need checking before the MVP is promoted."
   criteria:
   - {id: demand, name: User demand, weight: 25, icon: users-round, ask: "How many people need it, and how strong is the evidence?", scale: [No evidence, One source, Several sources or 5+ votes, Research finding or 15+ votes]}
   - {id: policy, name: DAM Policy, weight: 20, icon: landmark, ask: "Does it help organisations meet the DAM Policy?", scale: [No link, Indirect, Supports a should, Supports a must]}
@@ -4980,8 +5066,19 @@ research:
   - {id: BL-27, type: feature, title: Get involved and champions toolkit, story: "As a champion in my organisation, I need ready-made posts, emails and a walk-through, so that I can bring my team in without extra work.", source: Owner request, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 2}}
   - {id: BL-28, type: feature, title: Badges for taking part, story: "As someone who helps improve the portal, I want a badge for my profile and signature, so that my contribution is recognised.", source: Owner request, status: done, release: 1.10.0, strategy: [rmdg], assess: {demand: 2, policy: 0, strategy: 1, feasibility: 3, capacity: 3, inclusion: 1}}
   - {id: BL-29, type: content, title: Welsh language summaries, story: "As someone in a Welsh public body, I need key pages summarised in Welsh, so that we can meet our language duties.", source: BL-24, status: later, strategy: [rmdg], assess: {demand: 0, policy: 1, strategy: 1, feasibility: 1, capacity: 0, inclusion: 3}}
+  # Version 1.12.0: the Project Compass pilot backlog (GitHub issues 18 to 22), with where each sits on the DAMA wheel and an
+  # MVP verdict for the DAM Policy rollout (assessed 11 November 2026; usability is an expert review, not yet tested with users).
+  - {id: BL-30, type: feature, title: Governance layers and what each may change, story: "As a data owner, I need to know what each governance layer may and may not change, so that decisions go to the right place and survive a team handover.", source: "Project Compass pilot (issue 21)", status: done, release: 1.12.0, strategy: [dam], assess: {demand: 1, policy: 3, strategy: 2, feasibility: 3, capacity: 3, inclusion: 1}, dama: [DM-GOV], mvp: {verdict: in, usability: "One section on the Roles tab and a CSV; uses the 19 role names people already know.", condition: "Align with the GDS Data Ownership Model before it is promoted; until then it stays labelled as proposed."}}
+  - {id: BL-31, type: content, title: Retention fields in the ownership register and catalogue record, story: "As a data owner, I need retention and disposal recorded with each asset, so that data is neither kept too long nor destroyed early.", source: "Project Compass pilot (issue 19)", status: done, release: 1.12.0, strategy: [dam], assess: {demand: 1, policy: 1, strategy: 1, feasibility: 3, capacity: 3, inclusion: 0}, dama: [DM-DOC, DM-GOV, DM-META], mvp: {verdict: optional, usability: "Adds five fields to the ownership register and two to the catalogue record, which adds burden if made required.", condition: "Keep the fields optional and out of the return template; agree read-across to records schedules with the government knowledge and information management team."}}
+  - {id: BL-32, type: content, title: Data sharing agreement template and gateways, story: "As a data owner, I need a data sharing agreement that covers the lawful basis and legal gateway, so that shared critical assets are on a sound footing.", source: "Project Compass pilot (issue 20)", status: done, release: 1.12.0, strategy: [dam, ndl], assess: {demand: 1, policy: 2, strategy: 2, feasibility: 2, capacity: 2, inclusion: 0}, dama: [DM-SEC, DM-INT, DM-GOV], mvp: {verdict: lite, usability: "A 20-field template for owners and data protection officers, not for every user; reached from the data sharing supplement.", condition: "Have the government data protection team review it before it is promoted; a gateway lookup waits until after the MVP."}}
+  - {id: BL-33, type: content, title: Data architecture and models supplement, story: "As a data architect, I need to describe a critical asset's entities, relationships and authoritative source, so that others can build on it and returns do not count it twice.", source: "Project Compass pilot (issue 18)", status: done, release: 1.12.0, strategy: [blueprint], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 0}, dama: [DM-ARC, DM-MOD], mvp: {verdict: after, usability: "Useful to architects and design authorities; most owners and coordinators will not need it for the baseline return.", condition: "Only the authoritative source question belongs in the MVP, because it helps apply the policy's source data test; the rest follows the baseline return."}}
+  - {id: BL-34, type: content, title: Health and care obligations from DHSC and MedTech, story: "As a health or care body, I need the laws, standards and frameworks that apply to our data assets in one place, so that we meet them alongside the DAM Policy.", source: "Project Compass pilot (issue 22)", status: now, strategy: [dam], assess: {demand: 1, policy: 2, strategy: 1, feasibility: 1, capacity: 2, inclusion: 1}, dama: [DM-GOV, DM-SEC, DM-META], mvp: {verdict: lite, usability: "Signposts sit in the health supplement that health and care bodies already reach from the sector finder.", condition: "Signposts now; complete with the pilot's feedback and an expert review (BL-14) before implementation begins in January 2027."}}
+  - {id: BL-35, type: feature, title: Drill down from the DAMA wheel to activities and tasks, story: "As someone building an enterprise data management capability, I need to go from a knowledge area on the wheel to its activities and tasks, so that I can see what good looks like beyond the three DAM capabilities.", source: "Owner request, 11 November 2026", status: later, strategy: [dam, blueprint], assess: {demand: 1, policy: 1, strategy: 1, feasibility: 2, capacity: 1, inclusion: 2}, dama: [DM-GOV, DM-ARC, DM-MOD, DM-OPS, DM-SEC, DM-INT, DM-DOC, DM-REF, DM-BI, DM-META, DM-DQ], mvp: {verdict: after, usability: "Governance, metadata and data quality already drill down to their playbook steps; the other areas would add reading that most organisations do not need for the return.", condition: "Build the structure with data architecture first (BL-36). Add other areas only when the profession that owns each agrees to own its content."}}
+  - {id: BL-36, type: content, title: Data architecture capability playbook, story: "As a data architect or design authority, I need a step-by-step playbook for data architecture, so that critical assets have a known structure and authoritative source that others can build on.", source: "Owner request, 11 November 2026", status: later, strategy: [blueprint], assess: {demand: 1, policy: 1, strategy: 2, feasibility: 2, capacity: 0, inclusion: 0}, dama: [DM-ARC, DM-MOD], mvp: {verdict: after, usability: "Useful to architects; owners and coordinators need only the authoritative source question, which is already in the cataloguing guidance and the supplement.", condition: "Phase 2, from January 2027, once architecture leads agree to own and review it; see the assessment on the DAMA wheel."}}
   - {id: BL-25, type: feature, title: A chatbot hosted by this portal, story: "As a reader, I would like to chat with the guidance.", source: Reuse decision, status: out, reason: "Out of scope: the portal runs no server and sends nothing anywhere. Assistants your organisation approves can use its open data and MCP server instead (Use and reuse).", strategy: [rmdg], assess: {demand: 1, policy: 0, strategy: 2, feasibility: 0, capacity: 0, inclusion: 0}}
   decisions:
+  - {date: '2026-11-11', item: BL-34, decision: "Health and care obligations stay in Now", why: "The score says Later because demand is one pilot team and the rest depends on its feedback. Signposts were released in 1.12.0, and finishing needs only that feedback and the expert review (BL-14), so it should not wait behind unrelated work."}
+  - {date: '2026-11-11', item: BL-33, decision: "Data architecture judged After the MVP even though it is built", why: "It sits outside the three DAM capabilities on the DAMA wheel and most organisations will not need it for the baseline return; only its authoritative source question is pulled forward."}
   - {date: '2026-11-05', item: BL-05, decision: Research, roadmap and ideas published in the open, why: "Working in the open lets users see and shape priorities; modelled on the data.gov.uk roadmap."}
   - {date: '2026-11-05', item: BL-25, decision: A hosted chatbot is out of scope, why: "No server, nothing sent anywhere; open data and the MCP server serve approved assistants instead."}
   - {date: '2026-11-05', item: BL-10, decision: "Round 1 waits until Round 0 has recruited for every role", why: "Usability sessions need 5 to 8 people per role, including disabled people."}
@@ -5305,3 +5402,149 @@ easy_read:
   personas: [Choose the job closest to yours., You will see the steps for your job in order., Tick each step when you finish it.]
   research: [You can help make this website better., You can test it, talk to us, or share ideas., We show what we plan to do and why.]
   involve: [There are many ways to help., Pick the one that suits you., You can get a badge to show you helped.]
+standards_map:
+  intro: "Frameworks, methodologies and standards that apply to this capability, grouped by kind. Each one links to its publisher. Where this portal applies one to a step, the step says so under How to do it. The publisher's page is the authority."
+  kinds:
+  - {id: law, name: Legislation and statutory codes, icon: gavel}
+  - {id: standard, name: Standards, icon: badge-check}
+  - {id: framework, name: Frameworks, icon: layers}
+  - {id: methodology, name: Methodologies and bodies of knowledge, icon: route}
+  - {id: guidance, name: Guidance and policy, icon: book-open}
+  group_kind: {Legislation: law, Data protection: law, Standards: standard}
+  default_kind: guidance
+  kind_of:
+    RB-COP: law
+    RB-ICOSHARE: law
+    RB-ICODSA: law
+    RB-PRA: law
+    RB-PA23: law
+    RB-UKMDR: law
+    RB-S251: law
+    RB-EUDA: law
+    RB-SVC: standard
+    RB-TCOP: standard
+    RB-TCOP4: standard
+    RB-OPEN: standard
+    RB-OSP: standard
+    RB-UPRN: standard
+    RB-API: standard
+    RB-GEMINI: standard
+    RB-GSC: standard
+    RB-STYLE: standard
+    RB-ATRS: standard
+    RB-GOVS002: standard
+    RB-GOVS005: standard
+    RB-GOVS007: standard
+    RB-ISO15489: standard
+    RB-ISO23081: standard
+    RB-FHIRUK: standard
+    RB-SNOMED: standard
+    RB-DCB0129: standard
+    RB-DCB0160: standard
+    RB-METASTD: standard
+    RB-DDAT: framework
+    RB-ETH: framework
+    RB-DMAF: framework
+    RB-DSGF: framework
+    RB-CAF: framework
+    RB-SFIA: framework
+    RB-ASCOF: framework
+    RB-PKSB: framework
+    RB-AFCAREER: framework
+    RB-SUCCESS: framework
+    RB-CALD: framework
+    RB-DSPT: framework
+    RB-DAMA: methodology
+    RB-DCAM: methodology
+    RB-CMMI: methodology
+    RB-GREEN: methodology
+    RB-MAGENTA: methodology
+    RB-AQUA: methodology
+    RB-ORANGE: methodology
+    RB-QAAD: methodology
+    RB-GDSWAY: methodology
+    RB-DDATPB: methodology
+    RB-SOURCING: methodology
+    RB-IAAP: methodology
+    RB-SVCASSESS: methodology
+    RB-REFARCH: methodology
+  aliases:
+    RB-DAMA: [DAMA-DMBOK, DMBOK]
+    RB-DCAM: [DCAM]
+    RB-CMMI: [CMMI]
+    RB-SVC: [Service Standard]
+    RB-TCOP: [Technology Code of Practice]
+    RB-GDSWAY: [GDS Way]
+    RB-DPA: [Data Protection Act 2018]
+    RB-DUAA: [Data (Use and Access) Act 2025, Data (Use and Access) Act]
+    RB-DEA: [Digital Economy Act 2017, Digital Economy Act]
+    RB-EQA: [Equality Act 2010]
+    RB-PRA: [Public Records Act 1958, Public Records Act]
+    RB-PA23: [Procurement Act 2023]
+    RB-GSC: [Government Security Classifications]
+    RB-DCAT: [DCAT]
+    RB-DQV: [Data Quality Vocabulary]
+    RB-SKOS: [SKOS]
+    RB-PROVO: [PROV-O]
+    RB-CSVW: [CSV on the Web, CSVW]
+    RB-GEMINI: [UK GEMINI]
+    RB-SDMX: [SDMX]
+    RB-OLINEAGE: [OpenLineage]
+    RB-ODCS: [Open Data Contract Standard]
+    RB-ODPS: [Open Data Product Standard]
+    RB-OAS: [OpenAPI Specification, OpenAPI]
+    RB-MCPSPEC: [Model Context Protocol]
+    RB-OGL: [Open Government Licence]
+    RB-COP: [Code of Practice for Statistics]
+    RB-GREEN: [Green Book]
+    RB-MAGENTA: [Magenta Book]
+    RB-AQUA: [AQuA Book]
+    RB-ORANGE: [Orange Book]
+    RB-CALD: [Caldicott Principles]
+    RB-DSPT: [Data Security and Protection Toolkit]
+    RB-SNOMED: [SNOMED CT]
+    RB-FHIRUK: [FHIR UK Core]
+    RB-UPRN: [UPRN]
+    RB-CAF: [Cyber Assessment Framework]
+    RB-SFIA: [SFIA]
+    RB-DDAT: [Government Digital and Data Profession Capability Framework]
+    RB-ETH: [Data and AI Ethics Framework]
+    RB-ATRS: [Algorithmic Transparency Recording Standard]
+    RB-DMAF: [Data Maturity Assessment for Government, Data Maturity Assessment]
+    RB-ISO15489: [ISO 15489]
+    RB-ISO23081: [ISO 23081]
+    RB-DCB0129: [DCB0129]
+    RB-DCB0160: [DCB0160]
+    RB-GOVS002: [GovS 002]
+    RB-GOVS005: [GovS 005]
+    RB-GOVS007: [GovS 007]
+    RB-EUDA: [EU Data Act]
+    RB-DSA: [Data Standards Authority]
+    RB-DQHUB: [Government Data Quality Hub, Data Quality Hub]
+    RB-NDLPUB: [National Data Library]
+    RB-SBD: [Secure by Design]
+    RB-AIPLAY: [AI Playbook for the UK Government, AI Playbook]
+    RB-OPEN: [Open standards for government]
+    RB-ICOSHARE: [data sharing code of practice]
+  stages:
+    gov.mandate: [RB-GOVS005, RB-DMAF, RB-BLUEPRINT, RB-SRO]
+    gov.frame: [RB-DAMA, RB-DCAM, RB-ETH, RB-DSGF, RB-ORANGE]
+    gov.assign: [RB-SMROLES, RB-DDAT, RB-KIM, RB-SFIA]
+    gov.operate: [RB-DPA, RB-ICOSHARE, RB-ICODSA, RB-GSC, RB-TNAIM]
+    gov.assure: [RB-DMAHUB, RB-IAAP, RB-CMMI, RB-SVCASSESS]
+    cat.mobilise: [RB-NDLPUB, RB-DSA, RB-METASTD]
+    cat.discover: [RB-TNAIM, RB-DCATGOV]
+    cat.designate: [RB-GSC, RB-DPA]
+    cat.own: [RB-SMROLES, RB-KIM]
+    cat.describe: [RB-DCAT, RB-DCATGOV, RB-METASTD, RB-SKOS, RB-GEMINI, RB-ISO23081]
+    cat.publish: [RB-NDLPUB, RB-OGL, RB-API, RB-OAS, RB-AIREADY]
+    cat.report: [RB-DCATGOV, RB-DSACAT]
+    cat.maintain: [RB-PROVO, RB-OLINEAGE, RB-TNARET, RB-ISO15489]
+    dq.identify: [RB-QAAD, RB-DQHUB]
+    dq.define: [RB-DQV, RB-COP, RB-ODCS]
+    dq.baseline: [RB-QAAD, RB-AQUA]
+    dq.prioritise: [RB-GREEN, RB-ORANGE]
+    dq.improve: [RB-CSVW, RB-UPRN, RB-TECHDEBT]
+    dq.report: [RB-COP, RB-DQV]
+    dq.sustain: [RB-DQHUB, RB-ODCS]
+    dq.review: [RB-MAGENTA, RB-DMAHUB]

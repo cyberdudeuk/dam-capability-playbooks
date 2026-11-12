@@ -388,7 +388,7 @@ capabilities:
   - {name: Open exceptions past their expiry date, target: '0'}
   templates:
   - {id: T-GOV-1, mode: Both, name: Governance charter, fields: [Purpose, Scope and exclusions, Authority and sponsor, Membership, Decision rights, Review cadence, Sign-off (role and date)]}
-  - {id: T-GOV-2, mode: BAU, name: Data ownership register entry, fields: [Asset identifier, Asset title, Ownership option (IAO, data owner or hybrid), Data owner (role), Information asset owner (role), Data steward (role), Data custodian (role), Successor (role), Effective date, Training completed, Next review]}
+  - {id: T-GOV-2, mode: BAU, name: Data ownership register entry, fields: [Asset identifier, Asset title, "Ownership option (IAO, data owner or hybrid)", Data owner (role), Information asset owner (role), Data steward (role), Data custodian (role), Successor (role), Effective date, Training completed, Next review, Retention schedule reference, Retention period, "Disposal action (destroy, review or transfer to archive)", Retention review date, Longer retention approved by (role)]}
   - {id: T-GOV-3, mode: Both, name: Decision log entry, fields: [Decision ID, Date, Decision, Decided by (role or forum), Rationale, Assets affected, Review trigger]}
   - {id: T-GOV-4, mode: Both, name: Exception register entry, fields: [Exception ID, Policy deviated from, Rationale, Owner (role), Risk accepted by (role), Start date, Expiry date, Review outcome]}
   # Version 1.11.0: requested by a pilot team (Project Compass, 11 November 2026) so day-to-day logs live in one workbook.
@@ -403,8 +403,14 @@ capabilities:
     - {name: Issues, fields: [Issue ID, Date raised, Description, Impact, Priority, Owner (role), Action, Target date, Status]}
     - {name: Dependencies, fields: [Dependency ID, Date raised, We depend on, For what, Needed by, Owner (role), Status]}
     - {name: Decisions, from: T-GOV-3}
-    - {name: Actions, fields: [Action ID, Date raised, Action, From (meeting, decision or issue), Owner (role), Due date, Status]}
+    - {name: Actions, fields: [Action ID, Date raised, Action, "From (meeting, decision or issue)", Owner (role), Due date, Status]}
     - {name: Exceptions, from: T-GOV-4}
+  # Version 1.12.0 (issue #20): what the ICO data sharing code says an agreement should cover (S, found by web search 11 November 2026).
+  - id: T-GOV-6
+    mode: Both
+    name: Data sharing agreement
+    note: "The questions the ICO's data sharing code says an agreement should answer. Your organisation may call it an information sharing agreement or protocol. It does not replace legal advice or a DPIA."
+    fields: [Agreement reference, Parties, "Controller at each stage, including after sharing", Data protection officer or responsible contact for each party (role), Purpose and specific aims, Why sharing is necessary to meet them, Benefits to people or society, Lawful basis for each party, Legal gateway or power, Data items shared (data specification), "Formats and standards (for example, how dates of birth are recorded)", Access and security arrangements, How people's rights are met, How accuracy is checked and errors corrected, Retention and deletion of shared data, "Ending the sharing (deletion or return of data)", "Review date and review triggers (for example, a complaint or breach)", Freedom of information publication scheme entry, DPIA reference, Catalogue record of the shared asset]
 
 - id: cat
   in_brief:
@@ -611,11 +617,11 @@ capabilities:
   - {name: Records with access rights, licence and classification, target: 100%}
   - {name: Records harvestable as DCAT, target: Rising each quarter}
   templates:
-  - {id: T-CAT-1, mode: BAU, name: Candidate and designation log, fields: [Candidate, Found in (catalogue, IAR or sharing register), Provided to or acquired from, Purpose (one or more of seven), Scope tests passed, Designated (yes or no), Reason, Decided by (role), Date]}
-  - {id: T-CAT-2, mode: BAU, name: Critical data asset catalogue record, fields: [title, alternativeTitle, description, identifier, creator, dateCreated, temporalCoverage, conformsTo, accessRights, securityClassification, licence, mediaType, expires, supersededBy, Owner (role), Contact point (team or form), Purpose, Last reviewed, Next review]}
+  - {id: T-CAT-1, mode: BAU, name: Candidate and designation log, fields: [Candidate, "Found in (catalogue, IAR or sharing register)", Provided to or acquired from, Purpose (one or more of seven), Scope tests passed, Designated (yes or no), Reason, Decided by (role), Date]}
+  - {id: T-CAT-2, mode: BAU, name: Critical data asset catalogue record, fields: [title, alternativeTitle, description, identifier, creator, dateCreated, temporalCoverage, conformsTo, accessRights, securityClassification, licence, mediaType, expires, supersededBy, Owner (role), Contact point (team or form), Purpose, Last reviewed, Next review, Retention period, Disposal action]}
   - {id: T-CAT-3, mode: BAU, name: Annual record review, fields: [Asset, Date, Still critical (and why), Owner and successor confirmed, Metadata checked against the guidance, Changes made, Signed off by (role)]}
   # Version 1.11.0: an interim home for relationship artefacts until a data architecture playbook exists (backlog).
-  - {id: T-CAT-4, mode: Both, name: Entity and relationship list, note: "A plain list of the entities in a data asset and how they relate, so a relationship diagram can be drawn from it. Interim until a data architecture playbook exists.", fields: [Entity, Description, Key attributes, Related entity, Relationship (for example, places), Cardinality (one to one, one to many or many to many), Optional or mandatory, Source system, Data dictionary link]}
+  - {id: T-CAT-4, mode: Both, examples: [templates/T-CAT-4-example.csv, templates/T-CAT-4-example.mmd], name: Entity and relationship list, note: "A plain list of the entities in a data asset and how they relate, so a relationship diagram can be drawn from it. The Data architecture and models supplement has a worked example and the diagram it produces.", fields: [Entity, Description, Key attributes, Related entity, "Relationship (for example, places)", "Cardinality (one to one, one to many or many to many)", Optional or mandatory, Source system, Data dictionary link]}
 
 - id: dq
   in_brief:
@@ -954,6 +960,9 @@ defects:
 - {id: D-033, found: "Development (version 1.11.0, before publishing)", defect: "A data dictionary format with a comma in it was split into a stray key with no value, so the title's format lost its second half without any error.", cause: "Unquoted commas inside a YAML flow mapping start a new key.", check: "The build now rejects any dictionary entry with unexpected or empty keys and says to quote values that contain a comma; a test proves it."}
 - {id: D-034, found: "Estate compass sync (12 November 2026)", defect: "Every compass link to DCAT-AP-UK, and the DAM pages' Related link to it, returned 404 after the profile's site moved from dcat-uk-ap to dcat-ap-uk.", cause: "Links into the other portals were only checked by hand; nothing re-read them when a portal changed.", check: "tools/compass_sync.py reads every compass link into the other portals daily in CI, hides any that are gone, and opens a compass-sync issue; tests prove it finds a gone page and a missing anchor and treats an unreachable portal as unchecked."}
 - {id: D-035, found: "Visual inspection (compass 1.3)", defect: "Opening the compass with no address jumped down the page to the first tab and outlined it.", cause: "The pathway wrote the address while the page was still loading, so the browser then scrolled to that fragment and focused it.", check: "The compass never writes the address while loading or to say what is already shown. C-35 checks the guard and B-17 checks that the page stays at the top with an empty address."}
+- {id: D-034, found: "Backlog work (version 1.12.0)", defect: "Five template fields had been split in two since they were written, for example 'Ownership option (IAO' and 'data owner or hybrid)' in the ownership register, so downloads and the Library showed broken fields and inflated field counts.", cause: "The same as D-033: unquoted commas in YAML flow lists start a new item.", check: "Fields are quoted, and the build rejects any template field whose brackets do not balance; a test proves it. The C-39 health check also first missed a removed step because the reference titles repeat the words; it now looks for the steps themselves."}
+- {id: D-035, found: "Tooltip work (version 1.13.0)", defect: "The menu links to the Governance, Cataloguing and Quality playbooks showed an empty tooltip on every page.", cause: "Menu tooltips come from page descriptions, and the three playbook pages had none, so the grouped menu fell back to empty text.", check: "Menu tooltips now fall back to the capability's purpose. C-40 fails any page with an empty tooltip; a test proves it."}
+- {id: D-036, found: "Pull request 24 (11 November 2026)", defect: "The build failed twice before any check ran, because the runner could not reach Ubuntu's package mirror while installing the browser's system packages.", cause: "One attempt, with no retry or fallback, at a step that depends on an outside mirror.", check: "The workflow retries three times a minute apart, each attempt capped at 10 minutes after one ran for over 90 minutes without finishing, then installs the browser alone; the browser checks still fail if it cannot start. C-25 fails if the retry or the time limits go; two tests prove it."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1432,6 +1441,14 @@ domain_depth:
   why: Large holders of shared spatial and monitoring data, with sensor and time-series quality issues the core rules do not cover.
   needed: ["Timeliness and completeness rules for sensor and time-series data", "Metadata aligned with INSPIRE"]
   leads: [INSPIRE metadata, ISO 19157]
+- id: DD-15
+  theme: Data architecture and models
+  sectors: [All departments; design authorities and data architects]
+  caps: [cat, gov]
+  moscow: Should
+  why: "Raised by a pilot team (Project Compass, 11 November 2026): critical data assets need their entities, relationships and authoritative sources described, and relationship diagrams linked to the catalogue and data dictionary."
+  needed: ["An entity and relationship list linked to catalogue records", "A relationship diagram produced from the list, in an open text format"]
+  leads: [DAMA-DMBOK data architecture and data modelling and design knowledge areas]
 - id: DD-14
   theme: Education and skills
   sectors: [Department for Education and its ALBs]
@@ -1529,13 +1546,33 @@ depth_refs:
   DD-02: [RB-CLD, RB-ASCOF, RB-CDM, RB-CIN]
   DD-03: [RB-UPRN, RB-GEMINI, RB-QFAIR, RB-GEOBP]
   DD-04: [RB-COP, RB-QAAD, RB-SDMX]
-  DD-05: [RB-DUAA, RB-DEA, RB-ICOSHARE]
+  DD-05: [RB-DUAA, RB-DEA, RB-ICOSHARE, RB-ICODSA]
   DD-06: [RB-AIREADY, RB-ATRS, RB-AIPLAY, RB-ETH]
   DD-07: [RB-PSFA, RB-DEA]
   DD-08: [RB-DPA, RB-GSC]
   DD-10: [RB-OPEN]
-  DD-11: [RB-TNA]
+  DD-11: [RB-TNA, RB-TNARET]
   DD-12: [RB-LDD]
+  DD-15: [RB-DCATGOV]
+
+# Version 1.12.0 (issue #18): a synthetic worked entity and relationship list. The build draws a Mermaid diagram from it.
+erd_example:
+- {id: PERSON, entity: Person, desc: "Someone the service supports"}
+- {id: CASE, entity: Case, desc: "A piece of work about one person", to: PERSON, rel: "is about", card: many to one}
+- {id: APPOINTMENT, entity: Appointment, desc: "A meeting held for a case", to: CASE, rel: "is held for", card: many to one}
+- {id: OUTCOME, entity: Outcome, desc: "What an appointment recorded", to: APPOINTMENT, rel: "records", card: one to one}
+
+# Version 1.12.0 (issue #21): governance layers with what each may change. Proposed by this portal (O), drawing on the
+# role definitions above and on the five-layer model a pilot team (Project Compass) described on 11 November 2026.
+governance_layers:
+- {n: 1, name: Direction, roles: [BRD, CDO], may: ["Set data policy, standards and risk appetite", "Resolve escalations between owners", "Approve exceptions above an owner's authority"], may_not: ["Edit records or quality rules directly"]}
+- {n: 2, name: Asset accountability, roles: [OWN, IAO], may: ["Approve classification, access policy and sharing", "Approve changes to the meaning of data items", "Accept risks and approve exceptions for their assets", "Approve retention and disposal"], may_not: ["Change systems or data directly, without the custodian"]}
+- {n: 3, name: Stewardship, roles: [STW, CAT, DQL], may: ["Maintain catalogue records, glossary definitions and metadata", "Set and run quality rules within the owner's targets", "Propose changes to meaning, access or classification"], may_not: ["Change classification or approve sharing", "Change a definition's meaning without the owner"]}
+- {n: 4, name: Custody and operation, roles: [CUS], may: ["Run storage, backups and technical access controls", "Carry out approved access changes, fixes and disposal"], may_not: ["Grant access without approval", "Change what data means"]}
+- {n: 5, name: Use, roles: [USR], may: ["Use the data for the agreed purpose", "Report problems and request access or changes"], may_not: ["Change master data", "Share the data on without approval"]}
+governance_advisers:
+- {roles: [DPO], text: "Advises every layer on lawful basis, DPIAs and rights; has no change rights."}
+- {roles: [PUB], text: "Tests whether decisions are fair and understandable to the people the data describes."}
 
 # Findings from verification (version 1.2)
 findings:
@@ -1646,6 +1683,15 @@ design:
   - {id: FR-19, kind: Functional, moscow: Should, text: "Say whether each template is for business as usual, change or both, offer each template on its own, and offer logs used together as one tabbed workbook.", features: [governance, cataloguing, quality, library, data], checks: [C-38, C-28]}
   - {id: FR-20, kind: Functional, moscow: Should, text: "Give the data type, format, cardinality, controlled values and an example for every catalogue record property.", features: [knowledge, cataloguing], checks: [C-38, T-VAL]}
   - {id: FR-21, kind: Functional, moscow: Should, text: "Group each sector supplement's legislation, standards and frameworks by kind, and show how sector standards meet the catalogue standard.", features: [sectors, knowledge], checks: [C-38]}
+  # Version 1.12.0: backlog issues #18 to #22 from the Project Compass pilot.
+  - {id: FR-22, kind: Functional, moscow: Could, text: "Describe a critical data asset's entities, relationships and authoritative source, with a relationship diagram drawn from the list (issue 18).", features: [sectors, cataloguing, data], checks: [C-39]}
+  - {id: FR-23, kind: Functional, moscow: Should, text: "Record retention schedule, period and disposal action in the ownership register and catalogue record, from the organisation's own schedule (issue 19).", features: [governance, cataloguing, sectors], checks: [C-39]}
+  - {id: FR-24, kind: Functional, moscow: Should, text: "Give a data sharing agreement template covering lawful basis, legal gateway, retention and ending the sharing, and signpost the gateways (issue 20).", features: [governance, sectors], checks: [C-39]}
+  - {id: FR-25, kind: Functional, moscow: Should, text: "Show governance layers with the roles in each and what each may and may not change (issue 21).", features: [governance, data], checks: [C-39]}
+  - {id: FR-26, kind: Functional, moscow: Should, text: "Signpost health confidentiality gateways and medical device rules in the health and care supplement (issue 22).", features: [sectors], checks: [C-39]}
+  - {id: FR-27, kind: Functional, moscow: Should, text: "Give glossary terms and named frameworks, methodologies and standards a tooltip and a link where they are first mentioned on any page, outside headings and existing links.", features: [knowledge], checks: [C-40]}
+  - {id: FR-28, kind: Functional, moscow: Should, text: "List each capability's frameworks, methodologies and standards by kind on its Overview, and name the ones that apply at every step.", features: [governance, cataloguing, quality], checks: [C-40]}
+  - {id: FR-29, kind: Functional, moscow: Could, text: "Drill down from each slice of the DAMA wheel to its activities and tasks where the portal has them, and publish what a fuller drill-down and a data architecture playbook would take (BL-35, BL-36).", features: [capability-model], checks: [C-40]}
   - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services (Pages, issue forms, Discussions, Actions and releases), plus an optional Microsoft Forms route for private feedback.", features: [contact, status, whats-new], checks: [C-05, C-33, HL-01]}
   architecture:
     components:
@@ -1718,6 +1764,7 @@ applicability:
 - {id: Q-LOCAL, text: "It flows to or from councils or the devolved governments", sups: [SUP-DEV, SUP-SOC]}
 - {id: Q-CODES, text: "It relies on code lists or identifiers maintained by other organisations", sups: [SUP-REF]}
 - {id: Q-RECORDS, text: "It must be kept, archived or destroyed on a schedule", sups: [SUP-REC]}
+- {id: Q-MODEL, text: "Other systems or teams build on its structure, or it has a formal data model", sups: [SUP-ARC]}
 - {id: Q-SENSOR, text: "It is time-series or sensor data, such as environmental monitoring", sups: [SUP-ENV]}
 - {id: Q-LEARNERS, text: "It holds records about pupils or learners", sups: [SUP-EDU]}
 
@@ -1734,6 +1781,8 @@ supplements:
   - "Apply the Caldicott principles when deciding what each user of the asset needs: the minimum necessary, justified for each purpose."
   - "Record the clinical terminology and exchange standards the asset follows, such as SNOMED CT, dm+d and HL7 FHIR UK Core, in conformsTo, so the MEM record points to the sector standard."
   - "Where a health IT system holds the asset, record its clinical safety position: DCB0129 for the supplier and DCB0160 for the organisation that deploys it."
+  - "If confidential patient information is used without consent, record the legal basis that sets aside the duty of confidentiality, such as section 251 support, separately from the data protection lawful basis."
+  - "If software or AI that uses the asset has a medical purpose, check whether it is a medical device under the Medical Devices Regulations 2002, using the MHRA's guidance."
   cat:
   - {prop: legalBasis, term: "dpv:hasLegalBasis", rule: "The lawful basis and, for health data, the special category condition"}
   - {prop: optOutApplied, term: "local extension", rule: "Whether the national data opt-out has been applied to this distribution (yes, no or not applicable)"}
@@ -1760,7 +1809,7 @@ supplements:
   - "Legal basis, confidentiality position and opt-out status are recorded on the catalogue record"
   - "NHS number validity and completeness rules are in the DQAP"
   - "Quality is broken down by ethnic group where lawful"
-  refs: [RB-CALD, RB-DSPT, RB-DPA, RB-FHIRUK, RB-SNOMED, RB-DCB0129, RB-DCB0160]
+  refs: [RB-CALD, RB-DSPT, RB-DPA, RB-FHIRUK, RB-SNOMED, RB-DCB0129, RB-DCB0160, RB-S251, RB-UKMDR, RB-MHRASW]
 - id: SUP-SOC
   dd: DD-02
   title: Adult and children's social care data
@@ -1867,6 +1916,7 @@ supplements:
   - "Use a data sharing agreement for routine sharing, as the ICO code recommends, even where it is not mandatory."
   - "Name the owner on both sides of every flow, by role."
   - "If the flow uses a Part 5 power in the Digital Economy Act 2017, check the agreement is on the published register."
+  - "Record the agreement with the data sharing agreement template (T-GOV-6), and name the legal gateway in it and in the catalogue record."
   cat:
   - {prop: accessRights, term: "dcterms:accessRights", rule: "Restricted, with the agreement reference"}
   - {prop: legalGateway, term: "local extension", rule: "The statutory power or legal basis for the flow"}
@@ -1884,7 +1934,7 @@ supplements:
   - "A sharing decision record exists for each flow, with a review date"
   - "Agreement references appear on the catalogue record and in each extract"
   - "Flows were reviewed against the Data (Use and Access) Act 2025 changes"
-  refs: [RB-DUAA, RB-DEA, RB-DEAREG, RB-ICOSHARE, RB-DPA]
+  refs: [RB-DUAA, RB-DEA, RB-DEAREG, RB-ICOSHARE, RB-ICODSA, RB-DPA, RB-S251]
 - id: SUP-AI
   dd: DD-06
   title: AI-ready data
@@ -2042,7 +2092,7 @@ supplements:
   - {prop: retention, term: "local extension", rule: "Retention period and disposal action"}
   - {prop: isReplacedBy, term: "dcterms:isReplacedBy", rule: "What replaces a retired asset"}
   rules:
-  - {id: REC-01, element: Record date, rule: "Records are not older than the retention period (example: 7 years)", dimension: timeliness, check: freshness, params: {column: created_date, expected: P7Y, lag: P30D}}
+  - {id: REC-01, element: Record date, rule: "Records are not older than the retention period in your schedule (this example uses 7 years)", dimension: timeliness, check: freshness, params: {column: created_date, expected: P7Y, lag: P30D}}
   identifiers: []
   example: "Illustrative, synthetic: a case management extract kept for seven years. REC-01 flags records past retention, which the owner agrees to dispose of through the records management process."
   risks:
@@ -2051,7 +2101,31 @@ supplements:
   checklist:
   - "Retention and disposal are on the ownership register"
   - "Retired assets keep a marked catalogue record"
+  - "The retention fields in the ownership register (T-GOV-2) and catalogue record (T-CAT-2) are filled in from your organisation's schedule"
   refs: [RB-TNA, RB-TNARET, RB-TNAIM, RB-PRA]
+- id: SUP-ARC
+  dd: DD-15
+  title: Data architecture and models
+  icon: network
+  summary: For critical data assets whose structure others build on. Describes the entities, how they relate and which system is the authoritative source, and links them to the catalogue.
+  gov:
+  - "Name the authoritative source for each entity, and the role that approves changes to its structure (the design authority in a change programme)."
+  - "Keep the entity and relationship list (T-CAT-4) with the asset, and review it when the data model changes."
+  cat:
+  - {prop: conformsTo, term: "dcterms:conformsTo", rule: "Link to the published schema or data model"}
+  - {prop: dataModel, term: "local extension", rule: "Link to the entity and relationship list or diagram"}
+  rules:
+  - {id: ARC-01, element: Entity key, rule: "Each entity's key is unique", dimension: uniqueness, check: unique, params: {column: entity_id}}
+  identifiers: []
+  example: "Illustrative, synthetic: a case management asset with people, cases, appointments and outcomes. The worked entity and relationship list and the diagram drawn from it are with the entity and relationship list template (T-CAT-4); ARC-01 checks each entity key is unique."
+  risks:
+  - "Without an agreed authoritative source, two systems can each claim to be the master copy, and returns count assets twice."
+  - "Diagrams drawn by hand drift from the real model; keep the list as the source and draw the diagram from it."
+  checklist:
+  - "Every entity has a key, a description and an authoritative source"
+  - "Relationships state their cardinality"
+  - "The catalogue record links to the list or diagram"
+  refs: [RB-DCATGOV]
 - id: SUP-DEV
   dd: DD-12
   title: Devolved governments and local government

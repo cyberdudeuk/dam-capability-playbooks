@@ -12,6 +12,27 @@
   - The compass rose names and links the four portals at their bearings; tooltips on the wheel, capabilities, activity kinds, the lineage diagram, the rose and the tabs; the prototype strip moved to the top.
   - Kept up to date automatically: a daily check reads every link into the other portals, hides any that are gone, shows when each portal last changed, and opens a compass-sync issue for a person. Sister portals can trigger a rebuild with a `portal-updated` repository dispatch. The DAMA wheel itself is rebuilt from the DAM content at every build.
   - Fixed (D-034): DCAT-AP-UK moved to `dcat-ap-uk`; the compass and the DAM pages' Related links now use the new address.
+- Tooltips and standards links across the whole portal (version 1.13.0):
+  - The first time a glossary term appears in the text of any page, it links to its definition and shows a tooltip on hover or keyboard focus. Before, only six places did this. Headings, buttons, code, table headers, pills and existing links are left alone.
+  - The first time a page names one of 57 frameworks, methodologies or standards (for example DAMA-DMBOK, DCAT, the Service Standard, the Green Book or the Data Protection Act 2018), it links to the publisher's page with a tooltip saying why it matters. The labels live in `standards_map.aliases` in the content file.
+  - Each capability's Overview has a new section, "Frameworks, methodologies and standards". It groups them by kind (legislation and statutory codes, standards, frameworks, methodologies and bodies of knowledge, guidance and policy) and marks which step applies each one.
+  - Every step of the three playbooks lists the frameworks and standards that apply to it, under How to do it.
+- DAMA wheel drill-down:
+  - Each knowledge area now has a Drill down entry. Data governance, metadata management and data quality list their playbook steps, each linking to the step's tasks. Data architecture and data modelling link to their supplement.
+  - The DAMA wheel tab now publishes an assessment of what a full drill-down would take for all 11 areas, and of what would make data architecture a fourth capability playbook: what exists, what is needed, effort, copyright limits on DAMA-DMBOK, the 3.0 edition risk, phasing and risks.
+  - Verdict: after the MVP. These are new backlog items BL-35 and BL-36.
+- New check C-40, with ten deliberate breaks and four build-time rejections.
+- Fixed (D-035): the menu links to the three playbooks showed an empty tooltip on every page.
+- Fixed (D-036): the build failed before any check ran when Ubuntu's package mirror was unreachable. The browser install now retries with a 10-minute limit on each attempt, then falls back, and C-25 checks that the retry and the limits stay.
+- Backlog issues #18 to #22 from the Project Compass pilot:
+  - #18 Data architecture and models: a new sector supplement (SUP-ARC, theme DD-15) reached from the sector finder, and a worked entity and relationship list with a Mermaid relationship diagram the build draws from it, so the two cannot drift. Data architecture is a supplement, not a fourth capability, to keep the three DAM capabilities intact.
+  - #19 Retention: retention schedule, period, disposal action, review date and who approved longer retention in the ownership register (T-GOV-2); retention period and disposal action in the catalogue record (T-CAT-2). REC-01 now says the period comes from your schedule.
+  - #20 Data sharing: T-GOV-6 data sharing agreement, built from what the ICO data sharing code says an agreement should cover; SUP-SHR points to it and to section 251.
+  - #21 Governance layers: five layers, from direction to use, with the roles in each and what each may and may not change, on the Governance page's Roles tab and as `data/governance-layers.csv`. Proposed by this portal for teams to adapt.
+  - #22 Health and care: section 251 and the Health Service (Control of Patient Information) Regulations 2002, the Medical Devices Regulations 2002 and the MHRA's software guidance, with steps to record each. Further DHSC and MedTech items wait for the pilot's feedback.
+- New check C-39 with eight deliberate breaks and four build-time rejections.
+- MVP assessment against the DAMA wheel on the Research page (Backlog tab): each pilot backlog item (BL-30 to BL-34) placed on the wheel and judged for the DAM Policy rollout MVP on feasibility and usability, with a stated MVP definition and the limits of the assessment.
+- Fixed (D-034): five template fields split at unquoted commas since they were written; the build now rejects unbalanced brackets in any field.
 - From the Project Compass pilot session (11 November 2026), built now:
   - Templates: names and work email addresses may be kept in a team's own working copies; only what is published, on GitHub or anywhere public, must name roles alone. The old line read as banning named people from a team's own RACI.
   - Every template says whether it is for business as usual, change programmes or both, and the Library can filter by it. Each template downloads on its own as a CSV header row (`data/templates/`), as well as all together.
