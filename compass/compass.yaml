@@ -2,10 +2,10 @@
 # Source for compass/index.html, built by tools/compass.py with the DAM playbooks build. Edit here, never the built page.
 # Every fact about a portal is that portal's own (README, theory of change or personas, read 5 November 2026). Links only; no copied text.
 meta:
-  title: Estate compass
+  title: Data portals compass
   subtitle: Find your bearing across four portals for data in the public sector
-  version: 1.1.1
-  as_of: '2026-11-06'
+  version: 1.3.0
+  as_of: '2026-11-12'
   url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
   host_note: Hosted in the DAM capability playbooks repository for now, but it belongs to none of the four portals and favours none.
   contact: https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html
@@ -112,7 +112,7 @@ portals:
   name: DCAT Application Profile for the UK
   short: DCAT-AP-UK
   data_as_of: '2026-11-06'
-  url: https://cyberdudeuk.github.io/dcat-uk-ap/
+  url: https://cyberdudeuk.github.io/dcat-ap-uk/
   question: How do we describe it so others can find it?
   purpose: A proposed UK application profile of DCAT 3, aligned with DCAT-AP 3.0.1, that evolves the UK Cross-Government Metadata Exchange Model (xGov MEM) and resolves its backlog.
   mission: Every catalogue describes UK public sector data the same way, so it can be found, judged and shared across catalogues and the National Data Library.
@@ -302,3 +302,59 @@ links_today:
 - [ap, dam, "Estate page and xref.json; the critical data asset rules cite the DAM Policy (from DCAT-AP-UK 1.0.0-rc.1)"]
 - [ap, dqc, "Estate page; records link quality reports through a quality annotation (from DCAT-AP-UK 1.0.0-rc.1)"]
 - [ap, cat, "Estate page; the organisations list is reused from the catalogue (from DCAT-AP-UK 1.0.0-rc.1)"]
+
+# Compass 1.3: what this is, in plain words, and why it is called what it is (assessed 12 November 2026)
+about:
+  what: A free guide that helps you find the right page across four public websites about looking after data in the UK public sector, in the right order for your situation.
+  estate: '"The estate" means these four websites taken together. Each is run separately, for a different purpose. This guide sits above them and favours none.'
+  for_whom: Anyone in the public sector who works with data, from senior leaders to analysts, engineers and buyers. No knowledge of data management, the DAM Policy or GitHub is needed.
+  aims:
+  - Get you to the right page first time, instead of searching four websites
+  - Put the steps in a sensible order, starting with what is required
+  - Show how a task in one website connects to the others, so nothing is missed or done twice
+  - Let you build and share your own list of activities
+  not:
+  - It is not official government guidance and does not replace GOV.UK
+  - It does not hold, collect or send any of your data
+  - It does not judge or rank the four websites
+  name:
+    current: Data portals compass
+    previous: Estate compass
+    why: '"Estate" is technical shorthand that many readers do not know, and it can be read as property or land. "Data portals" says what the guide covers. "Compass" stays, because the guide still works like one: four directions, one for each website, with you at the centre. The web address has not changed.'
+
+# Words used on this page, in plain English. Each has other names people use (the thesaurus), a broader term where useful, and related terms.
+glossary:
+- {id: portal, term: Portal, def: "A website that brings together guidance, tools and information on one subject, with its own front page and navigation.", also: [website, hub, site], related: [estate]}
+- {id: estate, term: Estate, def: "All the websites, systems, data or code that an organisation or programme looks after, taken together. On this page it means the four portals.", also: ["data estate", "code estate", "IT estate", "landscape"], related: [portal]}
+- {id: compass, term: Compass and bearing, def: "The guide's picture of the four portals as four directions. Your bearing is the portal the guide suggests you start from.", also: [direction, "starting point"], related: [wayfinder, route]}
+- {id: wayfinder, term: Wayfinder, def: "The four questions under Find your bearing. Your answers produce a suggested route.", also: [questionnaire, "route finder"], related: [route, pathway]}
+- {id: route, term: Route, def: "An ordered list of steps across the portals that the guide suggests for your situation.", also: [journey, "suggested path"], related: [wayfinder, pathway]}
+- {id: pathway, term: Pathway, def: "Your own ordered list of activities, which you build yourself on the My pathway tab. It is kept only in the page address.", also: ["my pathway", "personal plan", "to-do list"], related: [route, activity]}
+- {id: dam, term: DAM Policy, def: "The Data Asset Management Policy: UK government's policy on how departments and arm's-length bodies identify, own, describe and manage the quality of their most important data.", also: ["data asset management policy"], related: [cda, owner]}
+- {id: cda, term: Critical data asset, def: "A set of data that an organisation or the public depends on, and so must have a named owner, a catalogue record and a data quality plan under the DAM Policy.", also: [CDA, "critical data"], broader: "Data asset", related: [dam, catalogue]}
+- {id: owner, term: Data owner, def: "The senior person accountable for a data asset: who uses it, how good it must be and who can see it.", also: ["information asset owner", IAO], related: [steward, raci]}
+- {id: steward, term: Data steward, def: "The person who looks after a data asset day to day for its owner: its definitions, quality and records.", also: ["data custodian (sometimes)"], related: [owner]}
+- {id: catalogue, term: Data catalogue, def: "A searchable list of an organisation's data assets, with a description of each so people can find and judge them.", also: ["data inventory", "information asset register"], related: [metadata, dcat]}
+- {id: metadata, term: Metadata, def: "Information that describes data, such as its title, owner, how often it is updated and who can use it.", also: ["data about data", "catalogue record"], related: [catalogue, dcat]}
+- {id: dq, term: Data quality, def: "How fit data is for the purpose it is used for: for example whether it is complete, accurate, consistent and up to date.", also: ["fitness for use"], related: [dqap]}
+- {id: dqap, term: Data quality action plan, def: "A plan for one data asset that sets out how good it needs to be, how that is measured and what is being done to improve it.", also: [DQAP], broader: "Data quality", related: [dq, dam]}
+- {id: dama, term: DAMA wheel, def: "A diagram by DAMA International, a professional body for data management, that shows the areas of data management around data governance at the centre.", also: ["DAMA-DMBOK wheel", "data management wheel"], related: [dmbok, area]}
+- {id: dmbok, term: DMBOK, def: "The Data Management Body of Knowledge: DAMA International's guide to data management practice, organised into knowledge areas.", also: ["DAMA-DMBOK"], related: [dama, area]}
+- {id: area, term: Data management area, def: "One of the parts of data management on the DAMA wheel, such as data quality or metadata management.", also: ["knowledge area", "discipline"], broader: "Data management", related: [dama, capability]}
+- {id: governance, term: Data governance, def: "Deciding who is responsible for data, who can make which decisions about it, and checking that those decisions are followed.", also: ["data stewardship (broadly)"], related: [owner, area]}
+- {id: capability, term: Capability, def: "Something an organisation needs to be able to do well to manage its data, such as naming owners or measuring quality. The DAM playbooks list 32.", also: ["capability area", "competence"], related: [activity, area]}
+- {id: activity, term: Activity, def: "A piece of work that builds a capability, such as a stage of a playbook recipe. Each activity is broken into steps.", also: [task, "work item"], broader: "Capability", related: [step, recipe]}
+- {id: step, term: Step, def: "The smallest unit of work on this page: one thing to do, as written in the DAM playbooks.", also: [action, "to-do"], broader: "Activity", related: [activity]}
+- {id: recipe, term: Playbook recipe, def: "A repeatable method in the DAM playbooks, made of stages done in order, such as Mandate, Frame, Assign, Operate and Assure for data governance.", also: [method, "playbook stage"], related: [activity]}
+- {id: maturity, term: Maturity strand, def: "A scale from level 1 to level 5 used to judge how well an organisation does one part of data management today.", also: ["maturity level", "maturity model"], related: [capability]}
+- {id: lens, term: Perspective, def: "What data management means when seen from another profession, such as cyber security, technology or commercial.", also: [lens, viewpoint], related: [capability]}
+- {id: raci, term: RACI, def: "Who is Responsible for doing a task, Accountable for it, Consulted about it and Informed of it.", also: ["responsibility matrix"], related: [owner]}
+- {id: lineage, term: Lineage, def: "Where something comes from and what it leads to. On this page, how a data management area leads to capabilities, activities and pages.", also: ["data lineage", provenance], related: [traceability]}
+- {id: traceability, term: Traceability, def: "Being able to follow a link from a requirement to the work that meets it and back again.", also: ["audit trail"], related: [lineage]}
+- {id: coverage, term: Coverage, def: "How much of a capability the DAM playbooks already explain: covered, partly covered, or new (guidance still to come).", also: [completeness], related: [capability]}
+- {id: dcat, term: DCAT, def: "The Data Catalog Vocabulary: a W3C web standard for describing datasets so catalogues can share records.", also: ["Data Catalog Vocabulary"], related: [profile, metadata]}
+- {id: profile, term: Application profile, def: "A set of rules for using a standard like DCAT in one country or sector: which properties to use, which are required and which lists of values apply.", also: [AP, "metadata profile"], related: [dcat, mem]}
+- {id: mem, term: xGov MEM, def: "The UK Cross-Government Metadata Exchange Model, the endorsed set of properties for describing government data. DCAT-AP-UK proposes how to evolve it.", also: ["Metadata Exchange Model"], related: [profile, metadata]}
+- {id: github, term: GitHub, def: "A website where people store, share and work together on code and documents. Two of the portals are built on it; none needs you to code.", also: [repository, repo], related: [code]}
+- {id: code, term: Public code, def: "Software that public bodies publish openly so others can read and reuse it.", also: ["open source code", "open code"], related: [github]}
+- {id: ogl, term: Open Government Licence, def: "A licence that lets anyone copy, adapt and reuse public sector information, as long as they say where it came from.", also: [OGL], related: []}

@@ -905,6 +905,37 @@ def c35_estate_compass(site, repo, pages):
     urls += [bases['dam'] + o['dam'] for o in d['questions'][1]['options']]
     urls += [u for a in d['areas'] for k in ('dam', 'dq', 'cat', 'ap') for _, u in a.get(k, [])]
     urls += [bases[p['id']] + p['start']['path'] for p in d['portals']]
+    # version 1.2 (compass): the DAMA wheel drill-down. Every activity, capability and requirement link resolves, every capability sits on
+    # the wheel, every activity belongs to a capability, and the drill-down, lineage, traceability table and pathway are on the page.
+    # D-035: writing the address while the page loads makes the browser scroll to and focus a tab panel on arrival
+    if "document.readyState==='loading'" not in html:
+        errs.append('compass: the address can be written while the page is loading (D-035)')
+    rose_links = re.findall(r'<a href="([^"]+)" class="rose-link"', html)
+    if sorted(rose_links) != sorted(bases.values()):
+        errs.append('compass: the compass rose must label and link each of the four portals at its bearing')
+    w = d.get('wheel')
+    if not w:
+        errs.append('compass: no DAMA wheel data')
+    else:
+        for need in ('id="wheel"', 'id="drill"', 'id="graph"', 'id="mx"', 'id="pathway"', 'id="crumbs"'):
+            if need not in html:
+                errs.append(f'compass: DAMA wheel part {need} missing')
+        area_ids = {a['id'] for a in w['areas']}
+        for cid, cap in w['caps'].items():
+            if not cap['areas'] or not set(cap['areas']) <= area_ids:
+                errs.append(f'compass: capability {cid} is not on the DAMA wheel')
+            urls += [cap['url'], cap['page']]
+        acts = {x['id'] for x in w['acts']}
+        for x in w['acts']:
+            if not x['steps'] or not x['caps'] or any(c not in w['caps'] for c in x['caps']):
+                errs.append(f'compass: activity {x["id"]} has no steps or an unknown capability')
+            if not x['url'].startswith(bases['dam']):
+                errs.append(f'compass: activity {x["id"]} is not located in the DAM playbooks')
+            urls += [x['url']] + [u for _, u in x.get('reqs', [])]
+        for cid, cap in w['caps'].items():
+            if any(a not in acts for a in cap['acts']):
+                errs.append(f'compass: capability {cid} lists an unknown activity')
+        urls += [a['wheel'] for a in w['areas']] + [u for a in w['areas'] for k in ('dq', 'cat', 'ap') for _, u in a[k]]
     for o in d['questions'][0]['options']:
         if o['id'] not in d['routes']:
             errs.append(f'compass: situation {o["id"]} has no route')

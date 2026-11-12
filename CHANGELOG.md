@@ -1,6 +1,17 @@
 # Changelog
 
 ## Unreleased
+- Data portals compass 1.3 (formerly the estate compass):
+  - Renamed after an assessment shown on the page: "estate" is shorthand many readers do not know; "data portals" says what it covers, and the compass picture stays. The address is unchanged.
+  - Says plainly what it is, who it is for, what it helps you do and what it is not, at the top of the page, without repeating the masthead.
+  - Words explained: 34 terms in plain English, each with other names (thesaurus), a broader term and related terms, searchable and A to Z. Dotted terms on the page show their meaning on hover or keyboard focus and open their entry.
+  - Fixed (D-035): opening the page jumped to the first tab and outlined it, because the address was written while the page loaded.
+- Estate compass 1.2:
+  - The DAMA wheel: Data governance at the centre, selected when the page opens, with the ten other knowledge areas around it. Select an area to drill down to its capabilities, the activities under each (playbook recipe stages, change items, perspectives and maturity strands) and their individual steps, with where each is in the DAM playbooks and the other three portals.
+  - A lineage diagram for whatever is selected, a traceability table of every activity and gap (filter, search, CSV), a search box across areas, capabilities, activities and steps, and My pathway: your own ordered list of activities, started from your role's recipe stages, kept in the page address, with copy link, download and print.
+  - The compass rose names and links the four portals at their bearings; tooltips on the wheel, capabilities, activity kinds, the lineage diagram, the rose and the tabs; the prototype strip moved to the top.
+  - Kept up to date automatically: a daily check reads every link into the other portals, hides any that are gone, shows when each portal last changed, and opens a compass-sync issue for a person. Sister portals can trigger a rebuild with a `portal-updated` repository dispatch. The DAMA wheel itself is rebuilt from the DAM content at every build.
+  - Fixed (D-034): DCAT-AP-UK moved to `dcat-ap-uk`; the compass and the DAM pages' Related links now use the new address.
 - From the Project Compass pilot session (11 November 2026), built now:
   - Templates: names and work email addresses may be kept in a team's own working copies; only what is published, on GitHub or anywhere public, must name roles alone. The old line read as banning named people from a team's own RACI.
   - Every template says whether it is for business as usual, change programmes or both, and the Library can filter by it. Each template downloads on its own as a CSV header row (`data/templates/`), as well as all together.

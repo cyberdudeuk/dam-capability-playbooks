@@ -48,6 +48,7 @@ BREAKS = {
     'navclip': ('b14_menus_usable', ""),
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'tours': ('b16_tours_and_share', ""),
+    'compasswheel': ('b17_compass', "var w=document.getElementById('wheel');if(w){w.replaceWith(w.cloneNode(true));}"),
     'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
     'ask': ('b18_ask_and_copy', "var f=document.querySelector('[data-ask]');if(f){f.replaceWith(f.cloneNode(true));}"),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
@@ -374,6 +375,54 @@ def run(site, axe_path, brk=None, pages=None):
                 pg7.wait_for_timeout(200)
                 if pg7.locator('#route ol.steps > li').count() == 0 or pg7.locator('.flagnote').count() == 0:
                     fail('b17_compass', 'a shared link does not restore the route, or optional policy steps are not marked for an organisation outside the policy')
+                # D-035: arriving with no address fragment stays at the top of the page, with nothing written to the address
+                pg7.goto(f'{base}/compass/index.html')
+                pg7.wait_for_timeout(200)
+                st = pg7.evaluate('[scrollY, location.hash]')
+                if st[0] != 0 or st[1]:
+                    fail('b17_compass', f'the page jumps on arrival (scroll {st[0]}, address {st[1]})')
+                # compass 1.3: dotted terms explain themselves and open their entry in Words explained
+                pg7.click('#tab-lineage')
+                pg7.hover('a.term[data-term="dama"]')
+                pg7.wait_for_timeout(150)
+                if pg7.is_hidden('#tip') or 'DAMA' not in pg7.inner_text('#tip'):
+                    fail('b17_compass', 'a term has no tooltip')
+                pg7.click('a.term[data-term="dama"]')
+                pg7.wait_for_timeout(200)
+                if pg7.is_hidden('#glossary') or not pg7.locator('#term-dama').count():
+                    fail('b17_compass', 'a term does not open its entry in Words explained')
+                # compass 1.2: the DAMA wheel drills down from area to capability to activity, by mouse and keyboard; the pathway is kept in the address
+                pg7.goto(f'{base}/compass/index.html#lineage')
+                pg7.reload()
+                prep(pg7)
+                pg7.wait_for_timeout(150)
+                pg7.click('#wheel [data-area="DM-DQ"]', timeout=2000)
+                pg7.wait_for_timeout(150)
+                if 'Data quality' not in pg7.inner_text('#crumbs'):
+                    fail('b17_compass', 'selecting an area on the DAMA wheel does not drill down to it')
+                pg7.focus('#wheel [data-area="DM-META"]')
+                pg7.keyboard.press('Enter')
+                pg7.wait_for_timeout(150)
+                if 'Metadata' not in pg7.inner_text('#crumbs'):
+                    fail('b17_compass', 'the DAMA wheel cannot be used with the keyboard')
+                pg7.click('#drill [data-go^="cap:"] >> nth=0', timeout=2000)
+                pg7.wait_for_timeout(150)
+                if pg7.locator('#drill details.act').count() == 0 and pg7.locator('#drill .gapnote').count() == 0:
+                    fail('b17_compass', 'a capability shows neither its activities nor a gap')
+                pg7.goto(f'{base}/compass/index.html#lineage//cap:CR-08')
+                pg7.reload()
+                pg7.wait_for_timeout(200)
+                pg7.locator('#drill details.act summary').first.click()
+                pg7.locator('#drill details[open] [data-pw]').first.click()
+                pg7.wait_for_timeout(100)
+                h = pg7.evaluate('location.hash')
+                if '/a.' not in h:
+                    fail('b17_compass', f'the pathway is not kept in the address: {h}')
+                pg7.goto(f'{base}/compass/index.html#pathway///{h.split("/")[-1]}')
+                pg7.reload()
+                pg7.wait_for_timeout(200)
+                if pg7.locator('#pw .pwl > li').count() != 1:
+                    fail('b17_compass', 'a shared pathway link does not restore the pathway')
             except Exception as e:
                 fail('b17_compass', f'compass could not be used: {str(e).splitlines()[0]}')
             ctx7.close()
