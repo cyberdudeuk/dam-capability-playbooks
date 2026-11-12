@@ -798,6 +798,10 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'compass' / 'index.html', "const dn=$('#dnav');", "const dn=$('#dnav');$('#dnav').innerHTML='';")
         self.fails('c35_estate_compass')
 
+    def test_c35_menu_link_address_from_page_text(self):
+        edit(self.s / 'compass' / 'index.html', "a.href=HREF[tab]||'#start';", "a.href='#'+tab;")
+        self.fails('c35_estate_compass')
+
     def test_c35_compass_without_menu(self):
         edit(self.s / 'compass' / 'index.html', 'id="drawer"', 'id="drawr"')
         self.fails('c35_estate_compass')

@@ -952,6 +952,8 @@ def c35_estate_compass(site, repo, pages):
     # CodeQL alerts 44 and 45: menu items were built as HTML from text read off the page; they must be built as DOM nodes
     if re.search(r"\$\('#(?:dnav|wn)'\)\.innerHTML|insertAdjacentHTML", html):
         errs.append('compass: the menu is built from page text as HTML; build it with DOM nodes (CodeQL 44, 45)')
+    if "a.href='#'+" in html:
+        errs.append('compass: a menu link address is built from page text; use the fixed address list (CodeQL 46)')
     wn = (d.get('whats_new') or {}).get('items', [])
     if not wn or any(x.get('flag') not in ('new', 'updated') for x in wn):
         errs.append('compass: the menu must flag what is new or updated')

@@ -503,7 +503,8 @@ const SUBTAB={};document.querySelectorAll('.subpanel').forEach(s=>{SUBTAB[s.id]=
  Object.entries(best).forEach(([k,f])=>{TL[k].appendChild(flagEl(f));});
  $('#wn-date').textContent=W.as_of?'('+W.as_of+')':'';
  const mk=(tag,txt)=>{const e=document.createElement(tag);if(txt!=null)e.textContent=txt;return e;};
- const link=(tab,txt,sub)=>{const a=mk('a',txt);a.href='#'+tab;a.dataset.tabgo=tab;if(sub)a.dataset.sub=sub;return a;};
+ const HREF={start:'#start',roles:'#roles',bearing:'#bearing',lineage:'#lineage',directory:'#directory',pathway:'#pathway',glossary:'#glossary'};
+ const link=(tab,txt,sub)=>{const a=mk('a',txt);a.href=HREF[tab]||'#start';a.dataset.tabgo=tab;if(sub)a.dataset.sub=sub;return a;};
  const wn=$('#wn');W.items.forEach(x=>{const li=mk('li');li.appendChild(flagEl(x.flag));li.append(' ');li.appendChild(TL[x.tab]?link(x.tab,x.label):mk('span',x.label));wn.appendChild(li);});
  /* every tab and sub-tab id comes from the page's own known set, never from free text (C-35) */
  const SUBIDS=new Set(Object.keys(SUBTAB));const dn=$('#dnav');
