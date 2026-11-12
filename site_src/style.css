@@ -677,3 +677,10 @@ ol.flow li:not(:last-child)::after{content:"\2192";position:absolute;right:-1.3r
 /* Version 1.12.0: DAMA wheel position in the MVP assessment */
 .pill.dama-core { font-weight: 700; }
 .pill.dama-adj { border-style: dashed; }
+/* version 1.13.0: standards links, standards by kind and the DAMA drill-down */
+a.std{text-decoration-style:dotted}
+.std-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(16em,1fr));gap:1rem;margin:1rem 0}
+.std-grid .panel h3{margin-top:0}
+.std-grid .link-list li{margin-bottom:.4rem}
+.std-refs{font-size:.95em}
+.drill-steps{margin:.25rem 0 .5rem;padding-left:1.4em}

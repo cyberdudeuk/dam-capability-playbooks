@@ -382,6 +382,44 @@ def validate_frameworks(d, errs, src, roles):
         for r in d['dama']['im_refs']:
             if r not in rb: errs.append(f"dama: unknown rulebook entry {r}")
         for k in names - {a['dmbok'] for a in d['dama']['areas']}: errs.append(f"capability model uses knowledge area '{k}' that is not on the wheel")
+        aids = {a['id'] for a in d['dama']['areas']}
+        for cid, a in d['dama'].get('cap_area', {}).items():
+            if cid not in {c['id'] for c in d['capabilities']} or a not in aids: errs.append(f"dama.cap_area: bad mapping {cid}: {a}")
+        sups = {x['id'] for x in d.get('supplements', [])}
+        for sid, al in d['dama'].get('supplement_area', {}).items():
+            if sid not in sups: errs.append(f"dama.supplement_area: unknown supplement {sid}")
+            for a in al:
+                if a not in aids: errs.append(f"dama.supplement_area: unknown area {a}")
+        dd = d['dama'].get('drilldown')
+        if dd:
+            if [x['n'] for x in dd['levels']] != list(range(1, len(dd['levels']) + 1)): errs.append('dama.drilldown: levels must be numbered 1..n')
+            for x in dd['arc']['parts']:
+                if x['effort'] not in ('S', 'M', 'L'): errs.append(f"dama.drilldown: {x['part']}: effort must be S, M or L")
+            bl = {x['id'] for x in d.get('research', {}).get('backlog', [])}
+            for b in dd.get('backlog', []):
+                if b not in bl: errs.append(f"dama.drilldown: unknown backlog item {b}")
+    sm = d.get('standards_map')
+    if sm:
+        kinds = {k['id'] for k in sm['kinds']}
+        if sm['default_kind'] not in kinds: errs.append('standards_map: unknown default kind')
+        for g, k in sm['group_kind'].items():
+            if k not in kinds: errs.append(f"standards_map: group {g}: unknown kind {k}")
+        for r, k in sm['kind_of'].items():
+            if r not in rb: errs.append(f"standards_map.kind_of: unknown rulebook entry {r}")
+            if k not in kinds: errs.append(f"standards_map.kind_of: {r}: unknown kind {k}")
+        seen = {}
+        for r, labels in sm['aliases'].items():
+            if r not in rb: errs.append(f"standards_map.aliases: unknown rulebook entry {r}")
+            for lb in labels:
+                if len(lb) < 4: errs.append(f"standards_map.aliases: {r}: label '{lb}' is too short to link safely")
+                if lb in seen: errs.append(f"standards_map.aliases: '{lb}' is used by {seen[lb]} and {r}")
+                seen[lb] = r
+        stage_keys = {f"{c['id']}.{st['id']}" for c in d['capabilities'] for st in c['stages']}
+        for k, refs in sm['stages'].items():
+            if k not in stage_keys: errs.append(f"standards_map.stages: unknown step {k}")
+            for r in refs:
+                if r not in rb: errs.append(f"standards_map.stages: {k}: unknown rulebook entry {r}")
+        for k in stage_keys - set(sm['stages']): errs.append(f"standards_map.stages: step {k} has no standards")
     for r in d.get('change', {}).get('programme_roles', {}).get('rows', []):
         if r['role'] not in roles: errs.append(f"programme role {r['role']}: unknown role")
         for w in r['works_with']:
@@ -553,7 +591,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 40)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 41)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -795,6 +833,100 @@ class Site:
                     break
         return out
 
+    TIP_SKIP_TAGS = {'a', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre', 'script', 'style', 'svg', 'button', 'label', 'option', 'select',
+                     'textarea', 'summary', 'th', 'caption', 'title', 'kbd', 'dt', 'nav', 'template', 'legend'}
+    TIP_SKIP_CLASSES = {'pill', 'chip', 'visually-hidden', 'tag', 'count', 'flag', 'hint', 'caption', 'sbs-num', 'easy'}
+    VOID_TAGS = {'br', 'img', 'input', 'meta', 'hr', 'link', 'wbr', 'source', 'col', 'area', 'base', 'embed', 'track', 'path', 'circle', 'rect', 'line'}
+
+    def nav_tip(self, key):
+        """D-035: the three playbooks had no page description, so their menu tooltips were empty. Fall back to the capability's purpose."""
+        page_cap = {v: k for k, v in CAP_PAGE.items()}
+        if PAGE_DESC.get(key):
+            return PAGE_DESC[key]
+        if key in page_cap:
+            return self.caps[page_cap[key]]['purpose']
+        return self.m['subtitle']
+
+    def rb_kind(self, rid):
+        sm = self.d['standards_map']
+        return sm['kind_of'].get(rid) or sm['group_kind'].get(self.rb[rid]['group']) or sm['default_kind']
+
+    def _tip_labels(self, key):
+        """Version 1.13.0: the labels the page enricher looks for. Glossary terms (any case) and named frameworks,
+        methodologies and standards (exact case), longest first so 'Data Protection Act 2018' wins over a shorter label."""
+        if getattr(self, '_tips', None) is None:
+            skip = {'purpose', 'return', 'role', 'recipe', 'metadata', 'raci', 'exception', 'charter'}
+            con = {}
+            for c in self.d['concepts']:
+                if c['id'] in skip:
+                    continue
+                for lb in [c['term']] + list(c.get('alt') or []):
+                    if len(lb) >= 4:
+                        con[E(lb).lower()] = c
+            std = {}
+            for rid, labels in self.d['standards_map']['aliases'].items():
+                for lb in labels:
+                    std[E(lb)] = rid
+            alt = lambda keys: '|'.join(re.escape(k) for k in sorted(keys, key=len, reverse=True))
+            self._tips = (con, re.compile(r'(?<![\w-])(' + alt(con) + r')(?![\w-])', re.I),
+                          std, re.compile(r'(?<![\w-])(' + alt(std) + r')(?![\w-])'))
+        return self._tips
+
+    def enrich(self, body, key):
+        """Version 1.13.0: tooltips and standards links across the whole portal.
+        In body text only (never in headings, links, buttons, code, table headers, pills or the navigation), link the first
+        mention on each page of every glossary term to its definition, and of every named framework, methodology or standard
+        to its publisher, each with a tooltip. Anything the page already links is left alone."""
+        con, crx, std, srx = self._tip_labels(key)
+        used_c = set(re.findall(r'href="knowledge\.html#c-([\w-]+)"', body))
+        if key == 'knowledge':
+            used_c |= {c['id'] for c in self.d['concepts']}
+        used_s = {rid for rid in self.d['standards_map']['aliases'] if f'href="{E(self.rb[rid]["url"])}"' in body}
+        out, stack = [], []
+        for tok in re.split(r'(<[^>]*>)', body):
+            if tok.startswith('<'):
+                m = re.match(r'<(/?)([a-zA-Z][\w-]*)', tok)
+                if m:
+                    name = m.group(2).lower()
+                    if m.group(1):
+                        if any(n == name for n, _ in stack):
+                            while stack and stack.pop()[0] != name:
+                                pass
+                    elif name not in self.VOID_TAGS and not tok.endswith('/>'):
+                        cls = re.search(r'\bclass="([^"]*)"', tok)
+                        skip = name in self.TIP_SKIP_TAGS or bool(cls and self.TIP_SKIP_CLASSES & set(cls.group(1).split()))
+                        stack.append((name, skip))
+                out.append(tok)
+                continue
+            if not tok.strip() or any(sk for _, sk in stack):
+                out.append(tok)
+                continue
+            cands = []
+            for mm in crx.finditer(tok):
+                c = con[mm.group(1).lower()]
+                cands.append((mm.start(), -len(mm.group(1)), 'c', c['id'], mm))
+            for mm in srx.finditer(tok):
+                cands.append((mm.start(), -len(mm.group(1)), 's', std[mm.group(1)], mm))
+            cands.sort(key=lambda x: (x[0], x[1]))
+            pieces, pos = [], 0
+            for start, _, kind, ident, mm in cands:
+                if start < pos or (ident in (used_c if kind == 'c' else used_s)):
+                    continue
+                if kind == 'c':
+                    c = next(x for x in self.d['concepts'] if x['id'] == ident)
+                    a = f'<a class="term" href="knowledge.html#c-{ident}" data-tip="{E(c["term"] + ": " + c["def"])}">{mm.group(1)}</a>'
+                    used_c.add(ident)
+                else:
+                    x = self.rb[ident]
+                    a = f'<a class="std" href="{E(x["url"])}" data-tip="{E(x["title"] + " (" + x["publisher"] + "): " + x["why"])}">{mm.group(1)}</a>'
+                    used_s.add(ident)
+                pieces.append(tok[pos:start])
+                pieces.append(a)
+                pos = mm.end()
+            pieces.append(tok[pos:])
+            out.append(''.join(pieces))
+        return ''.join(out)
+
     @staticmethod
     def _inside_tag(s, pos):
         lt, gt = s.rfind('<', 0, pos), s.rfind('>', 0, pos)
@@ -846,6 +978,7 @@ class Site:
     # -- page shell ------------------------------------------------------------
     def page(self, key, title, body, drawer=None, desc='', crumbs=None, jsonld=None, extra_json=None):
         m = self.m
+        body = self.enrich(body, key)
         self.reg[key] = (title, drawer or [])
         tours = [t for t in self.d.get('tours', []) if t['page'] == key]
         if tours:
@@ -865,7 +998,7 @@ class Site:
                 done.add(grp)
                 members = [x for x in NAV if x[0] in NAV_GROUPS[grp]]
                 cur = key in NAV_GROUPS[grp]
-                sub = ''.join(f'<li><a href="{mk}.html" data-tip="{E(PAGE_DESC.get(mk, ""))}"{" aria-current=" + chr(34) + "page" + chr(34) if mk == key else ""}>{icon(mic)}<span>{E(ml)}</span></a></li>' for mk, ml, mic in members)
+                sub = ''.join(f'<li><a href="{mk}.html" data-tip="{E(self.nav_tip(mk))}"{" aria-current=" + chr(34) + "page" + chr(34) if mk == key else ""}>{icon(mic)}<span>{E(ml)}</span></a></li>' for mk, ml, mic in members)
                 nav += (f'<li class="group{" current" if cur else ""}"><button type="button" aria-expanded="false">{icon(NAV_GROUP_ICONS[grp])}<span>{E(grp)}</span>{icon("chevron-down")}</button>'
                         f'<ul aria-label="{E(grp)}">{sub}</ul></li>')
             else:
@@ -1461,6 +1594,7 @@ class Site:
 <div class="cols"><div><h4>{icon("list-ordered")} Do this</h4><ol class="do">{"".join(f"<li>{self.gloss(s, used)}</li>" for s in st["steps"])}</ol></div>
 <div><h4>{icon("download")} You will have</h4>{ul(st["outputs"], cls="ticks")}<h4>{icon("list-checks")} Check before you move on</h4>{ul(st["checklist"], cls="checks")}</div></div>
 <p class="meets">{icon("landmark")} Meets: {self.req_links(st.get("reqs", []))}</p>
+<p class="meets std-refs">{icon("book-marked")} Frameworks and standards for this step: {"; ".join(self.rb_link(r) for r in self.d["standards_map"]["stages"][pid])}</p>
 {f'<div class="tip">{icon("lightbulb")}<p><strong>Tip.</strong> {E(st["tip"])}</p></div>' if st.get("tip") else ""}
 </details>
 {mark_done(pid)}
@@ -1506,6 +1640,7 @@ class Site:
                             f'<h3>Six dimensions</h3><ul class="icon-list">{dims}</ul><h2 id="tools">{icon("wrench")} Tools</h2><p>The Data Quality Commons is the authoritative home for these tools{prov("P")}. Files you check stay on your device.</p><ul class="link-list">{tools}</ul>')
             extra_drawer = [{'id': 'principles', 'label': 'Principles and dimensions', 'icon': 'compass', 'count': 11},
                             {'id': 'tools', 'label': 'Tools', 'icon': 'wrench', 'count': len(c['tools'])}]
+        std_html, std_n = self.cap_standards(cid)
         before = ul(c['before_you_start'], cls='checks')
         get = ul(c['you_get'], cls='ticks')
         tabs = [
@@ -1513,7 +1648,7 @@ class Site:
 <div class="cols"><div class="panel"><h3>{icon("clipboard-list")} Before you start</h3>{before}</div><div class="panel"><h3>{icon("award")} What you will have at the end</h3>{get}</div></div>
 <h2 id="policy">{icon("landmark")} What the policy requires</h2>{table(f"t-req-{cid}", f"Policy requirements met by {c['name'].lower()}", ["ID", "Strength", "Requirement"], req_rows)}
 <h2 id="links">{icon("workflow")} How it joins the other two</h2><ul class="hand-offs">{il_html}</ul>
-<h2 id="learn">{icon("graduation-cap")} Learn it</h2><ul class="link-list">{mod_html}</ul>'''),
+<h2 id="learn">{icon("graduation-cap")} Learn it</h2><ul class="link-list">{mod_html}</ul>{std_html}'''),
             ('method', 'Step by step', f'<h2 id="stages">{icon("route")} {E(c["method_name"])}{prov(c["method_prov"])}</h2><p>{E(c["method_intro"])}</p>{self.sector_callout(cid)}{self.step_by_step(c)}{extra_method}'),
             ('roles', 'Roles', f'<h2 id="role-list">{icon("users")} Roles</h2><ul class="icon-list">{roles}</ul><h2 id="raci">{icon("list-checks")} Who does what</h2>{self.raci_table(c, "t-raci-" + cid)}' + (self.layers_html() if cid == 'gov' else '')),
             ('templates', 'Templates', f'<h2 id="template-list">{icon("file-text")} Templates</h2><p>Blank structures to copy into your own tools.</p>{self.template_privacy()}{self.template_modes_note()}{tmpl}'),
@@ -1534,7 +1669,8 @@ class Site:
             {'label': 'Overview', 'icon': 'info', 'items': [{'id': 'why', 'label': 'Why it matters', 'icon': 'target'},
                                                              {'id': 'policy', 'label': 'Policy requirements', 'icon': 'landmark', 'count': len(reqs)},
                                                              {'id': 'links', 'label': 'Joins with the others', 'icon': 'workflow', 'count': len(ils)},
-                                                             {'id': 'learn', 'label': 'Learn it', 'icon': 'graduation-cap', 'count': len(mods)}]},
+                                                             {'id': 'learn', 'label': 'Learn it', 'icon': 'graduation-cap', 'count': len(mods)},
+                                                             {'id': 'frameworks-standards', 'label': 'Frameworks and standards', 'icon': 'book-marked', 'count': std_n, 'new': True}]},
             {'label': 'Step by step', 'icon': CAP_ICONS[cid], 'items': [{'id': f'{cid}-{st["id"]}', 'label': f'{st["n"]}. {st["name"]}', 'icon': STAGE_ICONS[st['id']]} for st in c['stages']] + extra_drawer},
             {'label': 'Using it', 'icon': 'users', 'items': [{'id': 'role-list', 'label': 'Roles', 'icon': 'users', 'count': len(c['roles'])},
                                                               {'id': 'raci', 'label': 'Who does what', 'icon': 'list-checks'},
@@ -1546,6 +1682,34 @@ class Site:
         ]
         return self.page(p, c['name'], body, drawer, crumbs=[c['name']], desc=c['purpose'],
                          jsonld={'@type': ['WebPage', 'HowTo'], 'name': c['name'], 'step': [{'@type': 'HowToStep', 'position': st['n'], 'name': st['name'], 'text': st['goal']} for st in c['stages']]})
+
+    def cap_standard_ids(self, cid):
+        """Rulebook entries tagged to the capability, plus every entry applied at one of its steps."""
+        sm = self.d['standards_map']['stages']
+        ids = [x['id'] for x in self.d['rulebook'] if cid in x['caps']]
+        for st in self.caps[cid]['stages']:
+            ids += sm[f'{cid}.{st["id"]}']
+        return list(dict.fromkeys(ids))
+
+    def cap_standards(self, cid):
+        """Version 1.13.0: each capability's Overview lists the frameworks, methodologies and standards that apply, by kind."""
+        sm = self.d['standards_map']
+        ids = self.cap_standard_ids(cid)
+        by = {k['id']: [] for k in sm['kinds']}
+        for r in ids:
+            by[self.rb_kind(r)].append(r)
+        stage_of = {}
+        for st in self.caps[cid]['stages']:
+            for r in sm['stages'][f'{cid}.{st["id"]}']:
+                stage_of.setdefault(r, []).append(st)
+        def item(r):
+            steps = ''.join(f' <a class="pill {cid}" href="#{cid}-{st["id"]}">Step {st["n"]}</a>' for st in stage_of.get(r, []))
+            return f'<li data-kind="{self.rb_kind(r)}">{self.rb_link(r)}{steps}</li>'
+        cols = ''.join(f'<div class="panel std-kind"><h3>{icon(k["icon"])} {E(k["name"])} <span class="count" aria-label="{len(by[k["id"]])} items">{len(by[k["id"]])}</span></h3>'
+                       f'<ul class="link-list">{"".join(item(r) for r in by[k["id"]])}</ul></div>' for k in sm['kinds'] if by[k['id']])
+        return (f'<h2 id="frameworks-standards">{icon("book-marked")} Frameworks, methodologies and standards</h2><p>{E(sm["intro"])}</p>'
+                f'<div class="std-grid" data-std-cap="{cid}">{cols}</div>'
+                f'<p>The full list, with why each matters, is on the <a href="#source-list">Sources</a> tab and in the <a href="dam.html#rulebook">rulebook on the policy page</a>.</p>'), len(ids)
 
     def rb_link(self, rid):
         x = self.rb[rid]
@@ -2551,6 +2715,7 @@ class Site:
                       f'<p>{E(a["desc"])}{prov("O")}</p>'
                       f'<dl class="cr-dl"><dt>{icon("radar")} DAM capabilities</dt><dd>{" ".join(self.cr_pill(c["id"]) for c in cs) or "None directly; it supports analysis built on critical assets."}</dd>'
                       f'<dt>{icon("layers")} Maturity topics</dt><dd>{self.topic_pills(topics)}</dd>'
+                      f'<dt>{icon("route")} Drill down</dt><dd>{self.dama_drill(a["id"])}</dd>'
                       f'<dt>{icon("archive")} Records and information counterpart</dt><dd>{E(a["im"])}</dd></dl>'
                       f'<details class="dama-uses"><summary>How each role uses it</summary>{table("t-uses-" + a["id"], "How each role uses " + a["name"].lower(), ["Role", "Use"], [[E(pers[p]["title"]), E(u)] for p, u in a["uses"].items()])}</details></section>')
         opts = ''.join(f'<option value="{p}">{E(pers[p]["title"])}</option>' for p in pers)
@@ -2563,7 +2728,39 @@ class Site:
                 f'<div class="dama-areas">{cards}</div>'
                 f'<h3 id="lifecycles">{icon("refresh-cw")} Data and records life cycles side by side</h3>'
                 + table('t-lifecycles', 'The data life cycle, the records life cycle and where DAM acts', ['Data life cycle', 'Records life cycle', 'Where DAM acts', 'Who'], life)
-                + f'<h3>{icon("book-marked")} Records and information management frameworks and standards</h3><ul>{"".join(f"<li>{self.rb_link(r)}</li>" for r in dm["im_refs"])}</ul>')
+                + f'<h3>{icon("book-marked")} Records and information management frameworks and standards</h3><ul>{"".join(f"<li>{self.rb_link(r)}</li>" for r in dm["im_refs"])}</ul>'
+                + self.dama_assessment())
+
+    def dama_drill(self, aid):
+        """Version 1.13.0: level 2 of the drill-down. Areas the portal has a playbook for list its steps; areas with a supplement link to it."""
+        dm = self.d['dama']
+        out = []
+        for cid, a in dm.get('cap_area', {}).items():
+            if a == aid:
+                c = self.caps[cid]
+                steps = ''.join(f'<li><a href="{CAP_PAGE[cid]}.html#{cid}-{st["id"]}" data-tip="{E(st["goal"])}">{E(st["name"])}</a></li>' for st in c['stages'])
+                out.append(f'<p><a href="{CAP_PAGE[cid]}.html">{E(c["name"])} playbook</a>: {len(c["stages"])} steps, each with its tasks, roles, templates and standards.</p><ol class="drill-steps">{steps}</ol>')
+        sups = {x['id']: x for x in self.d.get('supplements', [])}
+        for sid, areas in dm.get('supplement_area', {}).items():
+            if aid in areas:
+                out.append(f'<p><a href="sectors.html#{sid}">{E(sups[sid]["title"])} supplement</a>: extra rules for critical assets; not yet a playbook (<a href="#drilldown">see what it would take</a>).</p>')
+        return ''.join(out) or f'Not yet: this portal has no activities for this area. <a href="#drilldown">See what it would take</a>.'
+
+    def dama_assessment(self):
+        """Version 1.13.0: what it would take to drill down from every slice of the wheel, and to make data architecture a playbook."""
+        dd = self.d['dama']['drilldown']
+        mvp = self.d['research']['mvp']['verdicts']
+        bl = {x['id']: x for x in self.d['research']['backlog']}
+        levels = table('t-drill-levels', 'Drill-down levels: what exists and what is needed', ['Level', 'What exists now', 'What is needed'],
+                       [[f'{x["n"]}. {E(x["name"])}', E(x['now']), E(x['needs'])] for x in dd['levels']])
+        arc = table('t-arc-playbook', 'What a data architecture capability playbook would need', ['Part', 'What exists now', 'What is needed', 'Effort'],
+                    [[E(x['part']), E(x['now']), E(x['needs']), E(x['effort'])] for x in dd['arc']['parts']])
+        items = ''.join(f'<li><a href="research.html#{b}">{E(b)}</a>: {E(bl[b]["title"])} ({E(mvp[bl[b]["mvp"]["verdict"]])})</li>' for b in dd['backlog'])
+        return (f'<h3 id="drilldown">{icon("route")} Drilling down from the wheel: what it would take{prov("O")}</h3><p>{E(dd["intro"])}</p>{levels}'
+                f'<h4>For every knowledge area</h4>{ul(dd["wheel_needs"])}'
+                f'<h4 id="arc-playbook">Data architecture as a fourth capability playbook</h4><p>{E(dd["arc"]["summary"])}</p>{arc}<p class="hint">{E(dd["effort_key"])}</p>'
+                f'<h4>When</h4><p>{E(dd["phasing"])}</p><h4>Risks</h4>{ul(dd["risks"])}'
+                f'<h4>On the backlog</h4><ul>{items}</ul>')
 
     def p_community(self):
         d, j = self.d, self.d['joinup']
