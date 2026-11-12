@@ -292,6 +292,10 @@ def validate(c, d):
             errs.append(f'compass: glossary {x["id"]} needs a plain definition of 45 words or fewer')
     if not c.get('about', {}).get('what'):
         errs.append('compass: say what the compass is (about.what)')
+    tabs_ok = {'start', 'roles', 'bearing', 'lineage', 'directory', 'pathway', 'glossary', 'menu'}
+    for x in (c.get('whats_new') or {}).get('items', []):
+        if x['flag'] not in ('new', 'updated') or x['tab'] not in tabs_ok:
+            errs.append(f'compass: what is new item "{x["label"]}" needs flag new or updated and a known tab')
     blob = json.dumps(c)
     if re.search(r'[\w.+-]+' + chr(64) + r'[\w-]+\.[\w.]+', blob):
         errs.append('compass: an email address')
@@ -340,8 +344,8 @@ def rose(c):
         txt = ''.join(f'<tspan x="{tx}" dy="{0 if i == 0 else 15}">{l}</tspan>' for i, l in enumerate(lines))
         ty -= 7 * (len(lines) - 1)
         return (f'<a href="{p["url"]}" class="rose-link" data-tip="{p["bearing_name"]}, {p["metaphor"].lower()}: {p["question"]} {p["metaline_safe"]}">'
-                f'<circle cx="{x}" cy="{y}" r="17" fill="#0b2545" stroke="#f2c14e" stroke-width="2"/>'
-                f'<svg x="{x - 10}" y="{y - 10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" style="color:#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-{p["icon"]}"/></svg>'
+                f'<g class="rose-badge" style="transform-origin:{x}px {y}px;transition:transform .15s ease"><circle cx="{x}" cy="{y}" r="17" fill="#0b2545" stroke="#f2c14e" stroke-width="2"/>'
+                f'<svg x="{x - 10}" y="{y - 10}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" style="color:#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#i-{p["icon"]}"/></svg></g>'
                 f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" font-size="13" font-weight="700" fill="#ffffff" class="rose-name">{txt}'
                 f'<tspan x="{tx}" dy="14" font-size="10.5" font-weight="400" fill="#f2c14e">{p["metaphor"]}</tspan></text></a>')
     labels = lab('N', 150, 18, 'middle') + lab('E', 282, 150, 'start') + lab('W', 18, 150, 'end') + lab('S', 150, 282, 'middle')
@@ -374,7 +378,7 @@ def build(out, d, icon_set, barcode_svg, qr_svg, pb=None, page_names=None, page_
     if errs:
         raise ValueError('\n'.join(errs))
     t = (SRC / 'template.html').read_text(encoding='utf-8')
-    data = {k: c[k] for k in ('meta', 'portals', 'precedence', 'questions', 'routes', 'scenarios', 'when', 'links_today', 'about', 'glossary', 'audiences')}
+    data = {k: c[k] for k in ('meta', 'portals', 'precedence', 'questions', 'routes', 'scenarios', 'when', 'links_today', 'about', 'glossary', 'audiences', 'whats_new')}
     data['areas'] = areas(c, d)
     if w:
         w['page_names'] = page_names or {}

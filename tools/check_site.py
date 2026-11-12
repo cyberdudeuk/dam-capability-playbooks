@@ -945,6 +945,15 @@ def c35_estate_compass(site, repo, pages):
             if any(a not in acts for a in cap['acts']):
                 errs.append(f'compass: capability {cid} lists an unknown activity')
         urls += [a['wheel'] for a in w['areas']] + [u for a in w['areas'] for k in ('dq', 'cat', 'ap') for _, u in a[k]]
+    # compass 2.0: a menu drawer that flags what is new or changed, sub-tabs instead of long pages, and no history of an earlier name
+    for need in ('id="drawer"', 'id="wn"', 'id="dnav"', 'class="subtabs"', 'id="menu-btn"'):
+        if need not in html:
+            errs.append(f'compass: menu or sub-tab part {need} missing')
+    wn = (d.get('whats_new') or {}).get('items', [])
+    if not wn or any(x.get('flag') not in ('new', 'updated') for x in wn):
+        errs.append('compass: the menu must flag what is new or updated')
+    if 'Estate compass' in html or 'name was' in html:
+        errs.append('compass: do not explain an earlier name readers never saw')
     # compass 2.0: the directory and the profession hub. Every entry has a unique id, a secure link, a known kind and known professions;
     # entries placed in one of the four portals link into it; links into this portal land on a page and anchor that exist.
     dr, auds = d.get('directory'), {a['id'] for a in d.get('audiences', [])}

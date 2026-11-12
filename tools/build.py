@@ -3340,6 +3340,8 @@ class Site:
         inputs = {i['id']: i for i in G['meta']['inputs']}
         n_acts = sum(len(a['activities']) for a in G['areas'])
         stage_icon = {'start': 'flag', 'build': 'wrench', 'embed': 'refresh-cw'}
+        AREA_ICONS = {'DM-GOV': 'shield-check', 'DM-ARC': 'network', 'DM-MOD': 'git-branch', 'DM-OPS': 'server', 'DM-SEC': 'lock-keyhole',
+                      'DM-INT': 'arrow-right-left', 'DM-DOC': 'archive', 'DM-REF': 'key-round', 'DM-BI': 'chart-column', 'DM-META': 'library-big', 'DM-DQ': 'gauge'}
 
         def who(raci):
             parts = []
@@ -3374,7 +3376,7 @@ class Site:
         flow = ''.join(f'<li><a href="#stage-{s["id"]}" class="flow-step"><strong>{E(s["name"])}: {E(s["when"].lower())}</strong><span>{E(s["does"])}</span></a></li>' for s in G['stages'])
         rows = []
         for a in G['areas']:
-            cells = [f'<a href="#{a["id"]}">{E(A[a["id"]]["name"])}</a>']
+            cells = [f'{icon(AREA_ICONS.get(a["id"], "target"))} <a href="#{a["id"]}">{E(A[a["id"]]["name"])}</a>']
             for s in G['stages']:
                 xs = [x for x in a['activities'] if x['stage'] == s['id']]
                 cells.append('<br>'.join(f'<a href="#{x["id"]}">{E(x["title"])}</a>' for x in xs) or '<span class="hint">See the playbook</span>')
@@ -3384,7 +3386,7 @@ class Site:
             ar = A[a['id']]
             pb = (f'<p>{icon("book-open")} The core activities for this area are the <a href="{CAP_PAGE[a["playbook"]]}.html">{E({"gov": "governance", "cat": "cataloguing", "dq": "data quality"}[a["playbook"]])} playbook</a>. The ones below go further.</p>' if a.get('playbook') else '')
             sp = (f'<p>{icon("layers")} Read with the <a href="sectors.html#{a["supplement"]}">{E(sup[a["supplement"]])}</a> supplement.</p>' if a.get('supplement') else '')
-            secs += (f'<section class="area-guide" aria-labelledby="{a["id"]}"><h2 id="{a["id"]}">{icon("target")} {E(ar["name"])}</h2>'
+            secs += (f'<section class="area-guide" aria-labelledby="{a["id"]}"><div class="cr-head">{tile(AREA_ICONS.get(a["id"], "target"), "lg")}<div><p class="caption">Knowledge area · {len(a["activities"])} activities</p><h2 id="{a["id"]}">{E(ar["name"])}</h2></div></div>'
                      f'<p class="lede-sm">{E(ar["desc"])}</p>'
                      f'<div class="callout"><p><strong>Why it matters for the DAM Policy:</strong> {E(a["why"])}{prov("O")}</p>'
                      f'<p><strong>Usually led by:</strong> {E(roles[a["lead"]])}. <strong>Content owner:</strong> {E(a["owner"])}.</p></div>'
@@ -3410,7 +3412,7 @@ class Site:
         drawer = [{'label': 'Knowledge areas', 'icon': 'target', 'items': [
             {'id': 'stages', 'label': 'Three stages', 'icon': 'footprints', 'new': True},
             {'id': 'overview', 'label': 'All activities', 'icon': 'layers', 'count': n_acts}]
-            + [{'id': a['id'], 'label': A[a['id']]['name'], 'icon': 'target', 'count': len(a['activities'])} for a in G['areas']]
+            + [{'id': a['id'], 'label': A[a['id']]['name'], 'icon': AREA_ICONS.get(a['id'], 'target'), 'count': len(a['activities'])} for a in G['areas']]
             + [{'id': 'sources', 'label': 'Sources', 'icon': 'book-marked'}]}]
         return self.page('areas', 'Knowledge areas: what to do in each', body, drawer, crumbs=['Frameworks', 'Knowledge areas'])
 

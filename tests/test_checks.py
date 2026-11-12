@@ -794,6 +794,14 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'compass' / 'index.html', 'id="graph"', 'id="grph"')
         self.fails('c35_estate_compass')
 
+    def test_c35_compass_without_menu(self):
+        edit(self.s / 'compass' / 'index.html', 'id="drawer"', 'id="drawr"')
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_explains_old_name(self):
+        edit(self.s / 'compass' / 'index.html', '<h1>', '<h1>Estate compass ')
+        self.fails('c35_estate_compass')
+
     def test_c35_directory_without_search(self):
         edit(self.s / 'compass' / 'index.html', 'id="dq-q"', 'id="dq-x"')
         self.fails('c35_estate_compass')

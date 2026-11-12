@@ -230,35 +230,77 @@ header a.term{color:#fff}
 .dcard h4{margin:.15rem 0 .3rem;font-size:1.02rem}.dcard p{margin:.2rem 0}.dcard .dk{font-size:.82rem;font-weight:700;color:var(--quiet)}.dcard>p:last-child{margin-top:auto}
 .filters .grow{flex:1 1 14rem}
 .sub{margin-top:1.5rem;border-top:2px solid var(--rule);padding-top:.5rem}.subh{font-size:1.25rem}
+.shell{display:grid;grid-template-columns:15.5rem minmax(0,1fr);gap:1.5rem;align-items:start}
+.drawer{position:sticky;top:.5rem;max-height:calc(100vh - 1rem);overflow:auto;border:1px solid var(--rule);background:var(--card);padding:.6rem .8rem;margin-top:1.25rem;font-size:.95rem}
+.drawer h2{font-size:1.15rem;margin:.2rem 0 .4rem;display:flex;gap:.4rem;align-items:center}.drawer .dh{font-size:1rem;margin:.9rem 0 .3rem;display:flex;gap:.35rem;align-items:center}
+.wn,.dnav{list-style:none;padding:0;margin:0}.wn li{margin:.35rem 0}.dnav>li{margin:.35rem 0}.dnav ul{list-style:none;padding-left:.9rem;margin:.15rem 0;border-left:2px solid var(--rule)}.dnav ul li{margin:.15rem 0;font-size:.92rem}
+.dabout{margin-top:.9rem}.dabout summary{font-weight:700;cursor:pointer;color:var(--link)}.dabout ul{padding-left:1.1rem}
+.flag-n{display:inline-block;width:auto;height:auto;font-size:.72rem;font-weight:700;line-height:1.3;padding:.05rem .4rem;border-radius:3px;margin-left:.35rem;vertical-align:middle;text-transform:none}
+.flag-n.new{background:#ffdd00;color:#0b0c0c}.flag-n.updated{background:var(--navy);color:#fff}
+@media (prefers-color-scheme:dark){.flag-n.updated{background:#8cc2f0;color:#0b0c0c}}
+.menu-btn{display:none}
+@media (max-width:1000px){.shell{display:block}.drawer{display:none;position:static;max-height:none}.drawer.open{display:block}.menu-btn{display:inline-flex}}
+.subtabs{border-bottom:2px solid var(--rule);margin:.9rem 0 0}.subtabs [role=tab]{background:transparent;font-weight:600;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;min-height:44px}
+.subtabs [role=tab][aria-selected=true]{background:transparent;border:0;border-bottom:4px solid var(--navy);color:var(--ink)}
+@media (prefers-color-scheme:dark){.subtabs [role=tab][aria-selected=true]{border-bottom-color:var(--gold)}}
+.subpanel{padding-top:.8rem}
+/* compass 2.0: visual polish and motion (all motion off for people who ask for reduced motion) */
+header{position:relative;overflow:hidden;background:radial-gradient(circle at 82% 45%,rgba(242,193,78,.16),transparent 38%),repeating-radial-gradient(circle at 82% 45%,transparent 0 46px,rgba(255,255,255,.045) 46px 47px),linear-gradient(135deg,#0b2545 0%,#13315c 60%,#0b2545 100%)}
+.mast h1 .i{filter:drop-shadow(0 0 6px rgba(242,193,78,.45))}
+.door{position:relative;overflow:hidden}
+.door::after{content:"";position:absolute;inset:auto -30% -60% auto;width:9rem;height:9rem;border-radius:50%;background:radial-gradient(circle,rgba(242,193,78,.18),transparent 70%);pointer-events:none}
+.door .i{width:2.6rem;height:2.6rem;padding:.45rem;border-radius:50%;background:var(--panel);border:2px solid var(--gold);box-sizing:border-box}
+.subtabs [role=tab] .i,.drawer .i{color:var(--trail)}
+h3>.i{color:var(--trail);margin-right:.35rem;vertical-align:-.15em}
+.dcard,.aud-grid>li>button,.pcard,.sc,.wc{transition:transform .15s ease,box-shadow .15s ease}
+.dcard:hover,.aud-grid>li>button:hover,.sc:hover,.wc:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.flag-n.new{box-shadow:0 0 0 0 rgba(255,221,0,.7)}
+@media (prefers-reduced-motion:no-preference){
+[role=tabpanel]:not([hidden]){animation:cp-in .28s ease-out}
+.stagger>*{animation:cp-in .35s ease-out both}.stagger>*:nth-child(2){animation-delay:.05s}.stagger>*:nth-child(3){animation-delay:.1s}.stagger>*:nth-child(4){animation-delay:.15s}.stagger>*:nth-child(n+5){animation-delay:.2s}
+.needle.settle{animation:cp-swing 1.6s cubic-bezier(.3,1.5,.5,1) both}
+.flag-n.new{animation:cp-pulse 2.4s ease-out 1s 2}
+.rose-link:hover .rose-badge,.rose-link:focus .rose-badge{transform:scale(1.12)}
+}
+@keyframes cp-in{from{transform:translateY(10px)}to{transform:none}}
+@keyframes cp-swing{0%{transform:rotate(-60deg)}55%{transform:rotate(70deg)}75%{transform:rotate(30deg)}90%{transform:rotate(50deg)}100%{transform:rotate(45deg)}}
+@keyframes cp-pulse{0%{box-shadow:0 0 0 0 rgba(255,221,0,.7)}100%{box-shadow:0 0 0 8px rgba(255,221,0,0)}}
+@media (prefers-reduced-motion:reduce){.dcard,.aud-grid>li>button,.pcard,.sc,.wc{transition:none}.dcard:hover,.aud-grid>li>button:hover,.sc:hover,.wc:hover{transform:none}}
 </style>
 </head>
 <body>
 __SPRITE__
 <a class="skip" href="#main">Skip to main content</a>
 <header>
-<div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to four separate portals, each with its own owner, purpose and status. Every link opens the real page. __HOSTNOTE__</div></div>
+<div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to four separate websites. Every link opens the real page. __HOSTNOTE__</div></div>
 <div class="mast">
 <div>
 <p class="eyebrow">Four portals, one compass</p>
 <h1><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>__TITLE__</h1>
 <p class="mast-lede">__SUBTITLE__.</p>
-<p>The <a class="term" href="#glossary" data-term="compass">compass</a> shows the four <a class="term" href="#glossary" data-term="portal">portals</a> as four directions. North is the policy, east is the practice, west is what already exists, south is how data is described so others can find it. You are at the centre. Select a portal on the compass to open it.</p>
+<p>The <a class="term" href="#glossary" data-term="compass">compass</a> shows the four <a class="term" href="#glossary" data-term="portal">websites</a> as four directions. Select one to open it, or start below.</p>
+<p><button type="button" class="btn secondary menu-btn" id="menu-btn" aria-expanded="false" aria-controls="drawer"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg>Menu and what's new</button></p>
 </div>
 <div class="rose-wrap">__ROSE__<p class="bearing-now" id="bearing-now" aria-live="polite">Answer the questions to take a bearing</p></div>
 </div>
 </header>
 <main id="main" tabindex="-1">
-<section class="about" aria-labelledby="about-h">
-<h2 id="about-h" class="vh">About this guide</h2>
-<div class="about-grid">
-<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>What it is</h3><p id="ab-what"></p><p id="ab-estate" class="hint"></p></article>
-<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg>Who it is for</h3><p id="ab-who"></p></article>
-<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-target"/></svg>What it helps you do</h3><ul id="ab-aims"></ul></article>
-<article class="ab"><h3><svg class="i" aria-hidden="true"><use href="#i-circle-x"/></svg>What it is not</h3><ul id="ab-not"></ul></article>
-</div>
-<details class="namenote"><summary>Why is it called the data portals compass?</summary><p id="ab-name"></p></details>
-<p class="hint">New to any of the words here? Dotted words explain themselves when you point at them or move to them with the keyboard, and every term is in <button type="button" class="linkish" data-tabgo="glossary">Words explained</button>.</p>
-</section>
+<div class="shell">
+<nav class="drawer" id="drawer" aria-labelledby="drawer-h">
+<h2 id="drawer-h"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg>Menu</h2>
+<h3 class="dh"><svg class="i" aria-hidden="true"><use href="#i-sparkles"/></svg>What's new <span class="hint" id="wn-date"></span></h3>
+<ul class="wn" id="wn"></ul>
+<h3 class="dh"><svg class="i" aria-hidden="true"><use href="#i-map-pin"/></svg>Go to</h3>
+<ul class="dnav" id="dnav"></ul>
+<details class="dabout"><summary>About this guide</summary>
+<p id="ab-what"></p>
+<p><strong>Who it is for:</strong> <span id="ab-who"></span></p>
+<p><strong>It helps you:</strong></p><ul id="ab-aims"></ul>
+<p><strong>Good to know:</strong></p><ul id="ab-not"></ul>
+<p class="hint">Dotted words explain themselves when you point at them. Every term is in <button type="button" class="linkish" data-tabgo="glossary">Words explained</button>.</p>
+</details>
+</nav>
+<div class="content">
 <div role="tablist" aria-label="Ways to find your way">
 <button role="tab" id="tab-start" aria-controls="start" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Start</button>
 <button role="tab" id="tab-roles" aria-controls="roles" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg>By profession</button>
@@ -272,7 +314,7 @@ __SPRITE__
 <section role="tabpanel" id="start" aria-labelledby="tab-start" tabindex="0">
 <h2><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Where would you like to start?</h2>
 <p class="lede">Pick the way in that matches how you think about your work. You can switch at any time; everything you choose stays on this page.</p>
-<div class="doors">
+<div class="stagger doors">
 <button type="button" class="door" data-tabgo="roles"><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg><strong>I'm a&hellip;</strong><span>Start from your profession: the tasks, areas, activities, guidance and communities that fit your work.</span></button>
 <button type="button" class="door" data-tabgo="bearing"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg><strong>I need to&hellip;</strong><span>Answer four questions and get a step-by-step route across the portals.</span></button>
 <button type="button" class="door" data-tabgo="lineage"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg><strong>I'm interested in&hellip;</strong><span>Explore a data management area on the DAMA wheel, down to the individual steps.</span></button>
@@ -280,30 +322,36 @@ __SPRITE__
 </div>
 <div class="finder big"><label for="sq"><strong>Or search everything</strong></label><input id="sq" type="search" autocomplete="off" placeholder="For example: data owner, metadata standard, NHS number, procurement"><div id="sq-out" aria-live="polite"></div></div>
 <h3><svg class="i" aria-hidden="true"><use href="#i-map-pin"/></svg>The four portals at a glance</h3>
-<ul class="pstrip" id="pstrip"></ul>
+<ul class="stagger pstrip" id="pstrip"></ul>
 </section>
 
 <section role="tabpanel" id="roles" aria-labelledby="tab-roles" tabindex="0" hidden>
 <h2><svg class="i" aria-hidden="true"><use href="#i-users-round"/></svg>Start from your profession</h2>
-<p class="lede">Choose the group closest to your job. You get the tasks people like you bring, the data management areas you work in, the recipe stages you lead, the guidance that matters to you and the communities you can join.</p>
-<p class="hint">How professions are matched to tasks, areas, guidance and communities is this compass's own judgement. The recipe stages you lead come from the DAM playbooks' responsibility tables.</p>
-<ul class="aud-grid" id="aud-grid"></ul>
+<p class="lede">Choose the group closest to your job to see what people like you usually need.</p>
+<p class="hint">How jobs are matched is this guide's own judgement.</p>
+<ul class="stagger aud-grid" id="aud-grid"></ul>
 <div id="aud-hub" aria-live="polite"></div>
 </section>
 
 <section role="tabpanel" id="bearing" aria-labelledby="tab-bearing" tabindex="0" hidden>
-<p class="lede">Four questions about you and your situation. The compass suggests where to start, where to go next and why, and what you'll have at the end.</p>
+<h2><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg>Get a route for your task</h2>
+<div class="subtabs" role="tablist" aria-label="Parts of By task"><button role="tab" id="st-route-sub" aria-controls="route-sub" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-navigation"/></svg>Your route</button><button role="tab" id="st-prec-sub" aria-controls="prec-sub" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-milestone"/></svg>Which website first</button><button role="tab" id="st-examples" aria-controls="examples" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</button></div>
+<div class="subpanel" role="tabpanel" id="route-sub" aria-labelledby="st-route-sub" tabindex="0">
+<p class="lede">Answer four quick questions. You get where to start, what to do next and what you'll have at the end.</p>
 <form id="wayfinder" class="qgrid" aria-describedby="wf-hint" novalidate></form>
 <p class="hint" id="wf-hint">Nothing you choose leaves this page. Your answers are kept only in this page's address, so you can share or bookmark the route.</p>
 <div id="route" aria-live="polite"></div>
-<h2 id="precedence-h"><svg class="i" aria-hidden="true"><use href="#i-milestone"/></svg>Which way first: the order of precedence</h2>
-<p>When a journey crosses portals, this order usually works best.</p>
+</div>
+<div class="subpanel" role="tabpanel" id="prec-sub" aria-labelledby="st-prec-sub" tabindex="0" hidden>
+<h3 id="precedence-h"><svg class="i" aria-hidden="true"><use href="#i-milestone"/></svg>Which website first</h3>
+<p>When a task needs more than one website, this order usually works best.</p>
 <ol class="prec" id="prec"></ol>
-<section class="sub" id="examples" tabindex="-1">
-<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</h3>
-<p class="lede">Common situations, where to start and why. These are illustrative examples, not real cases.</p>
-<div class="scen" id="scen"></div>
-</section>
+</div>
+<div class="subpanel" role="tabpanel" id="examples" aria-labelledby="st-examples" tabindex="0" hidden>
+<h3><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>Worked examples</h3>
+<p>Common situations, where to start and why. These are made-up examples, not real cases.</p>
+<div class="stagger scen" id="scen"></div>
+</div>
 </section>
 
 
@@ -314,8 +362,10 @@ __SPRITE__
 
 <section role="tabpanel" id="lineage" aria-labelledby="tab-lineage" tabindex="0" hidden>
 <h2><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>The DAMA wheel: from data management area to activity</h2>
-<p class="lede">Start from a <a class="term" href="#glossary" data-term="area">data management area</a> on the <a class="term" href="#glossary" data-term="dama">DAMA wheel</a>, drill down to the <a class="term" href="#glossary" data-term="capability">capabilities</a> in it and the <a class="term" href="#glossary" data-term="activity">activities</a> under each one, down to the individual <a class="term" href="#glossary" data-term="step">steps</a>, and see exactly where each is in the four portals.</p>
-<p class="hint">Areas come from the DAMA Data Management Body of Knowledge (DMBOK) as the DAM playbooks place them. Which recipe stage serves which capability, and the Commons, catalogue and DCAT-AP-UK links for each area, are this compass's own mappings. Change items, perspectives and maturity strands carry their own capability links from the DAM playbooks.</p>
+<p class="lede">Pick a <a class="term" href="#glossary" data-term="area">data management area</a> on the <a class="term" href="#glossary" data-term="dama">DAMA wheel</a>. Go down to its <a class="term" href="#glossary" data-term="capability">capabilities</a>, <a class="term" href="#glossary" data-term="activity">activities</a> and <a class="term" href="#glossary" data-term="step">steps</a>, and see where each is in the four websites.</p>
+<p class="hint">Areas come from DAMA, an international body of knowledge on data management. Links to the other three websites are this guide's own suggestions.</p>
+<div class="subtabs" role="tablist" aria-label="Parts of By topic"><button role="tab" id="st-wheel-sub" aria-controls="wheel-sub" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The wheel</button><button role="tab" id="st-lin-sub" aria-controls="lin-sub" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-git-branch"/></svg>How it connects</button><button role="tab" id="st-trace-sub" aria-controls="trace-sub" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg>Everything in a table</button></div>
+<div class="subpanel" role="tabpanel" id="wheel-sub" aria-labelledby="st-wheel-sub" tabindex="0">
 <div class="finder"><label for="wq"><strong>Find an area, capability, activity or step</strong></label><input id="wq" type="search" autocomplete="off" placeholder="For example: owner, baseline, metadata, legacy"><ul id="wq-out" class="wq-out" aria-live="polite"></ul></div>
 <div class="dama-grid">
 <div class="wheel-wrap">
@@ -328,13 +378,17 @@ __SPRITE__
 <div id="drill" aria-live="polite"></div>
 </div>
 </div>
-<h3><svg class="i" aria-hidden="true"><use href="#i-git-branch"/></svg><a class="term" href="#glossary" data-term="lineage">Lineage</a>: how it traces through the portals</h3>
-<p class="hint">Read from the area outwards. To the right, solid lines follow the DAM playbooks' own content down to capabilities, activities and pages. To the left, dashed lines are this compass's suggestions for the other three portals, made at the level of the data management area. Select any area, capability or activity to follow it.</p>
+</div>
+<div class="subpanel" role="tabpanel" id="lin-sub" aria-labelledby="st-lin-sub" tabindex="0" hidden>
+<h3><a class="term" href="#glossary" data-term="lineage"><svg class="i" aria-hidden="true"><use href="#i-git-branch"/></svg>Lineage</a>: how it connects</h3>
+<ul class="hint"><li>Solid lines to the right: the DAM playbooks' own content.</li><li>Dashed lines to the left: this guide's suggestions for the other three websites.</li><li>Select anything on the diagram to follow it.</li></ul>
 <div id="graph" class="graph-wrap" role="region" aria-label="Lineage diagram. The same links are listed in the drill-down above and the traceability table below." tabindex="0"></div>
 <h3><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Where the selected area is in the four portals</h3>
 <div class="lineage" id="lin"></div>
+</div>
+<div class="subpanel" role="tabpanel" id="trace-sub" aria-labelledby="st-trace-sub" tabindex="0" hidden>
 <h3 id="matrix-h"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg><a class="term" href="#glossary" data-term="traceability">Traceability</a> table</h3>
-<p>Every activity, the capabilities and areas it serves, and where it is. Capabilities with no activities yet are listed too, so gaps are visible.</p>
+<p>Every activity, what it serves and where to find it. Gaps are listed too.</p>
 <div class="filters" role="group" aria-label="Filter the traceability table">
 <div><label for="mx-area">Area</label><select id="mx-area"></select></div>
 <div><label for="mx-kind">Kind</label><select id="mx-kind"></select></div>
@@ -344,12 +398,15 @@ __SPRITE__
 </div>
 <p id="mx-count" class="hint" aria-live="polite"></p>
 <div class="tablewrap" role="region" aria-label="Traceability table" tabindex="0"><table id="mx"><caption class="vh">Traceability from data management area to activity and location</caption><thead><tr><th scope="col">Area</th><th scope="col">Capability</th><th scope="col">Activity</th><th scope="col">Steps</th><th scope="col">In the DAM playbooks</th><th scope="col">Elsewhere (by area)</th><th scope="col"><span class="vh">Pathway</span></th></tr></thead><tbody></tbody></table></div>
+</div>
 </section>
 
 <section role="tabpanel" id="directory" aria-labelledby="tab-directory" tabindex="0" hidden>
 <h2><svg class="i" aria-hidden="true"><use href="#i-library-big"/></svg>Directory</h2>
-<p class="lede">Everything the four portals point to, in one place: the portals and their main pages, and the GOV.UK guidance, standards, laws, boards and communities around them.</p>
-<p class="hint">Each entry comes from the portals' own content and its source page. Which professions and data management areas an entry suits is this compass's own judgement.</p>
+<p class="lede">Everything the four websites point to, in one place: their main pages, and the guidance, standards, laws, boards and communities around them.</p>
+<p class="hint">Entries come from the websites themselves. Which jobs and topics each suits is this guide's own judgement.</p>
+<div class="subtabs" role="tablist" aria-label="Parts of the directory"><button role="tab" id="st-dir-sub" aria-controls="dir-sub" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-library-big"/></svg>All entries</button><button role="tab" id="st-portals" aria-controls="portals" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four websites</button><button role="tab" id="st-when" aria-controls="when" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</button><button role="tab" id="st-links" aria-controls="links" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How they link</button></div>
+<div class="subpanel" role="tabpanel" id="dir-sub" aria-labelledby="st-dir-sub" tabindex="0">
 <div class="filters" role="group" aria-label="Filter the directory">
 <div class="grow"><label for="dq-q">Search</label><input id="dq-q" type="search" autocomplete="off"></div>
 <div><label for="dq-kind">Kind</label><select id="dq-kind"></select></div>
@@ -361,22 +418,24 @@ __SPRITE__
 <button type="button" class="btn secondary" id="dq-csv"><svg class="i" aria-hidden="true"><use href="#i-download"/></svg>Download as CSV</button>
 </div>
 <p id="dq-count" class="hint" aria-live="polite"></p>
-<ul class="dir" id="dir"></ul>
+<ul class="stagger dir" id="dir"></ul>
 <p><button type="button" class="btn secondary" id="dq-more" hidden><svg class="i" aria-hidden="true"><use href="#i-arrow-right"/></svg>Show more</button></p>
-<section class="sub" id="portals" tabindex="-1">
-<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four portals</h3>
-<p class="lede">Four portals, four questions. Each is complete on its own; together they cover what the policy asks, how to do it well, what already exists and how to describe it so others can find it.</p>
-<div class="cards" id="pcards"></div>
-</section>
-<section class="sub" id="when" tabindex="-1">
-<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</h3>
-<p class="lede">When you need each portal, and when you can skip it.</p>
-<div class="when" id="whencards"></div>
-</section>
-<section class="sub" id="links" tabindex="-1">
-<h3 class="subh"><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How the portals link to each other</h3>
-<p>How the portals point to each other, as of __ASOF__. Every link says which portal it leads to and what that portal is; the portals stay separate.</p>
+</div>
+<div class="subpanel" role="tabpanel" id="portals" aria-labelledby="st-portals" tabindex="0" hidden>
+<h3><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>The four websites</h3>
+<p>Four websites, four questions. Each works on its own. Together they cover what the policy asks, how to do it well, what already exists and how to describe data so others can find it.</p>
+<div class="stagger cards" id="pcards"></div>
+</div>
+<div class="subpanel" role="tabpanel" id="when" aria-labelledby="st-when" tabindex="0" hidden>
+<h3><svg class="i" aria-hidden="true"><use href="#i-signpost"/></svg>When to use which</h3>
+<p>When you need each website, and when you can skip it.</p>
+<div class="stagger when" id="whencards"></div>
+</div>
+<div class="subpanel" role="tabpanel" id="links" aria-labelledby="st-links" tabindex="0" hidden>
+<h3><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How they link</h3>
+<p>How the websites point to each other, as of __ASOF__. They stay separate.</p>
 <div id="linktable" class="tablewrap" role="region" aria-label="Links between the portals" tabindex="0"></div>
+</div>
 </section>
 </section>
 
@@ -404,6 +463,7 @@ __SPRITE__
 </section>
 
 
+</div></div>
 </main>
 <footer>
 <div class="cols">
@@ -427,10 +487,27 @@ const ic=(n,cls)=>`<svg class="i${cls?' '+esc(cls):''}" aria-hidden="true"><use 
 const cv=p=>`--c:var(--${esc(p)});--cbg:var(--${esc(p)}-bg)`;
 const url=(p,path)=>P[p].url+path;
 /* tabs */
-const tabs=[...document.querySelectorAll('[role=tab]')];
+const tabs=[...document.querySelectorAll('[role=tablist]:not(.subtabs)>[role=tab]')];
 function sel(t,focus){tabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on;});if(focus)t.focus();}
 const selTab=(t,f)=>sel(t,f);
 tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();const nt=tabs[(i+n+tabs.length)%tabs.length];sel(nt,true);syncHash();}});});
+/* sub-tabs within a tab (compass 2.0): short sections instead of long pages */
+function showSub(id,focus){const b=document.getElementById('st-'+id);if(!b)return false;const list=b.parentElement;[...list.children].forEach(x=>{const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;const pn=document.getElementById(x.getAttribute('aria-controls'));if(pn)pn.hidden=!on;});if(focus)b.focus();return true;}
+document.querySelectorAll('.subtabs').forEach(list=>{const bs=[...list.children];bs.forEach((b,i)=>{b.addEventListener('click',()=>showSub(b.getAttribute('aria-controls')));b.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();showSub(bs[(i+n+bs.length)%bs.length].getAttribute('aria-controls'),true);}});});});
+const SUBTAB={};document.querySelectorAll('.subpanel').forEach(s=>{SUBTAB[s.id]=s.closest('[role=tabpanel]:not(.subpanel)').id;});
+/* the menu drawer and what is new (compass 2.0) */
+(function(){const W=D.whats_new||{items:[]};const TL={};tabs.forEach(x=>TL[x.getAttribute('aria-controls')]=x);
+ const FL={new:'New',updated:'Updated'};
+ const best={};W.items.forEach(x=>{if(TL[x.tab]&&best[x.tab]!=='new')best[x.tab]=x.flag;});
+ Object.entries(best).forEach(([k,f])=>{TL[k].insertAdjacentHTML('beforeend',`<span class="flag-n ${f}">${FL[f]}</span>`);});
+ $('#wn-date').textContent=W.as_of?'('+W.as_of+')':'';
+ $('#wn').innerHTML=W.items.map(x=>`<li><span class="flag-n ${x.flag}">${FL[x.flag]}</span> ${x.tab==='menu'?esc(x.label):`<a href="#${esc(x.tab)}" data-tabgo="${esc(x.tab)}">${esc(x.label)}</a>`}</li>`).join('');
+ $('#dnav').innerHTML=tabs.map(x=>{const id=x.getAttribute('aria-controls');const subs=[...document.querySelectorAll(`#${id} .subtabs [role=tab]`)];
+  return `<li><a href="#${id}" data-tabgo="${id}">${esc(x.childNodes[1]?x.childNodes[1].textContent:x.textContent)}</a>${best[id]?` <span class="flag-n ${best[id]}">${FL[best[id]]}</span>`:''}`+(subs.length?`<ul>${subs.map(s=>`<li><a href="#${id}" data-tabgo="${id}" data-sub="${s.getAttribute('aria-controls')}">${esc(s.textContent)}</a></li>`).join('')}</ul>`:'')+'</li>';}).join('');
+ const mb=$('#menu-btn'),dr=$('#drawer');mb.addEventListener('click',()=>{const o=mb.getAttribute('aria-expanded')!=='true';mb.setAttribute('aria-expanded',o);dr.classList.toggle('open',o);if(o){const f=dr.querySelector('a,button,summary');if(f)f.focus();}});
+ dr.addEventListener('keydown',e=>{if(e.key==='Escape'&&dr.classList.contains('open')){dr.classList.remove('open');mb.setAttribute('aria-expanded','false');mb.focus();}});
+})();
+(function(){const n=document.getElementById('needle');if(n&&!location.hash.includes(',')){n.classList.add('settle');n.addEventListener('animationend',()=>n.classList.remove('settle'),{once:true});}})();
 /* wayfinder */
 const ans={};
 $('#wayfinder').innerHTML=D.questions.map((q,qi)=>`<fieldset><legend><span class="num" aria-hidden="true">${qi+1}</span>${ic(q.icon)}${esc(q.ask)}</legend><p class="hint">${esc(q.help)}</p><div class="opts">`+q.options.map(o=>`<label><input type="radio" name="${esc(q.id)}" value="${esc(o.id)}"> <span>${esc(o.label)}</span></label>`).join('')+'</div></fieldset>').join('');
@@ -722,14 +799,14 @@ if(framed){const pr=$('#pw-print');if(pr)pr.hidden=true;}
 window.compassInit=()=>{drawWheel();drill();graph();lin();$('#area').value=sel.area;matrix();refreshPw();};
 window.compassRole=()=>{drill();refreshPw();};
 }
-document.addEventListener('click',e=>{const b=e.target.closest('[data-tabgo]');if(!b)return;const tt=tabs.find(x=>x.getAttribute('aria-controls')===b.dataset.tabgo);if(tt){sel(tt,true);syncHash();}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tabgo]');if(!b)return;e.preventDefault();const tt=tabs.find(x=>x.getAttribute('aria-controls')===b.dataset.tabgo);if(tt){sel(tt,!b.dataset.sub);if(b.dataset.sub)showSub(b.dataset.sub,true);syncHash();const dr=$('#drawer');if(dr.classList.contains('open')){dr.classList.remove('open');$('#menu-btn').setAttribute('aria-expanded','false');}if(b.closest('#drawer'))tt.scrollIntoView({block:'start'});}});
 /* hash: tab and answers */
 function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');const cs=window.compassState?window.compassState():['',''];
  const parts=[t.getAttribute('aria-controls'),a.replace(/,/g,'')?a:'',cs[0]==='area:'+(D.wheel?D.wheel.hub:'')?'':cs[0],cs[1],window.compassAud&&window.compassAud()||''];while(parts.length>1&&!parts[parts.length-1])parts.pop();const nh='#'+parts.join('/');
  /* never write the address while the page is loading (the browser would then scroll to it, D-035), nor the default view onto a bare address */
  if(document.readyState==='loading'||(nh==='#start'&&!location.hash)||nh===location.hash)return;history.replaceState(null,'',nh);}
-(function(){const h=location.hash.slice(1).split('/');const ALIAS={portals:'directory',when:'directory',links:'directory',examples:'bearing'};const t=tabs.find(x=>x.getAttribute('aria-controls')===(ALIAS[h[0]]||h[0]));if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}if(window.compassRestore)window.compassRestore(h[2],h[3]);if(window.compassInit)window.compassInit();if(h[4]&&window.compassAudSet)window.compassAudSet(h[4]);
- if(ALIAS[h[0]]){const s=document.getElementById(h[0]);if(s)setTimeout(()=>s.scrollIntoView(),0);}})();
+(function(){const h=location.hash.slice(1).split('/');const ALIAS={portals:'directory',when:'directory',links:'directory',examples:'bearing'};const SUBS=new Set(Object.keys(ALIAS));const t=tabs.find(x=>x.getAttribute('aria-controls')===(ALIAS[h[0]]||h[0]));if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}if(window.compassRestore)window.compassRestore(h[2],h[3]);if(window.compassInit)window.compassInit();if(h[4]&&window.compassAudSet)window.compassAudSet(h[4]);
+ if(SUBS.has(h[0]))showSub(h[0]);})();
 /* precedence */
 $('#prec').innerHTML=D.precedence.map((x,i)=>`<li><h3>${ic(x.icon)}${i+1}. ${esc(x.title)}</h3><p>${esc(x.text)}</p></li>`).join('');
 /* portals */
@@ -747,16 +824,16 @@ $('#pcards').innerHTML=D.portals.map(p=>`<article class="pcard" style="${cv(p.id
 <p><a class="btn" href="${esc(url(p.id,p.start.path))}">${ic('navigation')}Go to ${esc(p.start.title)} in ${esc(p.short)}</a></p></div></article>`).join('');
 /* examples */
 $('#scen').innerHTML=D.scenarios.map((x,i)=>{const seq=[x.start,...x.then];return `<article class="sc"><p class="who">${esc(x.who)}</p><h3>${ic(x.icon)}${esc(x.situation)}</h3><ol class="path" aria-label="Order to follow">${seq.map((p,j)=>`<li style="${cv(p)}">${ic(P[p].icon)}${j+1}. ${esc(P[p].short)}</li>`).join('')}</ol><p>${esc(x.why)}</p><p><button type="button" class="btn secondary" data-route="${esc(x.route)}" data-i="${i}">${ic('navigation')}Follow this route: ${esc(D.routes[x.route].title)}</button></p></article>`;}).join('');
-document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{const sc=D.scenarios[Number(b.dataset.i)];const v=sc&&opt('why',sc.route);if(!v)return;ans.why=v;const r=document.querySelector(`input[name="why"][value="${v}"]`);if(r)r.checked=true;render();sel(tabs[0]);syncHash();const h=document.querySelector('#route h2');if(h){h.setAttribute('tabindex','-1');h.focus();}}));
+document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',()=>{const sc=D.scenarios[Number(b.dataset.i)];const v=sc&&opt('why',sc.route);if(!v)return;ans.why=v;const r=document.querySelector(`input[name="why"][value="${v}"]`);if(r)r.checked=true;render();selTab(tabs.find(x=>x.getAttribute('aria-controls')==='bearing'));showSub('route-sub');syncHash();const h=document.querySelector('#route h2');if(h){h.setAttribute('tabindex','-1');h.focus();}}));
 /* when */
 $('#whencards').innerHTML=D.portals.map(p=>{const w=D.when[p.id];return `<article class="wc" style="${cv(p.id)}"><h3>${ic(p.icon)}${esc(p.name)}</h3><p class="yes">${ic('circle-check')}Go there when</p><ul>${w.use.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="no">${ic('info')}You can skip it when</p><ul>${w.skip.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article>`;}).join('');
 
 /* links */
 $('#linktable').innerHTML='<table><caption class="vh">How the portals link to each other</caption><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Links</th></tr></thead><tbody>'+D.links_today.map(([f,t,n])=>`<tr><td class="pn">${ic(P[f].icon)}${esc(P[f].short)}</td><td><span class="pn">${ic(P[t].icon)}${esc(P[t].short)}</span></td><td>${esc(n)}</td></tr>`).join('')+'</tbody></table>';
 /* about and glossary (compass 1.3) */
-if(D.about){const A=D.about;$('#ab-what').textContent=A.what;$('#ab-estate').textContent=A.estate;$('#ab-who').textContent=A.for_whom;
+if(D.about){const A=D.about;$('#ab-what').textContent=A.what;$('#ab-who').textContent=A.for_whom;
  $('#ab-aims').innerHTML=A.aims.map(x=>`<li>${esc(x)}</li>`).join('');$('#ab-not').innerHTML=A.not.map(x=>`<li>${esc(x)}</li>`).join('');
- $('#ab-name').textContent=`Its name was "${A.name.previous}" until version 1.3. ${A.name.why}`;}
+ }
 const G={};(D.glossary||[]).forEach(g=>G[g.id]=g);
 const gsorted=(D.glossary||[]).slice().sort((a,b)=>a.term.localeCompare(b.term));
 function gloss(){const q=($('#gq').value||'').toLowerCase();

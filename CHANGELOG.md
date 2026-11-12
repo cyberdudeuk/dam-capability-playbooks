@@ -1,6 +1,17 @@
 # Changelog
 
 ## Unreleased
+- Knowledge areas: what to do in each (version 1.14.0, BL-35):
+  - A new page with 36 activities for 10 data management areas: architecture, modelling, storage and operations, security, integration, records, reference and master data, reporting and analysis, plus extra metadata and data quality activities.
+  - Each activity has steps, what you produce, evidence it is done, a measure, who does what, the DAM Policy requirements it supports and the standards that apply.
+  - Three stages: before your first return, before your second, and business as usual.
+  - Draws on the Sovereign Standards Platform roadmap (internal draft) for the business glossary, the path from glossary to knowledge graph, shared code lists, the draft standards classification, and crypto-dependency and residency fields. Seven new verified standards: ISO 8601, ISO 3166, ISO 4217, ONS geography codes, the GSS harmonised standards, SHACL and the NCSC post-quantum migration timeline.
+  - Every capability on the DAMA wheel now has activities, in the capability model and the compass. New check C-41.
+- Data portals compass, more changes for 2.0:
+  - A menu drawer that lists every tab and its parts and flags what is new or updated. Tabs carry New and Updated labels too.
+  - Long tabs are split into short sub-tabs: By task (your route, which website first, worked examples), By topic (the wheel, how it connects, everything in a table) and Directory (all entries, the four websites, when to use which, how they link).
+  - Plainer, shorter wording for a general audience. The note about an earlier name is gone.
+  - Visual polish: a map-like header, icons in every section, cards that lift on hover, and a compass needle that settles on arrival. All motion is off for people who ask for reduced motion.
 - Data portals compass 2.0: a new way in, by profession, and a full directory
   - Starts with four doors that match how people think about their work: I'm a… (profession), I need to… (task), I'm interested in… (DAMA area) and Show me everything (directory), plus one search across all of it.
   - By profession: nine professional groups, from senior leaders to sector specialists. Each shows the questions people in that role ask, the tasks they bring, their data management areas, the recipe stages they lead (from the playbooks' responsibility tables), the guidance, standards and laws that matter to them, and the boards and communities they can join. The profession is kept in the page address.

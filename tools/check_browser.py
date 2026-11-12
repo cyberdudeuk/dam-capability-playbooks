@@ -49,6 +49,7 @@ BREAKS = {
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'tours': ('b16_tours_and_share', ""),
     'compasswheel': ('b17_compass', "var w=document.getElementById('wheel');if(w){w.replaceWith(w.cloneNode(true));}"),
+    'compassmenu': ('b17_compass', "var n=document.getElementById('dnav');if(n){n.replaceWith(n.cloneNode(true));}document.addEventListener('click',function(e){if(e.target.closest('#dnav'))e.stopImmediatePropagation();},true);"),
     'compassdir': ('b17_compass', "var q=document.getElementById('dq-q');if(q){q.replaceWith(q.cloneNode(true));}"),
     'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
     'ask': ('b18_ask_and_copy', "var f=document.querySelector('[data-ask]');if(f){f.replaceWith(f.cloneNode(true));}"),
@@ -449,6 +450,13 @@ def run(site, axe_path, brk=None, pages=None):
                 m = re.search(r'of (\d+) matching', pg7.inner_text('#dq-count'))
                 if not cards or not m or int(m.group(1)) >= total or any('catalog' not in c.lower() for c in cards):
                     fail('b17_compass', f'searching the directory does not narrow it to matching entries ({pg7.inner_text("#dq-count")})')
+                # compass 2.0: the menu drawer opens a tab's sub-tab, and tabs flag what is new
+                pg7.click('#dnav [data-sub="when"]', timeout=2000)
+                pg7.wait_for_timeout(150)
+                if pg7.is_hidden('#directory') or pg7.is_hidden('#when'):
+                    fail('b17_compass', 'the menu does not open the part of the page it names')
+                if pg7.locator('[role=tablist] .flag-n').count() == 0:
+                    fail('b17_compass', 'no tab flags what is new or updated')
                 # search everything on the start page finds directory entries
                 pg7.goto(f'{base}/compass/index.html#start')
                 pg7.reload()
