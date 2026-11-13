@@ -1,6 +1,25 @@
 # Changelog
 
 ## Unreleased
+- Data portals compass, 13 November 2026 review:
+  - Page menu: opens and closes with a labelled switch outside the masthead, remembered on your device. Each section folds, shows its icon and a count of its parts, and flags parts that are new or updated in the latest release.
+  - Release notes and About this guide move into a new Help tab, beside Words explained. The menu holds in-page navigation only.
+  - Fixed (D-039): six profession icons were not drawn. Every icon named in the data is now included. New check C-42 checks that every icon used is drawn.
+  - Fixed (D-040): defect numbers D-034 and D-035 had each been used twice. The compass ones are now D-037 and D-038, and the build rejects duplicate numbers.
+  - Fixed (D-041): Repos Asset Catalogue facts were 36 days old and one figure could not be reproduced. They have been rechecked, and the daily sync now reports facts older than 30 days.
+  - Review fixes:
+    - Buttons that point into a sub-tab now open it.
+    - Profession and "Start from my role" use the same roles, and their directory counts agree.
+    - Directory cards show an icon for every kind. Pages with the same title say which website they belong to.
+    - Visible wording says "website" throughout.
+    - Every sub-tab has a tooltip.
+    - Pathway buttons name their item.
+    - A stray closing tag and dead styles are removed.
+    - The print view hides the menu.
+- Knowledge areas: split into tabs (Start here and one per area), with a row for data governance. Role labels now match the compass.
+  - Fixed: one step had shown as raw code. The build now rejects steps that are not plain text.
+  - Corrected roles in ARC-1 and ARC-4, and requirements in OPS-2 and SEC-3 (now DAM-R09, the mandatory IAO actions).
+  - Overlapping activities now point to each other instead of repeating.
 - Knowledge areas: what to do in each (version 1.14.0, BL-35):
   - A new page with 36 activities for 10 data management areas: architecture, modelling, storage and operations, security, integration, records, reference and master data, reporting and analysis, plus extra metadata and data quality activities.
   - Each activity has steps, what you produce, evidence it is done, a measure, who does what, the DAM Policy requirements it supports and the standards that apply.
@@ -23,13 +42,13 @@
   - Renamed after an assessment shown on the page: "estate" is shorthand many readers do not know; "data portals" says what it covers, and the compass picture stays. The address is unchanged.
   - Says plainly what it is, who it is for, what it helps you do and what it is not, at the top of the page, without repeating the masthead.
   - Words explained: 34 terms in plain English, each with other names (thesaurus), a broader term and related terms, searchable and A to Z. Dotted terms on the page show their meaning on hover or keyboard focus and open their entry.
-  - Fixed (D-035): opening the page jumped to the first tab and outlined it, because the address was written while the page loaded.
+  - Fixed (D-038): opening the page jumped to the first tab and outlined it, because the address was written while the page loaded.
 - Estate compass 1.2:
   - The DAMA wheel: Data governance at the centre, selected when the page opens, with the ten other knowledge areas around it. Select an area to drill down to its capabilities, the activities under each (playbook recipe stages, change items, perspectives and maturity strands) and their individual steps, with where each is in the DAM playbooks and the other three portals.
   - A lineage diagram for whatever is selected, a traceability table of every activity and gap (filter, search, CSV), a search box across areas, capabilities, activities and steps, and My pathway: your own ordered list of activities, started from your role's recipe stages, kept in the page address, with copy link, download and print.
   - The compass rose names and links the four portals at their bearings; tooltips on the wheel, capabilities, activity kinds, the lineage diagram, the rose and the tabs; the prototype strip moved to the top.
   - Kept up to date automatically: a daily check reads every link into the other portals, hides any that are gone, shows when each portal last changed, and opens a compass-sync issue for a person. Sister portals can trigger a rebuild with a `portal-updated` repository dispatch. The DAMA wheel itself is rebuilt from the DAM content at every build.
-  - Fixed (D-034): DCAT-AP-UK moved to `dcat-ap-uk`; the compass and the DAM pages' Related links now use the new address.
+  - Fixed (D-037): DCAT-AP-UK moved to `dcat-ap-uk`; the compass and the DAM pages' Related links now use the new address.
 - Tooltips and standards links across the whole portal (version 1.13.0):
   - The first time a glossary term appears in the text of any page, it links to its definition and shows a tooltip on hover or keyboard focus. Before, only six places did this. Headings, buttons, code, table headers, pills and existing links are left alone.
   - The first time a page names one of 57 frameworks, methodologies or standards (for example DAMA-DMBOK, DCAT, the Service Standard, the Green Book or the Data Protection Act 2018), it links to the publisher's page with a tooltip saying why it matters. The labels live in `standards_map.aliases` in the content file.

@@ -186,18 +186,18 @@ footer h2{font-size:1rem;margin:0 0 .35rem;color:#fff}
 .pwl .n{width:2.3rem;height:2.3rem;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-weight:700}
 .pwl .ctl{display:flex;gap:.25rem;flex-wrap:wrap}.pwl .ctl button{font:inherit;min-width:44px;min-height:44px;background:var(--panel);border:1px solid var(--line);cursor:pointer;color:var(--ink)}
 .pwl h4{margin:0 0 .2rem;font-size:1.02rem}
-@media print{header,footer,[role=tablist],#bearing,#portals,#examples,#when,#lineage,#links,.btn,.pwl .ctl{display:none!important}#pathway{display:block!important}}
+@media print{header,footer,.drawer,.drawerbar,.subtabs,[role=tablist],#bearing,#portals,#examples,#when,#lineage,#links,.btn,.pwl .ctl{display:none!important}#pathway{display:block!important}}
 /* tooltips (compass 1.2): on hover and keyboard focus; Escape closes; the tip can be hovered (WCAG 1.4.13) */
 #tip{position:fixed;z-index:20;max-width:22rem;background:#0b0c0c;color:#fff;padding:.45rem .6rem;font-size:.88rem;line-height:1.4;border-left:4px solid #f2c14e;box-shadow:0 4px 12px rgba(0,0,0,.3)}
 #tip[hidden]{display:none}
 .pill2[data-tip],.legend [data-tip]{cursor:help}
 /* about and glossary (compass 1.3) */
 .mast-lede{font-size:1.2rem;color:#fff}
-.about{margin:1rem 0 .5rem}
-.about-grid{display:grid;gap:.75rem;grid-template-columns:repeat(auto-fit,minmax(min(16rem,100%),1fr))}
-.ab{background:var(--card);border:1px solid var(--rule);border-top:4px solid var(--gold);padding:.7rem .9rem}
-.ab h3{margin:0 0 .35rem;font-size:1.05rem}.ab p{margin:.3rem 0}.ab ul{margin:.2rem 0;padding-left:1.15rem}
-.namenote{margin:.6rem 0;max-width:52rem}.namenote summary{cursor:pointer;font-weight:700;color:var(--link)}
+
+
+
+
+.namenote summary{cursor:pointer;font-weight:700;color:var(--link)}
 .linkish{font:inherit;background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer}
 a.term{color:inherit;text-decoration:underline dotted;text-decoration-thickness:2px;text-underline-offset:.22em}
 header a.term{color:#fff}
@@ -229,21 +229,33 @@ header a.term{color:#fff}
 .dcard{background:var(--card);border:1px solid var(--rule);border-top:5px solid var(--c);padding:.6rem .8rem;display:flex;flex-direction:column}
 .dcard h4{margin:.15rem 0 .3rem;font-size:1.02rem}.dcard p{margin:.2rem 0}.dcard .dk{font-size:.82rem;font-weight:700;color:var(--quiet)}.dcard>p:last-child{margin-top:auto}
 .filters .grow{flex:1 1 14rem}
-.sub{margin-top:1.5rem;border-top:2px solid var(--rule);padding-top:.5rem}.subh{font-size:1.25rem}
-.shell{display:grid;grid-template-columns:15.5rem minmax(0,1fr);gap:1.5rem;align-items:start}
+
+.shell{display:grid;grid-template-columns:17.5rem minmax(0,1fr);gap:1.5rem;align-items:start}
 .drawer{position:sticky;top:.5rem;max-height:calc(100vh - 1rem);overflow:auto;border:1px solid var(--rule);background:var(--card);padding:.6rem .8rem;margin-top:1.25rem;font-size:.95rem}
-.drawer h2{font-size:1.15rem;margin:.2rem 0 .4rem;display:flex;gap:.4rem;align-items:center}.drawer .dh{font-size:1rem;margin:.9rem 0 .3rem;display:flex;gap:.35rem;align-items:center}
-.wn,.dnav{list-style:none;padding:0;margin:0}.wn li{margin:.35rem 0}.dnav>li{margin:.35rem 0}.dnav ul{list-style:none;padding-left:.9rem;margin:.15rem 0;border-left:2px solid var(--rule)}.dnav ul li{margin:.15rem 0;font-size:.92rem}
-.dabout{margin-top:.9rem}.dabout summary{font-weight:700;cursor:pointer;color:var(--link)}.dabout ul{padding-left:1.1rem}
+.drawer h2{font-size:1.15rem;margin:.2rem 0 .4rem;display:flex;gap:.4rem;align-items:center}
+.dnav{list-style:none;padding:0;margin:0}.dnav>li{margin:.35rem 0}.dnav ul{list-style:none;padding-left:.9rem;margin:.15rem 0;border-left:2px solid var(--rule)}.dnav ul li{margin:.15rem 0;font-size:.92rem}
 .flag-n{display:inline-block;width:auto;height:auto;font-size:.72rem;font-weight:700;line-height:1.3;padding:.05rem .4rem;border-radius:3px;margin-left:.35rem;vertical-align:middle;text-transform:none}
 .flag-n.new{background:#ffdd00;color:#0b0c0c}.flag-n.updated{background:var(--navy);color:#fff}
-@media (prefers-color-scheme:dark){.flag-n.updated{background:#8cc2f0;color:#0b0c0c}}
-.menu-btn{display:none}
-@media (max-width:1000px){.shell{display:block}.drawer{display:none;position:static;max-height:none}.drawer.open{display:block}.menu-btn{display:inline-flex}}
+@media (prefers-color-scheme:dark){.audbtn[aria-pressed=true],.chip:hover{border-color:var(--gold)}.flag-n.updated{background:#8cc2f0;color:#0b0c0c}}
+.drawerbar{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:center;margin:1rem 0 .2rem}
+.dtoggle{display:inline-flex;gap:.55rem;align-items:center;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:.3rem .8rem .3rem .4rem;font:inherit;font-weight:700;min-height:44px;cursor:pointer}
+.dtoggle .track{position:relative;width:2.6rem;height:1.4rem;border-radius:999px;background:#505a5f;transition:background .2s}
+.dtoggle .knob{position:absolute;top:.15rem;left:.15rem;width:1.1rem;height:1.1rem;border-radius:50%;background:#fff;transition:transform .2s}
+.dtoggle[aria-checked=true] .track{background:#00703c}.dtoggle[aria-checked=true] .knob{transform:translateX(1.2rem)}
+.dtoggle .dts{font-weight:400;font-size:.9rem}
+.shell.dclosed{grid-template-columns:minmax(0,1fr)}.shell.dclosed .drawer{display:none}
+.drawer{margin-top:.4rem}
+.dnav details{margin:.3rem 0}.dnav summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:.4rem;font-weight:700;padding:.2rem 0}
+.dnav .i{margin-right:.35rem;vertical-align:-.15em;flex:none}.dnav ul a{display:inline}.dnav .flag-n{margin-left:.3rem}
+.dcount{font-size:.78rem;font-weight:700;background:var(--panel);border:1px solid var(--rule);border-radius:999px;padding:0 .45rem;min-width:1.4rem;text-align:center}
+.dnav .dleaf{font-weight:700;padding:.2rem 0}
+.rel{border-left:4px solid var(--gold);padding:.1rem 0 .1rem .8rem;margin:0 0 1rem}.rel h4{margin:.2rem 0}.rel ul{list-style:none;padding:0}.rel li{margin:.3rem 0}
+@media (max-width:1000px){.shell{display:block}.drawer{position:static;max-height:none;margin-bottom:1rem}}
 .subtabs{border-bottom:2px solid var(--rule);margin:.9rem 0 0}.subtabs [role=tab]{background:transparent;font-weight:600;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;min-height:44px}
 .subtabs [role=tab][aria-selected=true]{background:transparent;border:0;border-bottom:4px solid var(--navy);color:var(--ink)}
 @media (prefers-color-scheme:dark){.subtabs [role=tab][aria-selected=true]{border-bottom-color:var(--gold)}}
 .subpanel{padding-top:.8rem}
+.addpw .i,.btn .i,.linkish .i{margin-right:.35rem}
 /* compass 2.0: visual polish and motion (all motion off for people who ask for reduced motion) */
 header{position:relative;overflow:hidden;background:radial-gradient(circle at 82% 45%,rgba(242,193,78,.16),transparent 38%),repeating-radial-gradient(circle at 82% 45%,transparent 0 46px,rgba(255,255,255,.045) 46px 47px),linear-gradient(135deg,#0b2545 0%,#13315c 60%,#0b2545 100%)}
 .mast h1 .i{filter:drop-shadow(0 0 6px rgba(242,193,78,.45))}
@@ -275,30 +287,20 @@ __SPRITE__
 <div class="banner"><div class="banner-in"><span class="tag">Prototype</span>A guide to four separate websites. Every link opens the real page. __HOSTNOTE__</div></div>
 <div class="mast">
 <div>
-<p class="eyebrow">Four portals, one compass</p>
+<p class="eyebrow">Four websites, one compass</p>
 <h1><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>__TITLE__</h1>
 <p class="mast-lede">__SUBTITLE__.</p>
 <p>The <a class="term" href="#glossary" data-term="compass">compass</a> shows the four <a class="term" href="#glossary" data-term="portal">websites</a> as four directions. Select one to open it, or start below.</p>
-<p><button type="button" class="btn secondary menu-btn" id="menu-btn" aria-expanded="false" aria-controls="drawer"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg>Menu and what's new</button></p>
 </div>
 <div class="rose-wrap">__ROSE__<p class="bearing-now" id="bearing-now" aria-live="polite">Answer the questions to take a bearing</p></div>
 </div>
 </header>
 <main id="main" tabindex="-1">
-<div class="shell">
+<div class="drawerbar"><button type="button" role="switch" class="dtoggle" id="drawer-toggle" aria-checked="true" aria-controls="drawer"><span class="track" aria-hidden="true"><span class="knob"></span></span><span class="dtl">Page menu</span><span class="dts" aria-hidden="true">On</span></button><span class="hint" id="dflag-sum"></span></div>
+<div class="shell" id="shell">
 <nav class="drawer" id="drawer" aria-labelledby="drawer-h">
-<h2 id="drawer-h"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg>Menu</h2>
-<h3 class="dh"><svg class="i" aria-hidden="true"><use href="#i-sparkles"/></svg>What's new <span class="hint" id="wn-date"></span></h3>
-<ul class="wn" id="wn"></ul>
-<h3 class="dh"><svg class="i" aria-hidden="true"><use href="#i-map-pin"/></svg>Go to</h3>
+<h2 id="drawer-h"><svg class="i" aria-hidden="true"><use href="#i-list-checks"/></svg>On this page</h2>
 <ul class="dnav" id="dnav"></ul>
-<details class="dabout"><summary>About this guide</summary>
-<p id="ab-what"></p>
-<p><strong>Who it is for:</strong> <span id="ab-who"></span></p>
-<p><strong>It helps you:</strong></p><ul id="ab-aims"></ul>
-<p><strong>Good to know:</strong></p><ul id="ab-not"></ul>
-<p class="hint">Dotted words explain themselves when you point at them. Every term is in <button type="button" class="linkish" data-tabgo="glossary">Words explained</button>.</p>
-</details>
 </nav>
 <div class="content">
 <div role="tablist" aria-label="Ways to find your way">
@@ -308,7 +310,7 @@ __SPRITE__
 <button role="tab" id="tab-lineage" aria-controls="lineage" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-network"/></svg>By topic</button>
 <button role="tab" id="tab-directory" aria-controls="directory" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-library-big"/></svg>Directory</button>
 <button role="tab" id="tab-pathway" aria-controls="pathway" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-footprints"/></svg>My pathway<span class="pwc"></span></button>
-<button role="tab" id="tab-glossary" aria-controls="glossary" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-book-open"/></svg>Words explained</button>
+<button role="tab" id="tab-glossary" aria-controls="glossary" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-circle-help"/></svg>Help</button>
 </div>
 
 <section role="tabpanel" id="start" aria-labelledby="tab-start" tabindex="0">
@@ -321,7 +323,7 @@ __SPRITE__
 <button type="button" class="door" data-tabgo="directory"><svg class="i" aria-hidden="true"><use href="#i-library-big"/></svg><strong>Show me everything</strong><span id="door-dir">Search and filter every portal, page, guidance, standard, law, board and community.</span></button>
 </div>
 <div class="finder big"><label for="sq"><strong>Or search everything</strong></label><input id="sq" type="search" autocomplete="off" placeholder="For example: data owner, metadata standard, NHS number, procurement"><div id="sq-out" aria-live="polite"></div></div>
-<h3><svg class="i" aria-hidden="true"><use href="#i-map-pin"/></svg>The four portals at a glance</h3>
+<h3><svg class="i" aria-hidden="true"><use href="#i-map-pin"/></svg>The four websites at a glance</h3>
 <ul class="stagger pstrip" id="pstrip"></ul>
 </section>
 
@@ -383,7 +385,7 @@ __SPRITE__
 <h3><a class="term" href="#glossary" data-term="lineage"><svg class="i" aria-hidden="true"><use href="#i-git-branch"/></svg>Lineage</a>: how it connects</h3>
 <ul class="hint"><li>Solid lines to the right: the DAM playbooks' own content.</li><li>Dashed lines to the left: this guide's suggestions for the other three websites.</li><li>Select anything on the diagram to follow it.</li></ul>
 <div id="graph" class="graph-wrap" role="region" aria-label="Lineage diagram. The same links are listed in the drill-down above and the traceability table below." tabindex="0"></div>
-<h3><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Where the selected area is in the four portals</h3>
+<h3><svg class="i" aria-hidden="true"><use href="#i-compass"/></svg>Where the selected area is in the four websites</h3>
 <div class="lineage" id="lin"></div>
 </div>
 <div class="subpanel" role="tabpanel" id="trace-sub" aria-labelledby="st-trace-sub" tabindex="0" hidden>
@@ -434,9 +436,8 @@ __SPRITE__
 <div class="subpanel" role="tabpanel" id="links" aria-labelledby="st-links" tabindex="0" hidden>
 <h3><svg class="i" aria-hidden="true"><use href="#i-route"/></svg>How they link</h3>
 <p>How the websites point to each other, as of __ASOF__. They stay separate.</p>
-<div id="linktable" class="tablewrap" role="region" aria-label="Links between the portals" tabindex="0"></div>
+<div id="linktable" class="tablewrap" role="region" aria-label="Links between the websites" tabindex="0"></div>
 </div>
-</section>
 </section>
 
 <section role="tabpanel" id="pathway" aria-labelledby="tab-pathway" tabindex="0" hidden>
@@ -454,12 +455,28 @@ __SPRITE__
 </section>
 
 <section role="tabpanel" id="glossary" aria-labelledby="tab-glossary" tabindex="0" hidden>
-<h2><svg class="i" aria-hidden="true"><use href="#i-book-open"/></svg>Words explained</h2>
+<h2><svg class="i" aria-hidden="true"><use href="#i-circle-help"/></svg>Help</h2>
+<div class="subtabs" role="tablist" aria-label="Parts of Help"><button role="tab" id="st-words-sub" aria-controls="words-sub" aria-selected="true"><svg class="i" aria-hidden="true"><use href="#i-book-open"/></svg>Words explained</button><button role="tab" id="st-about-sub" aria-controls="about-sub" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-info"/></svg>About this guide</button><button role="tab" id="st-rel-sub" aria-controls="rel-sub" aria-selected="false" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-history"/></svg>Release notes</button></div>
+<div class="subpanel" role="tabpanel" id="words-sub" aria-labelledby="st-words-sub" tabindex="0">
 <p class="lede">Every term used in this guide, in plain English, with the other names people use for it (a thesaurus) and the terms it relates to.</p>
 <div class="finder"><label for="gq"><strong>Find a word</strong></label><input id="gq" type="search" autocomplete="off"></div>
 <p id="gcount" class="hint" aria-live="polite"></p>
 <nav aria-label="Jump to a letter"><ul class="az" id="az"></ul></nav>
 <dl class="gloss" id="gloss"></dl>
+</div>
+<div class="subpanel" role="tabpanel" id="about-sub" aria-labelledby="st-about-sub" tabindex="0" hidden>
+<h3><svg class="i" aria-hidden="true"><use href="#i-info"/></svg>About this guide</h3>
+<p id="ab-what"></p>
+<h4>Who it is for</h4><p id="ab-who"></p>
+<h4>It helps you</h4><ul id="ab-aims"></ul>
+<h4>Good to know</h4><ul id="ab-not"></ul>
+<p class="hint">Dotted words explain themselves when you point at them.</p>
+</div>
+<div class="subpanel" role="tabpanel" id="rel-sub" aria-labelledby="st-rel-sub" tabindex="0" hidden>
+<h3><svg class="i" aria-hidden="true"><use href="#i-history"/></svg>Release notes</h3>
+<p>What changed in each version, newest first. The page menu flags the parts that changed in the latest version.</p>
+<div id="relnotes"></div>
+</div>
 </section>
 
 
@@ -467,7 +484,7 @@ __SPRITE__
 </main>
 <footer>
 <div class="cols">
-<div><h2>About this compass</h2><p>A neutral guide to four separate, open projects. It was made with help from an AI assistant (Claude) and checked by automated tests; a person reviews each release. Facts about each portal come from that portal's own pages, read on __ASOF__. None is an official GOV.UK service. Where they repeat GOV.UK guidance, GOV.UK is the authority.</p><p>Content: Open Government Licence v3.0. Icons: Lucide (ISC). No tracking, no cookies, and the page cannot make network requests.</p></div>
+<div><h2>About this compass</h2><p>A neutral guide to four separate, open projects. It was made with help from an AI assistant (Claude) and checked by automated tests; a person reviews each release. Facts about each website come from that portal's own pages, read on __ASOF__. None is an official GOV.UK service. Where they repeat GOV.UK guidance, GOV.UK is the authority.</p><p>Content: Open Government Licence v3.0. Icons: Lucide (ISC). No tracking, no cookies, and the page cannot make network requests.</p></div>
 <div><h2>Contact</h2><p>Use the <a href="__CONTACT__">contact form</a>. No email address is published.</p>
 <details class="selfcheck"><summary id="sc-sum">Self-check</summary><ul id="sc-list"></ul></details>
 <p>Version __VERSION__, as of __ASOF__.</p></div>
@@ -495,25 +512,38 @@ tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addE
 function showSub(id,focus){const b=document.getElementById('st-'+id);if(!b)return false;const list=b.parentElement;[...list.children].forEach(x=>{const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;const pn=document.getElementById(x.getAttribute('aria-controls'));if(pn)pn.hidden=!on;});if(focus)b.focus();return true;}
 document.querySelectorAll('.subtabs').forEach(list=>{const bs=[...list.children];bs.forEach((b,i)=>{b.addEventListener('click',()=>showSub(b.getAttribute('aria-controls')));b.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();showSub(bs[(i+n+bs.length)%bs.length].getAttribute('aria-controls'),true);}});});});
 const SUBTAB={};document.querySelectorAll('.subpanel').forEach(s=>{SUBTAB[s.id]=s.closest('[role=tabpanel]:not(.subpanel)').id;});
-/* the menu drawer and what is new (compass 2.0) */
-(function(){const W=D.whats_new||{items:[]};const TL={};tabs.forEach(x=>TL[x.getAttribute('aria-controls')]=x);
- const FL={new:'New',updated:'Updated'};
- const best={};W.items.forEach(x=>{if(TL[x.tab]&&best[x.tab]!=='new')best[x.tab]=x.flag;});
- const flagEl=f=>{const s=document.createElement('span');s.className='flag-n '+(f==='new'?'new':'updated');s.textContent=FL[f==='new'?'new':'updated'];return s;};
- Object.entries(best).forEach(([k,f])=>{TL[k].appendChild(flagEl(f));});
- $('#wn-date').textContent=W.as_of?'('+W.as_of+')':'';
- const mk=(tag,txt)=>{const e=document.createElement(tag);if(txt!=null)e.textContent=txt;return e;};
+/* the page menu: a retractable drawer of in-page sections, each collapsible, flagging what changed in the latest release (compass 2.0) */
+(function(){const R=(D.releases||[])[0]||{changes:[]};const TL={};tabs.forEach(x=>TL[x.getAttribute('aria-controls')]=x);
+ const FL={new:'New',updated:'Updated'};const fk=f=>f==='new'?'new':'updated';
+ const mk=(tag,txt,cls)=>{const e=document.createElement(tag);if(txt!=null)e.textContent=txt;if(cls)e.className=cls;return e;};
+ const flagEl=f=>{const s=mk('span',FL[fk(f)],'flag-n '+fk(f));return s;};
  const HREF={start:'#start',roles:'#roles',bearing:'#bearing',lineage:'#lineage',directory:'#directory',pathway:'#pathway',glossary:'#glossary'};
  const link=(tab,txt,sub)=>{const a=mk('a',txt);a.href=HREF[tab]||'#start';a.dataset.tabgo=tab;if(sub)a.dataset.sub=sub;return a;};
- const wn=$('#wn');W.items.forEach(x=>{const li=mk('li');li.appendChild(flagEl(x.flag));li.append(' ');li.appendChild(TL[x.tab]?link(x.tab,x.label):mk('span',x.label));wn.appendChild(li);});
- /* every tab and sub-tab id comes from the page's own known set, never from free text (C-35) */
- const SUBIDS=new Set(Object.keys(SUBTAB));const dn=$('#dnav');
- tabs.forEach(x=>{const id=Object.keys(TL).find(k=>TL[k]===x);if(!id)return;const li=mk('li');li.appendChild(link(id,x.childNodes[1]?x.childNodes[1].textContent:x.textContent));if(best[id]){li.append(' ');li.appendChild(flagEl(best[id]));}
-  const subs=[...x.ownerDocument.querySelectorAll('.subtabs [role=tab]')].filter(s=>SUBTAB[s.getAttribute('aria-controls')]===id&&SUBIDS.has(s.getAttribute('aria-controls')));
-  if(subs.length){const ul=mk('ul');subs.forEach(s=>{const sid=[...SUBIDS].find(k=>k===s.getAttribute('aria-controls'));const l2=mk('li');l2.appendChild(link(id,s.textContent,sid));ul.appendChild(l2);});li.appendChild(ul);}
-  dn.appendChild(li);});
- const mb=$('#menu-btn'),dr=$('#drawer');mb.addEventListener('click',()=>{const o=mb.getAttribute('aria-expanded')!=='true';mb.setAttribute('aria-expanded',o);dr.classList.toggle('open',o);if(o){const f=dr.querySelector('a,button,summary');if(f)f.focus();}});
- dr.addEventListener('keydown',e=>{if(e.key==='Escape'&&dr.classList.contains('open')){dr.classList.remove('open');mb.setAttribute('aria-expanded','false');mb.focus();}});
+ /* flags for sections (tabs) and items (sub-tabs) come only from the latest release */
+ const tabFlag={},subFlag={};R.changes.forEach(x=>{if(!TL[x.tab])return;if(tabFlag[x.tab]!=='new')tabFlag[x.tab]=fk(x.flag);[].concat(x.sub||[],x.subs||[]).forEach(s=>{if(SUBTAB[s]===x.tab&&subFlag[s]!=='new')subFlag[s]=fk(x.flag);});});
+ Object.entries(tabFlag).forEach(([k,f])=>TL[k].appendChild(flagEl(f)));
+ Object.entries(subFlag).forEach(([k,f])=>{const b=document.getElementById('st-'+k);if(b)b.appendChild(flagEl(f));});
+ const SUBIDS=new Set(Object.keys(SUBTAB));const dn=$('#dnav');let nNew=0,nUpd=0;
+ tabs.forEach(x=>{const id=Object.keys(TL).find(k=>TL[k]===x);if(!id)return;const label=x.childNodes[1]?x.childNodes[1].textContent:x.textContent;
+  const subs=[...document.querySelectorAll('.subtabs [role=tab]')].filter(s=>SUBIDS.has(s.getAttribute('aria-controls'))&&SUBTAB[s.getAttribute('aria-controls')]===id);
+  const li=mk('li');const svg=x.querySelector('svg');
+  const head=a=>{if(svg)a.prepend(svg.cloneNode(true));if(tabFlag[id]){a.append(' ');a.appendChild(flagEl(tabFlag[id]));tabFlag[id]==='new'?nNew++:nUpd++;}return a;};
+  if(!subs.length){li.className='dleaf';li.appendChild(head(link(id,label)));dn.appendChild(li);return;}
+  const det=mk('details');det.open=true;const sm=mk('summary');const sp=mk('span',null,'dsum');sp.appendChild(head(mk('span',label)));sm.appendChild(sp);const dc=mk('span',String(subs.length),'dcount');dc.appendChild(mk('span',' parts','vh'));sm.appendChild(dc);det.appendChild(sm);
+  const ul=mk('ul');ul.appendChild((()=>{const l=mk('li');l.appendChild(link(id,'Open '+label));return l;})());
+  subs.forEach(s=>{const sid=[...SUBIDS].find(k=>k===s.getAttribute('aria-controls'));const l2=mk('li');const a=link(id,s.childNodes[1]?s.childNodes[1].textContent:s.textContent,sid);const si=s.querySelector('svg');if(si)a.prepend(si.cloneNode(true));l2.appendChild(a);if(subFlag[sid]){l2.append(' ');l2.appendChild(flagEl(subFlag[sid]));}ul.appendChild(l2);});
+  det.appendChild(ul);li.appendChild(det);dn.appendChild(li);});
+ $('#dflag-sum').textContent=R.version?`Version ${R.version}: ${nNew} new and ${nUpd} updated sections are flagged.`:'';
+ /* release notes, newest first, in Help */
+ const rn=$('#relnotes');(D.releases||[]).forEach(r=>{const s=mk('section',null,'rel');const h=mk('h4',`Version ${r.version}, ${r.date}`);s.appendChild(h);s.appendChild(mk('p',r.summary));const ul=mk('ul');
+  r.changes.forEach(x=>{const l=mk('li');l.appendChild(flagEl(x.flag));l.append(' ');l.appendChild(TL[x.tab]?link(x.tab,x.text,x.sub&&SUBIDS.has(x.sub)?x.sub:null):mk('span',x.text));ul.appendChild(l);});s.appendChild(ul);rn.appendChild(s);});
+ /* the drawer opens and closes with a labelled switch, remembered on this device where storage works */
+ const sw=$('#drawer-toggle'),sh=$('#shell'),narrow=matchMedia('(max-width:1000px)');
+ const set=o=>{sw.setAttribute('aria-checked',o);sw.querySelector('.dts').textContent=o?'On':'Off';sh.classList.toggle('dclosed',!o);};
+ let pref=null;try{pref=localStorage.getItem('compass-drawer');}catch(e){}
+ set(pref?pref==='open':!narrow.matches);
+ sw.addEventListener('click',()=>{const o=sw.getAttribute('aria-checked')!=='true';set(o);try{localStorage.setItem('compass-drawer',o?'open':'closed');}catch(e){}if(o){const f=$('#drawer a,#drawer summary');if(f)f.focus();}});
+ $('#drawer').addEventListener('keydown',e=>{if(e.key==='Escape'&&narrow.matches){set(false);sw.focus();}});
 })();
 (function(){const n=document.getElementById('needle');if(n&&!location.hash.includes(',')){n.classList.add('settle');n.addEventListener('animationend',()=>n.classList.remove('settle'),{once:true});}})();
 /* wayfinder */
@@ -538,7 +568,7 @@ function render(){
  const pre=used.map(p=>`<div class="tip" style="${cv(p)}"><h3>${ic(P[p].icon)}${esc(P[p].short)}</h3><p>${esc(P[p].needs)}</p><p class="hint">${esc(P[p].binding)}.</p></div>`).join('');
  const roleq=D.questions.find(x=>x.id==='role').options.find(x=>x.id===ans.role);
  let tips='';
- if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each portal</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li><li><a href="${esc(url('ap','roles.html'))}">DCAT-AP-UK: routes for your role</a></li></ul></div>`;}
+ if(roleq){tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('users-round')}Your way in to each website</h3><ul><li><a href="${esc(url('dam',roleq.dam))}">DAM playbooks: the route for your role</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles and responsibilities</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here, with guided tours by role</a></li><li><a href="${esc(url('ap','roles.html'))}">DCAT-AP-UK: routes for your role</a></li></ul></div>`;}
  if(D.wheel)tips+=`<div class="tip" style="${cv('dam')}"><h3>${ic('network')}Go deeper</h3><p>Follow the DAMA wheel from data management area to capability, activity and step, then build your own pathway from the recipe stages your role leads.</p><p><button type="button" class="btn secondary" data-tabgo="lineage">${ic('network')}Open the DAMA wheel</button> <button type="button" class="btn secondary" data-tabgo="pathway">${ic('footprints')}My pathway</button></p></div>`;
  if(ans.skill==='new')tips+=`<div class="tip" style="${cv('cat')}"><h3>${ic('git-branch')}New to GitHub?</h3><p>You don't need to code. Read <a href="${esc(url('cat','#home'))}">GitHub in two minutes</a> in the catalogue, or <a href="${esc(url('dqc','github.html'))}">the Commons' plain-English introduction</a>.</p></div>`;
  if(ans.skill==='daily')tips+=`<div class="tip" style="${cv('dqc')}"><h3>${ic('code-xml')}Working in code?</h3><p>The Commons has a toolkit you can run and an API (<a href="${esc(url('dqc','reuse.html'))}">use the Commons your way</a>). The DAM playbooks publish open data and a reference server for AI assistants (<a href="${esc(url('dam','reuse.html'))}">use and reuse</a>).</p></div>`;
@@ -564,7 +594,7 @@ const FLAG={E:'Explicit in the DAM Policy',I:'Implicit in the DAM Policy',N:'Inf
 const HUES=['#b9d6f2','#c5e5cf','#f6d7a7','#e3c9ef','#f5c6c0','#cfe3e8','#e8dfc0','#d9d4f2','#c9e8d9','#f0d0e2'];
 const sel={area:W.hub,cap:null,act:null};
 const pw=[];
-const myRaci=()=>(W.raci_map[ans.role]||[]);const myRole=()=>W.role_map[ans.role];
+const myRaci=()=>{const A=(D.audiences||[]).find(x=>x.id===ans.aud);return A&&A.raci.length&&A.role===ans.role?A.raci:(W.raci_map[ans.role]||[]);};const myRole=()=>W.role_map[ans.role];
 const KT={'Playbook recipe':'A stage of a DAM playbook recipe, with its steps and the requirements it meets','Change and programmes':'What to do when a programme, contract or legacy exit touches a critical data asset','Perspective':'What the policy means seen from another profession, such as cyber or commercial','Maturity strand':'How to assess where you are, from level 1 to level 5','Knowledge area activity':'An activity in a data management area beyond the three DAM playbooks, with its stage, steps and who does what'};
 const KL=x=>x.kind==='Playbook recipe'?x.group+' recipe':x.kind;
 const leads=a=>a.raci?myRaci().filter(r=>/[RA]/.test(a.raci[r]||'')):[];
@@ -595,14 +625,14 @@ $('#wheel').innerHTML=s;
   const d=e.key==='ArrowRight'||e.key==='ArrowDown'?1:e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:0;if(d){e.preventDefault();ws[(i+d+ws.length)%ws.length].focus();}});});
 }
 /* drill-down */
-function go(a,c,x,keepFocus){if(!a&&!c&&!x)return;sel.act=x||null;sel.cap=c||(x?ACT[x].caps[0]:null);sel.area=a||(sel.cap?CAP[sel.cap].areas[0]:sel.area);
+function go(a,c,x,keepFocus){if(!a&&!c&&!x)return;if(typeof showSub==='function'&&document.readyState!=='loading'&&!keepFocus)showSub('wheel-sub');sel.act=x||null;sel.cap=c||(x?ACT[x].caps[0]:null);sel.area=a||(sel.cap?CAP[sel.cap].areas[0]:sel.area);
  drawWheel();drill();graph();lin();$('#area').value=sel.area;syncHash();
  if(sel.act){const el=document.getElementById('act-'+sel.act);if(el){el.open=true;if(!keepFocus)el.scrollIntoView({block:'nearest'});}}}
 const crumb=(t,fn,cur)=>`<li>${cur?`<span aria-current="location">${esc(t)}</span>`:`<button type="button" data-go="${esc(fn)}">${esc(t)}</button>`}</li>`;
 function addBtn(type,id){const on=pw.some(p=>p.t===type&&p.id===id);return `<button type="button" class="addpw" data-pw="${esc(type)}:${esc(id)}" aria-pressed="${on}">${on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway'}</button>`;}
 function actCard(x,open){const my=leads(x);const steps=x.steps.map(s=>`<li>${esc(s)}</li>`).join('');
  return `<details class="act${sel.act===x.id?' sel':''}" id="act-${esc(x.id)}"${open?' open':''}><summary><span class="pill2" data-tip="${esc(KT[x.kind]||'')}">${esc(KL(x))}</span>${esc(x.title)}${my.length?` <span class="mine">Your role: ${esc(my.map(r=>x.raci[r]).join('/'))}</span>`:''}</summary><div class="bd">`+
- (x.stage?`<p><span class="chip">${esc(x.stage)}</span></p>`:'')+(x.goal?`<p>${esc(x.goal)}</p>`:'')+`<p class="hint">${x.steps.length} steps (the lowest level of activity):</p><ol>${steps}</ol>`+
+ (x.stage?`<p><span class="pill2">${esc(x.stage)}</span></p>`:'')+(x.goal?`<p>${esc(x.goal)}</p>`:'')+`<p class="hint">${x.steps.length} steps (the lowest level of activity):</p><ol>${steps}</ol>`+
  (x.reqs&&x.reqs.length?`<p><strong>Meets:</strong> ${x.reqs.map(([t,u])=>`<a href="${esc(u)}">${esc(t)}</a>`).join(', ')}</p>`:'')+
  (x.raci&&Object.keys(x.raci).length?`<p class="hint">Who (R responsible, A accountable, C consulted, I informed): ${Object.entries(x.raci).map(([r,v])=>esc(W.raci_names[r]||r)+' '+esc(v)).join(' · ')}</p>`:'')+
  `<p><a href="${esc(x.url)}">${ic('landmark')}Open in the DAM playbooks</a> ${addBtn('a',x.id)} <button type="button" class="addpw" data-trace="${esc(x.id)}">${ic('git-branch')}Show its lineage</button></p></div></details>`;}
@@ -627,13 +657,13 @@ function drill(){const a=AREA[sel.area],c=sel.cap&&CAP[sel.cap];
   const xs=c.acts.map(id=>ACT[id]);
   h+=`<h4>${xs.length} ${xs.length===1?'activity':'activities'}, ${xs.reduce((n,x)=>n+x.steps.length,0)} steps</h4>`;
   h+=xs.length?xs.map(x=>actCard(x,sel.act===x.id)).join(''):`<p class="gapnote">No activity in the playbooks is linked to this capability yet. The capability card and <a href="${esc(c.page)}">its page</a> say what is covered so far.</p>`;
-  h+=`<h4>Related in the other portals</h4><p class="hint">Suggested by this compass for the capability's data management areas.</p>`+elsewhereHtml(c.areas);
+  h+=`<h4>Related in the other websites</h4><p class="hint">Suggested by this compass for the capability's data management areas.</p>`+elsewhereHtml(c.areas);
  }
  $('#drill').innerHTML=h;
 }
 function route(v){const [k,id]=String(v).split(':');if(k==='wheel')return go(W.hub);if(k==='area'&&areaId(id))return go(areaId(id));if(k==='cap'&&capId(id))return go(null,capId(id));if(k==='act'&&actId(id))return go(null,null,actId(id));}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go],[data-pw],[data-trace]');if(!b||!b.closest('#lineage,#pathway,#roles,#directory,#start'))return;
- if(b.dataset.go)route(b.dataset.go);else if(b.dataset.trace){const x=actId(b.dataset.trace);if(x){sel.act=x;sel.cap=CAP[sel.cap]&&ACT[x].caps.includes(sel.cap)?sel.cap:ACT[x].caps[0];graph();$('#graph').scrollIntoView({block:'nearest'});$('#graph').focus();syncHash();}}
+ if(b.dataset.go)route(b.dataset.go);else if(b.dataset.trace){const x=actId(b.dataset.trace);if(x){sel.act=x;sel.cap=CAP[sel.cap]&&ACT[x].caps.includes(sel.cap)?sel.cap:ACT[x].caps[0];showSub('lin-sub');graph();$('#graph').scrollIntoView({block:'nearest'});$('#graph').focus();syncHash();}}
  else{const i=b.dataset.pw.indexOf(':');const t=b.dataset.pw.slice(0,i),id=b.dataset.pw.slice(i+1);if(t==='r')togglePw('r',DIRI[id]?DIRI[id].id:undefined);else togglePw(t==='a'?'a':'c',t==='a'?actId(id):capId(id));}});
 /* lineage graph */
 function pname(u){const f=u.split('/').pop().replace('.html','');return (W.page_names[f]||f)+' page';}
@@ -646,7 +676,7 @@ function graph(){const a=AREA[sel.area],c=sel.cap&&CAP[sel.cap];
  const pages=[...new Set((c?actsArr:[].concat(...capsCol.map(k=>CAP[k.id].acts.map(i=>ACT[i])))).map(x=>x.url.split('#')[0]))].map(u=>({k:'page',id:u,label:pname(u)}));
  const ea=elsewhere(areasCol.map(n=>n.id));
  const portals=[['dqc','dq'],['cat','cat'],['ap','ap']].filter(([,k])=>ea[k].length).map(([p,k])=>({k:'portal',id:p,label:P[p].short+' ('+ea[k].length+')'}));
- cols.push(['Other portals (by area)',portals],['Data management area',areasCol],['Capability',capsCol]);if(c)cols.push(['Activity',actsCol]);cols.push(['DAM playbooks page',pages]);
+ cols.push(['Other websites (by area)',portals],['Data management area',areasCol],['Capability',capsCol]);if(c)cols.push(['Activity',actsCol]);cols.push(['DAM playbooks page',pages]);
  areasCol.forEach(n=>{capsCol.forEach(k=>{if(CAP[k.id].areas.includes(n.id))edges.push(['area:'+n.id,'cap:'+k.id,0]);});portals.forEach(p=>edges.push(['portal:'+p.id,'area:'+n.id,1]));});
  if(c){actsArr.forEach(x=>{edges.push(['cap:'+c.id,'act:'+x.id,0]);edges.push(['act:'+x.id,'page:'+x.url.split('#')[0],0]);});}
  else capsCol.forEach(k=>CAP[k.id].acts.forEach(i=>edges.push(['cap:'+k.id,'page:'+ACT[i].url.split('#')[0],0])));
@@ -655,7 +685,7 @@ function graph(){const a=AREA[sel.area],c=sel.cap&&CAP[sel.cap];
  cols.forEach(([t,ns],ci)=>{const off=Math.max(0,(Math.max(...cols.map(c2=>c2[1].length))-ns.length)*(NH+VG)/2*(ci<2?0:0));ns.forEach((n,i)=>{pos[n.k+':'+n.id]={x:12+ci*(CW+GAP),y:TOP+off+i*(NH+VG),n};});H=Math.max(H,TOP+ns.length*(NH+VG)+10);});
  const Wd=12+cols.length*(CW+GAP)-GAP+12;
  const hot=new Set();if(sel.act){const x=ACT[sel.act];hot.add('cap:'+sel.cap+'|act:'+x.id);hot.add('act:'+x.id+'|page:'+x.url.split('#')[0]);CAP[sel.cap].areas.forEach(id=>{hot.add('area:'+id+'|cap:'+sel.cap);portals.forEach(p=>hot.add('portal:'+p.id+'|area:'+id));});}
- let s=`<svg viewBox="0 0 ${Wd} ${H}" width="${Wd}" height="${H}" role="group" aria-label="Lineage from ${esc(c?c.id+' '+c.name:a.name)} to activities, pages and portals">`;
+ let s=`<svg viewBox="0 0 ${Wd} ${H}" width="${Wd}" height="${H}" role="group" aria-label="Lineage from ${esc(c?c.id+' '+c.name:a.name)} to activities, pages and websites">`;
  cols.forEach(([t],ci)=>{s+=`<text x="${12+ci*(CW+GAP)}" y="18" font-size="12" font-weight="700" role="heading" aria-level="4">${esc(t)}</text>`;});
  edges.forEach(([f,t,d])=>{const A=pos[f],B=pos[t];if(!A||!B)return;const x1=A.x+CW,y1=A.y+NH/2,x2=B.x,y2=B.y+NH/2,mx=(x1+x2)/2;s+=`<path class="gedge${d?' dash':''}${hot.has(f+'|'+t)?' hot':''}" d="M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}"/>`;});
  const fill={area:'var(--panel)',cap:'var(--card)',act:'var(--dam-bg)',page:'var(--dam-bg)',portal:'var(--card)'};
@@ -706,21 +736,21 @@ $('#mx-csv').addEventListener('click',()=>{download('compass-traceability.csv',[
 /* pathway */
 function togglePw(t,id){if(!id)return;const i=pw.findIndex(p=>p.t===t&&p.id===id);if(i>=0)pw.splice(i,1);else pw.push({t,id});refreshPw();}
 function pwItem(p){return p.t==='a'?ACT[p.id]:p.t==='r'?(D.directory||[]).find(e=>e.id===p.id):CAP[p.id];}
-function rank(p){const x=pwItem(p);if(p.t==='r')return 2000+['Portal','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'].indexOf(x.kind);if(p.t==='c')return 1000+Number(x.id.slice(3));const k={'Playbook recipe':0,'Knowledge area activity':100,'Maturity strand':200,'Change and programmes':300,'Perspective':400}[x.kind];return k+(x.order||0)+(x.kind==='Change and programmes'?Number(x.id.slice(3)):0);}
+function rank(p){const x=pwItem(p);if(p.t==='r')return 2000+['Website','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'].indexOf(x.kind);if(p.t==='c')return 1000+Number(x.id.slice(3));const k={'Playbook recipe':0,'Knowledge area activity':100,'Maturity strand':200,'Change and programmes':300,'Perspective':400}[x.kind];return k+(x.order||0)+(x.kind==='Change and programmes'?Number(x.id.slice(3)):0);}
 function refreshPw(){
  document.querySelectorAll('.addpw[data-pw]').forEach(b=>{const i=b.dataset.pw.indexOf(':');const t=b.dataset.pw.slice(0,i),id=b.dataset.pw.slice(i+1);const on=pw.some(p=>p.t===t&&p.id===id);b.setAttribute('aria-pressed',on);b.innerHTML=on?ic('check')+'In my pathway':ic('footprints')+'Add to my pathway';});
  const tab=document.getElementById('tab-pathway');if(tab)tab.querySelector('.pwc').textContent=pw.length?` (${pw.length})`:'';
  if(!pw.length){$('#pw').innerHTML='<p class="gapnote">Your pathway is empty. Add activities from the DAMA wheel, or start from your role.</p>';syncHash();return;}
  const steps=pw.reduce((n,p)=>n+(p.t==='a'?ACT[p.id].steps.length:0),0);
- $('#pw').innerHTML=`<p><strong>${pw.length} ${pw.length===1?'item':'items'}, ${steps} steps.</strong></p><ol class="pwl">`+pw.map((p,i)=>{const x=pwItem(p);const isA=p.t==='a';
-  if(p.t==='r')return `<li><span class="n" aria-hidden="true">${i+1}</span><div><p class="hint">${esc(x.kind)} · ${esc(x.by||'')}</p><h4><a href="${esc(x.url)}" rel="noopener">${esc(x.title)}</a></h4><p>${esc(x.desc||'')}</p></div><div class="ctl"><button type="button" data-mv="${i}:-1" aria-label="Move up">\u2191</button><button type="button" data-mv="${i}:1" aria-label="Move down">\u2193</button><button type="button" data-rm="${i}" aria-label="Remove">\u2715</button></div></li>`;
+ $('#pw').innerHTML=`<p><strong>${pw.length} ${pw.length===1?'item':'items'}, ${steps} steps.</strong></p><ol class="pwl">`+pw.map((p,i)=>{const x=pwItem(p);const isA=p.t==='a';const nm=p.t==='r'?x.title:isA?x.title:x.id+' '+x.name;
+  if(p.t==='r')return `<li><span class="n" aria-hidden="true">${i+1}</span><div><p class="hint">${esc(x.kind)} · ${esc(x.by||'')}</p><h4><a href="${esc(x.url)}" rel="noopener">${esc(x.title)}</a></h4><p>${esc(x.desc||'')}</p></div><div class="ctl"><button type="button" data-mv="${i}:-1" aria-label="Move up: ${esc(nm)}">\u2191</button><button type="button" data-mv="${i}:1" aria-label="Move down: ${esc(nm)}">\u2193</button><button type="button" data-rm="${i}" aria-label="Remove: ${esc(nm)}">\u2715</button></div></li>`;
   return `<li><span class="n" aria-hidden="true">${i+1}</span><div><p class="hint">${isA?esc(KL(x))+' · '+esc(x.caps.join(', ')):'Capability · '+esc(x.cluster)}</p><h4>${esc(isA?x.title:x.id+' '+x.name)}</h4>`+
   (isA?`<details><summary>${x.steps.length} steps</summary><ol>${x.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></details><p><a href="${esc(x.url)}">Open in the DAM playbooks</a></p>`:`<p>${esc(x.note)}</p><p><a href="${esc(x.url)}">Capability card</a></p>`)+
-  `</div><div class="ctl"><button type="button" data-mv="${i}:-1" aria-label="Move up">↑</button><button type="button" data-mv="${i}:1" aria-label="Move down">↓</button><button type="button" data-rm="${i}" aria-label="Remove">✕</button></div></li>`;}).join('')+'</ol>';
+  `</div><div class="ctl"><button type="button" data-mv="${i}:-1" aria-label="Move up: ${esc(nm)}">↑</button><button type="button" data-mv="${i}:1" aria-label="Move down: ${esc(nm)}">↓</button><button type="button" data-rm="${i}" aria-label="Remove: ${esc(nm)}">✕</button></div></li>`;}).join('')+'</ol>';
  syncHash();}
 $('#pw').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.rm!==undefined){const i=Number(b.dataset.rm);if(pw[i])pw.splice(i,1);}else if(b.dataset.mv){const [i,d]=b.dataset.mv.split(':').map(Number);const j=i+d;if(pw[i]&&pw[j]){[pw[i],pw[j]]=[pw[j],pw[i]];}}refreshPw();});
-$('#pw-role').addEventListener('click',()=>{const rr=myRaci();if(!rr.length){$('#pw-status').textContent='Choose your role in Find your bearing first. For roles that lead no recipe stage, add activities from the DAMA wheel.';return;}
- W.acts.filter(x=>leads(x).length).forEach(x=>{if(!pw.some(p=>p.t==='a'&&p.id===x.id))pw.push({t:'a',id:x.id});});$('#pw-status').textContent='Added the recipe stages your role is responsible or accountable for.';refreshPw();});
+$('#pw-role').addEventListener('click',()=>{const rr=myRaci();if(!rr.length){$('#pw-status').textContent='Choose your profession on By profession, or your role on By task, first. For roles that lead no activity, add activities from the DAMA wheel.';return;}
+ W.acts.filter(x=>leads(x).length).forEach(x=>{if(!pw.some(p=>p.t==='a'&&p.id===x.id))pw.push({t:'a',id:x.id});});$('#pw-status').textContent='Added the activities your role does or is accountable for.';refreshPw();});
 $('#pw-sort').addEventListener('click',()=>{pw.sort((a,b)=>rank(a)-rank(b));$('#pw-status').textContent='Sorted: playbook recipes in order first, then maturity, change and perspectives.';refreshPw();});
 $('#pw-clear').addEventListener('click',()=>{pw.length=0;refreshPw();});
 $('#pw-print').addEventListener('click',()=>window.print());
@@ -729,10 +759,11 @@ $('#pw-csv').addEventListener('click',()=>download('my-pathway.csv',['Order,Kind
 /* Compass 2.0: start doors, professions, directory and search everything */
 const DIR=D.directory||[];const AUD={};(D.audiences||[]).forEach(a=>AUD[a.id]=a);const DIRI={};DIR.forEach(e=>DIRI[e.id]=e);
 const WHERE={dam:P.dam.short,dqc:P.dqc.short,cat:P.cat.short,ap:P.ap.short,ext:'Elsewhere (GOV.UK and others)'};
-const KORD=['Portal','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'];
+const KICON=Object.fromEntries((D.kind_icons||[]).map(x=>[x.kind,x.icon]));
+const KORD=['Website','Policy and strategy','Legislation','Standard','Guidance','Board or group','Community or network','Portal page'];
 const dirId=v=>DIRI[v]?DIRI[v].id:undefined,audId=v=>AUD[v]?AUD[v].id:undefined;
 const seeTab=id=>{const tt=tabs.find(x=>x.getAttribute('aria-controls')===id);if(tt){selTab(tt);syncHash();window.scrollTo({top:document.getElementById(id).offsetTop-8});}};
-$('#door-dir').textContent=`Search and filter all ${DIR.length} portals, pages, guidance, standards, laws, boards and communities.`;
+$('#door-dir').textContent=`Search and filter all ${DIR.length} websites, pages, guidance, standards, laws, boards and communities.`;
 $('#pstrip').innerHTML=D.portals.map(p=>`<li style="${cv(p.id)}"><span class="badge">${ic(p.icon)}</span><div><p class="bear">${esc(p.bearing_name)}: ${esc(p.metaphor)}</p><h4><a href="${esc(p.url)}">${esc(p.name)}</a></h4><p>${esc(p.question)}</p></div></li>`).join('')+`<li class="more"><button type="button" class="linkish" data-tabgo="directory" data-jump="portals">${ic('arrow-right')}More about each portal, when to use it and how they link</button></li>`;
 /* directory */
 const opts=(el,items)=>{el.innerHTML='<option value="">All</option>'+items.map(([v,l])=>`<option value="${esc(v)}">${esc(l)}</option>`).join('');};
@@ -746,7 +777,7 @@ function dirRows(){const pick=(sel_,list)=>{const i=$(sel_).selectedIndex;return
  return DIR.filter(e=>(!k||e.kind===k)&&(!wh||e.where===wh)&&(!au||!e.aud.length||e.aud.includes(au))&&(!tp||e.topic===tp)&&(!ar||e.areas.includes(ar))&&(!q.length||q.every(w=>(e.title+' '+e.desc+' '+e.by+' '+e.topic).toLowerCase().includes(w))))
   .sort((a,b)=>KORD.indexOf(a.kind)-KORD.indexOf(b.kind)||a.title.localeCompare(b.title));}
 function dirCard(e){const areas=e.areas.map(a=>W&&W.areas.find(x=>x.id===a)).filter(Boolean);
- return `<li class="dcard" style="${cv(e.where==='ext'?'trail':e.where)}"><p class="dk"><span class="pill2">${esc(e.kind)}</span>${esc(WHERE[e.where])}${e.by&&e.where==='ext'?' · '+esc(e.by):''}</p><h4><a href="${esc(e.url)}" rel="noopener">${esc(e.title)}</a></h4>${e.desc?`<p>${esc(e.desc)}</p>`:''}`+
+ return `<li class="dcard" style="${cv(e.where==='ext'?'trail':e.where)}"><p class="dk">${ic((KICON[e.kind])||'file-text')}<span class="pill2">${esc(e.kind)}</span>${esc(WHERE[e.where])}${e.by&&e.where==='ext'?' · '+esc(e.by):''}</p><h4><a href="${esc(e.url)}" rel="noopener">${esc(e.title)}</a></h4>${e.desc?`<p>${esc(e.desc)}</p>`:''}`+
  (e.join?`<p class="hint"><strong>How to take part:</strong> ${esc(e.join)}</p>`:'')+
  `<p class="chips">${areas.map(a=>`<button type="button" class="chip" data-go="area:${esc(a.id)}" data-tabto="lineage">${esc(a.name)}</button>`).join('')}${e.status?`<span class="hint">${esc(e.status)}</span>`:''}</p><p>${addBtn('r',e.id)}</p></li>`;}
 function directoryRender(){const rs=dirRows();$('#dir').innerHTML=rs.slice(0,shown).map(dirCard).join('')||'<li class="gapnote">Nothing matches. Clear a filter or try other words.</li>';
@@ -763,8 +794,8 @@ function audHub(id){const a=AUD[id];if(!a)return;curAud=a.id;
  document.querySelectorAll('.audbtn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.aud===a.id));
  const r=opt('role',a.role);if(r){ans.role=r;const ri=document.querySelector(`input[name="role"][value="${r}"]`);if(ri)ri.checked=true;render();}
  const roleq=D.questions.find(x=>x.id==='role').options.find(x=>x.id===a.role);
- const lead=W?W.acts.filter(x=>x.raci&&a.raci.some(c=>/[RA]/.test(x.raci[c]||''))):[];
- const res=DIR.filter(e=>e.aud.includes(a.id)&&!['Portal','Portal page','Board or group','Community or network'].includes(e.kind)).sort((x,y)=>KORD.indexOf(x.kind)-KORD.indexOf(y.kind)||x.title.localeCompare(y.title));
+ ans.aud=a.id;const lead=W?W.acts.filter(x=>leads(x).length):[];
+ const res=DIR.filter(e=>e.aud.includes(a.id)&&!['Website','Website page','Board or group','Community or network'].includes(e.kind)).sort((x,y)=>KORD.indexOf(x.kind)-KORD.indexOf(y.kind)||x.title.localeCompare(y.title));
  const comm=a.bodies.map(dirId).filter(Boolean).map(i=>DIRI[i]);
  const sit=D.questions[0].options;
  $('#aud-hub').innerHTML=`<div class="hub"><div class="drill-h">${ic(a.icon)}<h3>${esc(a.name)}</h3></div><p class="hint">${esc(a.who)}</p>
@@ -772,19 +803,19 @@ function audHub(id){const a=AUD[id];if(!a)return;curAud=a.id;
  <section><h4>${ic('circle-help')}Questions people in your role ask</h4><ul>${a.asks.map(q=>`<li>${esc(q)}</li>`).join('')}</ul></section>
  <section><h4>${ic('navigation')}Tasks you are likely to bring</h4><ul class="plain">${a.routes.map(rid=>{const o=sit.find(s=>s.id===rid);return o?`<li><button type="button" class="chip" data-route2="${esc(o.id)}">${esc(o.label)}</button></li>`:'';}).join('')}</ul><p class="hint">Each opens a step-by-step route across the portals.</p></section>
  <section><h4>${ic('network')}Your data management areas</h4><p class="chips">${a.areas.map(id=>W&&W.areas.find(x=>x.id===id)).filter(Boolean).map(x=>`<button type="button" class="chip" data-go="area:${esc(x.id)}" data-tabto="lineage">${esc(x.name)}</button>`).join('')}</p></section>
- <section><h4>${ic('compass')}Your way in to each portal</h4><ul><li><a href="${esc(url('dam',roleq?roleq.dam:'personas.html'))}">DAM playbooks: your role's route</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here</a></li><li><a href="${esc(url('ap','index.html'))}">DCAT-AP-UK: the profile</a></li></ul></section>
+ <section><h4>${ic('compass')}Your way in to each website</h4><ul><li><a href="${esc(url('dam',roleq?roleq.dam:'personas.html'))}">DAM playbooks: your role's route</a></li><li><a href="${esc(url('dqc','roles.html'))}">Data Quality Commons: roles</a></li><li><a href="${esc(url('cat','#home'))}">Repos Asset Catalogue: start here</a></li><li><a href="${esc(url('ap','index.html'))}">DCAT-AP-UK: the profile</a></li></ul></section>
  </div>
- <h4>${ic('footprints')}Recipe stages you lead (${lead.length})</h4>${lead.length?`<ul class="plain">${lead.map(x=>`<li><button type="button" class="linkish" data-go="act:${esc(x.id)}" data-tabto="lineage">${esc(KL(x))}: ${esc(x.title)}</button> ${addBtn('a',x.id)}</li>`).join('')}</ul><p><button type="button" class="btn secondary" id="aud-addall">${ic('footprints')}Add all to my pathway</button></p>`:'<p class="hint">Your role is not named as responsible or accountable in the playbook recipes. Add activities from the DAMA wheel instead.</p>'}
+ <h4>${ic('footprints')}Activities you lead (${lead.length})</h4>${lead.length?`<ul class="plain">${lead.map(x=>`<li><button type="button" class="linkish" data-go="act:${esc(x.id)}" data-tabto="lineage">${esc(KL(x))}: ${esc(x.title)}</button> ${addBtn('a',x.id)}</li>`).join('')}</ul><p><button type="button" class="btn secondary" id="aud-addall">${ic('footprints')}Add all to my pathway</button></p>`:'<p class="hint">Your role is not named as responsible or accountable in the playbook recipes. Add activities from the DAMA wheel instead.</p>'}
  <h4>${ic('handshake')}Communities and boards for you (${comm.length})</h4><ul class="dir">${comm.map(dirCard).join('')}</ul>
  <h4>${ic('library')}Guidance, standards and laws for you (${res.length})</h4><ul class="dir">${res.slice(0,6).map(dirCard).join('')}</ul>
- <p><button type="button" class="btn" id="aud-all">${ic('library-big')}See all ${res.length} in the directory</button></p></div>`;
+ <p><button type="button" class="btn" id="aud-all">${ic('library-big')}See all ${DIR.filter(e=>!e.aud.length||e.aud.includes(a.id)).length} directory entries for you</button></p><p class="hint">That includes the four websites and anything for everyone.</p></div>`;
  const all=$('#aud-addall');if(all)all.addEventListener('click',()=>{lead.forEach(x=>{if(!pw.some(p=>p.t==='a'&&p.id===x.id))pw.push({t:'a',id:x.id});});refreshPw();});
  $('#aud-all').addEventListener('click',()=>{['#dq-kind','#dq-where','#dq-topic','#dq-area'].forEach(s=>$(s).selectedIndex=0);$('#dq-q').value='';$('#dq-aud').selectedIndex=(D.audiences||[]).findIndex(x=>x.id===a.id)+1;shown=24;directoryRender();seeTab('directory');});
  drill();refreshPw();syncHash();}
 $('#aud-grid').addEventListener('click',e=>{const b=e.target.closest('[data-aud]');if(b)audHub(audId(b.dataset.aud));});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-route2]');if(b){const v=opt('why',b.dataset.route2);if(!v)return;ans.why=v;const r=document.querySelector(`input[name="why"][value="${v}"]`);if(r)r.checked=true;render();seeTab('bearing');}
  const t2=e.target.closest('[data-tabto]');if(t2&&!t2.closest('#lineage')){setTimeout(()=>seeTab('lineage'),0);}
- const j=e.target.closest('[data-jump]');if(j){const s=document.getElementById(j.dataset.jump==='portals'?'portals':'');if(s)setTimeout(()=>{s.scrollIntoView();s.focus({preventScroll:true});},50);}});
+ const j=e.target.closest('[data-jump]');if(j){const s=document.getElementById(j.dataset.jump==='portals'?'portals':'');if(s)setTimeout(()=>{showSub('portals');s.scrollIntoView();s.focus({preventScroll:true});},50);}});
 /* search everything */
 const SIDX=[].concat((D.audiences||[]).map(a=>({g:'Professions',t:a.name,s:a.who,act:()=>{seeTab('roles');audHub(a.id);}})),
  D.questions[0].options.map(o=>({g:'Tasks',t:o.label,s:'',act:()=>{ans.why=o.id;const r=document.querySelector(`input[name="why"][value="${o.id}"]`);if(r)r.checked=true;render();seeTab('bearing');}})),
@@ -807,7 +838,7 @@ if(framed){const pr=$('#pw-print');if(pr)pr.hidden=true;}
 window.compassInit=()=>{drawWheel();drill();graph();lin();$('#area').value=sel.area;matrix();refreshPw();};
 window.compassRole=()=>{drill();refreshPw();};
 }
-document.addEventListener('click',e=>{const b=e.target.closest('[data-tabgo]');if(!b)return;e.preventDefault();const tt=tabs.find(x=>x.getAttribute('aria-controls')===b.dataset.tabgo);if(tt){sel(tt,!b.dataset.sub);if(b.dataset.sub)showSub(b.dataset.sub,true);syncHash();const dr=$('#drawer');if(dr.classList.contains('open')){dr.classList.remove('open');$('#menu-btn').setAttribute('aria-expanded','false');}if(b.closest('#drawer'))tt.scrollIntoView({block:'start'});}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tabgo]');if(!b)return;e.preventDefault();const tt=tabs.find(x=>x.getAttribute('aria-controls')===b.dataset.tabgo);if(tt){sel(tt,!b.dataset.sub);if(b.dataset.sub)showSub(b.dataset.sub,true);syncHash();if(b.closest('#drawer')){if(matchMedia('(max-width:1000px)').matches){$('#shell').classList.add('dclosed');$('#drawer-toggle').setAttribute('aria-checked','false');$('#drawer-toggle .dts').textContent='Off';}tt.scrollIntoView({block:'start'});}}});
 /* hash: tab and answers */
 function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');const cs=window.compassState?window.compassState():['',''];
  const parts=[t.getAttribute('aria-controls'),a.replace(/,/g,'')?a:'',cs[0]==='area:'+(D.wheel?D.wheel.hub:'')?'':cs[0],cs[1],window.compassAud&&window.compassAud()||''];while(parts.length>1&&!parts[parts.length-1])parts.pop();const nh='#'+parts.join('/');
@@ -837,7 +868,7 @@ document.querySelectorAll('[data-route]').forEach(b=>b.addEventListener('click',
 $('#whencards').innerHTML=D.portals.map(p=>{const w=D.when[p.id];return `<article class="wc" style="${cv(p.id)}"><h3>${ic(p.icon)}${esc(p.name)}</h3><p class="yes">${ic('circle-check')}Go there when</p><ul>${w.use.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p class="no">${ic('info')}You can skip it when</p><ul>${w.skip.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></article>`;}).join('');
 
 /* links */
-$('#linktable').innerHTML='<table><caption class="vh">How the portals link to each other</caption><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Links</th></tr></thead><tbody>'+D.links_today.map(([f,t,n])=>`<tr><td class="pn">${ic(P[f].icon)}${esc(P[f].short)}</td><td><span class="pn">${ic(P[t].icon)}${esc(P[t].short)}</span></td><td>${esc(n)}</td></tr>`).join('')+'</tbody></table>';
+$('#linktable').innerHTML='<table><caption class="vh">How the websites link to each other</caption><thead><tr><th scope="col">From</th><th scope="col">To</th><th scope="col">Links</th></tr></thead><tbody>'+D.links_today.map(([f,t,n])=>`<tr><td class="pn">${ic(P[f].icon)}${esc(P[f].short)}</td><td><span class="pn">${ic(P[t].icon)}${esc(P[t].short)}</span></td><td>${esc(n)}</td></tr>`).join('')+'</tbody></table>';
 /* about and glossary (compass 1.3) */
 if(D.about){const A=D.about;$('#ab-what').textContent=A.what;$('#ab-who').textContent=A.for_whom;
  $('#ab-aims').innerHTML=A.aims.map(x=>`<li>${esc(x)}</li>`).join('');$('#ab-not').innerHTML=A.not.map(x=>`<li>${esc(x)}</li>`).join('');
@@ -869,28 +900,30 @@ document.addEventListener('click',e=>{const a=e.target.closest('a[data-term]');i
  tip.addEventListener('mouseenter',()=>clearTimeout(timer));tip.addEventListener('mouseleave',later);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!tip.hidden){hide();}});
  window.addEventListener('scroll',()=>{if(!tip.hidden)hide();},{passive:true});
- const TT={tab_start:'Choose how to find your way, or search everything',tab_roles:'Tasks, areas, guidance and communities picked for your profession',tab_directory:'Every portal, page, guidance, standard, law, board and community in one searchable list',tab_bearing:'Answer four questions and get a route across the portals',tab_portals:'What each portal is for, who runs it and how binding it is',tab_examples:'Common situations and where to start',tab_when:'When you need each portal and when you can skip it',tab_lineage:'Drill down from a data management area to capabilities, activities and steps, and see where each is',tab_pathway:'Your own ordered list of activities, kept in the page address',tab_links:'How the portals point to each other',tab_glossary:'Plain-English meanings of every term used here, with other names for them'};
+ const TT={tab_start:'Choose how to find your way, or search everything',tab_roles:'Tasks, areas, guidance and communities picked for your profession',tab_directory:'Every website, page, guidance, standard, law, board and community in one searchable list',tab_bearing:'Answer four questions and get a route across the websites',tab_lineage:'Go down from a data management area to capabilities, activities and steps, and see where each is',tab_pathway:'Your own ordered list of activities, kept in the page address',tab_glossary:'Words explained, about this guide, and release notes',
+ st_portals:'What each website is for, who runs it and how binding it is',st_examples:'Common situations and where to start',st_when:'When you need each website and when you can skip it',st_links:'How the websites point to each other',
+ 'st_route-sub':'Answer four questions for a route','st_prec-sub':'Which website to use first when a task needs more than one','st_wheel-sub':'The DAMA wheel and its drill-down','st_lin-sub':'A diagram tracing an area or activity through the websites','st_trace-sub':'Every activity in one table, with gaps','st_dir-sub':'Search and filter every entry','st_words-sub':'Plain-English meanings of every term, with other names','st_about-sub':'What this guide is, who it is for and what it is not','st_rel-sub':'What changed in each version'};
  Object.entries(TT).forEach(([k,v])=>{const el=document.getElementById(k.replace('_','-'));if(el)el.setAttribute('data-tip',v);});
 })();
 /* self-check, on every load */
 const checks=[],ck=(n,ok,d)=>checks.push({n,ok,d});
 const bases=D.portals.map(p=>p.url);
 const allSteps=Object.values(D.routes).flatMap(r=>r.steps);
-ck('Every route step names a known portal',allSteps.every(s=>P[s.p]),allSteps.length+' steps');
+ck('Every route step names a known website',allSteps.every(s=>P[s.p]),allSteps.length+' steps');
 ck('Every situation has a route',D.questions[0].options.every(o=>D.routes[o.id]),D.questions[0].options.length+' situations');
 ck('Every worked example follows a known route',D.scenarios.every(x=>D.routes[x.route]&&P[x.start]&&x.then.every(p=>P[p])),D.scenarios.length+' examples');
 ck('Every portal has a compass bearing',D.portals.every(p=>p.bearing in ROT),'');
-ck('Links go only to the four portals',D.areas.flatMap(a=>[...a.dam,...a.dq,...a.cat,...a.ap].map(x=>x[1])).every(u=>bases.some(b=>u.startsWith(b))),'');
+ck('Links go only to the four websites',D.areas.flatMap(a=>[...a.dam,...a.dq,...a.cat,...a.ap].map(x=>x[1])).every(u=>bases.some(b=>u.startsWith(b))),'');
 if(D.wheel){const Wc=D.wheel;ck('Every capability is on the DAMA wheel',Object.values(Wc.caps).every(c=>c.areas.length),Object.keys(Wc.caps).length+' capabilities');
  ck('Every activity belongs to a known capability',Wc.acts.every(x=>x.caps.every(c=>Wc.caps[c])),Wc.acts.length+' activities, '+Wc.acts.reduce((n,x)=>n+x.steps.length,0)+' steps');
  ck('Every activity link goes to the DAM playbooks',Wc.acts.every(x=>x.url.startsWith(P.dam.url)),'');
  const gaps=Object.values(Wc.caps).filter(c=>!c.acts.length).map(c=>c.id);ck('Capabilities with no activity yet are shown as gaps',true,gaps.length?gaps.join(', '):'none');}
-if(D.sync)ck('Links into the other portals were found at the last automatic check',D.sync.available&&!D.sync.bad.length,D.sync.available?(D.sync.checked+(D.sync.bad.length?': '+D.sync.bad.length+' missing, hidden until fixed':'')):'Not checked in this build');
+if(D.sync)ck('Links into the other websites were found at the last automatic check',D.sync.available&&!D.sync.bad.length,D.sync.available?(D.sync.checked+(D.sync.bad.length?': '+D.sync.bad.length+' missing, hidden until fixed':'')):'Not checked in this build');
 const csp=(document.querySelector('meta[http-equiv=Content-Security-Policy]')||{}).content||'';
 ck('The page cannot make network requests',/default-src 'none'/.test(csp)&&!/connect-src/.test(csp),'Content Security Policy');
 const ages=D.portals.map(p=>[p.short,Math.round((Date.now()-Date.parse(p.data_as_of||D.meta.as_of))/864e5)]);
 const old=ages.filter(([,d])=>d>30);
-ck('No portal data older than 30 days',old.length===0,old.length?old.map(([n,d])=>`${n}: ${d} days`).join('; '):ages.map(([n,d])=>`${n} ${d} days`).join('; '));
+ck('No website facts older than 30 days',old.length===0,old.length?old.map(([n,d])=>`${n}: ${d} days`).join('; '):ages.map(([n,d])=>`${n} ${d} days`).join('; '));
 const pass=checks.filter(c=>c.ok).length;$('#sc-sum').textContent=`Self-check: ${pass} of ${checks.length} passed`;
 $('#sc-list').innerHTML=checks.map(c=>`<li class="${c.ok?'ok':'bad'}">${c.ok?'Pass':'Needs attention'}: ${esc(c.n)}${c.d?` (${esc(c.d)})`:''}</li>`).join('');
 })();

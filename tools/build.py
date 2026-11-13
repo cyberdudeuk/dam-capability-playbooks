@@ -123,6 +123,7 @@ def validate(d):
             errs.append(f'duplicate id {i} in {where} (also {ids[i]})')
         ids[i] = where
     for s in d['sources']: reg(s['id'], 'sources')
+    for x in d.get('defects', []): reg(x['id'], 'defects')  # D-040: two sessions gave out the same defect numbers
     for r in d['requirements']: reg(r['id'], 'requirements')
     for r in d['roles']: reg('role:' + r['code'], 'roles')
     for c in d['capabilities']:
@@ -613,6 +614,11 @@ def validate_areas(d, errs):
             for k in ('title', 'goal', 'steps', 'outputs', 'evidence', 'measure', 'raci', 'reqs', 'caps', 'refs'):
                 if not x.get(k): errs.append(f'{v}: {k} missing')
             if x['stage'] not in stages: errs.append(f"{v}: unknown stage {x['stage']}")
+            for k in ('steps', 'outputs'):  # an unquoted colon once turned a step into a mapping (review, 13 November 2026)
+                for s in x.get(k, []):
+                    if not isinstance(s, str): errs.append(f'{v}: a {k[:-1]} is not plain text (quote it if it has a colon): {s}')
+            for k in ('title', 'goal', 'evidence', 'measure'):
+                if x.get(k) is not None and not isinstance(x[k], str): errs.append(f'{v}: {k} is not plain text')
             if not any(r == 'A' for r in x.get('raci', {}).values()): errs.append(f'{v}: no one is accountable')
             if sum(1 for r in x.get('raci', {}).values() if r == 'A') > 1: errs.append(f'{v}: more than one accountable role')
             for k, ok in (('reqs', reqs), ('caps', caps), ('refs', rb), ('templates', tpls), ('links', acts)):
@@ -642,7 +648,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 42)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 43)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -3340,12 +3346,14 @@ class Site:
         inputs = {i['id']: i for i in G['meta']['inputs']}
         n_acts = sum(len(a['activities']) for a in G['areas'])
         stage_icon = {'start': 'flag', 'build': 'wrench', 'embed': 'refresh-cw'}
+        SHORT = {'DM-ARC': 'Architecture', 'DM-MOD': 'Modelling', 'DM-OPS': 'Operations', 'DM-SEC': 'Security', 'DM-INT': 'Integration',
+                 'DM-DOC': 'Records', 'DM-REF': 'Reference data', 'DM-BI': 'Reporting', 'DM-META': 'Metadata', 'DM-DQ': 'Data quality'}
         AREA_ICONS = {'DM-GOV': 'shield-check', 'DM-ARC': 'network', 'DM-MOD': 'git-branch', 'DM-OPS': 'server', 'DM-SEC': 'lock-keyhole',
                       'DM-INT': 'arrow-right-left', 'DM-DOC': 'archive', 'DM-REF': 'key-round', 'DM-BI': 'chart-column', 'DM-META': 'library-big', 'DM-DQ': 'gauge'}
 
         def who(raci):
             parts = []
-            for code, lbl in (('A', 'Accountable'), ('R', 'Does the work'), ('C', 'Consulted'), ('I', 'Kept informed')):
+            for code, lbl in (('A', 'Accountable'), ('R', 'Responsible (does the work)'), ('C', 'Consulted'), ('I', 'Informed')):
                 names = [roles[r] for r, v in raci.items() if v == code]
                 if names:
                     parts.append(f'<li><strong>{lbl}:</strong> {E(", ".join(names))}</li>')
@@ -3373,42 +3381,42 @@ class Site:
                     + (f'<dt>{icon("signpost")} Goes with</dt><dd>{ln}</dd>' if ln else '')
                     + f'<dt>{icon("ruler")} Standards and guidance</dt><dd><ul class="plain">{refs}</ul></dd></dl>{src}</li>')
 
-        flow = ''.join(f'<li><a href="#stage-{s["id"]}" class="flow-step"><strong>{E(s["name"])}: {E(s["when"].lower())}</strong><span>{E(s["does"])}</span></a></li>' for s in G['stages'])
-        rows = []
+        flow = ''.join(f'<li id="stage-{s["id"]}"><a href="#t-areas" class="flow-step"><strong>{E(s["name"])}: {E(s["when"].lower())}</strong><span>{E(s["does"])}</span></a></li>' for s in G['stages'])
+        rows = [[f'{icon(AREA_ICONS["DM-GOV"])} <a href="governance.html">{E(A["DM-GOV"]["name"])}</a>'] + ['<a href="governance.html">The governance playbook</a>' if s['id'] == 'start' else '<span class="hint">See the playbook</span>' for s in G['stages']]]
         for a in G['areas']:
             cells = [f'{icon(AREA_ICONS.get(a["id"], "target"))} <a href="#{a["id"]}">{E(A[a["id"]]["name"])}</a>']
             for s in G['stages']:
                 xs = [x for x in a['activities'] if x['stage'] == s['id']]
                 cells.append('<br>'.join(f'<a href="#{x["id"]}">{E(x["title"])}</a>' for x in xs) or '<span class="hint">See the playbook</span>')
             rows.append(cells)
-        secs = ''
+        secs = []
         for a in G['areas']:
             ar = A[a['id']]
             pb = (f'<p>{icon("book-open")} The core activities for this area are the <a href="{CAP_PAGE[a["playbook"]]}.html">{E({"gov": "governance", "cat": "cataloguing", "dq": "data quality"}[a["playbook"]])} playbook</a>. The ones below go further.</p>' if a.get('playbook') else '')
             sp = (f'<p>{icon("layers")} Read with the <a href="sectors.html#{a["supplement"]}">{E(sup[a["supplement"]])}</a> supplement.</p>' if a.get('supplement') else '')
-            secs += (f'<section class="area-guide" aria-labelledby="{a["id"]}"><div class="cr-head">{tile(AREA_ICONS.get(a["id"], "target"), "lg")}<div><p class="caption">Knowledge area · {len(a["activities"])} activities</p><h2 id="{a["id"]}">{E(ar["name"])}</h2></div></div>'
+            secs.append((f'p-{a["id"]}', SHORT.get(a['id'], ar['name']), f'<section class="area-guide" aria-labelledby="{a["id"]}"><div class="cr-head">{tile(AREA_ICONS.get(a["id"], "target"), "lg")}<div><p class="caption">Knowledge area · {len(a["activities"])} activities</p><h2 id="{a["id"]}">{E(ar["name"])}</h2></div></div>'
                      f'<p class="lede-sm">{E(ar["desc"])}</p>'
                      f'<div class="callout"><p><strong>Why it matters for the DAM Policy:</strong> {E(a["why"])}{prov("O")}</p>'
                      f'<p><strong>Usually led by:</strong> {E(roles[a["lead"]])}. <strong>Content owner:</strong> {E(a["owner"])}.</p></div>'
-                     f'{pb}{sp}<ul class="cr-list two">{"".join(card(a, x) for x in a["activities"])}</ul></section>')
+                     f'{pb}{sp}<ul class="cr-list two">{"".join(card(a, x) for x in a["activities"])}</ul></section>'))
             for x in a['activities']:
                 self.add_search(x['title'], 'Knowledge area activity', f'areas.html#{x["id"]}', x['goal'])
-        stage_secs = ''.join(f'<span id="stage-{s["id"]}"></span>' for s in G['stages'])
+        stage_secs = ''
         body = self.hero('target', 'Frameworks', 'Knowledge areas: what to do in each', E(G['meta']['intro']),
                          brief=[f'{n_acts} activities across {len(G["areas"])} data management areas, each with steps, outputs, evidence, a measure and who does what.',
                                 'Three stages: what to do before your first return, before your second, and as business as usual.',
                                 'Every activity says which DAM Policy requirements it supports and which standards apply.'],
                          meta=[('target', f'{len(G["areas"])} areas'), ('list-ordered', f'{n_acts} activities'), ('clock', f'As of {G["meta"]["as_of"]}')])
-        body += (f'<div class="callout warn" role="note"><p>{icon("triangle-alert")} <strong>Draft.</strong> {E(G["meta"]["status"])} '
-                 f'Activities are written fresh by this portal; DAMA-DMBOK is DAMA International\'s copyrighted work, and only its area names are used here.</p></div>'
-                 f'<h2 id="stages">{icon("footprints")} Where to start: three stages</h2>{stage_secs}'
+        draft = (f'<div class="callout warn" role="note"><p>{icon("triangle-alert")} <strong>Draft.</strong> {E(G["meta"]["status"])} '
+                 f'Activities are written fresh by this portal; DAMA-DMBOK is DAMA International\'s copyrighted work, and only its area names are used here.</p></div>')
+        start = (f'<h2 id="stages">{icon("footprints")} Where to start: three stages</h2>{stage_secs}'
                  f'<p>Pick the activities for the stage you are at. You do not need every activity for your first return.</p>'
                  f'<ol class="flow" aria-label="Adoption stages">{flow}</ol>'
                  f'<h2 id="overview">{icon("layers")} All activities at a glance</h2>'
                  + table('t-areas', 'Activities by knowledge area and stage', ['Knowledge area'] + [f'{s["name"]}: {s["when"].lower()}' for s in G['stages']], rows)
                  + f'<p class="hint">The DAMA wheel in the <a href="compass/index.html#lineage">data portals compass</a> drills down to every activity here. Governance, cataloguing and quality activities are the three <a href="together.html">capability playbooks</a>.</p>'
-                 + secs
                  + f'<h2 id="sources">{icon("book-marked")} Sources</h2>' + ul([f'{E(i["label"])}{prov(i["prov"])}' for i in G['meta']['inputs']], raw=True))
+        body += draft + self.tabbed([('p-start', 'Start here', start)] + secs, 'Knowledge areas')
         drawer = [{'label': 'Knowledge areas', 'icon': 'target', 'items': [
             {'id': 'stages', 'label': 'Three stages', 'icon': 'footprints', 'new': True},
             {'id': 'overview', 'label': 'All activities', 'icon': 'layers', 'count': n_acts}]

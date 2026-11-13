@@ -112,8 +112,24 @@ def sync(c, d, fetcher=fetch):
     return res
 
 
+def stale_facts(c, today=None, limit=30):
+    """Portals whose facts in compass.yaml were last checked more than `limit` days ago. The page's own self-check flagged
+    the Repos Asset Catalogue at 36 days while nothing in CI did (D-041), so the daily sync reports it too."""
+    today = today or dt.date.today()
+    out = []
+    for p in c['portals']:
+        d = dt.date.fromisoformat(str(p.get('data_as_of') or c['meta']['as_of']))
+        if (today - d).days > limit:
+            out.append((p['short'], (today - d).days))
+    return out
+
+
 def report(res):
     lines = []
+    for name, days in res.get('stale', []):
+        lines.append(f'- Facts about {name} in compass/compass.yaml were last checked {days} days ago; check them against the live site and update data_as_of.')
+    if lines:
+        lines.insert(0, 'Portal facts older than 30 days:')
     bad = {u: v for u, v in res['links'].items() if v['state'] in ('gone', 'anchor-missing')}
     if bad:
         lines.append('Links the compass has stopped showing until a person fixes the mapping in tools/compass.py or compass/compass.yaml:')
@@ -139,6 +155,7 @@ def main(argv=None):
         res['available'] = True
     except Exception as e:  # never fail the build
         res = {'available': False, 'reason': type(e).__name__, 'links': {}, 'portals': {}, 'unmapped': {}, 'checked': dt.date.today().isoformat()}
+    res['stale'] = stale_facts(c)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(res, indent=1), encoding='utf-8')
     rep = report(res)

@@ -145,7 +145,10 @@ def validate_wheel(w, d, pb):
 
 # Compass 2.0: a directory of the four portals and the sites, guidance, standards, laws, boards and communities around them.
 CAP_AREA = {'gov': 'DM-GOV', 'cat': 'DM-META', 'dq': 'DM-DQ'}
-KINDS = ['Portal', 'Portal page', 'Policy and strategy', 'Guidance', 'Standard', 'Legislation', 'Board or group', 'Community or network']
+KINDS = ['Website', 'Website page', 'Policy and strategy', 'Guidance', 'Standard', 'Legislation', 'Board or group', 'Community or network']
+# every kind has an icon, so every directory card shows one (review, 13 November 2026)
+KIND_ICONS = {'Website': 'compass', 'Website page': 'file-text', 'Policy and strategy': 'landmark', 'Guidance': 'book-open', 'Standard': 'ruler',
+              'Legislation': 'scale', 'Board or group': 'users-round', 'Community or network': 'handshake'}
 
 
 def rb_kind(r):
@@ -177,13 +180,13 @@ def directory(c, d, pb, page_names, page_desc):
         e['aud'] = sorted(set(e.get('aud') or [x for ar in e['areas'] for x in by_area.get(ar, [])]))
         out.append(e)
     for p in c['portals']:
-        add({'id': 'P-' + p['id'], 'kind': 'Portal', 'title': p['name'], 'url': p['url'], 'where': p['id'], 'by': p['owner_model'], 'topic': 'The four portals',
+        add({'id': 'P-' + p['id'], 'kind': 'Website', 'title': p['name'], 'url': p['url'], 'where': p['id'], 'by': p['owner_model'], 'topic': 'The four portals',
              'desc': p['purpose'], 'status': p['binding'], 'areas': [], 'aud': [a['id'] for a in aud]})
     dam = P['dam']['url']
     for key, desc in (page_desc or {}).items():
         if key in ('404',):
             continue
-        add({'id': 'DAM-' + key, 'kind': 'Portal page', 'title': (page_names or {}).get(key, key.replace('-', ' ').capitalize()), 'url': dam + ('' if key == 'index' else key + '.html'),
+        add({'id': 'DAM-' + key, 'kind': 'Website page', 'title': (page_names or {}).get(key, key.replace('-', ' ').capitalize()), 'url': dam + ('' if key == 'index' else key + '.html'),
              'where': 'dam', 'by': 'DAM capability playbooks', 'topic': 'DAM playbooks', 'desc': desc, 'status': P['dam']['binding'], 'areas': []})
     seen = {e['url'] for e in out}
     ar = {a['id']: a for a in areas(c, d)}
@@ -196,7 +199,7 @@ def directory(c, d, pb, page_names, page_desc):
                             e['areas'].append(aid)
                     continue
                 seen.add(u)
-                add({'id': f'{pid}-{len(out)}', 'kind': 'Portal page', 'title': title, 'url': u, 'where': pid, 'by': P[pid]['name'], 'topic': P[pid]['short'],
+                add({'id': f'{pid}-{len(out)}', 'kind': 'Website page', 'title': title, 'url': u, 'where': pid, 'by': P[pid]['name'], 'topic': P[pid]['short'],
                      'desc': f"In {P[pid]['short']}, for {a['name'].lower()}.", 'status': P[pid]['binding'], 'areas': [aid]})
     for pg, items in (d.get('related', {}).get('placements') or {}).items():
         for x in items:
@@ -204,7 +207,7 @@ def directory(c, d, pb, page_names, page_desc):
             if not u or u in seen:
                 continue
             seen.add(u)
-            add({'id': f'{x["portal"]}-{len(out)}', 'kind': 'Portal page', 'title': x['title'], 'url': u, 'where': x['portal'], 'by': P[x['portal']]['name'],
+            add({'id': f'{x["portal"]}-{len(out)}', 'kind': 'Website page', 'title': x['title'], 'url': u, 'where': x['portal'], 'by': P[x['portal']]['name'],
                  'topic': P[x['portal']]['short'], 'desc': x['why'], 'status': P[x['portal']]['binding'], 'areas': []})
     for s in pb.get('sources', []):
         if s['url'] in seen:
@@ -227,6 +230,15 @@ def directory(c, d, pb, page_names, page_desc):
              'by': b.get('host', ''), 'topic': 'Boards and networks', 'desc': b['purpose'], 'status': b.get('kind', ''),
              'areas': sorted({CAP_AREA[x] for x in b.get('caps', []) if x in CAP_AREA}), 'aud': [a['id'] for a in aud if b['id'] in a['bodies']],
              'join': b.get('engage', '')})
+    # two entries may share a title (both portals have a Knowledge page): say whose each one is (review, 13 November 2026)
+    seen = {}
+    for e in out:
+        seen.setdefault(e['title'], []).append(e)
+    for t, es in seen.items():
+        if len(es) > 1:
+            for e in es:
+                if e['where'] in P:
+                    e['title'] = f"{t} ({P[e['where']]['short']})"
     return out
 
 
@@ -292,10 +304,11 @@ def validate(c, d):
             errs.append(f'compass: glossary {x["id"]} needs a plain definition of 45 words or fewer')
     if not c.get('about', {}).get('what'):
         errs.append('compass: say what the compass is (about.what)')
-    tabs_ok = {'start', 'roles', 'bearing', 'lineage', 'directory', 'pathway', 'glossary', 'menu'}
-    for x in (c.get('whats_new') or {}).get('items', []):
-        if x['flag'] not in ('new', 'updated') or x['tab'] not in tabs_ok:
-            errs.append(f'compass: what is new item "{x["label"]}" needs flag new or updated and a known tab')
+    tabs_ok = {'start', 'roles', 'bearing', 'lineage', 'directory', 'pathway', 'glossary'}
+    for r in c.get('releases') or []:
+        for x in r['changes']:
+            if x['flag'] not in ('new', 'updated') or x['tab'] not in tabs_ok or not all(isinstance(s, str) for s in x.get('subs', [])):
+                errs.append(f'compass: release change "{x["text"]}" needs flag new or updated and a known tab')
     blob = json.dumps(c)
     if re.search(r'[\w.+-]+' + chr(64) + r'[\w-]+\.[\w.]+', blob):
         errs.append('compass: an email address')
@@ -378,7 +391,7 @@ def build(out, d, icon_set, barcode_svg, qr_svg, pb=None, page_names=None, page_
     if errs:
         raise ValueError('\n'.join(errs))
     t = (SRC / 'template.html').read_text(encoding='utf-8')
-    data = {k: c[k] for k in ('meta', 'portals', 'precedence', 'questions', 'routes', 'scenarios', 'when', 'links_today', 'about', 'glossary', 'audiences', 'whats_new')}
+    data = {k: c[k] for k in ('meta', 'portals', 'precedence', 'questions', 'routes', 'scenarios', 'when', 'links_today', 'about', 'glossary', 'audiences', 'releases')}
     data['areas'] = areas(c, d)
     if w:
         w['page_names'] = page_names or {}
@@ -387,6 +400,7 @@ def build(out, d, icon_set, barcode_svg, qr_svg, pb=None, page_names=None, page_
     # Links found missing are dropped from the area mappings and flagged on routes, so no wayfinder or pathway sends anyone to a missing page.
     if pb:
         data['directory'] = directory(c, d, pb, page_names, page_desc)
+        data['kind_icons'] = [{'kind': k, 'icon': v} for k, v in KIND_ICONS.items()]
     sp = ROOT / 'build' / 'compass-sync.json'
     sync = json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else {'available': False}
     bad = sorted(u for u, v in sync.get('links', {}).items() if v.get('state') in ('gone', 'anchor-missing'))
@@ -399,7 +413,19 @@ def build(out, d, icon_set, barcode_svg, qr_svg, pb=None, page_names=None, page_
         data['directory'] = [e for e in data.get('directory', []) if e['url'] not in bad]
     blob = json.dumps(data, ensure_ascii=False)
     used = set(re.findall(r'#i-([a-z0-9-]+)', t)) | set(re.findall(r"ic\('([a-z0-9-]+)'", t))
-    used |= {p['icon'] for p in c['portals']} | {x['icon'] for x in c['precedence']} | {q['icon'] for q in c['questions']} | {x['icon'] for x in c['scenarios']} | {'map-pin'}
+    # every icon the data names (professions, portals, kinds, questions...) goes into the sprite, not only those the template names:
+    # professions drawn in the browser lost their icons when only the template was scanned (defect D-039)
+    def _icons(o):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k == 'icon' and isinstance(v, str):
+                    yield v
+                else:
+                    yield from _icons(v)
+        elif isinstance(o, list):
+            for v in o:
+                yield from _icons(v)
+    used |= set(_icons(data)) | set(_icons(c)) | {'map-pin'}
     missing = sorted(n for n in used if n not in icon_set)
     if missing:
         raise ValueError(f'compass: icons not in the icon set: {missing}')

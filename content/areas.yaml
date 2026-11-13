@@ -58,7 +58,7 @@ areas:
         outputs: [A data landscape list for critical assets, Updated candidate and designation log]
         evidence: Every designated asset has at least one named system and a named custodian.
         measure: Share of critical assets with a named system and custodian.
-        raci: {ARC: R, STW: R, CUS: C, CAT: A, OWN: I}
+        raci: {ARC: A, STW: R, CUS: C, CAT: R, OWN: I}
         reqs: [DAM-R01, DAM-R12]
         caps: [CR-05, CR-12]
         refs: [RB-TCOP, RB-REFARCH]
@@ -85,7 +85,7 @@ areas:
         title: Draw the main data flows between systems and organisations
         goal: You can say where critical data goes, so sharing, quality and security risks have a place on the map.
         steps:
-          - For each critical asset, list the flows in and out: source, target, method (API, file, manual), frequency and owner.
+          - 'For each critical asset, list the flows in and out: source, target, method (API, file, manual), frequency and owner.'
           - Mark flows that cross organisational boundaries and link each to its data sharing agreement.
           - Mark manual re-keying and spreadsheet hand-offs. These are where quality usually drops.
           - Share the flow list with the data quality lead so quality rules sit where data enters and leaves.
@@ -109,7 +109,7 @@ areas:
         outputs: [Data architecture principles, Architecture decision records]
         evidence: New systems holding critical data have a decision record and an exit route for the data.
         measure: Share of new systems holding critical data with a recorded exit route.
-        raci: {ARC: A, BRD: C, CML: C, SVO: R, CDO: I}
+        raci: {ARC: R, BRD: A, CML: C, SVO: C, CDO: I}
         reqs: [DAM-R16, DAM-R04]
         caps: [CR-12, CR-32]
         refs: [RB-TCOP, RB-OPEN, RB-LOCKIN, RB-CHOOSE]
@@ -194,8 +194,8 @@ areas:
         steps:
           - Version each model and dictionary. Record what changed and why.
           - Before a change, list who uses the affected attributes, using the flow list and reuse records.
-          - Tell users in advance and give a date. Deprecate attributes rather than deleting them.
-          - Where others depend on the asset, publish a data contract that states the structure and service levels.
+          - Tell users in advance and give a date. Mark attributes as retired rather than deleting them.
+          - Where others depend on the asset, record the new structure in its data contract (see INT-4).
         outputs: [Versioned models, Change notices, Data contracts for shared assets]
         evidence: Structure changes have a version, a notice and a date.
         measure: Unplanned breaks to downstream users each year.
@@ -203,6 +203,7 @@ areas:
         reqs: [DAM-R04]
         caps: [CR-11, CR-19]
         refs: [RB-ODCS]
+        links: [INT-4]
   - id: DM-OPS
     lead: CUS
     owner: Your technology operations or hosting team
@@ -240,7 +241,7 @@ areas:
         evidence: A dated restore test for each critical asset.
         measure: Share of critical assets restored in a test in the last 12 months.
         raci: {CUS: R, OWN: A, SVO: C, IAO: C}
-        reqs: [DAM-R11]
+        reqs: [DAM-R09]
         caps: [CR-31, CR-10]
         refs: [RB-CAF, RB-NCSCIR]
         templates: [T-GOV-4]
@@ -266,8 +267,8 @@ areas:
         title: Plan retention, archiving and decommissioning
         goal: Data is kept as long as needed and no longer, and nothing critical is lost when a system retires.
         steps:
-          - Link each store to the retention schedule for the records it holds.
-          - Archive or delete on schedule and record what was done.
+          - Apply the retention set for each record (see DOC-2) to every store and copy that holds it.
+          - Archive or delete copies on schedule and record what was done.
           - When a system retires, migrate or archive critical data first, and update the catalogue record.
           - Remove decommissioned copies so they cannot be used by mistake.
         outputs: [Retention linked to each store, Decommissioning checklist]
@@ -277,6 +278,7 @@ areas:
         reqs: [DAM-R04]
         caps: [CR-10, CR-26, CR-15]
         refs: [RB-TNARET, RB-RETIRE, RB-LEGACY]
+        links: [DOC-2]
   - id: DM-SEC
     lead: IAO
     owner: Your security team, data protection officer and information asset owners
@@ -331,7 +333,7 @@ areas:
         evidence: Each critical asset is covered by a system in your cyber assurance scope.
         measure: Share of critical assets covered by cyber assurance.
         raci: {IAO: A, CUS: R, CDO: I, OWN: C}
-        reqs: [DAM-R11]
+        reqs: [DAM-R09, DAM-R01]
         caps: [CR-19, CR-31, CR-16]
         refs: [RB-CAF, RB-GCSS, RB-GOVS007]
       - id: SEC-4
@@ -353,10 +355,10 @@ areas:
         templates: [T-DQ-2, T-GOV-3]
       - id: SEC-5
         stage: embed
-        title: Record crypto-dependency and data residency for critical assets
-        goal: When cryptography or residency rules change, you can find the affected assets by query, not by survey.
+        title: Record which critical assets depend on encryption, and where they are stored
+        goal: When encryption or data residency rules change, you can find the affected assets by a search, not a survey.
         steps:
-          - Add two fields to the catalogue record or asset register, crypto-dependency and data residency.
+          - 'Add two fields to the catalogue record or asset register: crypto-dependency (does it rely on encryption?) and data residency (where is it stored?).'
           - For crypto-dependency, record whether the asset relies on public-key cryptography in storage or transfer, and where.
           - For residency, record the country where it is stored and processed, and any contract terms.
           - Use the fields to plan migration to post-quantum cryptography on the NCSC timeline.
@@ -396,7 +398,7 @@ areas:
         title: Classify and crosswalk the standards each asset meets
         goal: Anyone can see which standards an asset meets, and how your terms map to them, in a form machines can read.
         steps:
-          - For each standard you use, place it by category, topic and subject. The draft government classification has five building blocks, metadata, common reference data, service and platform design, data lifecycle and domain-specific.
+          - 'For each standard you use, place it by category, topic and subject. The draft government classification has five building blocks: metadata, common reference data, service and platform design, data lifecycle, and domain-specific.'
           - Map your local terms to the matching concepts in the cross-government standards, with a confidence level for each match.
           - Mark terms with no match and send them to the Data Standards Authority rather than inventing a standard.
           - Publish the statement of standards met as part of the catalogue record.
@@ -561,7 +563,7 @@ areas:
         goal: A change to a code list never silently breaks a report or a share.
         steps:
           - Version each code list you own. Record what changed and from when.
-          - Never delete a code. Mark it deprecated and point to its replacement.
+          - Never delete a code. Mark it as retired and point to its replacement.
           - Tell users before a change takes effect.
           - Publish your code lists in an open format so others can reuse them.
         outputs: [Versioned code lists, Change notices]
@@ -586,7 +588,7 @@ areas:
           - Ask analysis and reporting teams which reports, dashboards and statistics use each critical asset.
           - Record each use against the asset, with the decision or publication it supports.
           - Use the list as evidence of the purpose in the return.
-          - Share it with the data quality lead to set importance of purpose.
+          - Share it with the data quality lead, who uses it to set the importance of purpose in the issues framework.
         outputs: [Reuse list per asset]
         evidence: Each critical asset has at least one recorded use.
         measure: Recorded uses per critical asset.
@@ -617,7 +619,7 @@ areas:
         goal: Every warehouse table or extract can be traced back to its critical asset.
         steps:
           - Record which critical asset each analytical table comes from.
-          - Record the transformations applied, in a standard lineage format where you can.
+          - Record the transformations applied, in the lineage format agreed for shared flows (see INT-4).
           - Remove unmanaged copies, or bring them under the same quality rules.
           - Link analytical copies from the catalogue record as distributions.
         outputs: [Lineage from source to report]
@@ -627,6 +629,7 @@ areas:
         reqs: [DAM-R12]
         caps: [CR-12, CR-19]
         refs: [RB-PROVO, RB-OLINEAGE]
+        links: [INT-4]
       - id: BI-4
         stage: embed
         title: Measure the value and reuse of critical assets

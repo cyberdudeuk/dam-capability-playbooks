@@ -916,9 +916,9 @@ def c35_estate_compass(site, repo, pages):
     urls += [bases[p['id']] + p['start']['path'] for p in d['portals']]
     # version 1.2 (compass): the DAMA wheel drill-down. Every activity, capability and requirement link resolves, every capability sits on
     # the wheel, every activity belongs to a capability, and the drill-down, lineage, traceability table and pathway are on the page.
-    # D-035: writing the address while the page loads makes the browser scroll to and focus a tab panel on arrival
+    # D-038: writing the address while the page loads makes the browser scroll to and focus a tab panel on arrival
     if "document.readyState==='loading'" not in html:
-        errs.append('compass: the address can be written while the page is loading (D-035)')
+        errs.append('compass: the address can be written while the page is loading (D-038)')
     rose_links = re.findall(r'<a href="([^"]+)" class="rose-link"', html)
     if sorted(rose_links) != sorted(bases.values()):
         errs.append('compass: the compass rose must label and link each of the four portals at its bearing')
@@ -946,17 +946,50 @@ def c35_estate_compass(site, repo, pages):
                 errs.append(f'compass: capability {cid} lists an unknown activity')
         urls += [a['wheel'] for a in w['areas']] + [u for a in w['areas'] for k in ('dq', 'cat', 'ap') for _, u in a[k]]
     # compass 2.0: a menu drawer that flags what is new or changed, sub-tabs instead of long pages, and no history of an earlier name
-    for need in ('id="drawer"', 'id="wn"', 'id="dnav"', 'class="subtabs"', 'id="menu-btn"'):
+    # the page menu is a retractable drawer behind a labelled switch outside the masthead, holding in-page navigation only;
+    # release notes live in Help, and the drawer only flags which sections and items changed in the latest release
+    for need in ('id="drawer"', 'id="dnav"', 'class="subtabs"', 'id="drawer-toggle"', 'role="switch"', 'id="relnotes"'):
         if need not in html:
-            errs.append(f'compass: menu or sub-tab part {need} missing')
+            errs.append(f'compass: menu, release notes or sub-tab part {need} missing')
+    hdr = html[html.find('<header'):html.find('</header>')]
+    if 'drawer-toggle' in hdr:
+        errs.append('compass: the drawer switch must sit outside the masthead')
+    drw = html[html.find('id="drawer"'):html.find('</nav>', html.find('id="drawer"'))]
+    if 'relnotes' in drw or 'Release notes' in drw or 'ab-what' in drw:
+        errs.append('compass: the drawer holds in-page navigation only, not release notes or about text')
+    # container tags balance (review, 13 November 2026: a stray </section> was left after the directory sub-panels)
+    from html.parser import HTMLParser
+
+    class _Bal(HTMLParser):
+        def __init__(s):
+            super().__init__(); s.st, s.bad = [], []
+
+        def handle_starttag(s, t, a):
+            if t in ('section', 'div', 'nav', 'main', 'details'):
+                s.st.append(t)
+
+        def handle_endtag(s, t):
+            if t in ('section', 'div', 'nav', 'main', 'details'):
+                if s.st and s.st[-1] == t:
+                    s.st.pop()
+                else:
+                    s.bad.append(f'</{t}> at line {s.getpos()[0]}')
+    _b = _Bal(); _b.feed(html.split('<script')[0])
+    if _b.bad or _b.st:
+        errs.append(f'compass: unbalanced containers: {", ".join(_b.bad[:3] + [f"<{x}> never closed" for x in _b.st[:3]])}')
+    # every tooltip key names an element that exists (review, 13 November 2026: four sub-tab tooltips pointed at ids that did not exist)
+    mt = re.search(r'const TT=\{(.*?)\};', html, re.S)
+    for k in re.findall(r"'?([a-z]+_[a-z-]+)'?:'", mt.group(1) if mt else ''):
+        if f'id="{k.replace("_", "-", 1)}"' not in html:
+            errs.append(f'compass: tooltip {k} points at an element that does not exist')
     # CodeQL alerts 44 and 45: menu items were built as HTML from text read off the page; they must be built as DOM nodes
     if re.search(r"\$\('#(?:dnav|wn)'\)\.innerHTML|insertAdjacentHTML", html):
         errs.append('compass: the menu is built from page text as HTML; build it with DOM nodes (CodeQL 44, 45)')
     if "a.href='#'+" in html:
         errs.append('compass: a menu link address is built from page text; use the fixed address list (CodeQL 46)')
-    wn = (d.get('whats_new') or {}).get('items', [])
-    if not wn or any(x.get('flag') not in ('new', 'updated') for x in wn):
-        errs.append('compass: the menu must flag what is new or updated')
+    rel = d.get('releases') or []
+    if not rel or not rel[0].get('changes') or any(x.get('flag') not in ('new', 'updated') for r in rel for x in r['changes']):
+        errs.append('compass: release notes must exist and flag each change as new or updated')
     if 'Estate compass' in html or 'name was' in html:
         errs.append('compass: do not explain an earlier name readers never saw')
     # compass 2.0: the directory and the profession hub. Every entry has a unique id, a secure link, a known kind and known professions;
@@ -1415,6 +1448,21 @@ def c40_tooltips_and_standards(site, repo, pages):
     return errs
 
 
+def c42_icons_resolve(site, repo, pages):
+    """Rule (D-039): every icon a page uses, whether written in its HTML or named in the data its scripts draw from, has a
+    symbol on that page. Six professions on the compass showed no icon because their icons were named only in data."""
+    errs = []
+    for f in sorted(site.rglob('*.html')):
+        h = f.read_text(encoding='utf-8')
+        sym = set(re.findall(r'<symbol id="i-([a-z0-9-]+)"', h))
+        used = set(re.findall(r'href="#i-([a-z0-9-]+)"', h))
+        for blob in re.findall(r'<script type="application/json"[^>]*>(.*?)</script>', h, re.S):
+            used |= set(re.findall(r'"icon":\s*"([a-z0-9-]+)"', blob))
+        for n in sorted(used - sym):
+            errs.append(f'{f.relative_to(site)}: icon {n} is used but has no symbol, so nothing is drawn')
+    return errs
+
+
 def c41_knowledge_areas(site, repo, pages):
     """Rule (version 1.14.0, BL-35): every DAMA knowledge area drills down to activities. Areas without a DAM playbook have
     activities at each adoption stage on the Knowledge areas page; each activity shows its steps, evidence, who is accountable,
@@ -1474,7 +1522,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve]
 
 
 def run(site, repo, only=None, quiet=False):

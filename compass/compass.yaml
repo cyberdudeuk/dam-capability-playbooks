@@ -5,7 +5,7 @@ meta:
   title: Data portals compass
   subtitle: Find your way around four websites about public sector data
   version: 2.0.0
-  as_of: '2026-11-12'
+  as_of: '2026-11-13'
   url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
   host_note: It favours none of them.
   contact: https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html
@@ -80,7 +80,7 @@ portals:
   icon: map
   name: GitHub Repos Asset Catalogue
   short: Repos Asset Catalogue
-  data_as_of: '2026-10-08'
+  data_as_of: '2026-11-13'
   url: https://cyberdudeuk.github.io/github-repos-asset-catalogue/
   question: What already exists?
   purpose: Every UK public sector code project on GitHub in one place, explained in plain English. Before you build it, look for it.
@@ -97,7 +97,7 @@ portals:
   layout: Hubs in the order people need them, with guided tours for each kind of user
   stages: [Start here, Find code, Topics, Organisations, Insights, Good practice, Ask, About]
   gets:
-  - Search 25,981 public code projects in everyday words (data as of 8 October 2026)
+  - Search the code of over 200 public sector GitHub accounts in everyday words (cross-government data refreshed 10 November 2026)
   - Any public body's profile, family tree, and legacy and debt signals
   - Which data tools and standards public bodies use in their code
   - Reusable APIs and components, with who looks after them
@@ -316,27 +316,43 @@ about:
   - It is not official government guidance
   - It does not collect or send any of your data
   - It does not rank the four websites
-whats_new:
-  as_of: '2026-11-12'
-  items:
-  - {flag: new, tab: start, label: "A start page with four ways in and one search box"}
-  - {flag: new, tab: roles, label: "Start from your job: nine groups of professions"}
-  - {flag: new, tab: directory, label: "A directory of every website, page, standard, law and community"}
-  - {flag: updated, tab: lineage, label: "Every data management area now goes down to activities and steps"}
-  - {flag: updated, tab: bearing, label: "Worked examples now sit with your route"}
-  - {flag: new, tab: menu, label: "This menu, with what is new"}
+releases:
+- version: 2.0.0
+  date: '2026-11-13'
+  summary: New ways in, a directory and plainer wording
+  changes:
+  - {flag: new, tab: start, text: "A start page with four ways in and one search box"}
+  - {flag: new, tab: roles, text: "Start from your job: nine groups of professions, each with their tasks, topics, guidance and communities"}
+  - {flag: new, tab: directory, sub: dir-sub, text: "A directory of every website, page, standard, law and community the four websites point to"}
+  - {flag: updated, tab: directory, sub: portals, subs: [when, links], text: "The four websites, when to use which and how they link now sit in the directory"}
+  - {flag: updated, tab: lineage, sub: wheel-sub, text: "Every data management area on the wheel now goes down to activities and steps"}
+  - {flag: updated, tab: bearing, sub: examples, text: "Worked examples now sit with your route"}
+  - {flag: new, tab: glossary, sub: rel-sub, subs: [about-sub], text: "Help: release notes and about this guide, and a page menu that flags what is new"}
+- version: 1.3.0
+  date: '2026-11-12'
+  summary: The DAMA wheel, My pathway and words explained (versions 1.2 and 1.3, published together)
+  changes:
+  - {flag: new, tab: lineage, sub: wheel-sub, text: "The DAMA wheel, going down from area to capability, activity and step, with data governance selected at the centre"}
+  - {flag: new, tab: pathway, text: "My pathway: build and share your own list of things to do"}
+  - {flag: new, tab: glossary, sub: words-sub, text: "Words explained: every term in plain English, with other names and related terms"}
+- version: 1.0.0
+  date: '2026-11-05'
+  summary: First version
+  changes:
+  - {flag: new, tab: bearing, sub: route-sub, text: "Four questions that give you a route across the four websites"}
+  - {flag: new, tab: directory, sub: portals, text: "The four websites, when to use which and how they link"}
 
 # Words used on this page, in plain English. Each has other names people use (the thesaurus), a broader term where useful, and related terms.
 glossary:
 - {id: portal, term: Portal, def: "A website that brings together guidance, tools and information on one subject, with its own front page and navigation.", also: [website, hub, site], related: [estate]}
 - {id: estate, term: Estate, def: "All the websites, systems, data or code that an organisation or programme looks after, taken together.", also: ["data estate", "code estate", "IT estate", "landscape"], related: [portal]}
 - {id: compass, term: Compass and bearing, def: "The guide's picture of the four portals as four directions. Your bearing is the portal the guide suggests you start from.", also: [direction, "starting point"], related: [wayfinder, route]}
-- {id: wayfinder, term: Wayfinder, def: "The four questions under Find your bearing. Your answers produce a suggested route.", also: [questionnaire, "route finder"], related: [route, pathway]}
+- {id: wayfinder, term: Wayfinder, def: "The four questions on the By task tab. Your answers produce a suggested route.", also: [questionnaire, "route finder"], related: [route, pathway]}
 - {id: route, term: Route, def: "An ordered list of steps across the portals that the guide suggests for your situation.", also: [journey, "suggested path"], related: [wayfinder, pathway]}
 - {id: pathway, term: Pathway, def: "Your own ordered list of activities, which you build yourself on the My pathway tab. It is kept only in the page address.", also: ["my pathway", "personal plan", "to-do list"], related: [route, activity]}
 - {id: dam, term: DAM Policy, def: "The Data Asset Management Policy: UK government's policy on how departments and arm's-length bodies identify, own, describe and manage the quality of their most important data.", also: ["data asset management policy"], related: [cda, owner]}
 - {id: cda, term: Critical data asset, def: "A set of data that an organisation or the public depends on, and so must have a named owner, a catalogue record and a data quality plan under the DAM Policy.", also: [CDA, "critical data"], broader: "Data asset", related: [dam, catalogue]}
-- {id: owner, term: Data owner, def: "The senior person accountable for a data asset: who uses it, how good it must be and who can see it.", also: ["information asset owner", IAO], related: [steward, raci]}
+- {id: owner, term: Data owner, def: "The senior person accountable for a data asset: who uses it, how good it must be and who can see it. Often also the information asset owner, who answers for its security and records.", also: ["business owner"], related: [steward, raci]}
 - {id: steward, term: Data steward, def: "The person who looks after a data asset day to day for its owner: its definitions, quality and records.", also: ["data custodian (sometimes)"], related: [owner]}
 - {id: catalogue, term: Data catalogue, def: "A searchable list of an organisation's data assets, with a description of each so people can find and judge them.", also: ["data inventory", "information asset register"], related: [metadata, dcat]}
 - {id: metadata, term: Metadata, def: "Information that describes data, such as its title, owner, how often it is updated and who can use it.", also: ["data about data", "catalogue record"], related: [catalogue, dcat]}
@@ -372,7 +388,7 @@ audiences:
   icon: building-2
   who: Chief data officers, senior information risk owners, directors of data and senior responsible owners
   role: leader
-  raci: [CDO, BRD]
+  raci: [CDO, SRO, BRD]
   areas: [DM-GOV]
   routes: [policy, learn, estate]
   topics: ["Delivery, change and investment", Skills and professions, Data and AI]
@@ -416,7 +432,7 @@ audiences:
   icon: library-big
   who: Catalogue managers, metadata specialists, information and records managers
   role: tech
-  raci: [CAT, PUB]
+  raci: [CAT, STW]
   areas: [DM-META, DM-DOC, DM-REF, DM-MOD]
   routes: [describe, estate, buy]
   topics: [Records and information management, Records, Standards, Geospatial]
@@ -427,7 +443,7 @@ audiences:
   icon: code-xml
   who: Data and enterprise architects, data engineers and developers
   role: tech
-  raci: [STW]
+  raci: [ARC, CUS, MIG]
   areas: [DM-ARC, DM-INT, DM-OPS, DM-MOD]
   routes: [reuse, legacy, describe]
   topics: [Technology and architecture, Service delivery and technology, Standards]
@@ -438,7 +454,7 @@ audiences:
   icon: lock-keyhole
   who: Security leads, data protection officers, information governance and legal advisers
   role: other
-  raci: [DPO]
+  raci: [DPO, IAO]
   areas: [DM-SEC]
   routes: [policy, legacy]
   topics: [Cyber and security, Security, Data protection, Legislation]
@@ -449,7 +465,7 @@ audiences:
   icon: banknote
   who: Procurement and commercial staff, finance business partners, programme, product and service owners
   role: commercial
-  raci: []
+  raci: [CML, SVO, PDM]
   areas: [DM-OPS, DM-ARC]
   routes: [buy, legacy, reuse]
   topics: [Commercial and procurement, "Delivery, change and investment", Service delivery and technology]
