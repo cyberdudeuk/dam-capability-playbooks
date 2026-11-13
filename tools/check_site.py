@@ -992,6 +992,17 @@ def c35_estate_compass(site, repo, pages):
         errs.append('compass: release notes must exist and flag each change as new or updated')
     if 'Estate compass' in html or 'name was' in html:
         errs.append('compass: do not explain an earlier name readers never saw')
+    # compass 2.1 (issue 28): every page in the pages register is in the directory, so the directory covers the whole of each website
+    try:
+        import yaml as _y
+        _reg = _y.safe_load((repo / 'compass' / 'pages.yaml').read_text(encoding='utf-8'))['pages']
+    except FileNotFoundError:
+        _reg = []
+    _base = {p['id']: p['url'] for p in d.get('portals', [])}
+    _durls = {e['url'] for e in d.get('directory', [])}
+    for g in _reg:
+        if g['portal'] in _base and _base[g['portal']] + g['path'] not in _durls:
+            errs.append(f'compass: {g["portal"]} page {g["path"]} is in the pages register but not in the directory')
     # compass 2.0: the directory and the profession hub. Every entry has a unique id, a secure link, a known kind and known professions;
     # entries placed in one of the four portals link into it; links into this portal land on a page and anchor that exist.
     dr, auds = d.get('directory'), {a['id'] for a in d.get('audiences', [])}
@@ -1448,6 +1459,20 @@ def c40_tooltips_and_standards(site, repo, pages):
     return errs
 
 
+def c43_compass_name(site, repo, pages):
+    """Rule (13 November 2026): the compass is called the data portals compass everywhere a reader sees it. The old name stayed in the
+    footer of every page after the rename; only release notes for versions already published keep it, as a record."""
+    errs = []
+    for f in sorted(site.glob('*.html')):
+        h = f.read_text(encoding='utf-8')
+        if f.name == 'whats-new.html':
+            h = h.split('Unreleased', 1)[-1].split('<h2', 2)[0] if 'Unreleased' in h else ''
+        for m in re.findall(r'[Ee]state compass', h):
+            errs.append(f'{f.name}: still calls the compass the estate compass')
+            break
+    return errs
+
+
 def c42_icons_resolve(site, repo, pages):
     """Rule (D-039): every icon a page uses, whether written in its HTML or named in the data its scripts draw from, has a
     symbol on that page. Six professions on the compass showed no icon because their icons were named only in data."""
@@ -1458,6 +1483,8 @@ def c42_icons_resolve(site, repo, pages):
         used = set(re.findall(r'href="#i-([a-z0-9-]+)"', h))
         for blob in re.findall(r'<script type="application/json"[^>]*>(.*?)</script>', h, re.S):
             used |= set(re.findall(r'"icon":\s*"([a-z0-9-]+)"', blob))
+        # icons drawn by script, such as ic('link'), must have a symbol too
+        used |= set(re.findall(r"\bic\('([a-z0-9-]+)'\)", h)) | set(re.findall(r'#i-\$\{\'([a-z0-9-]+)\'\}', h))
         for n in sorted(used - sym):
             errs.append(f'{f.relative_to(site)}: icon {n} is used but has no symbol, so nothing is drawn')
     return errs
@@ -1522,7 +1549,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name]
 
 
 def run(site, repo, only=None, quiet=False):

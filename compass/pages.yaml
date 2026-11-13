@@ -1,0 +1,428 @@
+# Pages register (compass 2.1, issue 28)
+reviewed: '2026-11-13'
+note: Every page of the other websites that the compass knows about, beyond the pages it maps in tools/compass.py. Titles and descriptions come from each live page; the data management areas are this compass's
+  own mapping. An empty list means the page is about the website itself. The daily sync flags any page that is in a website's site map but not here.
+pages:
+- portal: dqc
+  path: about.html
+  title: About the Commons
+  desc: About the Public Sector Data Quality Commons
+  areas: []
+- portal: dqc
+  path: accessibility.html
+  title: Accessibility and Privacy
+  desc: Accessibility statement and privacy notice
+  areas: []
+- portal: dqc
+  path: ai.html
+  title: AI for Data Quality
+  desc: Getting real value from AI to improve data quality, safely
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: ask.html
+  title: Ask the Commons
+  desc: Ask the Commons a question
+  areas: []
+- portal: dqc
+  path: assistant.html
+  title: Rules assistant
+  desc: Describe your data quality rules in plain English. Get a tested rules file.
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: build.html
+  title: Help Us Build This
+  desc: Help us build the Commons
+  areas: []
+- portal: dqc
+  path: community.html
+  title: Community
+  desc: Share what works, ask for what you need, and find your people
+  areas: []
+- portal: dqc
+  path: connectors.html
+  title: Connectors, weaves and AI
+  desc: Connectors, weaves and AI
+  areas:
+  - DM-INT
+- portal: dqc
+  path: ecosystem.html
+  title: Three portals, one journey
+  desc: Three open portals, one journey
+  areas: []
+- portal: dqc
+  path: events.html
+  title: Data Quality Events
+  desc: Data quality events
+  areas: []
+- portal: dqc
+  path: getinvolved.html
+  title: Get involved
+  desc: 'Get involved: contribute, join, champion'
+  areas: []
+- portal: dqc
+  path: github.html
+  title: 'GitHub for the Commons: a plain-English introduction'
+  desc: New to GitHub? How the Commons and its code work together
+  areas: []
+- portal: dqc
+  path: global.html
+  title: UK and the World
+  desc: Data quality beyond the UK border
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: governance.html
+  title: Governance boards and forums
+  desc: Governance boards, councils and forums for government data
+  areas:
+  - DM-GOV
+- portal: dqc
+  path: guide.html
+  title: User Guide
+  desc: How to use the Commons
+  areas: []
+- portal: dqc
+  path: library.html
+  title: Library and Knowledge Base
+  desc: Everything worth reading about data quality, in one place
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: map.html
+  title: Data quality at a glance
+  desc: Data quality at a glance
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: media.html
+  title: Media Centre
+  desc: Blog, vlog and podcasts about data quality
+  areas: []
+- portal: dqc
+  path: ndl-assurance.html
+  title: NDL Collections Assurance
+  desc: How do the National Data Library's collections measure up to GOV.UK data asset and quality rules?
+  areas:
+  - DM-DQ
+  - DM-META
+- portal: dqc
+  path: professions.html
+  title: Data quality across the professions
+  desc: Where data quality sits in every profession's skills framework
+  areas:
+  - DM-GOV
+- portal: dqc
+  path: research.html
+  title: Take part in user research
+  desc: 'Help shape the Commons: take part in user research'
+  areas: []
+- portal: dqc
+  path: reuse.html
+  title: Use the Commons your way
+  desc: 'Use the Commons your way: link, embed, connect, copy or ask'
+  areas:
+  - DM-INT
+- portal: dqc
+  path: roadmap.html
+  title: Open roadmap and priorities
+  desc: 'Open roadmap: what we build next, and why'
+  areas: []
+- portal: dqc
+  path: scenarios.html
+  title: Data Quality Scenarios
+  desc: 'Your policy, sector, nation or platform: what applies and where to start'
+  areas:
+  - DM-GOV
+- portal: dqc
+  path: share.html
+  title: Share and Learn
+  desc: Share and learn
+  areas: []
+- portal: dqc
+  path: sitemap.html
+  title: Site map
+  desc: 'Site map: every page on one map'
+  areas: []
+- portal: dqc
+  path: surveys.html
+  title: Surveys and Commissions
+  desc: Take a survey, run your own, or ask the Commons for help
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: tooling.html
+  title: Public Sector DQ Tooling Atlas
+  desc: How does the public sector check its data quality, and what does its open code show?
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: training.html
+  title: Skills and Training
+  desc: Grow your data quality skills
+  areas:
+  - DM-DQ
+- portal: dqc
+  path: wheel.html
+  title: Data management wheel
+  desc: 'The data management wheel: see your whole data capability'
+  areas:
+  - DM-GOV
+- portal: ap
+  path: accessibility.html
+  title: Accessibility statement
+  desc: Accessibility statement for the DCAT-AP-UK portal.
+  areas: []
+- portal: ap
+  path: adopt.html
+  title: Adoption toolkit
+  desc: Conformance levels, sector routes, a checklist, crosswalks, harvesting, procurement clauses and identifiers for adopting DCAT-AP-UK.
+  areas:
+  - DM-META
+- portal: ap
+  path: ai-ready.html
+  title: AI-ready metadata
+  desc: 'Make records ready for AI: permission to train, usage policies, schema.org and Croissant exports, llms.txt and an MCP server.'
+  areas:
+  - DM-META
+- portal: ap
+  path: bulk.html
+  title: Check many records
+  desc: Convert a spreadsheet of records to DCAT-AP-UK and check them all in your browser. Nothing is uploaded.
+  areas:
+  - DM-META
+  - DM-DQ
+- portal: ap
+  path: class-agent.html
+  title: Organisation
+  desc: 'The organisation class in DCAT-AP-UK: An organisation that publishes, creates or is responsible for a resource. In this profile, never a person.'
+  areas:
+  - DM-META
+- portal: ap
+  path: class-catalogue.html
+  title: Catalogue
+  desc: 'The catalogue class in DCAT-AP-UK: A curated collection of metadata about datasets and data services.'
+  areas:
+  - DM-META
+  - DM-MOD
+- portal: ap
+  path: class-cataloguerecord.html
+  title: Catalogue record
+  desc: 'The catalogue record class in DCAT-AP-UK: A record in a catalogue about one dataset or data service, with its own dates.'
+  areas:
+  - DM-META
+  - DM-MOD
+- portal: ap
+  path: class-checksum.html
+  title: Checksum
+  desc: 'The checksum class in DCAT-AP-UK: A value calculated from a file, used to check it has not changed.'
+  areas:
+  - DM-SEC
+  - DM-META
+- portal: ap
+  path: class-contactpoint.html
+  title: Contact point
+  desc: 'The contact point class in DCAT-AP-UK: A team that can answer questions about a resource, with the routes to reach it.'
+  areas:
+  - DM-META
+- portal: ap
+  path: class-dataservice.html
+  title: Data service
+  desc: 'The data service class in DCAT-AP-UK: A set of operations, such as an API, that gives access to one or more datasets or data processing functions.'
+  areas:
+  - DM-META
+  - DM-INT
+- portal: ap
+  path: class-datasetseries.html
+  title: Dataset series
+  desc: 'The dataset series class in DCAT-AP-UK: A group of datasets published separately but sharing a subject and a method, such as each release of a census.'
+  areas:
+  - DM-META
+  - DM-MOD
+- portal: ap
+  path: class-distribution.html
+  title: Distribution
+  desc: 'The distribution class in DCAT-AP-UK: A specific form of a dataset, such as a CSV file, a GeoPackage or an API response.'
+  areas:
+  - DM-META
+  - DM-MOD
+- portal: ap
+  path: class-location.html
+  title: Location
+  desc: 'The location class in DCAT-AP-UK: A named area or a shape on the earth. Prefer the identifier of a standard area, such as a GSS code.'
+  areas:
+  - DM-REF
+- portal: ap
+  path: class-missingvalue.html
+  title: Missing value
+  desc: 'The missing value class in DCAT-AP-UK: A statement that one property is empty on purpose, and why, modelled on the nil reasons of GML and INSPIRE.'
+  areas:
+  - DM-DQ
+  - DM-META
+- portal: ap
+  path: class-periodoftime.html
+  title: Period of time
+  desc: 'The period of time class in DCAT-AP-UK: A period with a start date, an end date or both.'
+  areas:
+  - DM-META
+  - DM-MOD
+- portal: ap
+  path: class-relationship.html
+  title: Relationship
+  desc: 'The relationship class in DCAT-AP-UK: How one resource relates to another.'
+  areas:
+  - DM-META
+  - DM-MOD
+- portal: ap
+  path: connectors.html
+  title: Vendor connectors and AI agents
+  desc: 'Data catalogue and metadata products from the Gartner and Forrester reports, and the platforms beside them: crosswalks from their published models, add-on kits, weaver conversions and their MCP
+    servers for AI agents.'
+  areas:
+  - DM-INT
+- portal: ap
+  path: contact.html
+  title: Contact
+  desc: Ask a question, report a problem or request a change to DCAT-AP-UK using the contact form.
+  areas: []
+- portal: ap
+  path: estate.html
+  title: 'The estate: four portals'
+  desc: How DCAT-AP-UK compares with and joins the DAM playbooks, the Data Quality Commons and the Repos Asset Catalogue.
+  areas: []
+- portal: ap
+  path: examples.html
+  title: Worked examples
+  desc: Worked DCAT-AP-UK records for datasets, data services, a series, a critical data asset and a catalogue.
+  areas:
+  - DM-META
+- portal: ap
+  path: extensions.html
+  title: Sector extensions
+  desc: Extensions of DCAT-AP-UK for health, geospatial, statistics, transport, AI, data spaces, the private and voluntary sector, energy and EU exchange.
+  areas:
+  - DM-META
+- portal: ap
+  path: guide.html
+  title: User guide
+  desc: 'How to use the portal: tasks, guided tours, display options, questions people ask and where to get help.'
+  areas: []
+- portal: ap
+  path: insights.html
+  title: Insights
+  desc: 'Charts of the profile: obligations, changes from the xGov MEM, the backlog, codelists, extensions, quality scores and the landscape.'
+  areas:
+  - DM-BI
+- portal: ap
+  path: integrations.html
+  title: Integrations and connectors
+  desc: 'How catalogues, metadata platforms and data space connectors connect to DCAT-AP-UK: patterns, products, a conformance kit, a command-line checker, a GitHub Action and a reference API.'
+  areas:
+  - DM-INT
+- portal: ap
+  path: international.html
+  title: Cross-border data flows
+  desc: Describe where data is held and sent, and the safeguard for personal data leaving the UK, across the Crown Dependencies, Overseas Territories, Commonwealth and partners.
+  areas:
+  - DM-SEC
+- portal: ap
+  path: knowledge.html
+  title: Knowledge
+  desc: Glossary, thesaurus, taxonomy and knowledge graph for DCAT-AP-UK.
+  areas:
+  - DM-META
+- portal: ap
+  path: landscape.html
+  title: Profiles around the world
+  desc: A scan of DCAT profiles in Europe, the US and sectors, what each does best, and what DCAT-AP-UK takes from them.
+  areas:
+  - DM-META
+- portal: ap
+  path: licence.html
+  title: Licence
+  desc: 'How you may reuse DCAT-AP-UK: the Open Government Licence v3.0 for content and the profile, MIT for code, and third-party parts.'
+  areas: []
+- portal: ap
+  path: lineage.html
+  title: Lineage explorer
+  desc: Trace any property, class, codelist, rule, issue, example, test, extension, standard or defect to its sources and to what depends on it.
+  areas:
+  - DM-META
+- portal: ap
+  path: lockin.html
+  title: Avoiding lock-in and technical debt
+  desc: How an open, mandated metadata standard prevents vendor lock-in and technical debt, and the contract clauses and schedule of standards to make suppliers adopt it.
+  areas:
+  - DM-ARC
+- portal: ap
+  path: openapi.html
+  title: Describe an API from OpenAPI
+  desc: Turn an OpenAPI description into a DCAT-AP-UK data service record, checked, in your browser.
+  areas:
+  - DM-INT
+- portal: ap
+  path: quantum.html
+  title: Quantum-ready metadata
+  desc: 'Prepare for post-quantum migration: strong checksums, crypto-agility and connection security in the catalogue.'
+  areas:
+  - DM-SEC
+- portal: ap
+  path: requirements.html
+  title: Requirements stream
+  desc: 'What communities need from DCAT-AP-UK, how each need is evidenced, and how it is met: a common core, governed layers and a proposed work programme.'
+  areas:
+  - DM-META
+- portal: ap
+  path: reuse.html
+  title: Reuse across government
+  desc: Public standards, models, registers, catalogues and toolkits across UK government that fit with DCAT-AP-UK, with evidence of what is used and a real-world test.
+  areas:
+  - DM-INT
+- portal: ap
+  path: roles.html
+  title: Your role
+  desc: Routes through DCAT-AP-UK for catalogue managers, data owners, leaders, engineers, suppliers and users.
+  areas:
+  - DM-GOV
+- portal: ap
+  path: sitemap.html
+  title: Site map
+  desc: Every page of the DCAT-AP-UK portal.
+  areas: []
+- portal: ap
+  path: standards.html
+  title: Standards map
+  desc: An interactive map of every open standard DCAT-AP-UK profiles, reuses, extends, maps to or serves, with every relationship.
+  areas:
+  - DM-META
+  - DM-REF
+- portal: ap
+  path: status.html
+  title: Status and self-checks
+  desc: 'The self-checks that run on every build of DCAT-AP-UK: verification, self-assessment, staleness, health of sources and the defects each check came from.'
+  areas: []
+- portal: ap
+  path: tutorials.html
+  title: Tutorials
+  desc: Step-by-step lessons, from your first record to a sector extension, with progress you can tick off.
+  areas:
+  - DM-META
+- portal: ap
+  path: types.html
+  title: Value types
+  desc: The kinds of value DCAT-AP-UK properties take, how each is written in RDF and JSON, and which properties use it.
+  areas:
+  - DM-MOD
+- portal: ap
+  path: weaver.html
+  title: Metadata weaver
+  desc: Convert records between DCAT-AP-UK, xGov MEM, CKAN, DCAT-US, schema.org, Dublin Core, DDI and Croissant, with every field threaded, and the crosswalk matrix.
+  areas:
+  - DM-INT
+  - DM-META
+- portal: ap
+  path: whats-new.html
+  title: What's new
+  desc: Changes in each release of DCAT-AP-UK.
+  areas: []

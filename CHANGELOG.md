@@ -1,6 +1,13 @@
 # Changelog
 
 ## Unreleased
+- Data portals compass 2.1 (issue 28):
+  - The directory now lists every page of the four websites: 72 more from the Data Quality Commons and DCAT-AP-UK. Their titles and descriptions come from the live pages, checked on 13 November 2026.
+  - Data management areas point to the newly mapped pages.
+  - The open sub-tab is now kept in the page address, so a shared link reopens it. B-17 checks this, with a new deliberate break, compasssub.
+  - Directory cards whose link opens a page shared with other entries now say so. C-42 now also checks icons drawn by script.
+  - The portal footer and the daily sync's issue text still said "Estate compass". They now say "Data portals compass", and C-43 checks that no page uses the old name outside the release notes of versions already published.
+  - A new pages register, compass/pages.yaml, holds this compass's own mapping of each page to a data management area. The daily sync now flags only pages that are missing from the register. C-35 checks that every page in the register appears in the directory.
 - Data portals compass, 13 November 2026 review:
   - Page menu: opens and closes with a labelled switch outside the masthead, remembered on your device. Each section folds, shows its icon and a count of its parts, and flags parts that are new or updated in the latest release.
   - Release notes and About this guide move into a new Help tab, beside Words explained. The menu holds in-page navigation only.
@@ -38,12 +45,12 @@
   - Tabs regrouped from ten to seven: Start, By profession, By task, By topic, Directory, My pathway and Words explained. Old addresses (#portals, #when, #links, #examples) still open the right place.
   - C-35 now checks every directory entry (unique id, secure link, known professions, links into this portal resolve); B-17 checks the profession hub, the directory search and search everything, with a new deliberate break (compassdir). The build rejects a profession that names an unknown area, route, topic, role or body.
 - Health and care supplement (issue #22): DHSC's Data saves lives strategy, the secure data environment policy guidelines and the data access policy update are signposted, with a step and a checklist item to give research and analysis access through a secure data environment and record which one.
-- Data portals compass 1.3 (formerly the estate compass):
+- Data portals compass 1.3:
   - Renamed after an assessment shown on the page: "estate" is shorthand many readers do not know; "data portals" says what it covers, and the compass picture stays. The address is unchanged.
   - Says plainly what it is, who it is for, what it helps you do and what it is not, at the top of the page, without repeating the masthead.
   - Words explained: 34 terms in plain English, each with other names (thesaurus), a broader term and related terms, searchable and A to Z. Dotted terms on the page show their meaning on hover or keyboard focus and open their entry.
   - Fixed (D-038): opening the page jumped to the first tab and outlined it, because the address was written while the page loaded.
-- Estate compass 1.2:
+- Data portals compass 1.2:
   - The DAMA wheel: Data governance at the centre, selected when the page opens, with the ten other knowledge areas around it. Select an area to drill down to its capabilities, the activities under each (playbook recipe stages, change items, perspectives and maturity strands) and their individual steps, with where each is in the DAM playbooks and the other three portals.
   - A lineage diagram for whatever is selected, a traceability table of every activity and gap (filter, search, CSV), a search box across areas, capabilities, activities and steps, and My pathway: your own ordered list of activities, started from your role's recipe stages, kept in the page address, with copy link, download and print.
   - The compass rose names and links the four portals at their bearings; tooltips on the wheel, capabilities, activity kinds, the lineage diagram, the rose and the tabs; the prototype strip moved to the top.
@@ -87,7 +94,7 @@
 - In the form itself (8 November 2026): a new introduction linking back to the portal and its privacy wording, a "Something else" topic, labelled 1 to 7 ease scale, guidance on what to tell us and where the correct information is, new optional questions (what would make it better, browser and assistive technology, organisation type, whether to contact you or email a copy, email address, organisation), a reworded privacy confirmation, a thank-you message pointing to What's new, and a solid blue theme closer to the portal's own colours.
 - Fixed (D-032): the private form opened blank from everywhere and the portal said it might ask people to sign in. C-33 now checks the wiring on every page and task, proved by five deliberate breaks and a build-time rejection.
 - Journeys across the three portals: every page now loads `assets/journey-bar.js`, so a journey started on the Data Quality Commons ("Three portals, one journey") shows its step and a link to the next one here too. The script is the same file the Commons publishes, needs no styles or libraries, sends nothing anywhere and shows nothing unless you started a journey (Commons BL-34).
-- Estate compass 1.1.1: South is now called DCAT-AP-UK, the DCAT Application Profile for the UK, as the profile renamed itself after other national DCAT-AP profiles (DCAT-AP-NO, -SE, -NL) in its release 1.2.0-rc.1. Its address is unchanged until its owner renames the repository.
+- Data portals compass 1.1.1: South is now called DCAT-AP-UK, the DCAT Application Profile for the UK, as the profile renamed itself after other national DCAT-AP profiles (DCAT-AP-NO, -SE, -NL) in its release 1.2.0-rc.1. Its address is unchanged until its owner renames the repository.
 
 ## 1.10.1 (2026-11-06)
 - Estate compass 1.1.0: a fourth bearing. South is the DCAT-UK Application Profile (DCAT-UK AP), the proposed successor to the xGov MEM: how to describe data so others can find it. It has a portal card, a "describe data so others can find it" situation and route, steps in the policy and reuse routes, a worked example, when to use it, links for each DAMA area, a lane on the route trail, and its links in the link table. North, east and west are unchanged. DCAT-UK AP is proposed, not endorsed, and the card says so.
