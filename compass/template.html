@@ -533,7 +533,7 @@ const SUBTAB={};document.querySelectorAll('.subpanel').forEach(s=>{SUBTAB[s.id]=
   const ul=mk('ul');ul.appendChild((()=>{const l=mk('li');l.appendChild(link(id,'Open '+label));return l;})());
   subs.forEach(s=>{const sid=[...SUBIDS].find(k=>k===s.getAttribute('aria-controls'));const l2=mk('li');const a=link(id,s.childNodes[1]?s.childNodes[1].textContent:s.textContent,sid);const si=s.querySelector('svg');if(si)a.prepend(si.cloneNode(true));l2.appendChild(a);if(subFlag[sid]){l2.append(' ');l2.appendChild(flagEl(subFlag[sid]));}ul.appendChild(l2);});
   det.appendChild(ul);li.appendChild(det);dn.appendChild(li);});
- $('#dflag-sum').textContent=R.version?`Version ${R.version}: ${nNew} new and ${nUpd} updated sections are flagged.`:'';
+ const fp=[nNew?`${nNew} new`:'',nUpd?`${nUpd} updated`:''].filter(Boolean);$('#dflag-sum').textContent=R.version&&fp.length?`Version ${R.version}: ${fp.join(' and ')} ${nNew+nUpd===1?'section is':'sections are'} flagged in the menu.`:'';
  /* release notes, newest first, in Help */
  const rn=$('#relnotes');(D.releases||[]).forEach(r=>{const s=mk('section',null,'rel');const h=mk('h4',`Version ${r.version}, ${r.date}`);s.appendChild(h);s.appendChild(mk('p',r.summary));const ul=mk('ul');
   r.changes.forEach(x=>{const l=mk('li');l.appendChild(flagEl(x.flag));l.append(' ');l.appendChild(TL[x.tab]?link(x.tab,x.text,x.sub&&SUBIDS.has(x.sub)?x.sub:null):mk('span',x.text));ul.appendChild(l);});s.appendChild(ul);rn.appendChild(s);});
