@@ -580,9 +580,18 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'research.html', '<strong>After the MVP</strong>', '<strong>Pending</strong>')
         self.fails('c39_backlog_18_22')
 
+    # the old compass name stayed in every footer after the rename (C-43)
+    def test_c43_old_compass_name_in_footer(self):
+        edit(self.s / 'index.html', 'Data portals compass: find your way', 'Estate compass: find your way')
+        self.fails('c43_compass_name')
+
     # D-039: icons named only in data had no symbol (C-42)
     def test_c42_profession_icon_without_symbol(self):
         edit(self.s / 'compass' / 'index.html', '<symbol id="i-banknote"', '<symbol id="i-banknote-x"')
+        self.fails('c42_icons_resolve')
+
+    def test_c42_script_icon_without_symbol(self):
+        edit(self.s / 'compass' / 'index.html', '<symbol id="i-link"', '<symbol id="i-link-gone"')
         self.fails('c42_icons_resolve')
 
     def test_c42_template_icon_without_symbol(self):
@@ -676,7 +685,7 @@ class Vaccination(unittest.TestCase):
         self._rejects('    RB-SDMX: [SDMX]', '    RB-SDMX: [SDM]')
 
     def test_build_rejects_bad_drilldown_effort(self):
-        self._rejects('Mapped to each step", effort: S}', 'Mapped to each step", effort: XL}')
+        self._rejects('Checked by architecture leads", effort: S}', 'Checked by architecture leads", effort: XL}')
 
     def test_c25_browser_install_without_retry_d036(self):
         edit(self.r / '.github' / 'workflows' / 'pages.yml', 'for attempt in 1 2 3', 'for attempt in')
@@ -686,6 +695,10 @@ class Vaccination(unittest.TestCase):
     def test_c25_browser_install_without_time_limit_d036(self):
         edit(self.r / '.github' / 'workflows' / 'pages.yml', 'if timeout 600 python -m playwright', 'if python -m playwright')
         self.fails('c25_workflow_inventory')
+
+    def test_c40_assessment_contradicts_knowledge_areas_d042(self):
+        edit(self.r / 'content' / 'frameworks.yaml', '{part: Step by step, now: "5 activities', '{part: Step by step, now: None, x: "5 activities')
+        self.fails('c40_tooltips_and_standards')
 
     def test_build_rejects_unknown_dama_area(self):
         edit(self.r / 'content' / 'frameworks.yaml', 'dama: [DM-ARC, DM-MOD]', 'dama: [DM-XYZ]')
@@ -824,6 +837,12 @@ class Vaccination(unittest.TestCase):
 
     def test_c35_stray_closing_tag(self):
         edit(self.s / 'compass' / 'index.html', '<section role="tabpanel" id="pathway"', '</section>\n<section role="tabpanel" id="pathway"')
+        self.fails('c35_estate_compass')
+
+    def test_c35_register_page_missing_from_directory(self):
+        f = self.s / 'compass' / 'index.html'
+        t = f.read_text(encoding='utf-8')
+        f.write_text(t.replace('https://cyberdudeuk.github.io/dcat-ap-uk/quantum.html', 'https://cyberdudeuk.github.io/dcat-ap-uk/quantum-gone.html'), encoding='utf-8')
         self.fails('c35_estate_compass')
 
     def test_c35_compass_without_menu(self):
@@ -1076,6 +1095,19 @@ class CompassSync(unittest.TestCase):
     """Compass 1.2: the daily check of the other portals finds moved pages and missing anchors, never fails when a portal is down,
     and the build hides links found missing so no wayfinder or pathway sends anyone to a missing page. Exists because the
     DCAT-AP-UK site moved (D-037) and every compass link to it returned 404 for a week without anything noticing."""
+    def test_register_pages_are_not_reported_as_unknown(self):
+        import compass_sync, compass
+        c = compass.load()
+        g = c['pages']['pages'][0]
+        base = {p['id']: p['url'] for p in c['portals']}[g['portal']]
+        known, new = base + g['path'], base + 'brand-new-page.html'
+        sm = '<urlset>' + ''.join(f'<url><loc>{x}</loc></url>' for x in (known, new)) + '</urlset>'
+        def fetch(u):
+            return (200, sm, '') if u.endswith('sitemap.xml') else (200, '<html></html>', '')
+        res = compass_sync.sync(c, build.load(ROOT / 'content' / 'playbooks.yaml'), fetch)
+        self.assertIn(new, res['unmapped'].get(g['portal'], []))
+        self.assertNotIn(known, res['unmapped'].get(g['portal'], []))
+
     def test_stale_portal_facts_are_reported(self):
         import compass_sync, compass, datetime as dt
         c = compass.load()

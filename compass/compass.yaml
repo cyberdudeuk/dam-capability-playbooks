@@ -4,7 +4,7 @@
 meta:
   title: Data portals compass
   subtitle: Find your way around four websites about public sector data
-  version: 2.0.0
+  version: 2.1.0
   as_of: '2026-11-13'
   url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
   host_note: It favours none of them.
@@ -317,6 +317,13 @@ about:
   - It does not collect or send any of your data
   - It does not rank the four websites
 releases:
+- version: 2.1.0
+  date: '2026-11-13'
+  summary: Every page of the four websites in the directory
+  changes:
+  - {flag: updated, tab: directory, sub: dir-sub, text: "The directory now lists every page of the four websites: 72 more pages from the Data Quality Commons and DCAT-AP-UK, with their own titles and descriptions"}
+  - {flag: updated, tab: lineage, sub: wheel-sub, text: "Data management areas now point to more pages on the other websites, such as DCAT-AP-UK's classes, lock-in and quantum pages"}
+  - {flag: updated, tab: directory, sub: links, text: "Shared links now keep the part of a tab you had open, and cards say when a link opens a page shared with other entries"}
 - version: 2.0.0
   date: '2026-11-13'
   summary: New ways in, a directory and plainer wording

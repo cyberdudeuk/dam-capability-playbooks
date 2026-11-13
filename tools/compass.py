@@ -201,6 +201,17 @@ def directory(c, d, pb, page_names, page_desc):
                 seen.add(u)
                 add({'id': f'{pid}-{len(out)}', 'kind': 'Website page', 'title': title, 'url': u, 'where': pid, 'by': P[pid]['name'], 'topic': P[pid]['short'],
                      'desc': f"In {P[pid]['short']}, for {a['name'].lower()}.", 'status': P[pid]['binding'], 'areas': [aid]})
+    reg = {P[g['portal']]['url'] + g['path']: g for g in (c.get('pages') or {}).get('pages', []) if g['portal'] in P}
+    for e in out:
+        g = reg.get(e['url'])
+        if g:
+            e['title'], e['desc'] = g['title'], g['desc'] or e['desc']
+    for u, g in reg.items():
+        if u in seen:
+            continue
+        seen.add(u)
+        add({'id': f'{g["portal"]}-{len(out)}', 'kind': 'Website page', 'title': g['title'], 'url': u, 'where': g['portal'], 'by': P[g['portal']]['name'],
+             'topic': P[g['portal']]['short'], 'desc': g['desc'], 'status': P[g['portal']]['binding'], 'areas': list(g['areas'])})
     for pg, items in (d.get('related', {}).get('placements') or {}).items():
         for x in items:
             u = P[x['portal']]['url'] + x['path'] if x['portal'] in P else ''
@@ -230,6 +241,14 @@ def directory(c, d, pb, page_names, page_desc):
              'by': b.get('host', ''), 'topic': 'Boards and networks', 'desc': b['purpose'], 'status': b.get('kind', ''),
              'areas': sorted({CAP_AREA[x] for x in b.get('caps', []) if x in CAP_AREA}), 'aud': [a['id'] for a in aud if b['id'] in a['bodies']],
              'join': b.get('engage', '')})
+    # several boards and communities are described on one shared GOV.UK or data.gov.uk page: say so on the card (review, 13 November 2026)
+    by_url = {}
+    for e in out:
+        by_url.setdefault(e['url'], []).append(e)
+    for es in by_url.values():
+        if len(es) > 1:
+            for e in es:
+                e['shared'] = len(es) - 1
     # two entries may share a title (both portals have a Knowledge page): say whose each one is (review, 13 November 2026)
     seen = {}
     for e in out:
@@ -265,7 +284,10 @@ def validate_audiences(c, d, pb, w):
 
 
 def load():
-    return yaml.safe_load((SRC / 'compass.yaml').read_text(encoding='utf-8'))
+    c = yaml.safe_load((SRC / 'compass.yaml').read_text(encoding='utf-8'))
+    pf = SRC / 'pages.yaml'  # compass 2.1: every known page of the other websites (issue 28)
+    c['pages'] = yaml.safe_load(pf.read_text(encoding='utf-8')) if pf.exists() else {'pages': []}
+    return c
 
 
 def validate(c, d):
@@ -304,6 +326,17 @@ def validate(c, d):
             errs.append(f'compass: glossary {x["id"]} needs a plain definition of 45 words or fewer')
     if not c.get('about', {}).get('what'):
         errs.append('compass: say what the compass is (about.what)')
+    areas_ok = {a['id'] for a in d['dama']['areas']}
+    seen_pg = set()
+    for g in (c.get('pages') or {}).get('pages', []):
+        k = (g['portal'], g['path'])
+        if g['portal'] not in P or g['portal'] == 'dam':
+            errs.append(f'compass: page register entry {g["path"]} names an unknown website {g["portal"]}')
+        if k in seen_pg:
+            errs.append(f'compass: page register lists {g["portal"]} {g["path"]} twice')
+        seen_pg.add(k)
+        if not str(g.get('title') or '').strip() or any(a not in areas_ok for a in g.get('areas', [])):
+            errs.append(f'compass: page register entry {g["portal"]} {g["path"]} has no title or an unknown area')
     tabs_ok = {'start', 'roles', 'bearing', 'lineage', 'directory', 'pathway', 'glossary'}
     for r in c.get('releases') or []:
         for x in r['changes']:
@@ -329,6 +362,15 @@ def areas(c, d):
                     'dq': [[t, P['dqc']['url'] + u] for t, u in DQMAP[a['id']]],
                     'cat': [[t, P['cat']['url'] + '#' + h] for t, h in CATMAP[a['id']]] + [['Data management wheel', P['cat']['url'] + '#dama']],
                     'ap': [[t, P['ap']['url'] + u] for t, u in APMAP[a['id']]]})
+    # pages from the register join the area they are mapped to, after the hand-picked ones
+    key = {'dqc': 'dq', 'ap': 'ap', 'cat': 'cat'}
+    for o in out:
+        for pg in (c.get('pages') or {}).get('pages', []):
+            if o['id'] in pg['areas'] and pg['portal'] in key:
+                u = P[pg['portal']]['url'] + pg['path']
+                lst = o[key[pg['portal']]]
+                if all(x[1].partition('#')[0] != u for x in lst):
+                    lst.append([pg['title'], u])
     return out
 
 

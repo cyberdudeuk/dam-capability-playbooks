@@ -648,7 +648,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 43)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 44)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -1385,7 +1385,7 @@ class Site:
 <div><h2>{icon("info")} About this portal</h2>
 <p>{E(m["status"])}</p>
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
-<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="involve.html">Get involved, champions and badges</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Estate compass: find your way across four portals</a></li></ul></div>
+<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="involve.html">Get involved, champions and badges</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Data portals compass: find your way across four websites</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
 <p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>{f'<p>Or <a href="{E(self.ms_form_link(self.ms_where(key, title) if key else ""))}" rel="noopener" data-ms-form>give feedback privately about this page</a> (Microsoft Forms, no sign-in or GitHub account needed).</p>' if self.ms_form_url() else ''}
 <p>{E(m["contact_note"])}</p></div>

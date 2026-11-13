@@ -464,7 +464,7 @@ REVIEWED_ACTIONS = {
     'actions/dependency-review-action': 'a1d282b36b6f3519aa1f3fc636f609c47dddb294',   # v5.0.0
     'actions/checkout': '3d3c42e5aac5ba805825da76410c181273ba90b1',                   # v7.0.1
     'actions/upload-artifact': 'cf430e030ddbb5b0abf93d22962f4752f3646cd9',            # v7.0.2
-    'github/codeql-action/upload-sarif': '1fc58d04a4d4374f921bdac573c3811c240f9c26',  # v4.39.2
+    'github/codeql-action/upload-sarif': '33d7b85da1a04171e211befe2c739303b9a4c066',  # v4.39.3, the commit tag v4.39.3 resolves to (checked 13 November 2026)  # v4.39.2
     'ossf/scorecard-action': 'fa7117db83c52d787ae5a89f350999701505d78e',              # v2.5.0
 }
 
@@ -961,19 +961,19 @@ def c35_estate_compass(site, repo, pages):
     from html.parser import HTMLParser
 
     class _Bal(HTMLParser):
-        def __init__(s):
-            super().__init__(); s.st, s.bad = [], []
+        def __init__(self):
+            super().__init__(); self.st, self.bad = [], []
 
-        def handle_starttag(s, t, a):
+        def handle_starttag(self, t, a):
             if t in ('section', 'div', 'nav', 'main', 'details'):
-                s.st.append(t)
+                self.st.append(t)
 
-        def handle_endtag(s, t):
+        def handle_endtag(self, t):
             if t in ('section', 'div', 'nav', 'main', 'details'):
-                if s.st and s.st[-1] == t:
-                    s.st.pop()
+                if self.st and self.st[-1] == t:
+                    self.st.pop()
                 else:
-                    s.bad.append(f'</{t}> at line {s.getpos()[0]}')
+                    self.bad.append(f'</{t}> at line {self.getpos()[0]}')
     _b = _Bal(); _b.feed(html.split('<script')[0])
     if _b.bad or _b.st:
         errs.append(f'compass: unbalanced containers: {", ".join(_b.bad[:3] + [f"<{x}> never closed" for x in _b.st[:3]])}')
@@ -992,6 +992,17 @@ def c35_estate_compass(site, repo, pages):
         errs.append('compass: release notes must exist and flag each change as new or updated')
     if 'Estate compass' in html or 'name was' in html:
         errs.append('compass: do not explain an earlier name readers never saw')
+    # compass 2.1 (issue 28): every page in the pages register is in the directory, so the directory covers the whole of each website
+    try:
+        import yaml as _y
+        _reg = _y.safe_load((repo / 'compass' / 'pages.yaml').read_text(encoding='utf-8'))['pages']
+    except FileNotFoundError:
+        _reg = []
+    _base = {p['id']: p['url'] for p in d.get('portals', [])}
+    _durls = {e['url'] for e in d.get('directory', [])}
+    for g in _reg:
+        if g['portal'] in _base and _base[g['portal']] + g['path'] not in _durls:
+            errs.append(f'compass: {g["portal"]} page {g["path"]} is in the pages register but not in the directory')
     # compass 2.0: the directory and the profession hub. Every entry has a unique id, a secure link, a known kind and known professions;
     # entries placed in one of the four portals link into it; links into this portal land on a page and anchor that exist.
     dr, auds = d.get('directory'), {a['id'] for a in d.get('audiences', [])}
@@ -1441,10 +1452,35 @@ def c40_tooltips_and_standards(site, repo, pages):
         for st in c['stages']:
             if f'#{cid}-{st["id"]}"' not in card:
                 errs.append(f'capability-model.html: {aid} does not drill down to step {cid}.{st["id"]}')
+    # D-042: the assessment said areas had no activities after version 1.14.0 had built them
+    ap = repo / 'content' / 'areas.yaml'
+    if ap.exists():
+        built = {a['id'] for a in yaml.safe_load(ap.read_text(encoding='utf-8'))['areas'] if a.get('activities')}
+        dd = fw['dama']['drilldown']
+        if built:
+            if any(w in x['now'] for x in dd['levels'] for w in ('have none', 'no activities')):
+                errs.append('capability-model.html: the drill-down assessment says areas have no activities, but the Knowledge areas page has them (D-042)')
+            for x in dd['arc']['parts']:
+                if 'DM-ARC' in built and x['part'] in ('Step by step', 'Measures and escalation', 'Standards') and str(x['now']) in ('None', ''):
+                    errs.append(f'capability-model.html: the data architecture assessment says "{x["part"]}" does not exist, but DM-ARC has activities (D-042)')
     rs = (site / 'research.html').read_text(encoding='utf-8')
     for b in fw['dama']['drilldown']['backlog']:
         if f'id="{b}"' not in rs:
             errs.append(f'research.html: backlog item {b} from the drill-down assessment missing')
+    return errs
+
+
+def c43_compass_name(site, repo, pages):
+    """Rule (13 November 2026): the compass is called the data portals compass everywhere a reader sees it. The old name stayed in the
+    footer of every page after the rename; only release notes for versions already published keep it, as a record."""
+    errs = []
+    for f in sorted(site.glob('*.html')):
+        h = f.read_text(encoding='utf-8')
+        if f.name == 'whats-new.html':
+            h = h.split('Unreleased', 1)[-1].split('<h2', 2)[0] if 'Unreleased' in h else ''
+        for m in re.findall(r'[Ee]state compass', h):
+            errs.append(f'{f.name}: still calls the compass the estate compass')
+            break
     return errs
 
 
@@ -1458,6 +1494,8 @@ def c42_icons_resolve(site, repo, pages):
         used = set(re.findall(r'href="#i-([a-z0-9-]+)"', h))
         for blob in re.findall(r'<script type="application/json"[^>]*>(.*?)</script>', h, re.S):
             used |= set(re.findall(r'"icon":\s*"([a-z0-9-]+)"', blob))
+        # icons drawn by script, such as ic('link'), must have a symbol too
+        used |= set(re.findall(r"\bic\('([a-z0-9-]+)'\)", h)) | set(re.findall(r'#i-\$\{\'([a-z0-9-]+)\'\}', h))
         for n in sorted(used - sym):
             errs.append(f'{f.relative_to(site)}: icon {n} is used but has no symbol, so nothing is drawn')
     return errs
@@ -1522,7 +1560,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name]
 
 
 def run(site, repo, only=None, quiet=False):

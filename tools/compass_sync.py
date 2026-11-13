@@ -108,7 +108,8 @@ def sync(c, d, fetcher=fetch):
         sm = sitemap_pages(p['url'], fetcher)
         if sm:
             mapped = {u.partition('#')[0] for u in res['links']}
-            res['unmapped'][pid] = [u for u in sm if u not in mapped and u.rstrip('/') + '/' != p['url'] and not u.endswith('404.html')]
+            known = mapped | {P[g['portal']]['url'] + g['path'] for g in (c.get('pages') or {}).get('pages', []) if g['portal'] == pid}
+            res['unmapped'][pid] = [u for u in sm if u not in known and u.rstrip('/') + '/' != p['url'] and not u.endswith('404.html')]
     return res
 
 
@@ -136,7 +137,7 @@ def report(res):
         lines += [f'- {v["state"]}: {u} (used by {", ".join(v["used_by"])})' for u, v in sorted(bad.items())]
     for pid, us in res['unmapped'].items():
         if us:
-            lines.append(f'\nPages in {pid} that the compass does not point to yet (consider mapping them to a data management area or route):')
+            lines.append(f'\nNew pages in {pid} that the compass does not know yet (add each to compass/pages.yaml with its data management areas):')
             lines += [f'- {u}' for u in us[:40]]
     return '\n'.join(lines)
 
