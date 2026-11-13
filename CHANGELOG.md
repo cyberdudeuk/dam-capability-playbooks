@@ -8,6 +8,11 @@
   - Directory cards whose link opens a page shared with other entries now say so. C-42 now also checks icons drawn by script.
   - The portal footer and the daily sync's issue text still said "Estate compass". They now say "Data portals compass", and C-43 checks that no page uses the old name outside the release notes of versions already published.
   - A new pages register, compass/pages.yaml, holds this compass's own mapping of each page to a data management area. The daily sync now flags only pages that are missing from the register. C-35 checks that every page in the register appears in the directory.
+- Reference and master data: three new plays in DM-REF, drawn from a 13 November 2026 sweep of community questions:
+  - REF-5 "Find peers before you buy or build": ask organisations that already run the tool. Uses the catalogue's register of expertise.
+  - REF-6 "Choose a master data tool with exit in mind": open standards, exportable data, accessibility and NCSC cloud principles before you sign.
+  - REF-7 "Publish shared lists as open, versioned data": follow GOV.UK's reference data guidance (first published 11 March 2021) and SKOS.
+  - New framework references: RB-REFDATA ("Publish reference data for use across government") and RB-A11YREQ ("Understanding accessibility requirements for public sector bodies").
 - Data portals compass, 13 November 2026 review:
   - Page menu: opens and closes with a labelled switch outside the masthead, remembered on your device. Each section folds, shows its icon and a count of its parts, and flags parts that are new or updated in the latest release.
   - Release notes and About this guide move into a new Help tab, beside Words explained. The menu holds in-page navigation only.

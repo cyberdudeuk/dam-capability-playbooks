@@ -722,6 +722,27 @@ rulebook_more:
   - cat
   - dq
   why: Reference architecture for data and APIs in government.
+- id: RB-REFDATA
+  group: Technology and architecture
+  title: Publish reference data for use across government
+  publisher: Government Digital Service and Central Digital and Data Office
+  url: https://www.gov.uk/guidance/publish-reference-data-for-use-across-government
+  updated: '2021-03-11'
+  prov: V
+  caps:
+  - cat
+  - dq
+  why: How to publish reference data others can rely on, with a named owner, persistent identifiers, open formats and versioned change.
+- id: RB-A11YREQ
+  group: Technology and architecture
+  title: Understanding accessibility requirements for public sector bodies
+  publisher: Government Digital Service and Central Digital and Data Office
+  url: https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps
+  updated: '2024-09-30'
+  prov: V
+  caps:
+  - gov
+  why: The accessibility regulations apply to the public sector's own websites and apps, including the interfaces staff use in data tools.
 - id: RB-CHOOSE
   group: Technology and architecture
   title: 'Choosing technology: an introduction'
