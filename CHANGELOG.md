@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fixed (D-042): the DAMA drill-down assessment on the capability model still said eight areas had no activities, and that data architecture had no steps, measures or standards. It now reflects the Knowledge areas page: what is left is expert review, ownership, templates and learning. C-40 fails if the two disagree again.
 - Data portals compass, 13 November 2026 review:
   - Page menu: opens and closes with a labelled switch outside the masthead, remembered on your device. Each section folds, shows its icon and a count of its parts, and flags parts that are new or updated in the latest release.
   - Release notes and About this guide move into a new Help tab, beside Words explained. The menu holds in-page navigation only.

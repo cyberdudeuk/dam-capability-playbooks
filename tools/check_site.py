@@ -961,19 +961,19 @@ def c35_estate_compass(site, repo, pages):
     from html.parser import HTMLParser
 
     class _Bal(HTMLParser):
-        def __init__(s):
-            super().__init__(); s.st, s.bad = [], []
+        def __init__(self):
+            super().__init__(); self.st, self.bad = [], []
 
-        def handle_starttag(s, t, a):
+        def handle_starttag(self, t, a):
             if t in ('section', 'div', 'nav', 'main', 'details'):
-                s.st.append(t)
+                self.st.append(t)
 
-        def handle_endtag(s, t):
+        def handle_endtag(self, t):
             if t in ('section', 'div', 'nav', 'main', 'details'):
-                if s.st and s.st[-1] == t:
-                    s.st.pop()
+                if self.st and self.st[-1] == t:
+                    self.st.pop()
                 else:
-                    s.bad.append(f'</{t}> at line {s.getpos()[0]}')
+                    self.bad.append(f'</{t}> at line {self.getpos()[0]}')
     _b = _Bal(); _b.feed(html.split('<script')[0])
     if _b.bad or _b.st:
         errs.append(f'compass: unbalanced containers: {", ".join(_b.bad[:3] + [f"<{x}> never closed" for x in _b.st[:3]])}')
@@ -1441,6 +1441,17 @@ def c40_tooltips_and_standards(site, repo, pages):
         for st in c['stages']:
             if f'#{cid}-{st["id"]}"' not in card:
                 errs.append(f'capability-model.html: {aid} does not drill down to step {cid}.{st["id"]}')
+    # D-042: the assessment said areas had no activities after version 1.14.0 had built them
+    ap = repo / 'content' / 'areas.yaml'
+    if ap.exists():
+        built = {a['id'] for a in yaml.safe_load(ap.read_text(encoding='utf-8'))['areas'] if a.get('activities')}
+        dd = fw['dama']['drilldown']
+        if built:
+            if any(w in x['now'] for x in dd['levels'] for w in ('have none', 'no activities')):
+                errs.append('capability-model.html: the drill-down assessment says areas have no activities, but the Knowledge areas page has them (D-042)')
+            for x in dd['arc']['parts']:
+                if 'DM-ARC' in built and x['part'] in ('Step by step', 'Measures and escalation', 'Standards') and str(x['now']) in ('None', ''):
+                    errs.append(f'capability-model.html: the data architecture assessment says "{x["part"]}" does not exist, but DM-ARC has activities (D-042)')
     rs = (site / 'research.html').read_text(encoding='utf-8')
     for b in fw['dama']['drilldown']['backlog']:
         if f'id="{b}"' not in rs:
