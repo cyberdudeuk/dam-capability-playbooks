@@ -1,0 +1,716 @@
+# Knowledge area implementation guide (version 1.14.0, BL-35 and BL-36).
+# Activities for the DAMA knowledge areas beyond the three DAM capability playbooks, written fresh in this portal's own words.
+# DAMA-DMBOK is DAMA International's copyrighted work: area names only are used; no activity text is taken from it.
+# Every activity names the DAM Policy requirements it helps meet, the capabilities in the capability model it builds,
+# who does what (role codes from playbooks.yaml), and the rulebook entries that apply. The build rejects unknown references.
+meta:
+  as_of: '2026-11-12'
+  status: Draft by this portal for review by the profession that owns each area. Not government guidance.
+  intro: >-
+    The DAM Policy asks for three capabilities: data governance, data cataloguing and data quality. Each rests on work in
+    other data management areas. A catalogue record needs to know where the data lives, who can see it and which system is
+    the authoritative source. A quality plan needs the reference data and the flows that feed it. This guide gives each
+    area the activities that matter for the policy, in the order most organisations need them, down to the steps, outputs
+    and evidence.
+  inputs:
+    - id: IN-DMBOK
+      label: DAMA-DMBOK knowledge areas (names only, linked, not copied)
+      prov: V
+    - id: IN-SSP
+      label: >-
+        Sovereign Standards Platform: introduction, user guide and roadmap (cross-government internal draft, version 1.1,
+        November 2026). Used for the business glossary anatomy, the knowledge organisation ladder, controlled vocabularies, the draft
+        data standards classification, crypto-dependency and residency fields. The pack is not published; the standards classification
+        and the standards crosswalk it describes are drafts in review with the Data Standards Authority.
+      prov: O
+stages:
+  - id: start
+    name: Start
+    when: Before your first return
+    does: What the DAM Policy needs now, so the return is complete and true.
+  - id: build
+    name: Build
+    when: Before your second return
+    does: Makes the next return easier, and makes critical assets safer to reuse.
+  - id: embed
+    name: Embed
+    when: Business as usual
+    does: Keeps the work going without a project, and prepares critical assets for AI and wider sharing.
+areas:
+  - id: DM-ARC
+    lead: ARC
+    owner: Your design authority or architecture community
+    why: >-
+      The policy asks you to designate the source data set behind any distribution you designate (DAM-R12). You can only do that
+      if you know where each critical asset lives, which copy is authoritative and how it flows. Architecture gives the catalogue
+      its structure.
+    supplement: SUP-ARC
+    activities:
+      - id: ARC-1
+        stage: start
+        title: Map where each critical asset lives
+        goal: One list that says which systems hold each critical asset, so nothing is designated from the wrong copy.
+        steps:
+          - Start from the candidate and designation log. For each candidate, ask the steward and custodian which systems hold the data.
+          - Record each system, the copy it holds (master, replica, extract, archive) and who runs it.
+          - Mark copies that are spreadsheets, shared drives or personal stores. These are risks, not sources.
+          - Add the landscape to the catalogue record as related resources, not as separate critical assets.
+        outputs: [A data landscape list for critical assets, Updated candidate and designation log]
+        evidence: Every designated asset has at least one named system and a named custodian.
+        measure: Share of critical assets with a named system and custodian.
+        raci: {ARC: A, STW: R, CUS: C, CAT: R, OWN: I}
+        reqs: [DAM-R01, DAM-R12]
+        caps: [CR-05, CR-12]
+        refs: [RB-TCOP, RB-REFARCH]
+        templates: [T-CAT-1]
+      - id: ARC-2
+        stage: start
+        title: Name the authoritative source for each critical asset
+        goal: Everyone who reuses the asset knows which copy to trust and where to report problems.
+        steps:
+          - For each critical asset, decide which system is the authoritative source. If two systems disagree, the data owner decides.
+          - Record the source system, the entities it is authoritative for and how other copies are refreshed from it.
+          - Where you designate a distribution, link it to its source data set in the catalogue (DAM-R12).
+          - Record the decision in the decision log, with the date and who made it.
+        outputs: [Authoritative source named in each catalogue record, Decision log entries]
+        evidence: Designated distributions link to their source data set; decisions are dated and owned.
+        measure: Share of critical assets with a named authoritative source.
+        raci: {OWN: A, ARC: R, STW: C, CAT: R, CUS: C}
+        reqs: [DAM-R12, DAM-R02]
+        caps: [CR-12, CR-14]
+        refs: [RB-REFARCH, RB-DCAT]
+        templates: [T-CAT-2, T-CAT-4, T-GOV-3]
+      - id: ARC-3
+        stage: build
+        title: Draw the main data flows between systems and organisations
+        goal: You can say where critical data goes, so sharing, quality and security risks have a place on the map.
+        steps:
+          - 'For each critical asset, list the flows in and out: source, target, method (API, file, manual), frequency and owner.'
+          - Mark flows that cross organisational boundaries and link each to its data sharing agreement.
+          - Mark manual re-keying and spreadsheet hand-offs. These are where quality usually drops.
+          - Share the flow list with the data quality lead so quality rules sit where data enters and leaves.
+        outputs: [A data flow list for each critical asset, Links to data sharing agreements]
+        evidence: Every external flow of a critical asset has a sharing agreement or a recorded exception.
+        measure: Share of external flows with an agreement.
+        raci: {ARC: R, STW: R, CUS: C, DQL: C, DPO: C, OWN: A}
+        reqs: [DAM-R11, DAM-R15]
+        caps: [CR-12, CR-28, CR-17]
+        refs: [RB-API, RB-ICOSHARE, RB-DEA]
+        templates: [T-GOV-6]
+      - id: ARC-4
+        stage: build
+        title: Set a target data architecture and record decisions
+        goal: Changes move critical assets toward open, portable designs instead of new legacy.
+        steps:
+          - Write down the principles for critical data, for example one authoritative source, open formats and documented interfaces.
+          - Record each significant choice as an architecture decision record with the options, the choice and the reason.
+          - Check new systems and contracts against the principles before approval, including how data leaves at exit.
+          - Review the target each year with the governance board.
+        outputs: [Data architecture principles, Architecture decision records]
+        evidence: New systems holding critical data have a decision record and an exit route for the data.
+        measure: Share of new systems holding critical data with a recorded exit route.
+        raci: {ARC: R, BRD: A, CML: C, SVO: C, CDO: I}
+        reqs: [DAM-R16, DAM-R04]
+        caps: [CR-12, CR-32]
+        refs: [RB-TCOP, RB-OPEN, RB-LOCKIN, RB-CHOOSE]
+      - id: ARC-5
+        stage: embed
+        title: Make architecture review a gate in change
+        goal: Every change that touches a critical asset updates its landscape, source and flows before it goes live.
+        steps:
+          - Add a question to your change and assurance gates, such as "does this change a critical data asset?".
+          - If yes, require an updated landscape, flow list and catalogue record before go-live.
+          - Feed spend control and service assessment evidence from the same records rather than a new pack.
+          - Report gate results to the governance board each quarter.
+        outputs: [A gate question and checklist, Quarterly gate report]
+        evidence: Changes to critical assets show updated records at go-live.
+        measure: Share of changes to critical assets with records updated at go-live.
+        raci: {PMO: R, ARC: R, PDM: R, BRD: A, CAT: C}
+        reqs: [DAM-R04]
+        caps: [CR-25, CR-12]
+        refs: [RB-SVCASSESS, RB-SPEND, RB-GOVS005]
+  - id: DM-MOD
+    lead: ARC
+    owner: Your design authority, with data stewards
+    why: >-
+      A catalogue record describes a critical asset; a data model describes what is inside it. Stewards need a model to agree
+      definitions, quality leads need it to write rules, and users need it to judge whether the asset fits their purpose.
+    supplement: SUP-ARC
+    activities:
+      - id: MOD-1
+        stage: start
+        title: List the entities and relationships in each critical asset
+        goal: A plain list of what the asset is about (people, cases, payments, places) and how they connect.
+        steps:
+          - With the steward, name the main things the asset records, in business words.
+          - For each, list its identifier and the few attributes people rely on most.
+          - Record how they relate, for example "a case has one or more payments".
+          - Attach the list to the catalogue record and keep it with the asset, not in a project folder.
+        outputs: [Entity and relationship list]
+        evidence: Each critical asset links to an entity list that its steward has checked.
+        measure: Share of critical assets with an entity list.
+        raci: {STW: R, ARC: R, CAT: C, OWN: A}
+        reqs: [DAM-R13, DAM-R02]
+        caps: [CR-12, CR-06]
+        refs: [RB-DCAT]
+        templates: [T-CAT-4]
+      - id: MOD-2
+        stage: build
+        title: Agree definitions for the attributes people rely on
+        goal: The same word means the same thing in every system and report that uses the asset.
+        steps:
+          - Pick the attributes that drive decisions, payments or published figures.
+          - Write one plain-English definition for each and name the steward who owns it.
+          - Check the definition against cross-government standards and the business glossary before writing a new one.
+          - Link each attribute to its glossary term, so a change to the definition reaches every model that uses it.
+        outputs: [Attribute definitions linked to glossary terms]
+        evidence: Key attributes link to an approved glossary term with a named owner.
+        measure: Share of key attributes linked to an approved term.
+        raci: {STW: A, ARC: R, CAT: C, DQL: C}
+        reqs: [DAM-R13]
+        caps: [CR-11, CR-07]
+        refs: [RB-SKOS, RB-DSA]
+        links: [META-1]
+      - id: MOD-3
+        stage: build
+        title: Publish a data dictionary with the catalogue record
+        goal: Users can see the columns, types and allowed values before they ask for access.
+        steps:
+          - Export the column names, types, formats and allowed values from the authoritative source.
+          - Add the definitions from MOD-2 and mark personal or sensitive fields.
+          - Publish the dictionary as a machine-readable file (for example CSV on the Web) linked from the catalogue record.
+          - Regenerate it from the source when the structure changes, rather than editing by hand.
+        outputs: [Machine-readable data dictionary]
+        evidence: The catalogue record links to a current data dictionary.
+        measure: Share of critical assets with a current dictionary.
+        raci: {CAT: R, CUS: R, STW: A, DPO: C}
+        reqs: [DAM-R02, DAM-R13]
+        caps: [CR-06, CR-11]
+        refs: [RB-CSVW, RB-DCAT]
+      - id: MOD-4
+        stage: embed
+        title: Control changes to models
+        goal: A change to structure never breaks reports, sharing or quality rules without warning.
+        steps:
+          - Version each model and dictionary. Record what changed and why.
+          - Before a change, list who uses the affected attributes, using the flow list and reuse records.
+          - Tell users in advance and give a date. Mark attributes as retired rather than deleting them.
+          - Where others depend on the asset, record the new structure in its data contract (see INT-4).
+        outputs: [Versioned models, Change notices, Data contracts for shared assets]
+        evidence: Structure changes have a version, a notice and a date.
+        measure: Unplanned breaks to downstream users each year.
+        raci: {ARC: R, STW: A, USR: I, DQL: C}
+        reqs: [DAM-R04]
+        caps: [CR-11, CR-19]
+        refs: [RB-ODCS]
+        links: [INT-4]
+  - id: DM-OPS
+    lead: CUS
+    owner: Your technology operations or hosting team
+    why: >-
+      A critical asset is only useful if it is available, recoverable and kept for the right time. The policy's purposes, such as
+      public service delivery, depend on the data being there when needed.
+    activities:
+      - id: OPS-1
+        stage: start
+        title: Name the custodian and hosting for each critical asset
+        goal: Someone is responsible for keeping each asset running, and you know where it is hosted.
+        steps:
+          - Add a custodian to each ownership register entry, separate from the data owner.
+          - Record the hosting (on premises, cloud, supplier service) and the contract that covers it.
+          - Record where the data is physically stored, if your security or contracts require it.
+          - Tell the custodian which assets are critical and why.
+        outputs: [Custodian and hosting in the ownership register]
+        evidence: Every critical asset has a custodian distinct from its owner, or a recorded reason why not.
+        measure: Share of critical assets with a named custodian.
+        raci: {OWN: A, CUS: R, STW: C, COO: I}
+        reqs: [DAM-R05, DAM-R02]
+        caps: [CR-07, CR-12]
+        refs: [RB-CLOUD, RB-NCSCCLOUD]
+        templates: [T-GOV-2]
+      - id: OPS-2
+        stage: build
+        title: Back up critical assets and test that you can restore them
+        goal: A failure or attack does not lose critical data or the service that depends on it.
+        steps:
+          - Agree with the owner how much data the service could lose and how long it could be without it.
+          - Check backups meet that, including copies held offline or out of reach of ransomware.
+          - Test a restore at least once a year and record the result.
+          - Fix gaps and record any accepted risk in the exception register.
+        outputs: [Recovery targets, Restore test record]
+        evidence: A dated restore test for each critical asset.
+        measure: Share of critical assets restored in a test in the last 12 months.
+        raci: {CUS: R, OWN: A, SVO: C, IAO: C}
+        reqs: [DAM-R09]
+        caps: [CR-31, CR-10]
+        refs: [RB-CAF, RB-NCSCIR]
+        templates: [T-GOV-4]
+      - id: OPS-3
+        stage: build
+        title: Monitor availability, freshness and capacity
+        goal: Problems are found by the custodian before users find them.
+        steps:
+          - Monitor whether each critical asset is available and when it was last updated.
+          - Set a freshness threshold with the data quality lead and alert when it is missed.
+          - Feed failures into the data quality issue log, not just the service desk.
+          - Review capacity before peaks, such as year end.
+        outputs: [Availability and freshness monitoring, Issues logged for failures]
+        evidence: Freshness failures appear in the issue log with an owner.
+        measure: Freshness failures for critical assets each quarter.
+        raci: {CUS: R, DQL: C, OWN: A}
+        reqs: [DAM-R06, DAM-R15]
+        caps: [CR-08, CR-10]
+        refs: [RB-DQV, RB-DQHUB]
+        templates: [T-DQ-2]
+      - id: OPS-4
+        stage: embed
+        title: Plan retention, archiving and decommissioning
+        goal: Data is kept as long as needed and no longer, and nothing critical is lost when a system retires.
+        steps:
+          - Apply the retention set for each record (see DOC-2) to every store and copy that holds it.
+          - Archive or delete copies on schedule and record what was done.
+          - When a system retires, migrate or archive critical data first, and update the catalogue record.
+          - Remove decommissioned copies so they cannot be used by mistake.
+        outputs: [Retention linked to each store, Decommissioning checklist]
+        evidence: Retired systems show where their critical data went.
+        measure: Retired systems with critical data accounted for.
+        raci: {CUS: R, IAO: A, MIG: R, CAT: C}
+        reqs: [DAM-R04]
+        caps: [CR-10, CR-26, CR-15]
+        refs: [RB-TNARET, RB-RETIRE, RB-LEGACY]
+        links: [DOC-2]
+  - id: DM-SEC
+    lead: IAO
+    owner: Your security team, data protection officer and information asset owners
+    why: >-
+      In-scope assets are classified OFFICIAL, including handling markings such as 'personal' (DAM-R01). The catalogue must say
+      how each asset is protected and who may use it, or it cannot be shared safely.
+    activities:
+      - id: SEC-1
+        stage: start
+        title: Record classification and personal data for each asset
+        goal: Every catalogue record says how the asset is classified and whether it holds personal data.
+        steps:
+          - Record the classification and any handling marking from your information asset register.
+          - Mark whether the asset holds personal or special category data, with the data protection officer.
+          - Link to the data protection impact assessment where there is one.
+          - Check the record before it goes into the return. Never put the data itself in the catalogue.
+        outputs: [Classification and personal data fields in each record]
+        evidence: No critical asset record has a blank classification.
+        measure: Share of records with classification and personal data recorded.
+        raci: {IAO: A, DPO: R, CAT: R, STW: C}
+        reqs: [DAM-R01, DAM-R13]
+        caps: [CR-16, CR-17]
+        refs: [RB-GSC, RB-DPA, RB-ICODSA]
+        templates: [T-CAT-2]
+      - id: SEC-2
+        stage: start
+        title: Record who can access each asset, and on what basis
+        goal: People asking for data can see the route and the conditions without starting from scratch.
+        steps:
+          - Record who can access the asset now (roles, not names) and how access is granted.
+          - Record the legal basis for any sharing and link to the agreement.
+          - Say how to request access in the catalogue record.
+          - Review access at least once a year with the owner.
+        outputs: [Access rules and request route in the catalogue record]
+        evidence: Each record says how to request access.
+        measure: Share of records with an access route.
+        raci: {OWN: A, IAO: R, DPO: C, CAT: R}
+        reqs: [DAM-R02, DAM-R13]
+        caps: [CR-16, CR-17]
+        refs: [RB-ICOSHARE, RB-DEA, RB-DUAA]
+        templates: [T-GOV-6]
+      - id: SEC-3
+        stage: build
+        title: Link critical assets to cyber risk
+        goal: Security effort goes first to the data that matters most.
+        steps:
+          - Give your security team the list of critical assets and their purposes.
+          - Map each to the systems and Cyber Assessment Framework outcomes that protect it.
+          - Add any gap to the risk register with an owner and a date.
+          - Use the same mapping as evidence for GovAssure rather than a separate survey.
+        outputs: [Critical assets mapped to systems and CAF outcomes, Risks recorded]
+        evidence: Each critical asset is covered by a system in your cyber assurance scope.
+        measure: Share of critical assets covered by cyber assurance.
+        raci: {IAO: A, CUS: R, CDO: I, OWN: C}
+        reqs: [DAM-R09, DAM-R01]
+        caps: [CR-19, CR-31, CR-16]
+        refs: [RB-CAF, RB-GCSS, RB-GOVS007]
+      - id: SEC-4
+        stage: build
+        title: Make data incidents reach owners and quality leads
+        goal: A breach or corruption of critical data is handled as a data problem as well as a security one.
+        steps:
+          - Add critical asset owners to the incident response contact list.
+          - After an incident, check data integrity and log any quality impact.
+          - Tell users of affected data what changed and when it is fixed.
+          - Record lessons in the decision log and update controls.
+        outputs: [Incident plan that names data owners, Quality impact logged]
+        evidence: Incidents on critical assets have a quality impact entry.
+        measure: Time from incident to notifying data users.
+        raci: {IAO: A, CUS: R, OWN: R, DQL: C, DPO: C}
+        reqs: [DAM-R05, DAM-R15]
+        caps: [CR-31, CR-09]
+        refs: [RB-NCSCIR]
+        templates: [T-DQ-2, T-GOV-3]
+      - id: SEC-5
+        stage: embed
+        title: Record which critical assets depend on encryption, and where they are stored
+        goal: When encryption or data residency rules change, you can find the affected assets by a search, not a survey.
+        steps:
+          - 'Add two fields to the catalogue record or asset register: crypto-dependency (does it rely on encryption?) and data residency (where is it stored?).'
+          - For crypto-dependency, record whether the asset relies on public-key cryptography in storage or transfer, and where.
+          - For residency, record the country where it is stored and processed, and any contract terms.
+          - Use the fields to plan migration to post-quantum cryptography on the NCSC timeline.
+        outputs: [Crypto-dependency and residency fields]
+        evidence: Critical assets carry both fields.
+        measure: Share of critical assets with both fields recorded.
+        raci: {IAO: A, CUS: R, ARC: C, CAT: R}
+        reqs: [DAM-R13]
+        caps: [CR-31, CR-32]
+        refs: [RB-NCSCPQC, RB-CAF]
+        source: IN-SSP
+  - id: DM-INT
+    lead: ARC
+    owner: Your architecture and integration teams, with data stewards
+    why: >-
+      The policy's introduction promises minimum requirements for interoperability (DAM-R16). Until they are published, using the
+      identifiers and standards government already expects makes your assets easier to join and reuse.
+    activities:
+      - id: INT-1
+        stage: start
+        title: Use the identifiers and standards government expects
+        goal: Your critical assets can be matched with others without guesswork.
+        steps:
+          - List the identifiers in each critical asset, such as UPRN for addresses or company numbers for organisations.
+          - Check each against the Data Standards Authority's recommended standards and the open standards list.
+          - Record the identifiers and standards used in the catalogue record.
+          - Where you use a local identifier, record how it maps to the national one.
+        outputs: [Identifiers and standards recorded per asset]
+        evidence: Records name the identifiers and standards used.
+        measure: Share of critical assets that use at least one recommended identifier.
+        raci: {STW: R, ARC: C, CAT: R, OWN: A}
+        reqs: [DAM-R16, DAM-R13]
+        caps: [CR-11]
+        refs: [RB-UPRN, RB-DSA, RB-OPEN, RB-DSACAT]
+      - id: INT-2
+        stage: build
+        title: Classify and crosswalk the standards each asset meets
+        goal: Anyone can see which standards an asset meets, and how your terms map to them, in a form machines can read.
+        steps:
+          - 'For each standard you use, place it by category, topic and subject. The draft government classification has five building blocks: metadata, common reference data, service and platform design, data lifecycle, and domain-specific.'
+          - Map your local terms to the matching concepts in the cross-government standards, with a confidence level for each match.
+          - Mark terms with no match and send them to the Data Standards Authority rather than inventing a standard.
+          - Publish the statement of standards met as part of the catalogue record.
+        outputs: [Standards statement per asset, Term mappings with confidence, Gaps sent to the DSA]
+        evidence: Critical asset records carry a standards statement.
+        measure: Share of critical assets with a standards statement.
+        raci: {STW: R, CAT: R, ARC: C, OWN: A}
+        reqs: [DAM-R16, DAM-R13]
+        caps: [CR-11]
+        refs: [RB-DSA, RB-SKOS, RB-DCAT]
+        source: IN-SSP
+      - id: INT-3
+        stage: build
+        title: Share critical data through documented interfaces
+        goal: Other teams reuse the authoritative source, not a copy made for one project.
+        steps:
+          - For each regular consumer, offer an API or a published distribution from the authoritative source.
+          - Document it with an open description format and link it from the catalogue record.
+          - Put a data sharing agreement in place for each external consumer.
+          - Retire one-off extracts once the interface is in use.
+        outputs: [Documented interfaces, Sharing agreements]
+        evidence: Regular consumers use a documented interface.
+        measure: One-off extracts of critical assets each year.
+        raci: {ARC: R, CUS: R, OWN: A, DPO: C, USR: I}
+        reqs: [DAM-R12, DAM-R11]
+        caps: [CR-12, CR-17, CR-28]
+        refs: [RB-API, RB-OAS, RB-ICOSHARE]
+        templates: [T-GOV-6]
+      - id: INT-4
+        stage: embed
+        title: Agree data contracts and record lineage
+        goal: Producers and consumers know what to expect, and anyone can trace a figure back to its source.
+        steps:
+          - For shared assets, write a data contract covering structure, quality rules, freshness and support.
+          - Record lineage for critical flows in a standard format, from source through each transformation.
+          - Check contracts automatically where you can, and log breaches as quality issues.
+          - Review contracts with suppliers and partners each year.
+        outputs: [Data contracts, Lineage records]
+        evidence: Shared critical assets have a contract and lineage.
+        measure: Contract breaches each quarter.
+        raci: {OWN: A, ARC: R, DQL: R, CML: C}
+        reqs: [DAM-R07, DAM-R06]
+        caps: [CR-11, CR-20]
+        refs: [RB-ODCS, RB-OLINEAGE, RB-PROVO]
+  - id: DM-DOC
+    lead: IAO
+    owner: Your records and information management team
+    why: >-
+      Many critical assets are also public records. The catalogue and the records schedule should agree on what the asset is, who
+      is responsible for it and how long it is kept.
+    activities:
+      - id: DOC-1
+        stage: start
+        title: Check which critical assets are also public records
+        goal: Records managers and data owners work from the same list.
+        steps:
+          - Share the critical asset list with your records team.
+          - For each asset, record whether it is a public record and which schedule covers it.
+          - Agree who decides on retention and disposal, the data owner or the information asset owner.
+          - Note any asset whose records status is unclear and resolve it before the return.
+        outputs: [Records status in the ownership register]
+        evidence: Each critical asset says whether it is a public record.
+        measure: Share of critical assets with a records status.
+        raci: {IAO: A, OWN: C, COO: R, CAT: I}
+        reqs: [DAM-R01, DAM-R11]
+        caps: [CR-15]
+        refs: [RB-PRA, RB-TNAIM]
+        templates: [T-GOV-2]
+      - id: DOC-2
+        stage: build
+        title: Attach retention and disposal to each catalogue record
+        goal: Users can see how long data is kept and what happens to it next.
+        steps:
+          - Copy the retention period and disposal action from the schedule into the catalogue record.
+          - Record the review date and who approved any longer retention.
+          - Check the record's own metadata is kept as long as the data.
+          - Flag assets past their retention date to the owner.
+        outputs: [Retention and disposal fields filled in]
+        evidence: No critical asset is past its retention date without an approved reason.
+        measure: Assets past retention without a reason.
+        raci: {IAO: A, CAT: R, OWN: C}
+        reqs: [DAM-R13, DAM-R04]
+        caps: [CR-15, CR-10]
+        refs: [RB-TNARET, RB-ISO15489]
+        templates: [T-CAT-2, T-GOV-2]
+      - id: DOC-3
+        stage: embed
+        title: Transfer, archive or destroy with evidence
+        goal: Disposal is lawful, recorded and reflected in the catalogue.
+        steps:
+          - When disposal is due, carry out the action in the schedule and record it.
+          - For records selected for permanent preservation, follow the transfer process.
+          - Keep the catalogue record, marked as retired, with where the data went.
+          - Report disposals to the governance board each year.
+        outputs: [Disposal records, Retired catalogue records]
+        evidence: Retired records say what happened to the data.
+        measure: Disposals recorded each year.
+        raci: {IAO: A, CUS: R, CAT: R, BRD: I}
+        reqs: [DAM-R04]
+        caps: [CR-15, CR-26]
+        refs: [RB-TNATRANS, RB-ISO23081]
+  - id: DM-REF
+    lead: STW
+    owner: Your data stewards, with the owners of national registers
+    why: >-
+      The policy asks for dates in ISO 8601 and plain values instead of blanks (DAM-R13). Reference data goes further: shared code
+      lists for countries, places, organisations and categories are what let critical assets be joined and compared.
+    supplement: SUP-REF
+    activities:
+      - id: REF-1
+        stage: start
+        title: Find the reference data each critical asset depends on
+        goal: You know which code lists each asset uses and where they come from.
+        steps:
+          - List the coded fields in each critical asset, such as country, local authority, sector or status.
+          - For each, record the code list used and its source, for example ISO 3166 for countries or ONS codes for geography.
+          - Record dates in ISO 8601 and currencies in ISO 4217.
+          - Mark local code lists that duplicate a national one.
+        outputs: [Code lists recorded per asset]
+        evidence: Coded fields name their code list.
+        measure: Share of coded fields with a named national code list.
+        raci: {STW: R, CAT: C, DQL: C, OWN: A}
+        reqs: [DAM-R13]
+        caps: [CR-14, CR-11]
+        refs: [RB-ISO8601, RB-ISO3166, RB-ISO4217, RB-ONSGEO]
+      - id: REF-2
+        stage: build
+        title: Use shared controlled vocabularies, not local copies
+        goal: Fewer local lists, so data joins across services without mapping by hand.
+        steps:
+          - Replace local lists with the national one where it exists, for example ONS geography codes, UPRN and USRN, company numbers, school identifiers and the GSS harmonised standards for age, sex, ethnicity and language.
+          - Use SIC, SOC and CPV codes for sector, occupation and spend.
+          - Where you must keep a local list, map it to the national one and publish the mapping.
+          - Use shared values for status and lifecycle (draft, active, superseded, retired) across catalogues.
+        outputs: [Local lists retired or mapped]
+        evidence: Local lists that duplicate a national one have a mapping or a retirement date.
+        measure: Local lists retired or mapped.
+        raci: {STW: R, ARC: C, DQL: C, OWN: A}
+        reqs: [DAM-R16]
+        caps: [CR-14, CR-11]
+        refs: [RB-GSSHARM, RB-ONSGEO, RB-UPRN, RB-SKOS]
+        source: IN-SSP
+      - id: REF-3
+        stage: build
+        title: Name a master record for shared entities
+        goal: People, organisations and places are recorded once and matched consistently.
+        steps:
+          - Pick the shared entities your critical assets hold in more than one place.
+          - Name the master source for each and the identifier used to match records.
+          - Write the matching and duplicate rules, and who resolves doubtful matches.
+          - Measure duplicates and fix them at source.
+        outputs: [Master source and matching rules per entity]
+        evidence: Shared entities have a named master source.
+        measure: Duplicate rate for shared entities.
+        raci: {OWN: A, STW: R, ARC: R, DQL: C}
+        reqs: [DAM-R12]
+        caps: [CR-14, CR-12]
+        refs: [RB-UPRN, RB-REFARCH]
+      - id: REF-4
+        stage: embed
+        title: Govern changes to code lists
+        goal: A change to a code list never silently breaks a report or a share.
+        steps:
+          - Version each code list you own. Record what changed and from when.
+          - Never delete a code. Mark it as retired and point to its replacement.
+          - Tell users before a change takes effect.
+          - Publish your code lists in an open format so others can reuse them.
+        outputs: [Versioned code lists, Change notices]
+        evidence: Code lists have versions and deprecation markers.
+        measure: Code list changes with notice given.
+        raci: {STW: A, CAT: R, USR: I}
+        reqs: [DAM-R04]
+        caps: [CR-14, CR-11]
+        refs: [RB-SKOS]
+  - id: DM-BI
+    lead: DQL
+    owner: Your analysis and reporting teams
+    why: >-
+      Each critical asset must support at least one of the policy's seven purposes (DAM-R11). Reports, dashboards and statistics
+      are where much of that value shows, and where quality problems reach decision makers.
+    activities:
+      - id: BI-1
+        stage: start
+        title: List the reports and statistics that use each critical asset
+        goal: You can show who relies on the asset, which supports its designation and its priority.
+        steps:
+          - Ask analysis and reporting teams which reports, dashboards and statistics use each critical asset.
+          - Record each use against the asset, with the decision or publication it supports.
+          - Use the list as evidence of the purpose in the return.
+          - Share it with the data quality lead, who uses it to set the importance of purpose in the issues framework.
+        outputs: [Reuse list per asset]
+        evidence: Each critical asset has at least one recorded use.
+        measure: Recorded uses per critical asset.
+        raci: {USR: R, STW: R, DQL: C, OWN: A}
+        reqs: [DAM-R11, DAM-R15]
+        caps: [CR-02, CR-04]
+        refs: [RB-COP]
+      - id: BI-2
+        stage: build
+        title: Show quality and provenance next to published figures
+        goal: People reading a figure know how good the data behind it is.
+        steps:
+          - Publish the data quality statement with each regular report that uses a critical asset.
+          - Say where the data came from and when it was extracted.
+          - Flag known issues from the issue log that affect the figures.
+          - Follow the Code of Practice for Statistics where the output is official statistics.
+        outputs: [Quality statements with reports]
+        evidence: Regular reports link to a quality statement.
+        measure: Share of regular reports with a quality statement.
+        raci: {DQL: R, USR: R, OWN: A}
+        reqs: [DAM-R06]
+        caps: [CR-08, CR-04]
+        refs: [RB-QAAD, RB-COP]
+        templates: [T-DQ-3]
+      - id: BI-3
+        stage: build
+        title: Make analytical copies traceable to their source
+        goal: Every warehouse table or extract can be traced back to its critical asset.
+        steps:
+          - Record which critical asset each analytical table comes from.
+          - Record the transformations applied, in the lineage format agreed for shared flows (see INT-4).
+          - Remove unmanaged copies, or bring them under the same quality rules.
+          - Link analytical copies from the catalogue record as distributions.
+        outputs: [Lineage from source to report]
+        evidence: Analytical copies link back to their source.
+        measure: Share of analytical copies with recorded lineage.
+        raci: {DQL: R, ARC: C, CAT: R, OWN: A}
+        reqs: [DAM-R12]
+        caps: [CR-12, CR-19]
+        refs: [RB-PROVO, RB-OLINEAGE]
+        links: [INT-4]
+      - id: BI-4
+        stage: embed
+        title: Measure the value and reuse of critical assets
+        goal: The annual review knows which assets earn their keep and which need investment.
+        steps:
+          - Count uses, users and decisions supported for each critical asset each year.
+          - Set this beside the cost of keeping the asset and its quality score.
+          - Report to the governance board as part of the annual review.
+          - Use the results to prioritise improvement and investment.
+        outputs: [Annual value and reuse summary]
+        evidence: The annual review includes value and reuse.
+        measure: Critical assets with a value and reuse figure.
+        raci: {CDO: A, DQL: R, COO: R, BRD: C}
+        reqs: [DAM-R04]
+        caps: [CR-29, CR-04, CR-24]
+        refs: [RB-GREEN]
+  - id: DM-META
+    lead: CAT
+    owner: Your catalogue manager, with data stewards
+    why: >-
+      The cataloguing playbook covers what the policy asks for. These activities go further, toward governed vocabularies and
+      machine-readable metadata that AI tools and the National Data Library can use.
+    playbook: cat
+    activities:
+      - id: META-1
+        stage: build
+        title: Govern a business glossary
+        goal: Each important term has one agreed meaning, an owner and a history.
+        steps:
+          - For each term, record a preferred label, other labels (synonyms and abbreviations), a one-sentence plain-English definition and a scope note saying when to use it.
+          - Name the owner (a steward), the source standard or law it comes from, and the body that endorsed it.
+          - Give it a status (draft, in review, approved, deprecated), a version and valid from and to dates.
+          - Map it to the equivalent term in other standards. When a term retires, point to its replacement; terms are deprecated, never deleted.
+          - Review each term every year, or when its source changes, and log every change.
+        outputs: [A business glossary with owners, status and history]
+        evidence: Approved terms have an owner, a source and a review date.
+        measure: Share of governed terms with a named steward.
+        raci: {STW: A, CAT: R, BRD: C, USR: I}
+        reqs: [DAM-R13]
+        caps: [CR-06, CR-07, CR-11]
+        refs: [RB-SKOS, RB-METASTD]
+        source: IN-SSP
+      - id: META-2
+        stage: embed
+        title: Climb from glossary to knowledge graph
+        goal: Your terms, standards, assets and owners become linked data that people, catalogues and AI tools can query.
+        steps:
+          - 'Level 1, glossary: agreed terms with owners (META-1).'
+          - 'Level 2, thesaurus: relate terms as broader, narrower, related, and "use instead", so search finds the preferred term.'
+          - 'Level 3, vocabularies and taxonomies: closed code lists and a classification tree (category, topic, subject) applied the same way everywhere.'
+          - 'Level 4, ontologies: describe concepts with SKOS, data sets with DCAT, lineage with PROV-O and quality with DQV, and validate them with SHACL shapes before publishing.'
+          - 'Level 5, knowledge graph: give each term, standard, asset and owner a persistent, resolvable identifier and publish the links, so questions such as "who owns this term?" and "what breaks if it changes?" can be answered by query.'
+        outputs: [Machine-readable vocabularies with persistent identifiers, Validation in your publishing pipeline]
+        evidence: Published vocabularies resolve and pass validation.
+        measure: Share of governed terms with a resolvable identifier.
+        raci: {CAT: A, ARC: R, STW: C}
+        reqs: [DAM-R02]
+        caps: [CR-06, CR-11, CR-18]
+        refs: [RB-SKOS, RB-DCAT, RB-PROVO, RB-DQV, RB-SHACL]
+        source: IN-SSP
+  - id: DM-DQ
+    lead: DQL
+    owner: Your data quality lead
+    why: >-
+      The quality playbook covers what the policy asks for. This activity prepares critical assets for use with AI, which the
+      capability model treats as an inferred need.
+    playbook: dq
+    activities:
+      - id: DQ-AI
+        stage: embed
+        title: Make critical assets ready for AI
+        goal: Critical assets can be used by AI tools safely, with known quality, meaning and limits.
+        steps:
+          - Check the asset has a current catalogue record, glossary-linked definitions and a quality statement.
+          - Record known biases, gaps in coverage and groups under-represented in the data.
+          - Publish machine-readable metadata with persistent identifiers so retrieval tools cite the right source.
+          - Assess any AI use against the data ethics framework and record algorithmic tools where required.
+        outputs: [AI readiness check per asset]
+        evidence: Assets used by AI have a readiness check.
+        measure: Critical assets used by AI with a readiness check.
+        raci: {DQL: R, OWN: A, DPO: C, STW: R}
+        reqs: [DAM-R06, DAM-R13]
+        caps: [CR-18, CR-30]
+        refs: [RB-AIREADY, RB-ETH, RB-ATRS]

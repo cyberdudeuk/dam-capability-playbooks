@@ -40,6 +40,9 @@ def load(path):
         f = yaml.safe_load(extra.read_text(encoding='utf-8'))
         d['rulebook'] = list(d.get('rulebook', [])) + list(f.pop('rulebook_more', []))
         d.update(f)
+    areas_f = path.parent / 'areas.yaml'
+    if areas_f.exists():
+        d['area_guide'] = yaml.safe_load(areas_f.read_text(encoding='utf-8'))
     anchors = path.parent / 'source-anchors.json'
     d['_anchors'] = json.loads(anchors.read_text())['anchors'] if anchors.exists() else {}
     resolve_workbooks(d)
@@ -120,6 +123,7 @@ def validate(d):
             errs.append(f'duplicate id {i} in {where} (also {ids[i]})')
         ids[i] = where
     for s in d['sources']: reg(s['id'], 'sources')
+    for x in d.get('defects', []): reg(x['id'], 'defects')  # D-040: two sessions gave out the same defect numbers
     for r in d['requirements']: reg(r['id'], 'requirements')
     for r in d['roles']: reg('role:' + r['code'], 'roles')
     for c in d['capabilities']:
@@ -475,6 +479,7 @@ def validate_frameworks(d, errs, src, roles):
             if r not in crs: errs.append(f"maturity strand {st['id']}: unknown capability {r}")
     validate_research(d, errs, rb)
     validate_involvement(d, errs)
+    validate_areas(d, errs)
 
 
 # ---------------------------------------------------------------------------
@@ -577,6 +582,58 @@ def validate_involvement(d, errs):
         if k not in PAGE_LEVEL: errs.append(f'easy read: unknown page {k}')
 
 
+def validate_areas(d, errs):
+    """Version 1.14.0 (BL-35, BL-36): the knowledge area implementation guide. Every reference resolves, every area on the
+    DAMA wheel without a capability playbook has activities at each adoption stage, and no address appears in it."""
+    G = d.get('area_guide')
+    if not G:
+        return
+    reqs = {r['id'] for r in d['requirements']}
+    caps = {c['id'] for c in d.get('capmap', [])}
+    roles = {r['code'] for r in d['roles']}
+    rb = {r['id'] for r in d.get('rulebook', [])}
+    tpls = {t['id'] for c in d['capabilities'] for t in c.get('templates', [])}
+    sups = {s['id'] for s in d.get('supplements', [])}
+    areas = {a['id'] for a in d['dama']['areas']}
+    stages = {s['id'] for s in G['stages']}
+    inputs = {i['id'] for i in G['meta']['inputs']}
+    seen, acts = set(), set()
+    for a in G['areas']:
+        acts |= {x['id'] for x in a['activities']}
+    for a in G['areas']:
+        w = f"areas {a['id']}"
+        if a['id'] not in areas: errs.append(f'{w}: not a DAMA knowledge area')
+        if a['id'] in seen: errs.append(f'{w}: listed twice')
+        seen.add(a['id'])
+        if a['lead'] not in roles: errs.append(f"{w}: unknown lead role {a['lead']}")
+        if a.get('supplement') and a['supplement'] not in sups: errs.append(f"{w}: unknown supplement {a['supplement']}")
+        if not a.get('playbook') and {x['stage'] for x in a['activities']} != stages:
+            errs.append(f'{w}: needs activities at every adoption stage ({", ".join(sorted(stages))})')
+        for x in a['activities']:
+            v = f"{w} {x['id']}"
+            for k in ('title', 'goal', 'steps', 'outputs', 'evidence', 'measure', 'raci', 'reqs', 'caps', 'refs'):
+                if not x.get(k): errs.append(f'{v}: {k} missing')
+            if x['stage'] not in stages: errs.append(f"{v}: unknown stage {x['stage']}")
+            for k in ('steps', 'outputs'):  # an unquoted colon once turned a step into a mapping (review, 13 November 2026)
+                for s in x.get(k, []):
+                    if not isinstance(s, str): errs.append(f'{v}: a {k[:-1]} is not plain text (quote it if it has a colon): {s}')
+            for k in ('title', 'goal', 'evidence', 'measure'):
+                if x.get(k) is not None and not isinstance(x[k], str): errs.append(f'{v}: {k} is not plain text')
+            if not any(r == 'A' for r in x.get('raci', {}).values()): errs.append(f'{v}: no one is accountable')
+            if sum(1 for r in x.get('raci', {}).values() if r == 'A') > 1: errs.append(f'{v}: more than one accountable role')
+            for k, ok in (('reqs', reqs), ('caps', caps), ('refs', rb), ('templates', tpls), ('links', acts)):
+                for i in x.get(k, []):
+                    if i not in ok: errs.append(f'{v}: unknown {k[:-1]} {i}')
+            for r in x.get('raci', {}):
+                if r not in roles: errs.append(f'{v}: unknown role {r}')
+            if x.get('source') and x['source'] not in inputs: errs.append(f"{v}: unknown input {x['source']}")
+            if chr(64) in str(x): errs.append(f'{v}: no email addresses')
+    for i in areas - seen:
+        if d['dama'].get('cap_area') and i in d['dama']['cap_area'].values():
+            continue
+        errs.append(f'areas: knowledge area {i} has no implementation activities')
+
+
 FLAGS = {'E': ('Explicit', 'The text names this as a requirement or responsibility.'),
          'I': ('Implicit', 'The text depends on it to meet an explicit requirement but does not name it as one.'),
          'N': ('Inferred', 'Not in the text. This portal\'s judgement from good practice and adjacent rulebooks.')}
@@ -591,7 +648,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 41)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 43)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -606,7 +663,7 @@ ROLE_ICONS = {'CDO': 'building-2', 'COO': 'clipboard-list', 'BRD': 'gavel', 'OWN
 CAP_ICONS = {'gov': 'shield-check', 'cat': 'library-big', 'dq': 'gauge'}
 LEVELS = {'Foundation': 'award', 'Practitioner': 'graduation-cap', 'Advanced': 'milestone'}
 PAGE_LEVEL = {**{k: 'Foundation' for k in ('index', 'dam', 'personas', 'learning', 'guide', 'inclusion', 'research', 'involve', 'test', 'contact', 'site-map', 'about', 'whats-new', 'accessibility')},
-              **{k: 'Practitioner' for k in ('governance', 'cataloguing', 'quality', 'together', 'sectors', 'change', 'perspectives', 'community', 'library', 'knowledge', 'professions', 'data', 'bodies', 'status', 'notices')},
+              **{k: 'Practitioner' for k in ('areas', 'governance', 'cataloguing', 'quality', 'together', 'sectors', 'change', 'perspectives', 'community', 'library', 'knowledge', 'professions', 'data', 'bodies', 'status', 'notices')},
               **{k: 'Advanced' for k in ('capability-model', 'tooling', 'reuse', 'design')}}
 LEVEL_TEXT = {'Foundation': 'For anyone: no data management background needed.', 'Practitioner': 'For people who do data governance, cataloguing or quality work.',
               'Advanced': 'For specialists: detailed models, standards and technical reuse.'}
@@ -747,16 +804,16 @@ NAV = [
     ('index', 'Home', 'house'), ('dam', 'The policy', 'landmark'), ('governance', 'Governance', 'shield-check'),
     ('cataloguing', 'Cataloguing', 'library-big'), ('quality', 'Quality', 'gauge'), ('sectors', 'Sectors', 'layers'), ('together', 'Joined up', 'workflow'),
     ('change', 'Delivery and change', 'construction'),
-    ('capability-model', 'Capability model', 'radar'), ('perspectives', 'Perspectives', 'eye'), ('community', 'Working together', 'handshake'), ('professions', 'Professions and skills', 'briefcase'), ('tooling', 'Tools and interoperability', 'plug'), ('bodies', 'Boards and networks', 'building-2'),
+    ('capability-model', 'Capability model', 'radar'), ('areas', 'Knowledge areas', 'target'), ('perspectives', 'Perspectives', 'eye'), ('community', 'Working together', 'handshake'), ('professions', 'Professions and skills', 'briefcase'), ('tooling', 'Tools and interoperability', 'plug'), ('bodies', 'Boards and networks', 'building-2'),
     ('personas', 'Your role', 'users-round'), ('learning', 'Learning', 'graduation-cap'), ('library', 'Library', 'library'),
     ('knowledge', 'Knowledge', 'network'), ('inclusion', 'Inclusion', 'heart-handshake'), ('about', 'About', 'info'),
 ]
 # Grouped menus keep the global bar to about ten top-level destinations (build standard: use hubs before adding more)
 NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', 'together', 'change'],
-              'Frameworks': ['capability-model', 'perspectives', 'community', 'professions', 'tooling', 'bodies']}
+              'Frameworks': ['capability-model', 'areas', 'perspectives', 'community', 'professions', 'tooling', 'bodies']}
 # Section colour coding (version 1.8): every page carries a section, styled as an accent colour for orientation
 SECTION = {'index': 'home', 'dam': 'policy', 'governance': 'gov', 'cataloguing': 'cat', 'quality': 'dq', 'sectors': 'sectors', 'together': 'together',
-           'change': 'change', 'capability-model': 'model', 'perspectives': 'lens', 'community': 'community', 'professions': 'skills',
+           'change': 'change', 'capability-model': 'model', 'areas': 'model', 'perspectives': 'lens', 'community': 'community', 'professions': 'skills',
            'personas': 'roles', 'learning': 'learning', 'library': 'library', 'knowledge': 'knowledge', 'inclusion': 'inclusion',
            'data': 'data', 'test': 'test', 'guide': 'guide', 'site-map': 'guide', 'reuse': 'reuse', 'tooling': 'tooling', 'research': 'research', 'bodies': 'community', 'involve': 'research'}
 NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3'}
@@ -772,6 +829,7 @@ PAGE_DESC = {
     'contact': 'Ask a question, report a problem or suggest an improvement to the DAM capability playbooks using the contact form.',
     'status': 'Latest automated health check of the DAM capability playbooks: source currency, review date and page weight.',
     'sectors': 'Sector supplements for health, social care, geospatial, statistics, data sharing, AI and more: governance overlays, catalogue fields and quality rule libraries.',
+    'areas': 'Activities for each DAMA knowledge area that support the DAM Policy: data architecture, modelling, operations, security, integration, records, reference data and reporting.',
     'capability-model': 'Every capability the DAM Policy and related guidance need, flagged explicit, implicit or inferred, with a data maturity model and self-assessment.',
     'professions': 'Government professions, Digital and Data capability framework roles, career pathways, skills and learning routes for data asset management.',
     'change': 'Embedding the DAM Policy in business as usual and in change programmes: business cases, assurance, legacy exits, contracts and handover.',
@@ -1369,7 +1427,7 @@ class Site:
                  'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
                  'professions': self.p_professions, 'change': self.p_change, 'perspectives': self.p_lenses, 'community': self.p_community, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
                  'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices, 'data': self.p_data, 'test': self.p_test,
-                 'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, 'research': self.p_research, 'bodies': self.p_bodies, 'involve': self.p_involve, '404': self.p_404}
+                 'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, 'research': self.p_research, 'bodies': self.p_bodies, 'areas': self.p_areas, 'involve': self.p_involve, '404': self.p_404}
         for k, fn in pages.items():
             self._key = k
             (self.out / f'{k}.html').write_text(fn(), encoding='utf-8')
@@ -1378,7 +1436,7 @@ class Site:
         sys.path.insert(0, str(ROOT / 'tools'))
         import compass as _compass
         try:
-            self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg, pb=self.d, page_names={k: l for k, l, _ in NAV})
+            self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg, pb=self.d, page_names={k: l for k, l, _ in NAV}, page_desc=PAGE_DESC)
         except ValueError as e:
             raise ContentError(str(e))
         # The site map is built last, from the registry every other page has filled
@@ -2743,7 +2801,12 @@ class Site:
         sups = {x['id']: x for x in self.d.get('supplements', [])}
         for sid, areas in dm.get('supplement_area', {}).items():
             if aid in areas:
-                out.append(f'<p><a href="sectors.html#{sid}">{E(sups[sid]["title"])} supplement</a>: extra rules for critical assets; not yet a playbook (<a href="#drilldown">see what it would take</a>).</p>')
+                out.append(f'<p><a href="sectors.html#{sid}">{E(sups[sid]["title"])} supplement</a>: extra rules for critical assets.</p>')
+        G = self.d.get('area_guide') or {'areas': []}
+        for ga in G['areas']:
+            if ga['id'] == aid:
+                acts = ''.join(f'<li><a href="areas.html#{x["id"]}" data-tip="{E(x["goal"])}">{E(x["title"])}</a></li>' for x in ga['activities'])
+                out.append(f'<p><a href="areas.html#{aid}">Knowledge area activities</a>: {len(ga["activities"])} activities, each with steps, outputs, evidence and who does what.</p><ol class="drill-steps">{acts}</ol>')
         return ''.join(out) or f'Not yet: this portal has no activities for this area. <a href="#drilldown">See what it would take</a>.'
 
     def dama_assessment(self):
@@ -3114,7 +3177,7 @@ class Site:
             these = sorted((x for x in items if x['status'] == st), key=lambda x: -x['score'])
             cols += (f'<section class="rm-col rm-{st}" aria-labelledby="rm-h-{st}"><h3 id="rm-h-{st}">{icon({"now": "flag", "next": "calendar-clock", "later": "clock"}[st])} {RESEARCH_STATUS[st]} <span class="count">{len(these)}</span></h3>'
                      f'<p class="hint">{lede}</p><ul class="cr-list">{"".join(card(x) for x in these)}</ul></section>')
-        done = ''.join(f'<li><strong>{E(x["id"])}</strong> {E(x["title"])} <span class="hint">released in {E(x["release"])}</span></li>' for x in items if x['status'] == 'done')
+        done = ''.join(f'<li id="{x["id"]}"><strong>{E(x["id"])}</strong> {E(x["title"])} <span class="hint">released in {E(x["release"])}</span></li>' for x in items if x['status'] == 'done')
         out_ = ''.join(f'<li id="{x["id"]}"><strong>{E(x["id"])}</strong> {E(x["title"])}. {E(x["reason"])}</li>' for x in items if x['status'] == 'out')
         nnow = sum(1 for x in items if x['status'] == 'now')
         roadmap = (f'<h2 id="roadmap">{icon("kanban")} Roadmap</h2><p>What is being worked on now, next and later, modelled on the {self.rb_link("RB-DGUROADMAP")}. '
@@ -3269,6 +3332,97 @@ class Site:
         for x in B['items']:
             self.add_search(x['name'], 'Board or network', f'bodies.html#{x["id"]}', x['purpose'])
         return self.page('bodies', 'Boards, councils and networks', body, drawer, crumbs=['Frameworks', 'Boards and networks'])
+
+    # -- version 1.14.0: knowledge area implementation guide (BL-35, BL-36) ------------------------------
+    def p_areas(self):
+        G, d = self.d['area_guide'], self.d
+        A = {a['id']: a for a in d['dama']['areas']}
+        S = {s['id']: s for s in G['stages']}
+        roles = {r['code']: r['name'] for r in d['roles']}
+        capn = {c['id']: c['name'] for c in d['capmap']}
+        tpl_page = {t['id']: CAP_PAGE[c['id']] for c in d['capabilities'] for t in c.get('templates', [])}
+        tpl_name = {t['id']: t['name'] for c in d['capabilities'] for t in c.get('templates', [])}
+        sup = {s['id']: s['title'] for s in d.get('supplements', [])}
+        inputs = {i['id']: i for i in G['meta']['inputs']}
+        n_acts = sum(len(a['activities']) for a in G['areas'])
+        stage_icon = {'start': 'flag', 'build': 'wrench', 'embed': 'refresh-cw'}
+        SHORT = {'DM-ARC': 'Architecture', 'DM-MOD': 'Modelling', 'DM-OPS': 'Operations', 'DM-SEC': 'Security', 'DM-INT': 'Integration',
+                 'DM-DOC': 'Records', 'DM-REF': 'Reference data', 'DM-BI': 'Reporting', 'DM-META': 'Metadata', 'DM-DQ': 'Data quality'}
+        AREA_ICONS = {'DM-GOV': 'shield-check', 'DM-ARC': 'network', 'DM-MOD': 'git-branch', 'DM-OPS': 'server', 'DM-SEC': 'lock-keyhole',
+                      'DM-INT': 'arrow-right-left', 'DM-DOC': 'archive', 'DM-REF': 'key-round', 'DM-BI': 'chart-column', 'DM-META': 'library-big', 'DM-DQ': 'gauge'}
+
+        def who(raci):
+            parts = []
+            for code, lbl in (('A', 'Accountable'), ('R', 'Responsible (does the work)'), ('C', 'Consulted'), ('I', 'Informed')):
+                names = [roles[r] for r, v in raci.items() if v == code]
+                if names:
+                    parts.append(f'<li><strong>{lbl}:</strong> {E(", ".join(names))}</li>')
+            return '<ul class="plain">' + ''.join(parts) + '</ul>'
+
+        def card(a, x):
+            st = S[x['stage']]
+            reqs = ', '.join(f'<a href="dam.html#{r}">{r}</a>' for r in x['reqs'])
+            caps = ', '.join(f'<a href="capability-model.html#{c}">{E(capn[c])}</a>' for c in x['caps'])
+            refs = ''.join(f'<li>{self.rb_link(r)}</li>' for r in x['refs'])
+            tp = ', '.join(f'<a href="{tpl_page[i]}.html#{i}">{E(tpl_name[i])}</a>' for i in x.get('templates', []))
+            ln = ', '.join(f'<a href="#{i}">{i}</a>' for i in x.get('links', []))
+            src = (f'<p class="hint">{icon("info")}Draws on: {E(inputs[x["source"]]["label"].split(":")[0])}{prov(inputs[x["source"]]["prov"])}</p>' if x.get('source') else '')
+            return (f'<li class="cr-card area-act" id="{x["id"]}" data-item data-kind="{x["stage"]}"><div class="cr-head">{tile(stage_icon[x["stage"]], "sm")}'
+                    f'<div><p class="caption">{x["id"]} · {E(st["name"])}: {E(st["when"].lower())}</p><h3>{E(x["title"])}</h3></div></div>'
+                    f'<p><strong>Goal:</strong> {E(x["goal"])}{prov("O")}</p>'
+                    f'<details open><summary>Steps</summary>{"<ol>" + "".join(f"<li>{E(s)}</li>" for s in x["steps"]) + "</ol>"}</details>'
+                    f'<dl class="cr-dl"><dt>{icon("package")} You produce</dt><dd>{ul(x["outputs"])}</dd>'
+                    f'<dt>{icon("circle-check")} Evidence it is done</dt><dd>{E(x["evidence"])}</dd>'
+                    f'<dt>{icon("gauge")} Measure</dt><dd>{E(x["measure"])}</dd>'
+                    f'<dt>{icon("users-round")} Who does what</dt><dd>{who(x["raci"])}</dd>'
+                    f'<dt>{icon("landmark")} DAM Policy requirements it supports</dt><dd>{reqs}</dd>'
+                    f'<dt>{icon("radar")} Capabilities it builds</dt><dd>{caps}</dd>'
+                    + (f'<dt>{icon("book-marked")} Templates</dt><dd>{tp}</dd>' if tp else '')
+                    + (f'<dt>{icon("signpost")} Goes with</dt><dd>{ln}</dd>' if ln else '')
+                    + f'<dt>{icon("ruler")} Standards and guidance</dt><dd><ul class="plain">{refs}</ul></dd></dl>{src}</li>')
+
+        flow = ''.join(f'<li id="stage-{s["id"]}"><a href="#t-areas" class="flow-step"><strong>{E(s["name"])}: {E(s["when"].lower())}</strong><span>{E(s["does"])}</span></a></li>' for s in G['stages'])
+        rows = [[f'{icon(AREA_ICONS["DM-GOV"])} <a href="governance.html">{E(A["DM-GOV"]["name"])}</a>'] + ['<a href="governance.html">The governance playbook</a>' if s['id'] == 'start' else '<span class="hint">See the playbook</span>' for s in G['stages']]]
+        for a in G['areas']:
+            cells = [f'{icon(AREA_ICONS.get(a["id"], "target"))} <a href="#{a["id"]}">{E(A[a["id"]]["name"])}</a>']
+            for s in G['stages']:
+                xs = [x for x in a['activities'] if x['stage'] == s['id']]
+                cells.append('<br>'.join(f'<a href="#{x["id"]}">{E(x["title"])}</a>' for x in xs) or '<span class="hint">See the playbook</span>')
+            rows.append(cells)
+        secs = []
+        for a in G['areas']:
+            ar = A[a['id']]
+            pb = (f'<p>{icon("book-open")} The core activities for this area are the <a href="{CAP_PAGE[a["playbook"]]}.html">{E({"gov": "governance", "cat": "cataloguing", "dq": "data quality"}[a["playbook"]])} playbook</a>. The ones below go further.</p>' if a.get('playbook') else '')
+            sp = (f'<p>{icon("layers")} Read with the <a href="sectors.html#{a["supplement"]}">{E(sup[a["supplement"]])}</a> supplement.</p>' if a.get('supplement') else '')
+            secs.append((f'p-{a["id"]}', SHORT.get(a['id'], ar['name']), f'<section class="area-guide" aria-labelledby="{a["id"]}"><div class="cr-head">{tile(AREA_ICONS.get(a["id"], "target"), "lg")}<div><p class="caption">Knowledge area · {len(a["activities"])} activities</p><h2 id="{a["id"]}">{E(ar["name"])}</h2></div></div>'
+                     f'<p class="lede-sm">{E(ar["desc"])}</p>'
+                     f'<div class="callout"><p><strong>Why it matters for the DAM Policy:</strong> {E(a["why"])}{prov("O")}</p>'
+                     f'<p><strong>Usually led by:</strong> {E(roles[a["lead"]])}. <strong>Content owner:</strong> {E(a["owner"])}.</p></div>'
+                     f'{pb}{sp}<ul class="cr-list two">{"".join(card(a, x) for x in a["activities"])}</ul></section>'))
+            for x in a['activities']:
+                self.add_search(x['title'], 'Knowledge area activity', f'areas.html#{x["id"]}', x['goal'])
+        stage_secs = ''
+        body = self.hero('target', 'Frameworks', 'Knowledge areas: what to do in each', E(G['meta']['intro']),
+                         brief=[f'{n_acts} activities across {len(G["areas"])} data management areas, each with steps, outputs, evidence, a measure and who does what.',
+                                'Three stages: what to do before your first return, before your second, and as business as usual.',
+                                'Every activity says which DAM Policy requirements it supports and which standards apply.'],
+                         meta=[('target', f'{len(G["areas"])} areas'), ('list-ordered', f'{n_acts} activities'), ('clock', f'As of {G["meta"]["as_of"]}')])
+        draft = (f'<div class="callout warn" role="note"><p>{icon("triangle-alert")} <strong>Draft.</strong> {E(G["meta"]["status"])} '
+                 f'Activities are written fresh by this portal; DAMA-DMBOK is DAMA International\'s copyrighted work, and only its area names are used here.</p></div>')
+        start = (f'<h2 id="stages">{icon("footprints")} Where to start: three stages</h2>{stage_secs}'
+                 f'<p>Pick the activities for the stage you are at. You do not need every activity for your first return.</p>'
+                 f'<ol class="flow" aria-label="Adoption stages">{flow}</ol>'
+                 f'<h2 id="overview">{icon("layers")} All activities at a glance</h2>'
+                 + table('t-areas', 'Activities by knowledge area and stage', ['Knowledge area'] + [f'{s["name"]}: {s["when"].lower()}' for s in G['stages']], rows)
+                 + f'<p class="hint">The DAMA wheel in the <a href="compass/index.html#lineage">data portals compass</a> drills down to every activity here. Governance, cataloguing and quality activities are the three <a href="together.html">capability playbooks</a>.</p>'
+                 + f'<h2 id="sources">{icon("book-marked")} Sources</h2>' + ul([f'{E(i["label"])}{prov(i["prov"])}' for i in G['meta']['inputs']], raw=True))
+        body += draft + self.tabbed([('p-start', 'Start here', start)] + secs, 'Knowledge areas')
+        drawer = [{'label': 'Knowledge areas', 'icon': 'target', 'items': [
+            {'id': 'stages', 'label': 'Three stages', 'icon': 'footprints', 'new': True},
+            {'id': 'overview', 'label': 'All activities', 'icon': 'layers', 'count': n_acts}]
+            + [{'id': a['id'], 'label': A[a['id']]['name'], 'icon': AREA_ICONS.get(a['id'], 'target'), 'count': len(a['activities'])} for a in G['areas']]
+            + [{'id': 'sources', 'label': 'Sources', 'icon': 'book-marked'}]}]
+        return self.page('areas', 'Knowledge areas: what to do in each', body, drawer, crumbs=['Frameworks', 'Knowledge areas'])
 
     # -- version 1.10: get involved, champions and badges ------------------------------------------------
     def badge_url(self, b, ext='svg'):

@@ -7,7 +7,7 @@ Pass --break NAME to apply a deliberate break and prove the matching check fails
 import argparse
 import functools
 import http.server
-import json
+import re
 import socketserver
 import sys
 import threading
@@ -49,6 +49,8 @@ BREAKS = {
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'tours': ('b16_tours_and_share', ""),
     'compasswheel': ('b17_compass', "var w=document.getElementById('wheel');if(w){w.replaceWith(w.cloneNode(true));}"),
+    'compassmenu': ('b17_compass', "var n=document.getElementById('dnav');if(n){n.replaceWith(n.cloneNode(true));}document.addEventListener('click',function(e){if(e.target.closest('#dnav'))e.stopImmediatePropagation();},true);"),
+    'compassdir': ('b17_compass', "var q=document.getElementById('dq-q');if(q){q.replaceWith(q.cloneNode(true));}"),
     'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
     'ask': ('b18_ask_and_copy', "var f=document.querySelector('[data-ask]');if(f){f.replaceWith(f.cloneNode(true));}"),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
@@ -351,7 +353,7 @@ def run(site, axe_path, brk=None, pages=None):
         if (site / 'compass' / 'index.html').exists():
             ctx7 = b.new_context(viewport={'width': 1280, 'height': 900}, bypass_csp=bool(brk))
             pg7 = ctx7.new_page()
-            pg7.goto(f'{base}/compass/index.html')
+            pg7.goto(f'{base}/compass/index.html#bearing')
             prep(pg7)
             try:
                 data = pg7.evaluate("JSON.parse(document.getElementById('data').textContent)")
@@ -375,7 +377,7 @@ def run(site, axe_path, brk=None, pages=None):
                 pg7.wait_for_timeout(200)
                 if pg7.locator('#route ol.steps > li').count() == 0 or pg7.locator('.flagnote').count() == 0:
                     fail('b17_compass', 'a shared link does not restore the route, or optional policy steps are not marked for an organisation outside the policy')
-                # D-035: arriving with no address fragment stays at the top of the page, with nothing written to the address
+                # D-038: arriving with no address fragment stays at the top of the page, with nothing written to the address
                 pg7.goto(f'{base}/compass/index.html')
                 pg7.wait_for_timeout(200)
                 st = pg7.evaluate('[scrollY, location.hash]')
@@ -418,11 +420,81 @@ def run(site, axe_path, brk=None, pages=None):
                 h = pg7.evaluate('location.hash')
                 if '/a.' not in h:
                     fail('b17_compass', f'the pathway is not kept in the address: {h}')
-                pg7.goto(f'{base}/compass/index.html#pathway///{h.split("/")[-1]}')
+                pg7.goto(f'{base}/compass/index.html#pathway///{h.split("/")[3]}')
                 pg7.reload()
                 pg7.wait_for_timeout(200)
                 if pg7.locator('#pw .pwl > li').count() != 1:
                     fail('b17_compass', 'a shared pathway link does not restore the pathway')
+                # compass 2.0: the profession hub fills from the chosen profession, is kept in the address,
+                # and its directory link opens the directory filtered to that profession
+                pg7.goto(f'{base}/compass/index.html#roles')
+                pg7.reload()
+                prep(pg7)
+                pg7.wait_for_timeout(150)
+                pg7.click('[data-aud="metadata"]', timeout=2000)
+                pg7.wait_for_timeout(150)
+                if pg7.is_hidden('#aud-hub') or pg7.locator('#aud-hub [data-pw]').count() == 0:
+                    fail('b17_compass', 'choosing a profession does not show its tasks, areas, guidance and communities')
+                if not pg7.evaluate('location.hash').endswith('/metadata'):
+                    fail('b17_compass', 'the chosen profession is not kept in the address')
+                n_btn = int(re.search(r'See all (\d+)', pg7.inner_text('#aud-all')).group(1))
+                pg7.click('#aud-all', timeout=2000)
+                pg7.wait_for_timeout(200)
+                m0 = re.search(r'of (\d+) matching', pg7.inner_text('#dq-count'))
+                if not m0 or int(m0.group(1)) != n_btn:
+                    fail('b17_compass', f'the profession says {n_btn} directory entries but the directory shows {m0.group(1) if m0 else "none"}')
+                if pg7.is_hidden('#directory') or pg7.input_value('#dq-aud') != 'metadata':
+                    fail('b17_compass', 'a profession does not open the directory filtered to it')
+                # the directory filters by text and kind, and every card shown matches
+                pg7.select_option('#dq-aud', '')
+                total = len(data['directory'])
+                pg7.fill('#dq-q', 'catalogue')
+                pg7.wait_for_timeout(200)
+                cards = pg7.locator('#dir .dcard').all_inner_texts()
+                m = re.search(r'of (\d+) matching', pg7.inner_text('#dq-count'))
+                if not cards or not m or int(m.group(1)) >= total or any('catalog' not in c.lower() for c in cards):
+                    fail('b17_compass', f'searching the directory does not narrow it to matching entries ({pg7.inner_text("#dq-count")})')
+                # buttons that point into a sub-tab open it (review, 13 November 2026)
+                pg7.goto(f'{base}/compass/index.html#start')
+                pg7.reload()
+                prep(pg7)
+                pg7.wait_for_timeout(150)
+                j = pg7.locator('[data-jump="portals"]').first
+                if j.count():
+                    j.click(timeout=2000)
+                    pg7.wait_for_timeout(250)
+                    if pg7.is_hidden('#portals'):
+                        fail('b17_compass', 'a link to the four websites opens the directory but not that part of it')
+                # compass 2.0: the menu drawer opens a tab's sub-tab, and tabs flag what is new
+                pg7.click('#dnav [data-sub="when"]', timeout=2000)
+                pg7.wait_for_timeout(150)
+                if pg7.is_hidden('#directory') or pg7.is_hidden('#when'):
+                    fail('b17_compass', 'the menu does not open the part of the page it names')
+                if pg7.locator('[role=tablist] .flag-n').count() == 0:
+                    fail('b17_compass', 'no tab flags what is new or updated')
+                # the drawer switch retracts and restores the menu; release notes are in Help, not the drawer
+                pg7.click('#drawer-toggle', timeout=2000)
+                if pg7.is_visible('#drawer') or pg7.get_attribute('#drawer-toggle', 'aria-checked') != 'false':
+                    fail('b17_compass', 'the page menu switch does not retract the drawer')
+                pg7.click('#drawer-toggle', timeout=2000)
+                if pg7.is_hidden('#drawer'):
+                    fail('b17_compass', 'the page menu switch does not bring the drawer back')
+                if pg7.locator('#drawer details').count() == 0 or pg7.locator('#drawer .dcount').count() == 0:
+                    fail('b17_compass', 'drawer sections are not collapsible or have no item counts')
+                if pg7.locator('#relnotes .rel').count() != len(data.get('releases', [])):
+                    fail('b17_compass', 'release notes do not list every release')
+                # D-039: every profession card draws its icon
+                blank = pg7.evaluate("[...document.querySelectorAll('#aud-grid use')].filter(u=>!document.getElementById((u.getAttribute('href')||'').slice(1))).length")
+                if blank or pg7.locator('#aud-grid use').count() != len(data.get('audiences', [])):
+                    fail('b17_compass', f'{blank} profession cards draw no icon (D-039)')
+                # search everything on the start page finds directory entries
+                pg7.goto(f'{base}/compass/index.html#start')
+                pg7.reload()
+                pg7.wait_for_timeout(150)
+                pg7.fill('#sq', 'metadata')
+                pg7.wait_for_timeout(200)
+                if pg7.locator('#sq-out a, #sq-out button').count() == 0:
+                    fail('b17_compass', 'search everything finds nothing for a common term')
             except Exception as e:
                 fail('b17_compass', f'compass could not be used: {str(e).splitlines()[0]}')
             ctx7.close()

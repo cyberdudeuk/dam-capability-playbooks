@@ -19,7 +19,7 @@ def fresh():
     tmp = Path(tempfile.mkdtemp(prefix='dcp-'))
     repo = tmp / 'repo'
     (repo / 'content').mkdir(parents=True)
-    for f in ('playbooks.yaml', 'frameworks.yaml', 'source-anchors.json'):
+    for f in ('playbooks.yaml', 'frameworks.yaml', 'areas.yaml', 'source-anchors.json'):
         shutil.copy(ROOT / 'content' / f, repo / 'content' / f)
     for f in ('README.md', 'LICENSE', 'CITATION.cff'):
         shutil.copy(ROOT / f, repo / f)
@@ -580,6 +580,51 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'research.html', '<strong>After the MVP</strong>', '<strong>Pending</strong>')
         self.fails('c39_backlog_18_22')
 
+    # D-039: icons named only in data had no symbol (C-42)
+    def test_c42_profession_icon_without_symbol(self):
+        edit(self.s / 'compass' / 'index.html', '<symbol id="i-banknote"', '<symbol id="i-banknote-x"')
+        self.fails('c42_icons_resolve')
+
+    def test_c42_template_icon_without_symbol(self):
+        edit(self.s / 'compass' / 'index.html', '<symbol id="i-history"', '<symbol id="i-history-gone"')
+        self.fails('c42_icons_resolve')
+
+    # version 1.14.0: knowledge area activities (C-41)
+    def test_c41_activity_missing_from_page(self):
+        edit(self.s / 'areas.html', 'id="SEC-5"', 'id="SEC-X"')
+        self.fails('c41_knowledge_areas')
+
+    def test_c41_activity_loses_evidence(self):
+        edit(self.s / 'areas.html', 'Evidence it is done', 'Proof', count=1)
+        self.fails('c41_knowledge_areas')
+
+    def test_c41_wheel_does_not_drill_to_activity(self):
+        edit(self.s / 'capability-model.html', 'href="areas.html#REF-2"', 'href="areas.html#REF-X"')
+        self.fails('c41_knowledge_areas')
+
+    def test_c41_compass_does_not_reach_activity(self):
+        edit(self.s / 'compass' / 'index.html', '"id": "BI-4"', '"id": "BI-X"')
+        self.fails('c41_knowledge_areas')
+
+    def test_build_rejects_area_activity_with_unknown_requirement(self):
+        y = self.r / 'content' / 'areas.yaml'
+        edit(y, 'reqs: [DAM-R01, DAM-R12]', 'reqs: [DAM-R99, DAM-R12]')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_area_step_that_is_not_text(self):
+        y = self.r / 'content' / 'areas.yaml'
+        edit(y, "          - 'For each critical asset, list the flows in and out: source", "          - For each critical asset, list the flows in and out: source")
+        edit(y, "frequency and owner.'", "frequency and owner.")
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_area_without_every_stage(self):
+        y = self.r / 'content' / 'areas.yaml'
+        edit(y, "      - id: DOC-3\n        stage: embed", "      - id: DOC-3\n        stage: build")
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
     # version 1.13.0: tooltips, standards links and the DAMA drill-down (C-40)
     def test_c40_tooltip_inside_heading(self):
         edit(self.s / 'governance.html', '<h2 id="policy">', '<h2 id="policy"><a class="term" href="knowledge.html#c-data-asset" data-tip="Data asset: x">x</a>')
@@ -746,7 +791,7 @@ class Vaccination(unittest.TestCase):
         self._wheel(br)
         self.fails('c35_estate_compass')
 
-    def test_c35_d035_address_written_while_loading(self):
+    def test_c35_d038_address_written_while_loading(self):
         edit(self.s / 'compass' / 'index.html', "document.readyState==='loading'||", '')
         self.fails('c35_estate_compass')
 
@@ -764,6 +809,49 @@ class Vaccination(unittest.TestCase):
     def test_c35_wheel_without_lineage_graph(self):
         edit(self.s / 'compass' / 'index.html', 'id="graph"', 'id="grph"')
         self.fails('c35_estate_compass')
+
+    def test_c35_menu_built_as_html(self):
+        edit(self.s / 'compass' / 'index.html', "const dn=$('#dnav');", "const dn=$('#dnav');$('#dnav').innerHTML='';")
+        self.fails('c35_estate_compass')
+
+    def test_c35_menu_link_address_from_page_text(self):
+        edit(self.s / 'compass' / 'index.html', "a.href=HREF[tab]||'#start';", "a.href='#'+tab;")
+        self.fails('c35_estate_compass')
+
+    def test_c35_tooltip_for_missing_element(self):
+        edit(self.s / 'compass' / 'index.html', "st_portals:'", "tab_portals:'")
+        self.fails('c35_estate_compass')
+
+    def test_c35_stray_closing_tag(self):
+        edit(self.s / 'compass' / 'index.html', '<section role="tabpanel" id="pathway"', '</section>\n<section role="tabpanel" id="pathway"')
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_without_menu(self):
+        edit(self.s / 'compass' / 'index.html', 'id="drawer"', 'id="drawr"')
+        self.fails('c35_estate_compass')
+
+    def test_c35_compass_explains_old_name(self):
+        edit(self.s / 'compass' / 'index.html', '<h1>', '<h1>Estate compass ')
+        self.fails('c35_estate_compass')
+
+    def test_c35_directory_without_search(self):
+        edit(self.s / 'compass' / 'index.html', 'id="dq-q"', 'id="dq-x"')
+        self.fails('c35_estate_compass')
+
+    def test_c35_directory_entry_with_insecure_link(self):
+        f = self.s / 'compass' / 'index.html'
+        t = f.read_text(encoding='utf-8')
+        j = t.index('"url": "https://', t.index('"directory": ['))
+        f.write_text(t[:j] + t[j:].replace('https://', 'http://', 1), encoding='utf-8')
+        self.fails('c35_estate_compass')
+
+    def test_build_rejects_audience_with_unknown_area(self):
+        import compass
+        d = build.load(self.r / 'content' / 'playbooks.yaml')
+        c = compass.load()
+        c['audiences'][0]['areas'].append('DM-NOPE')
+        errs = compass.validate_audiences(c, d, d, None)
+        self.assertTrue(any('unknown area DM-NOPE' in e for e in errs), errs)
 
     def test_build_rejects_unmapped_recipe_stage(self):
         import compass
@@ -987,7 +1075,15 @@ class Vaccination(unittest.TestCase):
 class CompassSync(unittest.TestCase):
     """Compass 1.2: the daily check of the other portals finds moved pages and missing anchors, never fails when a portal is down,
     and the build hides links found missing so no wayfinder or pathway sends anyone to a missing page. Exists because the
-    DCAT-AP-UK site moved (D-034) and every compass link to it returned 404 for a week without anything noticing."""
+    DCAT-AP-UK site moved (D-037) and every compass link to it returned 404 for a week without anything noticing."""
+    def test_stale_portal_facts_are_reported(self):
+        import compass_sync, compass, datetime as dt
+        c = compass.load()
+        c['portals'][0]['data_as_of'] = '2026-01-01'
+        st = compass_sync.stale_facts(c, today=dt.date(2026, 11, 13))
+        self.assertTrue(any(n == c['portals'][0]['short'] for n, _ in st), st)
+        self.assertIn('older than 30 days', compass_sync.report({'stale': st, 'links': {}, 'unmapped': {}}))
+
     def setUp(self):
         import compass
         self.c = compass.load()
