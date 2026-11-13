@@ -542,8 +542,12 @@ function matrix(){const rs=mxRows();
  $('#mx-count').textContent=`Showing ${rs.length} of ${rows.length} rows: ${W.acts.length} activities with ${W.acts.reduce((n,x)=>n+x.steps.length,0)} steps across ${Object.keys(CAP).length} capabilities and ${W.areas.length} areas.`;}
 ['#mx-area','#mx-kind','#mx-cov','#mx-q'].forEach(s=>$(s).addEventListener(s==='#mx-q'?'input':'change',matrix));
 const csvCell=v=>'"'+String(v).replace(/"/g,'""')+'"';
-function download(name,text){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
-$('#mx-csv').addEventListener('click',()=>{download('compass-traceability.csv',['Area,Capability,Coverage,Activity kind,Activity,Step,Location'].concat(mxRows().flatMap(r=>{const base=[r.areas.map(id=>AREA[id].name).join('; '),r.c.id+' '+r.c.name,r.c.coverage];return r.x?r.x.steps.map(st=>base.concat([r.x.kind,r.x.title,st,r.x.url]).map(csvCell).join(',')):[base.concat(['','No activity yet','',r.c.page]).map(csvCell).join(',')];})).join('\n'));});
+/* Where the page runs inside another site's frame (for example a hosted copy), downloads and printing are often blocked: copy the text instead and say so. */
+const framed=(()=>{try{return window.self!==window.top;}catch(e){return true;}})();
+function download(name,text,statusEl){if(framed){const st=statusEl||document.getElementById('pw-status');const done=ok=>{if(st)st.textContent=ok?'Downloads are blocked here, so the table was copied: paste it into a spreadsheet.':'Downloads and copying are blocked here. Open the compass on its own page to download.';};
+  if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>done(1),()=>done(0));else done(0);return;}
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/csv'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);}
+$('#mx-csv').addEventListener('click',()=>{download('compass-traceability.csv',['Area,Capability,Coverage,Activity kind,Activity,Step,Location'].concat(mxRows().flatMap(r=>{const base=[r.areas.map(id=>AREA[id].name).join('; '),r.c.id+' '+r.c.name,r.c.coverage];return r.x?r.x.steps.map(st=>base.concat([r.x.kind,r.x.title,st,r.x.url]).map(csvCell).join(',')):[base.concat(['','No activity yet','',r.c.page]).map(csvCell).join(',')];})).join('\n'),$('#mx-count'));});
 /* pathway */
 function togglePw(t,id){if(!id)return;const i=pw.findIndex(p=>p.t===t&&p.id===id);if(i>=0)pw.splice(i,1);else pw.push({t,id});refreshPw();}
 function pwItem(p){return p.t==='a'?ACT[p.id]:CAP[p.id];}
@@ -570,6 +574,7 @@ $('#pw-csv').addEventListener('click',()=>download('my-pathway.csv',['Order,Kind
 window.compassState=()=>[sel.cap?(sel.act?'act:'+sel.act:'cap:'+sel.cap):'area:'+sel.area,pw.map(p=>p.t+'.'+p.id).join('~')];
 window.compassRestore=(s,p)=>{if(p)p.split('~').forEach(t=>{const [k,id]=t.split('.');const v=k==='a'?actId(id):capId(id);if(v&&!pw.some(z=>z.t===k&&z.id===v))pw.push({t:k==='a'?'a':'c',id:v});});
  if(s){const [k,id]=s.split(':');if(k==='area'&&areaId(id))sel.area=areaId(id);if(k==='cap'&&capId(id)){sel.cap=capId(id);sel.area=CAP[sel.cap].areas[0];}if(k==='act'&&actId(id)){sel.act=actId(id);sel.cap=ACT[sel.act].caps[0];sel.area=CAP[sel.cap].areas[0];}}};
+if(framed){const pr=$('#pw-print');if(pr)pr.hidden=true;}
 window.compassInit=()=>{drawWheel();drill();graph();lin();$('#area').value=sel.area;matrix();refreshPw();};
 window.compassRole=()=>{drill();refreshPw();};
 }
