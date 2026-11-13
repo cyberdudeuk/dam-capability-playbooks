@@ -510,7 +510,7 @@ const selTab=(t,f)=>sel(t,f);
 tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();const nt=tabs[(i+n+tabs.length)%tabs.length];sel(nt,true);syncHash();}});});
 /* sub-tabs within a tab (compass 2.0): short sections instead of long pages */
 function showSub(id,focus){const b=document.getElementById('st-'+id);if(!b)return false;const list=b.parentElement;[...list.children].forEach(x=>{const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;const pn=document.getElementById(x.getAttribute('aria-controls'));if(pn)pn.hidden=!on;});if(focus)b.focus();return true;}
-document.querySelectorAll('.subtabs').forEach(list=>{const bs=[...list.children];bs.forEach((b,i)=>{b.addEventListener('click',()=>{showSub(b.getAttribute('aria-controls'));if(typeof syncHash==='function')syncHash();});b.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();showSub(bs[(i+n+bs.length)%bs.length].getAttribute('aria-controls'),true);if(typeof syncHash==='function')syncHash();}});});});
+document.querySelectorAll('.subtabs').forEach(list=>{const bs=[...list.children];bs.forEach((b,i)=>{b.addEventListener('click',()=>{showSub(b.getAttribute('aria-controls'));syncHash();});b.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();showSub(bs[(i+n+bs.length)%bs.length].getAttribute('aria-controls'),true);syncHash();}});});});
 const SUBTAB={};document.querySelectorAll('.subpanel').forEach(s=>{SUBTAB[s.id]=s.closest('[role=tabpanel]:not(.subpanel)').id;});
 /* the page menu: a retractable drawer of in-page sections, each collapsible, flagging what changed in the latest release (compass 2.0) */
 (function(){const R=(D.releases||[])[0]||{changes:[]};const TL={};tabs.forEach(x=>TL[x.getAttribute('aria-controls')]=x);
@@ -625,7 +625,7 @@ $('#wheel').innerHTML=s;
   const d=e.key==='ArrowRight'||e.key==='ArrowDown'?1:e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:0;if(d){e.preventDefault();ws[(i+d+ws.length)%ws.length].focus();}});});
 }
 /* drill-down */
-function go(a,c,x,keepFocus){if(!a&&!c&&!x)return;if(typeof showSub==='function'&&document.readyState!=='loading'&&!keepFocus)showSub('wheel-sub');sel.act=x||null;sel.cap=c||(x?ACT[x].caps[0]:null);sel.area=a||(sel.cap?CAP[sel.cap].areas[0]:sel.area);
+function go(a,c,x,keepFocus){if(!a&&!c&&!x)return;if(document.readyState!=='loading'&&!keepFocus)showSub('wheel-sub');sel.act=x||null;sel.cap=c||(x?ACT[x].caps[0]:null);sel.area=a||(sel.cap?CAP[sel.cap].areas[0]:sel.area);
  drawWheel();drill();graph();lin();$('#area').value=sel.area;syncHash();
  if(sel.act){const el=document.getElementById('act-'+sel.act);if(el){el.open=true;if(!keepFocus)el.scrollIntoView({block:'nearest'});}}}
 const crumb=(t,fn,cur)=>`<li>${cur?`<span aria-current="location">${esc(t)}</span>`:`<button type="button" data-go="${esc(fn)}">${esc(t)}</button>`}</li>`;
