@@ -685,7 +685,7 @@ class Vaccination(unittest.TestCase):
         self._rejects('    RB-SDMX: [SDMX]', '    RB-SDMX: [SDM]')
 
     def test_build_rejects_bad_drilldown_effort(self):
-        self._rejects('Mapped to each step", effort: S}', 'Mapped to each step", effort: XL}')
+        self._rejects('Checked by architecture leads", effort: S}', 'Checked by architecture leads", effort: XL}')
 
     def test_c25_browser_install_without_retry_d036(self):
         edit(self.r / '.github' / 'workflows' / 'pages.yml', 'for attempt in 1 2 3', 'for attempt in')
@@ -695,6 +695,10 @@ class Vaccination(unittest.TestCase):
     def test_c25_browser_install_without_time_limit_d036(self):
         edit(self.r / '.github' / 'workflows' / 'pages.yml', 'if timeout 600 python -m playwright', 'if python -m playwright')
         self.fails('c25_workflow_inventory')
+
+    def test_c40_assessment_contradicts_knowledge_areas_d042(self):
+        edit(self.r / 'content' / 'frameworks.yaml', '{part: Step by step, now: "5 activities', '{part: Step by step, now: None, x: "5 activities')
+        self.fails('c40_tooltips_and_standards')
 
     def test_build_rejects_unknown_dama_area(self):
         edit(self.r / 'content' / 'frameworks.yaml', 'dama: [DM-ARC, DM-MOD]', 'dama: [DM-XYZ]')
