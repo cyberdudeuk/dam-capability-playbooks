@@ -1,6 +1,11 @@
 # Changelog
 
 ## Unreleased
+- Data portals compass 2.1 (issue #28):
+  - Every page of the Data Quality Commons and DCAT-AP-UK is now accounted for. 52 pages are mapped to the data management areas they serve, and 20 are named as housekeeping, such as about, help, accessibility and site map pages.
+  - The mapped pages appear in the directory under their areas, and the daily check now verifies those links too: 104 links, up from 52.
+  - The daily check reports only pages in neither list, so a new page still raises an issue.
+  - The mapping is a first pass by this portal, made from each page's title and description on 13 November 2026, for the owner to review.
 - Data portals compass, 13 November 2026 review:
   - Page menu: opens and closes with a labelled switch outside the masthead, remembered on your device. Each section folds, shows its icon and a count of its parts, and flags parts that are new or updated in the latest release.
   - Release notes and About this guide move into a new Help tab, beside Words explained. The menu holds in-page navigation only.

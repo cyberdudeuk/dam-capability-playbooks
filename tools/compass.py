@@ -201,6 +201,18 @@ def directory(c, d, pb, page_names, page_desc):
                 seen.add(u)
                 add({'id': f'{pid}-{len(out)}', 'kind': 'Website page', 'title': title, 'url': u, 'where': pid, 'by': P[pid]['name'], 'topic': P[pid]['short'],
                      'desc': f"In {P[pid]['short']}, for {a['name'].lower()}.", 'status': P[pid]['binding'], 'areas': [aid]})
+    # compass 2.1 (issue #28): the other portals' pages mapped to data management areas
+    for pid, sp in (c.get('sister_pages') or {}).items():
+        for path, x in sp.get('pages', {}).items():
+            u = P[pid]['url'] + path
+            if u in seen:
+                for e in out:
+                    if e['url'] == u:
+                        e['areas'] = sorted(set(e['areas']) | set(x['a']))
+                continue
+            seen.add(u)
+            add({'id': f'{pid}-{len(out)}', 'kind': 'Website page', 'title': x['t'], 'url': u, 'where': pid, 'by': P[pid]['name'], 'topic': P[pid]['short'],
+                 'desc': f"In {P[pid]['short']}, for {', '.join(ar[a]['name'].lower() for a in x['a'])}.", 'status': P[pid]['binding'], 'areas': list(x['a'])})
     for pg, items in (d.get('related', {}).get('placements') or {}).items():
         for x in items:
             u = P[x['portal']]['url'] + x['path'] if x['portal'] in P else ''
@@ -292,6 +304,22 @@ def validate(c, d):
     areas = {a['id'] for a in d['dama']['areas']}
     if set(DQMAP) != areas or set(CATMAP) != areas or set(APMAP) != areas:
         errs.append('compass: the area mappings must cover every DAMA area in the content')
+    # compass 2.1 (issue #28): every page of the other portals is mapped to areas or named as housekeeping
+    for pid, sp in (c.get('sister_pages') or {}).items():
+        if pid not in P or pid == 'dam':
+            errs.append(f'compass sister_pages: unknown portal {pid}')
+            continue
+        both = set(sp.get('housekeeping', [])) & set(sp.get('pages', {}))
+        if both:
+            errs.append(f'compass sister_pages {pid}: {sorted(both)} are both housekeeping and mapped')
+        for path, x in sp.get('pages', {}).items():
+            if not path.endswith('.html') or '/' in path or '#' in path:
+                errs.append(f'compass sister_pages {pid}: {path} must be a page name')
+            if not x.get('t') or not x.get('a'):
+                errs.append(f'compass sister_pages {pid}: {path} needs a title and at least one area')
+            for a in x.get('a', []):
+                if a not in areas:
+                    errs.append(f'compass sister_pages {pid}: {path} names unknown area {a}')
     g = c.get('glossary', [])
     gids = [x['id'] for x in g]
     if len(gids) != len(set(gids)):

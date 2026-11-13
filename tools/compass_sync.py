@@ -63,6 +63,9 @@ def links(c, d):
     for p in c['portals']:
         if p['id'] != 'dam':
             add(p['url'] + p['start']['path'], 'start ' + p['id'])
+    for pid, sp in (c.get('sister_pages') or {}).items():
+        for path in sp.get('pages', {}):
+            add(P[pid]['url'] + path, 'directory')
     return {u: sorted(w) for u, w in out.items()}
 
 
@@ -108,7 +111,8 @@ def sync(c, d, fetcher=fetch):
         sm = sitemap_pages(p['url'], fetcher)
         if sm:
             mapped = {u.partition('#')[0] for u in res['links']}
-            res['unmapped'][pid] = [u for u in sm if u not in mapped and u.rstrip('/') + '/' != p['url'] and not u.endswith('404.html')]
+            house = {p['url'] + x for x in ((c.get('sister_pages') or {}).get(pid) or {}).get('housekeeping', [])}
+            res['unmapped'][pid] = [u for u in sm if u not in mapped and u not in house and u.rstrip('/') + '/' != p['url'] and not u.endswith('404.html')]
     return res
 
 

@@ -1114,6 +1114,52 @@ class CompassSync(unittest.TestCase):
         r = compass_sync.sync(self.c, self.d, self.fetcher(noanchor={(ap + 'codelists.html', 'orgs')}))
         self.assertEqual(r['links'][ap + 'codelists.html#orgs']['state'], 'anchor-missing')
 
+    def _sitemap_fetcher(self, pid, pages):
+        """A fetcher whose sitemap for one portal lists the given pages."""
+        import urllib.error
+        base = next(p['url'] for p in self.c['portals'] if p['id'] == pid)
+        inner = self.fetcher()
+
+        def f(url, timeout=20):
+            if url == base + 'sitemap.xml':
+                return 200, ''.join(f'<url><loc>{base}{x}</loc></url>' for x in pages), ''
+            return inner(url, timeout)
+        return f, base
+
+    def test_issue28_housekeeping_and_mapped_pages_are_not_reported(self):
+        import compass_sync
+        sp = self.c['sister_pages']['dqc']
+        f, base = self._sitemap_fetcher('dqc', [sp['housekeeping'][0], next(iter(sp['pages']))])
+        r = compass_sync.sync(self.c, self.d, f)
+        self.assertEqual(r['unmapped']['dqc'], [])
+
+    def test_issue28_a_new_page_is_still_reported(self):
+        import compass_sync
+        f, base = self._sitemap_fetcher('dqc', ['brand-new-page.html'])
+        r = compass_sync.sync(self.c, self.d, f)
+        self.assertEqual(r['unmapped']['dqc'], [base + 'brand-new-page.html'])
+        self.assertIn('brand-new-page.html', compass_sync.report(r))
+
+    def test_issue28_mapped_pages_are_link_checked_and_listed(self):
+        import compass_sync, compass
+        ap = next(p['url'] for p in self.c['portals'] if p['id'] == 'ap')
+        r = compass_sync.sync(self.c, self.d, self.fetcher(gone={ap + 'weaver.html'}))
+        self.assertEqual(r['links'][ap + 'weaver.html']['state'], 'gone')
+        pb = build.load(ROOT / 'content' / 'playbooks.yaml')
+        urls = {e['url']: e for e in compass.directory(self.c, self.d, pb, {}, {})}
+        self.assertIn(ap + 'weaver.html', urls)
+        self.assertIn('DM-INT', urls[ap + 'weaver.html']['areas'])
+
+    def test_issue28_validation_rejects_bad_sister_pages(self):
+        import compass, copy
+        c = copy.deepcopy(self.c)
+        c['sister_pages']['ap']['pages']['weaver.html']['a'] = ['DM-NOPE']
+        c['sister_pages']['ap']['housekeeping'].append('tutorials.html')
+        errs = compass.validate(c, self.d)
+        self.assertTrue(any('unknown area DM-NOPE' in e for e in errs))
+        self.assertTrue(any('both housekeeping and mapped' in e for e in errs))
+        self.assertFalse([e for e in compass.validate(self.c, self.d) if 'sister_pages' in e])
+
     def test_unreachable_portal_is_unchecked_not_gone(self):
         import compass_sync
         dq = next(p['url'] for p in self.c['portals'] if p['id'] == 'dqc')

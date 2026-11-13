@@ -482,3 +482,67 @@ audiences:
   topics: [Health and care, Local government, Children and education, Geospatial, Fraud and error, Statistics]
   bodies: [NW-DLCN, NW-QCH, NW-DSNE]
   asks: ["Which extra rules apply to data in my sector?", "Which sector standards should our records follow?", "Who else works on this?"]
+
+# Compass 2.1 (issue #28): every page of the other portals is either mapped to the data management areas it serves, so the
+# directory lists it and the daily check verifies the link, or named as housekeeping (about, help, accessibility, site map),
+# which the compass does not need to point to. This is a first mapping by this portal, from each page's title and description
+# on 13 November 2026, for the owner to review. A page in neither list is reported by the daily check.
+sister_pages:
+  dqc:
+    housekeeping: [about.html, accessibility.html, build.html, ecosystem.html, getinvolved.html, github.html, guide.html, media.html, research.html, reuse.html, roadmap.html, sitemap.html]
+    pages:
+      ai.html: {t: AI for Data Quality, a: [DM-DQ]}
+      ask.html: {t: Ask the Commons, a: [DM-DQ]}
+      assistant.html: {t: Rules assistant, a: [DM-DQ]}
+      community.html: {t: Community, a: [DM-DQ]}
+      connectors.html: {t: "Connectors, weaves and AI", a: [DM-DQ, DM-INT]}
+      events.html: {t: Data Quality Events, a: [DM-DQ]}
+      global.html: {t: UK and the World, a: [DM-DQ]}
+      governance.html: {t: Governance boards and forums, a: [DM-GOV, DM-DQ]}
+      library.html: {t: Library and Knowledge Base, a: [DM-DQ, DM-DOC]}
+      map.html: {t: Data quality at a glance, a: [DM-DQ]}
+      ndl-assurance.html: {t: NDL Collections Assurance, a: [DM-DQ, DM-META]}
+      professions.html: {t: Data quality across the professions, a: [DM-DQ]}
+      scenarios.html: {t: Data Quality Scenarios, a: [DM-DQ]}
+      share.html: {t: Share and Learn, a: [DM-DQ]}
+      surveys.html: {t: Surveys and Commissions, a: [DM-DQ]}
+      tooling.html: {t: Public Sector DQ Tooling Atlas, a: [DM-DQ]}
+      training.html: {t: Skills and Training, a: [DM-DQ]}
+      wheel.html: {t: Data management wheel, a: [DM-GOV]}
+  ap:
+    housekeeping: [accessibility.html, contact.html, estate.html, guide.html, licence.html, sitemap.html, status.html, whats-new.html]
+    pages:
+      adopt.html: {t: Adoption toolkit, a: [DM-META]}
+      ai-ready.html: {t: AI-ready metadata, a: [DM-META]}
+      bulk.html: {t: Check many records, a: [DM-META, DM-DQ]}
+      class-agent.html: {t: "Class: Organisation", a: [DM-META]}
+      class-catalogue.html: {t: "Class: Catalogue", a: [DM-META]}
+      class-cataloguerecord.html: {t: "Class: Catalogue record", a: [DM-META]}
+      class-checksum.html: {t: "Class: Checksum", a: [DM-META, DM-SEC]}
+      class-contactpoint.html: {t: "Class: Contact point", a: [DM-META]}
+      class-dataservice.html: {t: "Class: Data service", a: [DM-META, DM-INT]}
+      class-datasetseries.html: {t: "Class: Dataset series", a: [DM-META]}
+      class-distribution.html: {t: "Class: Distribution", a: [DM-META]}
+      class-location.html: {t: "Class: Location", a: [DM-META, DM-REF]}
+      class-missingvalue.html: {t: "Class: Missing value", a: [DM-META, DM-DQ]}
+      class-periodoftime.html: {t: "Class: Period of time", a: [DM-META]}
+      class-relationship.html: {t: "Class: Relationship", a: [DM-META]}
+      connectors.html: {t: Vendor connectors and AI agents, a: [DM-META, DM-INT]}
+      examples.html: {t: Worked examples, a: [DM-META]}
+      extensions.html: {t: Sector extensions, a: [DM-META]}
+      insights.html: {t: Insights on the profile, a: [DM-META]}
+      integrations.html: {t: Integrations and connectors, a: [DM-META, DM-INT]}
+      international.html: {t: Cross-border data flows, a: [DM-META, DM-SEC]}
+      knowledge.html: {t: "Knowledge: glossary, thesaurus, taxonomy", a: [DM-META]}
+      landscape.html: {t: Profiles around the world, a: [DM-META]}
+      lineage.html: {t: Lineage explorer of the profile, a: [DM-META]}
+      lockin.html: {t: Avoiding lock-in and technical debt, a: [DM-META, DM-ARC]}
+      openapi.html: {t: Describe an API from OpenAPI, a: [DM-META, DM-INT]}
+      quantum.html: {t: Quantum-ready metadata, a: [DM-META, DM-SEC]}
+      requirements.html: {t: Requirements stream, a: [DM-META]}
+      reuse.html: {t: Reuse across government, a: [DM-META, DM-REF]}
+      roles.html: {t: Your role in DCAT-AP-UK, a: [DM-META]}
+      standards.html: {t: Standards map, a: [DM-META]}
+      tutorials.html: {t: Tutorials, a: [DM-META]}
+      types.html: {t: Value types, a: [DM-META]}
+      weaver.html: {t: Metadata weaver, a: [DM-META, DM-INT]}
