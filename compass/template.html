@@ -510,7 +510,7 @@ const selTab=(t,f)=>sel(t,f);
 tabs.forEach((t,i)=>{t.addEventListener('click',()=>{sel(t);syncHash();});t.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();const nt=tabs[(i+n+tabs.length)%tabs.length];sel(nt,true);syncHash();}});});
 /* sub-tabs within a tab (compass 2.0): short sections instead of long pages */
 function showSub(id,focus){const b=document.getElementById('st-'+id);if(!b)return false;const list=b.parentElement;[...list.children].forEach(x=>{const on=x===b;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;const pn=document.getElementById(x.getAttribute('aria-controls'));if(pn)pn.hidden=!on;});if(focus)b.focus();return true;}
-document.querySelectorAll('.subtabs').forEach(list=>{const bs=[...list.children];bs.forEach((b,i)=>{b.addEventListener('click',()=>showSub(b.getAttribute('aria-controls')));b.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();showSub(bs[(i+n+bs.length)%bs.length].getAttribute('aria-controls'),true);}});});});
+document.querySelectorAll('.subtabs').forEach(list=>{const bs=[...list.children];bs.forEach((b,i)=>{b.addEventListener('click',()=>{showSub(b.getAttribute('aria-controls'));if(typeof syncHash==='function')syncHash();});b.addEventListener('keydown',e=>{const n=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(n){e.preventDefault();showSub(bs[(i+n+bs.length)%bs.length].getAttribute('aria-controls'),true);if(typeof syncHash==='function')syncHash();}});});});
 const SUBTAB={};document.querySelectorAll('.subpanel').forEach(s=>{SUBTAB[s.id]=s.closest('[role=tabpanel]:not(.subpanel)').id;});
 /* the page menu: a retractable drawer of in-page sections, each collapsible, flagging what changed in the latest release (compass 2.0) */
 (function(){const R=(D.releases||[])[0]||{changes:[]};const TL={};tabs.forEach(x=>TL[x.getAttribute('aria-controls')]=x);
@@ -778,6 +778,7 @@ function dirRows(){const pick=(sel_,list)=>{const i=$(sel_).selectedIndex;return
   .sort((a,b)=>KORD.indexOf(a.kind)-KORD.indexOf(b.kind)||a.title.localeCompare(b.title));}
 function dirCard(e){const areas=e.areas.map(a=>W&&W.areas.find(x=>x.id===a)).filter(Boolean);
  return `<li class="dcard" style="${cv(e.where==='ext'?'trail':e.where)}"><p class="dk">${ic((KICON[e.kind])||'file-text')}<span class="pill2">${esc(e.kind)}</span>${esc(WHERE[e.where])}${e.by&&e.where==='ext'?' · '+esc(e.by):''}</p><h4><a href="${esc(e.url)}" rel="noopener">${esc(e.title)}</a></h4>${e.desc?`<p>${esc(e.desc)}</p>`:''}`+
+ (e.shared?`<p class="hint">${ic('link')}The link opens a page that also describes ${e.shared} other ${e.shared>1?'entries':'entry'} here.</p>`:'')+
  (e.join?`<p class="hint"><strong>How to take part:</strong> ${esc(e.join)}</p>`:'')+
  `<p class="chips">${areas.map(a=>`<button type="button" class="chip" data-go="area:${esc(a.id)}" data-tabto="lineage">${esc(a.name)}</button>`).join('')}${e.status?`<span class="hint">${esc(e.status)}</span>`:''}</p><p>${addBtn('r',e.id)}</p></li>`;}
 function directoryRender(){const rs=dirRows();$('#dir').innerHTML=rs.slice(0,shown).map(dirCard).join('')||'<li class="gapnote">Nothing matches. Clear a filter or try other words.</li>';
@@ -841,11 +842,12 @@ window.compassRole=()=>{drill();refreshPw();};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-tabgo]');if(!b)return;e.preventDefault();const tt=tabs.find(x=>x.getAttribute('aria-controls')===b.dataset.tabgo);if(tt){sel(tt,!b.dataset.sub);if(b.dataset.sub)showSub(b.dataset.sub,true);syncHash();if(b.closest('#drawer')){if(matchMedia('(max-width:1000px)').matches){$('#shell').classList.add('dclosed');$('#drawer-toggle').setAttribute('aria-checked','false');$('#drawer-toggle .dts').textContent='Off';}tt.scrollIntoView({block:'start'});}}});
 /* hash: tab and answers */
 function syncHash(){const t=tabs.find(x=>x.getAttribute('aria-selected')==='true');const a=D.questions.map(q=>ans[q.id]||'').join(',');const cs=window.compassState?window.compassState():['',''];
- const parts=[t.getAttribute('aria-controls'),a.replace(/,/g,'')?a:'',cs[0]==='area:'+(D.wheel?D.wheel.hub:'')?'':cs[0],cs[1],window.compassAud&&window.compassAud()||''];while(parts.length>1&&!parts[parts.length-1])parts.pop();const nh='#'+parts.join('/');
+ const tid=t.getAttribute('aria-controls');const st=document.querySelector(`#${tid} .subtabs [role=tab][aria-selected=true]`);const first=document.querySelector(`#${tid} .subtabs [role=tab]`);const sub=st&&st!==first?st.getAttribute('aria-controls'):'';
+ const parts=[tid,a.replace(/,/g,'')?a:'',cs[0]==='area:'+(D.wheel?D.wheel.hub:'')?'':cs[0],cs[1],window.compassAud&&window.compassAud()||'',sub];while(parts.length>1&&!parts[parts.length-1])parts.pop();const nh='#'+parts.join('/');
  /* never write the address while the page is loading (the browser would then scroll to it, D-035), nor the default view onto a bare address */
  if(document.readyState==='loading'||(nh==='#start'&&!location.hash)||nh===location.hash)return;history.replaceState(null,'',nh);}
 (function(){const h=location.hash.slice(1).split('/');const ALIAS={portals:'directory',when:'directory',links:'directory',examples:'bearing'};const SUBS=new Set(Object.keys(ALIAS));const t=tabs.find(x=>x.getAttribute('aria-controls')===(ALIAS[h[0]]||h[0]));if(t)sel(t);if(h[1]){h[1].split(',').forEach((v,i)=>{const q=D.questions[i];const c=q&&opt(q.id,v);if(c){ans[q.id]=c;const r=document.querySelector(`input[name="${q.id}"][value="${c}"]`);if(r)r.checked=true;}});render();}if(window.compassRestore)window.compassRestore(h[2],h[3]);if(window.compassInit)window.compassInit();if(h[4]&&window.compassAudSet)window.compassAudSet(h[4]);
- if(SUBS.has(h[0]))showSub(h[0]);})();
+ if(SUBS.has(h[0]))showSub(h[0]);else if(h[5]&&SUBTAB[h[5]]===(t&&t.getAttribute('aria-controls')))showSub(h[5]);})();
 /* precedence */
 $('#prec').innerHTML=D.precedence.map((x,i)=>`<li><h3>${ic(x.icon)}${i+1}. ${esc(x.title)}</h3><p>${esc(x.text)}</p></li>`).join('');
 /* portals */

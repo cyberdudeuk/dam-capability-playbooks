@@ -49,6 +49,7 @@ BREAKS = {
     'damarole': ('b15_dama_role', "var x=document.getElementById('dama-role');if(x){x.replaceWith(x.cloneNode(true));}"),
     'tours': ('b16_tours_and_share', ""),
     'compasswheel': ('b17_compass', "var w=document.getElementById('wheel');if(w){w.replaceWith(w.cloneNode(true));}"),
+    'compasssub': ('b17_compass', "document.querySelectorAll('.subtabs [role=tab]').forEach(function(x){x.replaceWith(x.cloneNode(true));});"),
     'compassmenu': ('b17_compass', "var n=document.getElementById('dnav');if(n){n.replaceWith(n.cloneNode(true));}document.addEventListener('click',function(e){if(e.target.closest('#dnav'))e.stopImmediatePropagation();},true);"),
     'compassdir': ('b17_compass', "var q=document.getElementById('dq-q');if(q){q.replaceWith(q.cloneNode(true));}"),
     'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
@@ -454,6 +455,21 @@ def run(site, axe_path, brk=None, pages=None):
                 m = re.search(r'of (\d+) matching', pg7.inner_text('#dq-count'))
                 if not cards or not m or int(m.group(1)) >= total or any('catalog' not in c.lower() for c in cards):
                     fail('b17_compass', f'searching the directory does not narrow it to matching entries ({pg7.inner_text("#dq-count")})')
+                # the open sub-tab is kept in the address and restored from it (review, 13 November 2026)
+                pg7.goto(f'{base}/compass/index.html#directory')
+                pg7.reload()
+                prep(pg7)
+                pg7.wait_for_timeout(150)
+                pg7.click('#st-links', timeout=2000)
+                pg7.wait_for_timeout(150)
+                hh = pg7.evaluate('location.hash')
+                if not hh.endswith('/links'):
+                    fail('b17_compass', f'the open sub-tab is not kept in the address ({hh})')
+                pg7.goto(f'{base}/compass/index.html{hh}')
+                pg7.reload()
+                pg7.wait_for_timeout(200)
+                if pg7.is_hidden('#links'):
+                    fail('b17_compass', 'a shared address does not reopen its sub-tab')
                 # buttons that point into a sub-tab open it (review, 13 November 2026)
                 pg7.goto(f'{base}/compass/index.html#start')
                 pg7.reload()
