@@ -8,6 +8,7 @@
   - Directory cards whose link opens a page shared with other entries now say so. C-42 now also checks icons drawn by script.
   - The portal footer and the daily sync's issue text still said "Estate compass". They now say "Data portals compass", and C-43 checks that no page uses the old name outside the release notes of versions already published.
   - A new pages register, compass/pages.yaml, holds this compass's own mapping of each page to a data management area. The daily sync now flags only pages that are missing from the register. C-35 checks that every page in the register appears in the directory.
+- Fixed (D-042): the DAMA drill-down assessment on the capability model still said eight areas had no activities, and that data architecture had no steps, measures or standards. It now reflects the Knowledge areas page: what is left is expert review, ownership, templates and learning. C-40 fails if the two disagree again.
 - Data portals compass, 13 November 2026 review:
   - Page menu: opens and closes with a labelled switch outside the masthead, remembered on your device. Each section folds, shows its icon and a count of its parts, and flags parts that are new or updated in the latest release.
   - Release notes and About this guide move into a new Help tab, beside Words explained. The menu holds in-page navigation only.
