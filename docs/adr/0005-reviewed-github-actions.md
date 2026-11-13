@@ -17,7 +17,7 @@ request, and the OpenSSF Scorecard. Rebuilding them as plain commands would take
   - `actions/dependency-review-action` v5.0.0 (`a1d282b3`)
   - `actions/checkout` v7.0.1 (`3d3c42e5`)
   - `actions/upload-artifact` v7.0.2 (`cf430e03`)
-  - `github/codeql-action/upload-sarif` v4.39.2 (`1fc58d04`)
+  - `github/codeql-action/upload-sarif` v4.39.3 (`33d7b85d`), from 13 November 2026 (v4.39.2, `1fc58d04`, before)
   - `ossf/scorecard-action` v2.5.0 (`fa7117db`)
 - Each commit was checked against the upstream tag with `git ls-remote` on 5 November 2026.
 - C-24 fails on any other action, or on a listed action at a different commit. C-25 lists the two new workflows.

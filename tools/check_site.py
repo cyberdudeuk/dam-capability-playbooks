@@ -464,7 +464,7 @@ REVIEWED_ACTIONS = {
     'actions/dependency-review-action': 'a1d282b36b6f3519aa1f3fc636f609c47dddb294',   # v5.0.0
     'actions/checkout': '3d3c42e5aac5ba805825da76410c181273ba90b1',                   # v7.0.1
     'actions/upload-artifact': 'cf430e030ddbb5b0abf93d22962f4752f3646cd9',            # v7.0.2
-    'github/codeql-action/upload-sarif': '1fc58d04a4d4374f921bdac573c3811c240f9c26',  # v4.39.2
+    'github/codeql-action/upload-sarif': '33d7b85da1a04171e211befe2c739303b9a4c066',  # v4.39.3, the commit tag v4.39.3 resolves to (checked 13 November 2026)  # v4.39.2
     'ossf/scorecard-action': 'fa7117db83c52d787ae5a89f350999701505d78e',              # v2.5.0
 }
 
