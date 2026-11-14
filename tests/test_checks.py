@@ -613,6 +613,69 @@ class Vaccination(unittest.TestCase):
         self.fails('c39_backlog_18_22')
 
     # the old compass name stayed in every footer after the rename (C-43)
+    # Version 1.15.0: the AI-ready data stewardship pathway (C-44)
+    def test_c44_pathway_module_dropped_from_route(self):
+        edit(self.s / 'learning.html', '<ol class="path pathway-steps"><li><a href="#M12">', '<ol class="path pathway-steps"><li><a href="#M99">')
+        self.fails('c44_pathways')
+
+    def test_c44_pathway_gap_hidden(self):
+        edit(self.s / 'learning.html', 'id="PG-01"', 'id="PG-X"')
+        self.fails('c44_pathways')
+
+    def test_c44_resource_status_dropped(self):
+        edit(self.s / 'learning.html', '<span class="chip">Alpha prototype</span>', '<span class="chip"></span>')
+        self.fails('c44_pathways')
+
+    def test_c44_external_link_without_owner(self):
+        edit(self.s / 'learning.html', ' <span class="hint">(NDL PubSec MCP)</span>', '')
+        self.fails('c44_pathways')
+
+    def test_c44_pathways_missing_from_json(self):
+        import json as _j
+        f = self.s / 'data' / 'playbooks.json'
+        j = _j.loads(f.read_text(encoding='utf-8'))
+        j.pop('pathways')
+        f.write_text(_j.dumps(j), encoding='utf-8')
+        self.fails('c44_pathways')
+
+    def test_c44_fading_keyframes(self):
+        edit(self.s / 'assets' / 'style.css', '@keyframes pw-in{from{transform:translateY(.4rem)}', '@keyframes pw-in{from{opacity:0;transform:translateY(.4rem)}')
+        self.fails('c44_pathways')
+
+    def test_build_rejects_untagged_pathway_module(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '  pathway: ai-ready\n  outcomes: ["Explain the RDF triple', '  outcomes: ["Explain the RDF triple')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_unknown_pathway(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '  pathway: ai-ready\n  outcomes: ["Name the four pillars', '  pathway: ai-nope\n  outcomes: ["Name the four pillars')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    # D-046: an unquoted comma in any flow mapping silently cut published text short (69 values, 79 fragments)
+    def test_build_rejects_value_cut_by_comma(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'trigger: "Access, quality or sharing decision within remit"', 'trigger: Access, quality or sharing decision within remit')
+        with self.assertRaises(build.ContentError) as e:
+            build.load(self.r / 'content' / 'playbooks.yaml')
+        self.assertIn('cut off by an unquoted comma', str(e.exception))
+
+    def test_build_rejects_value_cut_by_comma_in_frameworks(self):
+        f = self.r / 'content' / 'frameworks.yaml'
+        t = f.read_text(encoding='utf-8')
+        i = t.index('"A link to the idea, issue or pull request."')
+        f.write_text(t[:i] + 'A link to the idea, issue or pull request.' + t[i + len('"A link to the idea, issue or pull request."'):], encoding='utf-8')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_allows_explicit_null(self):
+        self.assertEqual(build.split_values('- {id: X, src: null, a: "b, c"}\n', 't.yaml'), [])
+
+    # D-043: an unquoted comma in a check option split one answer into two
+    def test_build_rejects_split_option(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'options: ["Someone owns quality, drift and bias monitoring",', 'options: [Someone owns quality, drift and bias monitoring,')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
     def test_c43_old_compass_name_in_footer(self):
         edit(self.s / 'index.html', 'Data portals compass: find your way', 'Estate compass: find your way')
         self.fails('c43_compass_name')
@@ -846,6 +909,20 @@ class Vaccination(unittest.TestCase):
         c['glossary'][0]['related'] = ['no-such-term']
         d = build.load(self.r / 'content' / 'playbooks.yaml')
         self.assertTrue(any('unknown term' in e for e in compass.validate(c, d)))
+
+    # D-046: an unquoted comma in a compass route step cut its title short and left a stray key
+    def test_build_rejects_compass_value_cut_by_comma(self):
+        y = self.r / 'compass' / 'compass.yaml'
+        edit(y, 'title: "What AI use adds to governance, cataloguing and quality", path:', 'title: What AI use adds to governance, cataloguing and quality, path:')
+        sys.path.insert(0, str(self.r / 'tools'))
+        import compass
+        compass.SRC = self.r / 'compass'
+        try:
+            errs = compass.validate(compass.load(), build.load(self.r / 'content' / 'playbooks.yaml'))
+        finally:
+            compass.SRC = ROOT / 'compass'
+        self.assertTrue(any('cut off by an unquoted comma' in e for e in errs), errs)
+        self.assertTrue(any('unknown keys' in e for e in errs), errs)
 
     def test_c35_rose_without_portal_link(self):
         edit(self.s / 'compass' / 'index.html', 'class="rose-link"', 'class="rose-label"', count=1)

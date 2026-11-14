@@ -30,7 +30,7 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Tools and interoperability | Nine kinds of data management tool mapped to DAMA areas, the open standards and integration patterns that connect them, a maturity rating for nine common pairings, bundles and commercial barriers, and 23 RFI questions as CSV |
 | Professions and skills | Government professions, Digital and Data framework career pathways with grades and skill levels, and learning routes |
 | Your role | Routes for six roles across learn, prepare, do, report and improve |
-| Learning | Modules with outcomes, activities and checks of understanding |
+| Learning | Modules with outcomes, activities and checks of understanding, plus themed pathways such as AI-ready data stewardship, which joins the modules to the sister projects and shows its gaps |
 | Library | All material, templates, an assessment of where sector-specific content is needed, and open data |
 | Knowledge | Glossary, thesaurus, taxonomy, knowledge graph and data dictionary |
 | Inclusion | Equality, inclusion and accessibility checks for each capability |

@@ -299,6 +299,25 @@ def validate(c, d):
     for s in sit:
         if s not in c['routes']:
             errs.append(f'compass: situation {s} has no route')
+    # D-046: an unquoted comma in a flow mapping turns the rest of a value into a key with no value, silently cutting the
+    # text short (a route step title lost ", cataloguing and quality"). Steps take known keys only, and nowhere may a key
+    # with spaces in it have an empty value.
+    def split_keys(o, where):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if v is None and ' ' in str(k):
+                    errs.append(f'compass: {where}: "{k}" looks like text cut off by an unquoted comma; quote the value before it')
+                split_keys(v, where)
+        elif isinstance(o, list):
+            for x in o:
+                split_keys(x, where)
+    for k in ('routes', 'scenarios', 'questions', 'glossary', 'releases', 'audiences', 'portals', 'about', 'precedence'):
+        split_keys(c.get(k), k)
+    for rid, r in c['routes'].items():
+        for s in r['steps']:
+            extra = set(s) - {'p', 'title', 'path', 'ask', 'why', 'gets', 'scope'}
+            if extra:
+                errs.append(f'compass: route {rid} step {s.get("title")}: unknown keys {sorted(extra)}')
     for rid, r in c['routes'].items():
         if len({s['p'] for s in r['steps']}) < 2:
             errs.append(f'compass: route {rid} stays in one portal; it does not need the compass')

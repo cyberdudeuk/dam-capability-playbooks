@@ -4,8 +4,8 @@
 meta:
   title: Data portals compass
   subtitle: Find your way around four websites about public sector data
-  version: 2.1.0
-  as_of: '2026-11-13'
+  version: 2.2.0
+  as_of: '2026-11-14'
   url: https://cyberdudeuk.github.io/dam-capability-playbooks/compass/
   host_note: It favours none of them.
   contact: https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html
@@ -139,7 +139,7 @@ precedence:
 - {icon: landmark, title: Obligation before practice, text: "If your organisation is covered by the DAM Policy, read what it asks first. It sets the bar, the deadline and who is accountable, so the work you do next counts towards it."}
 - {icon: search, title: Look before you build, text: "Before commissioning, buying or building, check what already exists in public code. Someone may have built it, bought it or hit the same problem."}
 - {icon: wrench, title: Practice to deliver, text: "Use the Commons' tools and methods to do the work: check data, score issues, compare tools and learn from peers."}
-- {icon: layers, title: Describe it once, the same way, text: "Record what you have to DCAT-AP-UK, so catalogues, central discovery and returns all read the same record. Check it before you publish."}
+- {icon: layers, title: "Describe it once, the same way", text: "Record what you have to DCAT-AP-UK, so catalogues, central discovery and returns all read the same record. Check it before you publish."}
 - {icon: refresh-cw, title: Back to the policy to report and sustain, text: "Close the loop in the DAM playbooks: record what changed, report it and keep it going through the yearly cycle."}
 - {icon: info, title: The exception, text: "Purely technical or discovery questions (who builds what, which API exists) start in the catalogue, and may never need the other two."}
 
@@ -157,6 +157,7 @@ questions:
   - {id: estate, label: "I need to understand an organisation's data or code estate"}
   - {id: describe, label: "We need to describe our data so others can find, judge and share it"}
   - {id: learn, label: "I want to learn, or build my team's skills"}
+  - {id: ai, label: "We've been asked whether our data can be used for AI"}
 - id: role
   icon: users-round
   ask: Which is closest to your role?
@@ -263,6 +264,16 @@ routes:
     - {p: dam, title: Professions and skills, path: professions.html, ask: "Where does this sit in your profession?", why: "Skills frameworks show the next step.", gets: "Roles, skill levels and learning routes."}
     - {p: dqc, title: Learning pathways, path: learn.html, ask: "How deep do you want to go on data quality?", why: "The community shares what works.", gets: "A data quality pathway for your role."}
     - {p: cat, title: GitHub in two minutes, path: '#home', ask: "Is GitHub new to you?", why: "Much public sector work lives there.", gets: "The four words you need, in plain English."}
+    - {p: dam, title: AI-ready data stewardship modules, path: learning.html#pathway-ai-ready, ask: "Are you being asked whether data can be used for AI?", why: "Six modules join the four websites on one theme.", gets: "A route from what AI-ready means to governing AI use, with the gaps named."}
+  ai:
+    title: Get data ready for AI, and govern its use
+    outcome: A clear answer on whether a critical data asset can be used for AI, with the metadata, quality checks and controls that support it
+    steps:
+    - {p: dam, title: The AI-ready data stewardship modules, path: learning.html#pathway-ai-ready, ask: "Who decides whether this asset can be used for AI, and on what evidence?", why: "AI-readiness is a stewardship question before it is a technical one.", gets: "Six modules in order, how each lines up with an independent course, and what is still missing."}
+    - {p: dam, title: "What AI use adds to governance, cataloguing and quality", path: sectors.html#SUP-AI, ask: "Is the asset used, or may it be used, for AI?", why: "The AI-ready supplement says what each capability must add.", gets: "Purpose checks, catalogue fields, quality rules and the operating model for AI use."}
+    - {p: ap, title: AI-ready metadata, path: ai-ready.html, ask: "Can a machine tell from the record what uses are allowed?", why: "Usage policies and provenance have to be machine-readable to travel with the data.", gets: "The proposed AI-ready extension, exports and a server for AI assistants."}
+    - {p: dqc, title: AI for data quality, path: ai.html, ask: "Is the data good enough to train or ground a model?", why: "Gaps and bias in the data become gaps and bias in the answers.", gets: "Principles and use cases for using AI on data quality, and checking data used by AI."}
+    - {p: cat, title: Look for public code that already does this, path: '#discover', ask: "Has someone in the public sector already built this?", why: "Before you build it, look for it.", gets: "Public sector code you may be able to reuse."}
 
 # Worked examples: common situations, where to start and why
 scenarios:
@@ -272,6 +283,7 @@ scenarios:
 - {icon: briefcase, who: Commercial lead, situation: "Our catalogue contract ends next year and a supplier is offering a bundle.", start: dam, then: [dqc, cat], route: buy, why: "Agree principles first, compare products and lock-in in the Commons, then check which peers use the tool."}
 - {icon: search, who: Service owner, situation: "We're about to commission an appointment booking service.", start: cat, then: [dam, dqc], route: reuse, why: "Someone may have built it already. If your service will hold critical data, the DAM playbooks say what to record."}
 - {icon: construction, who: Programme lead, situation: "We're replacing a 20-year-old case management system.", start: cat, then: [dam, dqc], route: legacy, why: "See the legacy first, plan the exit from the critical assets it holds, then set data quality gates for the migration."}
+- {icon: brain, who: Data owner in a department, situation: "A team wants to use one of our critical data assets to train a model.", start: dam, then: [ap, dqc, cat], route: ai, why: "Decide the purpose and the controls in the DAM playbooks first. Then describe permitted uses so machines can read them, check the data is fit, and look for code others have built."}
 - {icon: target, who: Chief data officer, situation: "The board wants to know how good our data management is compared with peers.", start: cat, then: [dam, dqc], route: estate, why: "Evidence from code, then the policy's capability model, then data quality maturity in depth."}
 - {icon: layers, who: Catalogue manager, situation: "Central discovery wants our records, and we used the xGov MEM.", start: ap, then: [dam, cat, dqc], route: describe, why: "See what changed and convert your records first, then check what the policy adds for critical assets, what peers run, and how to publish in other standards."}
 - {icon: graduation-cap, who: New data steward, situation: "I've just been given responsibility for three datasets.", start: dam, then: [dqc, cat], route: learn, why: "Learn what the role means under the policy, then build data quality skills, then get comfortable with GitHub."}
@@ -317,6 +329,13 @@ about:
   - It does not collect or send any of your data
   - It does not rank the four websites
 releases:
+- version: 2.2.0
+  date: '2026-11-14'
+  summary: A route for data and AI
+  changes:
+  - {flag: new, tab: bearing, sub: route-sub, text: "A new answer to 'What brings you here today?': we've been asked whether our data can be used for AI. It leads to a five-step route across all four websites"}
+  - {flag: new, tab: bearing, sub: examples, text: "A worked example: a data owner whose critical data asset a team wants to use to train a model"}
+  - {flag: updated, tab: bearing, sub: route-sub, text: "The learning route now ends with the AI-ready data stewardship modules in the DAM playbooks"}
 - version: 2.1.0
   date: '2026-11-13'
   summary: Every page of the four websites in the directory
@@ -356,6 +375,7 @@ glossary:
 - {id: compass, term: Compass and bearing, def: "The guide's picture of the four portals as four directions. Your bearing is the portal the guide suggests you start from.", also: [direction, "starting point"], related: [wayfinder, route]}
 - {id: wayfinder, term: Wayfinder, def: "The four questions on the By task tab. Your answers produce a suggested route.", also: [questionnaire, "route finder"], related: [route, pathway]}
 - {id: route, term: Route, def: "An ordered list of steps across the portals that the guide suggests for your situation.", also: [journey, "suggested path"], related: [wayfinder, pathway]}
+- {id: aiready, term: AI-ready data, def: "Data, and the metadata about it, prepared so it can be used safely and lawfully by AI: fit in quality, described for machines, and governed for its purpose. GDS sets out four pillars for it.", also: ["AI readiness", "ready for AI"], related: [cda, metadata, dq]}
 - {id: pathway, term: Pathway, def: "Your own ordered list of activities, which you build yourself on the My pathway tab. It is kept only in the page address.", also: ["my pathway", "personal plan", "to-do list"], related: [route, activity]}
 - {id: dam, term: DAM Policy, def: "The Data Asset Management Policy: UK government's policy on how departments and arm's-length bodies identify, own, describe and manage the quality of their most important data.", also: ["data asset management policy"], related: [cda, owner]}
 - {id: cda, term: Critical data asset, def: "A set of data that an organisation or the public depends on, and so must have a named owner, a catalogue record and a data quality plan under the DAM Policy.", also: [CDA, "critical data"], broader: "Data asset", related: [dam, catalogue]}
@@ -419,7 +439,7 @@ audiences:
   role: owner
   raci: [OWN, IAO, STW, CUS]
   areas: [DM-GOV, DM-DQ, DM-SEC]
-  routes: [policy, quality]
+  routes: [policy, quality, ai]
   topics: [Records and information management, Data protection, Legislation]
   bodies: [NW-DMC, NW-GDQC]
   asks: ["What am I accountable for?", "What happens to my assets when I move role?", "How good does my data need to be?"]
@@ -430,7 +450,7 @@ audiences:
   role: dq
   raci: [DQL]
   areas: [DM-DQ, DM-BI, DM-REF]
-  routes: [quality, learn, reuse]
+  routes: [quality, learn, reuse, ai]
   topics: [Statistics, Data and AI]
   bodies: [NW-GDQC, NW-QCH, NW-DLCN, NW-ETH]
   asks: ["How do I write a data quality action plan?", "How do I measure and report quality?", "Which issues do I fix first?"]
@@ -441,7 +461,7 @@ audiences:
   role: tech
   raci: [CAT, STW]
   areas: [DM-META, DM-DOC, DM-REF, DM-MOD]
-  routes: [describe, estate, buy]
+  routes: [describe, estate, buy, ai]
   topics: [Records and information management, Records, Standards, Geospatial]
   bodies: [GB-TOG, GB-OSB, NW-GDAC, NW-DMC]
   asks: ["What must a catalogue record say?", "Which metadata standard do we follow?", "How do records harvest into central discovery?"]

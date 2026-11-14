@@ -6,6 +6,7 @@ Exit code 0 when every check passes, 1 otherwise.
 """
 import argparse
 import csv
+import html
 import json
 import re
 import sys
@@ -1484,6 +1485,54 @@ def c43_compass_name(site, repo, pages):
     return errs
 
 
+def c44_pathways(site, repo, pages):
+    """Rule (version 1.15.0): every learning pathway in the content is shown in full on the Learning page: its modules in order,
+    each tagged; the alignment rows; every gap; the case against with its answer; and every resource with its status. External
+    activity links name the website they open and use rel="noopener". The published JSON carries the pathways for reuse."""
+    import yaml
+    errs = []
+    d = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+    h = (site / 'learning.html').read_text(encoding='utf-8')
+    for p in d.get('pathways', []):
+        m = re.search(r'<section class="pathway card" id="pathway-' + re.escape(p['id']) + r'".*?</section>', h, re.S)
+        if not m:
+            errs.append(f'learning.html: pathway {p["id"]} missing'); continue
+        s = m.group(0)
+        steps = re.search(r'<ol class="path pathway-steps">(.*?)</ol>', s, re.S)
+        shown = re.findall(r'href="#(M\d+)"', steps.group(1)) if steps else []
+        if shown != p['modules']:
+            errs.append(f'pathway {p["id"]}: route shows {shown}, content has {p["modules"]}')
+        for mid in p['modules']:
+            sec = re.search(r'<section class="module" id="' + mid + r'".*?</section>', h, re.S)
+            if not sec or 'chip pw' not in sec.group(0):
+                errs.append(f'{mid}: module section missing or not tagged with its pathway')
+        rows = re.search(r'<table><caption id="t-pw-' + re.escape(p['id']) + r'">.*?<tbody>(.*?)</tbody>', s, re.S)
+        if not rows or rows.group(1).count('<tr') != len(p['alignment']['rows']):
+            errs.append(f'pathway {p["id"]}: alignment rows missing or incomplete')
+        if p['alignment']['url'] not in s:
+            errs.append(f'pathway {p["id"]}: course page not linked')
+        for g in p['gaps']:
+            if f'id="{g["id"]}"' not in s: errs.append(f'pathway {p["id"]}: gap {g["id"]} not shown')
+        if 'The case against' not in s or 'Our answer' not in s:
+            errs.append(f'pathway {p["id"]}: case against or its answer missing')
+        for r in p['resources']:
+            if not re.search(r'<a href="' + re.escape(html.escape(r['url'])) + r'" rel="noopener">[^<]+</a> <span class="chip">' + re.escape(html.escape(r['status'])), s):
+                errs.append(f'pathway {p["id"]}: resource {r["name"]} missing or without its status')
+    for a in re.findall(r'<li class="activity">.*?</li>', h, re.S):
+        for link in re.findall(r'<a href="(https://[^"]+)"([^>]*)>', a):
+            if 'noopener' not in link[1] or '<span class="hint">(' not in a:
+                errs.append(f'learning.html: external activity link {link[0]} does not say where it goes or lacks rel="noopener"')
+    # D-044: a keyframe that fades opacity fails colour contrast while it runs, and axe reads the page mid-animation
+    css = (site / 'assets' / 'style.css').read_text(encoding='utf-8')
+    for name, body in re.findall(r'@keyframes\s+([\w-]+)\s*\{((?:[^{}]*\{[^{}]*\})*)\s*\}', css):
+        if 'opacity' in body:
+            errs.append(f'assets/style.css: keyframes {name} animates opacity')
+    j = json.loads((site / 'data' / 'playbooks.json').read_text(encoding='utf-8'))
+    if [p['id'] for p in j.get('pathways', [])] != [p['id'] for p in d.get('pathways', [])]:
+        errs.append('data/playbooks.json: pathways missing')
+    return errs
+
+
 def c42_icons_resolve(site, repo, pages):
     """Rule (D-039): every icon a page uses, whether written in its HTML or named in the data its scripts draw from, has a
     symbol on that page. Six professions on the compass showed no icon because their icons were named only in data."""
@@ -1560,7 +1609,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name, c44_pathways]
 
 
 def run(site, repo, only=None, quiet=False):

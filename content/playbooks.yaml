@@ -378,9 +378,9 @@ capabilities:
   escalation_note: The ladder and its timescales are this playbook's recommendation, not a GOV.UK requirement.
   escalation:
   - {level: Tier 1, who: Steward or custodian, trigger: Working-level query or minor exception, when: 2 working days}
-  - {level: Tier 2, who: Data owner, trigger: Access, quality or sharing decision within remit, when: 5 working days}
-  - {level: Tier 3, who: Data governance board, trigger: Cross-owner conflict, policy exception or high risk, when: 10 working days}
-  - {level: Tier 4, who: CDO, SIRO or accounting officer, trigger: Unresolved board decision or legal or reputational risk, when: As required}
+  - {level: Tier 2, who: Data owner, trigger: "Access, quality or sharing decision within remit", when: 5 working days}
+  - {level: Tier 3, who: Data governance board, trigger: "Cross-owner conflict, policy exception or high risk", when: 10 working days}
+  - {level: Tier 4, who: "CDO, SIRO or accounting officer", trigger: Unresolved board decision or legal or reputational risk, when: As required}
   measures:
   - {name: Critical data assets with a named owner, target: 100%}
   - {name: Owners and stewards with a named successor, target: 100%}
@@ -576,15 +576,15 @@ capabilities:
   - {prop: title, mem: CataloguedResource.title, obligation: must, rule: Plain English name; avoid acronyms and jargon}
   - {prop: alternativeTitle, mem: CataloguedResource.alternativeTitle, obligation: optional, rule: A short name to keep titles concise}
   - {prop: description, mem: CataloguedResource.description, obligation: must, rule: Describes the data; usage warnings go elsewhere}
-  - {prop: identifier, mem: CataloguedResource.identifier, obligation: should, rule: Your own system's identifier or an opaque random one, not sequential}
-  - {prop: creator, mem: CataloguedResource.creator, obligation: must, rule: The organisation that created the data, from a list of organisations}
+  - {prop: identifier, mem: CataloguedResource.identifier, obligation: should, rule: "Your own system's identifier or an opaque random one, not sequential"}
+  - {prop: creator, mem: CataloguedResource.creator, obligation: must, rule: "The organisation that created the data, from a list of organisations"}
   - {prop: dateCreated, mem: CataloguedResource.created, obligation: should, rule: ISO 8601 date or date-time}
   - {prop: temporalCoverage, mem: none in MEM (gap), obligation: listed, rule: The period the data applies to}
   - {prop: conformsTo, mem: none in MEM (gap), obligation: listed, rule: The standard or schema the data follows}
   - {prop: accessRights, mem: CataloguedResource.accessRights, obligation: should, rule: 'open, commercial or internal, with any handling caveat'}
-  - {prop: securityClassification, mem: CataloguedResource.securityClassification, obligation: listed, rule: Sensitivity level, OFFICIAL for assets in scope}
+  - {prop: securityClassification, mem: CataloguedResource.securityClassification, obligation: listed, rule: "Sensitivity level, OFFICIAL for assets in scope"}
   - {prop: licence, mem: CataloguedResource.licence, obligation: should, rule: OGL URL for open data; the agreement for restricted data}
-  - {prop: mediaType, mem: Distribution.mediaType, obligation: should, rule: IANA media type, such as text/csv}
+  - {prop: mediaType, mem: Distribution.mediaType, obligation: should, rule: "IANA media type, such as text/csv"}
   - {prop: expires, mem: none in MEM (gap), obligation: listed, rule: How long this version is valid}
   - {prop: supersededBy, mem: none in MEM (gap), obligation: listed, rule: The newer version that replaces this one}
   # Version 1.11.0: technical detail requested by a pilot team (Project Compass, 11 November 2026).
@@ -614,7 +614,7 @@ capabilities:
   measures:
   - {name: Designated assets with a catalogue record, target: 100%}
   - {name: Records reviewed in the last 12 months, target: 100%}
-  - {name: Records with access rights, licence and classification, target: 100%}
+  - {name: "Records with access rights, licence and classification", target: 100%}
   - {name: Records harvestable as DCAT, target: Rising each quarter}
   templates:
   - {id: T-CAT-1, mode: BAU, name: Candidate and designation log, fields: [Candidate, "Found in (catalogue, IAR or sharing register)", Provided to or acquired from, Purpose (one or more of seven), Scope tests passed, Designated (yes or no), Reason, Decided by (role), Date]}
@@ -788,15 +788,15 @@ capabilities:
   - {name: Communicate data quality clearly and effectively, src: SRC-GDQF}
   - {name: Anticipate changes affecting data quality, src: SRC-GDQF}
   dimensions:
-  - {name: Completeness, text: How fully records are present, including whether essential values are filled in}
-  - {name: Uniqueness, text: Whether each thing is recorded once, without duplication}
-  - {name: Consistency, text: Whether values agree with other values about the same thing, within or across data sets}
-  - {name: Timeliness, text: Whether data is up to date for its use, with an acceptable lag}
+  - {name: Completeness, text: "How fully records are present, including whether essential values are filled in"}
+  - {name: Uniqueness, text: "Whether each thing is recorded once, without duplication"}
+  - {name: Consistency, text: "Whether values agree with other values about the same thing, within or across data sets"}
+  - {name: Timeliness, text: "Whether data is up to date for its use, with an acceptable lag"}
   - {name: Validity, text: Whether data is in the expected range and format}
   - {name: Accuracy, text: How closely data matches reality}
   escalation_note: Timescales from the GDS issues framework, which presents them as an example; triggers from the Data Quality Commons.
   escalation:
-  - {level: Critical, who: Data owner, with the board informed, trigger: A critical data element in the lowest band, or wrong data could harm people or break the law, when: Immediately}
+  - {level: Critical, who: "Data owner, with the board informed", trigger: "A critical data element in the lowest band, or wrong data could harm people or break the law", when: Immediately}
   - {level: High, who: Data owner, trigger: More than one band below target, when: Within one cycle}
   - {level: Medium, who: Steward, trigger: One band below target, when: Within three cycles}
   - {level: Low, who: Steward, trigger: Slightly below target with low impact, when: Within six cycles}
@@ -822,11 +822,11 @@ interlocks:
 - {id: IL-01, from: gov.assign, to: cat.own, what: The ownership register is the source for the owner and successor on the catalogue record. Record them once.}
 - {id: IL-02, from: cat.own, to: dq.identify, what: The owner on the catalogue record is the owner who signs off DQAP targets and accepts risks.}
 - {id: IL-03, from: cat.designate, to: dq.identify, what: The asset boundary set at designation is the scope of the DQAP. No DQAP for fields outside the asset.}
-- {id: IL-04, from: dq.report, to: cat.describe, what: Quality information is published on the catalogue record, so the record says how good the data is.}
+- {id: IL-04, from: dq.report, to: cat.describe, what: "Quality information is published on the catalogue record, so the record says how good the data is."}
 - {id: IL-05, from: dq.report, to: gov.operate, what: Quality issues above Medium enter the board's issue and risk log.}
 - {id: IL-06, from: gov.frame, to: cat.describe, what: The metadata standard and the classification policy adopted in Frame are what records are checked against.}
-- {id: IL-07, from: cat.maintain, to: dq.review, what: One annual review date per asset covers the record, the owner and the DQAP together.}
-- {id: IL-08, from: cat.report, to: gov.assure, what: The GDS return is part of the governance evidence pack, assembled as you go.}
+- {id: IL-07, from: cat.maintain, to: dq.review, what: "One annual review date per asset covers the record, the owner and the DQAP together."}
+- {id: IL-08, from: cat.report, to: gov.assure, what: "The GDS return is part of the governance evidence pack, assembled as you go."}
 - {id: IL-09, from: gov.assure, to: gov.mandate, what: Lessons from assurance refresh the mandate for the next cycle.}
 
 cycle:
@@ -853,11 +853,11 @@ library:
 - {id: LIB-12, title: W3C Data Quality Vocabulary, cap: [dq, cat], type: Standard, status: Published, audience: Catalogue managers, src: SRC-DQV, prov: K}
 - {id: LIB-13, title: Open Data Contract Standard, cap: [dq], type: Standard, status: Published, audience: Analysts and engineers, src: SRC-ODCS, prov: K}
 - {id: LIB-14, title: Public Sector Data Quality Commons (tools and playbook), cap: [dq, cat], type: Toolkit, status: Prototype, audience: Stewards and analysts, src: SRC-DQC, prov: P}
-- {id: LIB-15, title: Data manual, data management section, cap: [gov, cat, dq], type: Index, status: Published, audience: All, src: SRC-MAN, prov: V}
+- {id: LIB-15, title: "Data manual, data management section", cap: [gov, cat, dq], type: Index, status: Published, audience: All, src: SRC-MAN, prov: V}
 - {id: LIB-16, title: Data Cataloguing Playbook v2.6 and learner journey, cap: [cat], type: Playbook, status: Internal, audience: Coordinators, src: null, prov: P, note: Held internally; not public. Its content is what the cataloguing stages here should be checked against (OR-01).}
-- {id: LIB-17, title: Data Governance Playbook suite (main manual, toolkit, templates, pocket guides, assessment, Command Centre), cap: [gov], type: Playbook, status: Internal draft, audience: Owners, stewards and boards, src: null, prov: P, note: The source of the five recipes. Decks in the suite stay outside this repository.}
+- {id: LIB-17, title: "Data Governance Playbook suite (main manual, toolkit, templates, pocket guides, assessment, Command Centre)", cap: [gov], type: Playbook, status: Internal draft, audience: "Owners, stewards and boards", src: null, prov: P, note: The source of the five recipes. Decks in the suite stay outside this repository.}
 - {id: LIB-18, title: Canonical shared glossary of the data playbook compendium, cap: [gov, cat, dq], type: Vocabulary, status: Internal draft, audience: All, src: null, prov: P, note: The terms here reconcile with it; eight conflicts it logged are tracked in the open register.}
-- {id: LIB-19, title: Data Maturity and Transformation suite (MAT-01 to MAT-05) and crosswalk spine, cap: [gov], type: Playbook, status: Internal draft, audience: CDOs, src: null, prov: P, note: Spine indicators S04, S08, S09 and S10 map to the three capabilities.}
+- {id: LIB-19, title: Data Maturity and Transformation suite (MAT-01 to MAT-05) and crosswalk spine, cap: [gov], type: Playbook, status: Internal draft, audience: CDOs, src: null, prov: P, note: "Spine indicators S04, S08, S09 and S10 map to the three capabilities."}
 - {id: LIB-20, title: DQAP template workbook, cap: [dq], type: Template, status: Published, audience: Stewards, src: SRC-DQAP, prov: V, note: Downloadable from the DQAP guide; the Commons can produce a filled one from rule results.}
 
 # ---------------------------------------------------------------------------
@@ -905,19 +905,19 @@ concepts:
 # ---------------------------------------------------------------------------
 open_register:
 - {id: OR-01, reader: "The cataloguing method is built from public guidance", item: "The internal Data Cataloguing Playbook v2.6 is not public. The cataloguing stages here are a synthesis of GOV.UK guidance and need checking against it, or replacing with it once cleared.", who: Service owner}
-- {id: OR-02, reader: "How long private feedback is kept is not yet confirmed", item: "Added on 5 November 2026: a private Microsoft Forms route, so people without a GitHub account can give feedback. Set on 8 November 2026: anyone can respond without signing in, names and accounts are not recorded, and every page and test task opens it with the page or task filled in. Contact details are optional and asked for only to reply or send a copy of the answers; Microsoft Forms cannot email an automatic receipt to people who do not sign in, so copies are sent by the maintainers. Still to confirm with the data protection officer: the data controller, how long responses and contact details are kept, and whether the privacy wording on the About page is enough.", who: Service owner, with the data protection officer}
+- {id: OR-02, reader: "How long private feedback is kept is not yet confirmed", item: "Added on 5 November 2026: a private Microsoft Forms route, so people without a GitHub account can give feedback. Set on 8 November 2026: anyone can respond without signing in, names and accounts are not recorded, and every page and test task opens it with the page or task filled in. Contact details are optional and asked for only to reply or send a copy of the answers; Microsoft Forms cannot email an automatic receipt to people who do not sign in, so copies are sent by the maintainers. Still to confirm with the data protection officer: the data controller, how long responses and contact details are kept, and whether the privacy wording on the About page is enough.", who: "Service owner, with the data protection officer"}
 - {id: OR-03, reader: "Not cleared as official guidance", item: "Not cleared as official guidance. Clearance, and a move to an official GitHub organisation, are needed before departments are told to rely on it.", who: Service owner}
-- {id: OR-04, reader: "Not yet tested with users", item: "No research with real users yet. A research plan with questions, methods, hypotheses and falsification conditions is now published on the Service design page; it needs participants through the Working Group.", who: Service owner, with the Working Group}
+- {id: OR-04, reader: "Not yet tested with users", item: "No research with real users yet. A research plan with questions, methods, hypotheses and falsification conditions is now published on the Service design page; it needs participants through the Working Group.", who: "Service owner, with the Working Group"}
 - {id: OR-05, reader: "Interoperability requirements are not yet stated", item: "The policy promises minimum interoperability requirements that its body does not state. The Tools and interoperability page proposes open standards for each boundary between tools; these are this portal's synthesis until GDS publishes requirements.", who: GDS Data Frameworks and Standards}
 - {id: OR-06, reader: "Proposed metadata terms are not agreed", item: "Four metadata properties in the guidance have no slot in the published MEM. A crosswalk to DCAT and Dublin Core terms is proposed on the cataloguing page (finding F-04) and needs agreement.", who: Metadata standards owner}
 - {id: OR-07, reader: "Some dates come from material that is not public", item: "Dates for the rollout phases, returns and support offer come from practitioner material, not a public page. Confirm before external use.", who: Service owner}
 - {id: OR-08, reader: "Escalation timescales are a recommendation", item: "The governance escalation timescales are this playbook's recommendation. Each organisation should set its own.", who: Each organisation's board}
 - {id: OR-09, reader: "Not yet tested with disabled people", item: "Not tested with disabled users or assistive technology users in person; automated checks only.", who: Service owner}
 - {id: OR-10, item: "Data owner versus information asset owner is resolved by the GOV.UK data ownership model (three options). The two maturity models and the remaining glossary conflicts are not resolved here.", who: Service owner}
-- {id: OR-12, reader: "Sector supplements need review by sector experts", item: "All 14 sector themes now have supplements on the Sectors page, signposted from each capability playbook. Each supplement is this portal's synthesis and needs review by subject experts from its sector before organisations rely on it.", who: Service owner, with sector data leads}
+- {id: OR-12, reader: "Sector supplements need review by sector experts", item: "All 14 sector themes now have supplements on the Sectors page, signposted from each capability playbook. Each supplement is this portal's synthesis and needs review by subject experts from its sector before organisations rely on it.", who: "Service owner, with sector data leads"}
 - {id: OR-13, item: "Done on 5 November 2026: description, homepage, topics, Discussions, private vulnerability reporting, Dependabot, secret push protection and approval for workflows from all external contributors. Still to do: a ruleset on main that blocks force pushes and deletion and requires the 'Build, check and publish' check.", who: Repository owner}
 - {id: OR-14, reader: "The maturity framework is linked, not copied", item: "The Data Maturity Assessment framework is CC BY-NC-SA 4.0 and asks government users to contact CDDO. Confirm whether its level descriptions may be shown inside this portal; until then it is linked, not copied (F-05).", who: Service owner}
-- {id: OR-15, reader: "Capability flags are this portal''s reading of the policy", item: "The explicit, implicit and inferred flags on the capability model are this portal's reading of the policy. Ask the GDS data policy team to confirm them, especially the inferred ones.", who: Service owner, with GDS Data Frameworks and Standards}
+- {id: OR-15, reader: "Capability flags are this portal''s reading of the policy", item: "The explicit, implicit and inferred flags on the capability model are this portal's reading of the policy. Ask the GDS data policy team to confirm them, especially the inferred ones.", who: "Service owner, with GDS Data Frameworks and Standards"}
 - {id: OR-16, item: "Done on 5 November 2026: Pages publishes the built site from the gh-pages branch. Still to do: set the default workflow token to read-only and stop GitHub Actions creating or approving pull requests; every workflow already declares the permissions it needs. Narrow installed GitHub Apps to the repositories each needs.", who: Repository owner}
 - {id: OR-17, item: "Decide whether to rewrite the four commits credited to the unrelated 'noreply' account (D-021). It removes the false credit but changes their identifiers and needs a force push to main.", who: Repository owner}
 - {id: OR-18, item: "Decide which glossary is master. The compendium glossary (LIB-18), this portal's knowledge layer and the cross-portfolio shared glossary kept with the data asset register define overlapping terms, and the shared glossary logs six conflicts of its own. A scan on 11 November 2026 proposes the shared glossary as master, with this portal publishing only its public subset. Until decided, terms here reconcile with LIB-18 only.", who: "Service owner, with the shared glossary's owner"}
@@ -926,16 +926,16 @@ open_register:
 defects:
 - {id: D-001, found: Prior governance suite (September 2026), defect: "DQAP was expanded with the wrong middle word, as an 'assurance' plan.", cause: "Expansion written from memory, not from the policy text.", check: "C-06 bans the wrong expansion anywhere in content or pages."}
 - {id: D-002, found: Prior governance suite (September 2026), defect: "Evidence was mapped to a policy annex that does not exist.", cause: "An assumed reporting template was presented as fact.", check: "C-07 bans references to the non-existent annex."}
-- {id: D-003, found: This build, source reading, defect: "The identification guidance page prints a team email address; copying source text risks putting it on the portal.", cause: "Source text carries contact details.", check: "C-04 fails the build on any email address in content or published files."}
+- {id: D-003, found: "This build, source reading", defect: "The identification guidance page prints a team email address; copying source text risks putting it on the portal.", cause: "Source text carries contact details.", check: "C-04 fails the build on any email address in content or published files."}
 
-- {id: D-004, found: This build, first browser run, defect: "Focusing a tab panel, table region or the graph filled the whole block with the yellow focus colour.", cause: "One focus rule targeted every element with a tabindex, including large containers.", check: "B-03 focuses each container type and fails if its background becomes the focus colour."}
-- {id: D-005, found: This build, vaccination tests, defect: "The provenance check passed even when a requirement lost its label, because the source cell's own label satisfied it.", cause: "The check looked for a label anywhere in the row, not in the requirement cell.", check: "C-08 now inspects the requirement cell alone; its vaccination test removes that label and must fail."}
-- {id: D-006, found: This build, first browser run, defect: "Every page scrolled sideways on 320 and 390 pixel screens.", cause: "The colophon barcode had a fixed pixel width.", check: "B-02 checks overflow at six widths from 320 to 1920 pixels."}
-- {id: D-007, found: This build, first browser run, defect: "Links in the 'Met by' column were smaller than the 24 pixel target size.", cause: "Plain inline links set side by side in a table cell.", check: "B-01 runs axe with the WCAG 2.2 AA target-size rule in light and dark modes."}
-- {id: D-008, found: This build (version 1.1), content review, defect: "A bulk rename of the portal's owner in the open register also renamed the data owner in the quality escalation table.", cause: "A pattern replacement matched role names inside the playbook methods.", check: "The build refuses any escalation row that names the portal's service owner; a vaccination test proves it."}
-- {id: D-009, found: This build (version 1.1), first browser run, defect: "Module outcomes and persona goals containing commas were split into fragments such as 'Frame' and 'Assign'.", cause: "Unquoted commas inside YAML flow lists.", check: "The build refuses list items under three words; a vaccination test proves it."}
-- {id: D-010, found: This build (version 1.1), static checks, defect: "The external-assets check treated canonical links as remote loads.", cause: "The check looked at every link element, not only ones the browser fetches.", check: "C-05 now ignores canonical and alternate links; its existing vaccination still fails on a remote script."}
-- {id: D-011, found: This build (version 1.1), screenshot review, defect: "The contact form's first error link pointed to a radio button with no id, so it went nowhere.", cause: "The error summary is written by script, so the static link check could not see it.", check: "B-09 now checks every error summary link resolves to a field."}
+- {id: D-004, found: "This build, first browser run", defect: "Focusing a tab panel, table region or the graph filled the whole block with the yellow focus colour.", cause: "One focus rule targeted every element with a tabindex, including large containers.", check: "B-03 focuses each container type and fails if its background becomes the focus colour."}
+- {id: D-005, found: "This build, vaccination tests", defect: "The provenance check passed even when a requirement lost its label, because the source cell's own label satisfied it.", cause: "The check looked for a label anywhere in the row, not in the requirement cell.", check: "C-08 now inspects the requirement cell alone; its vaccination test removes that label and must fail."}
+- {id: D-006, found: "This build, first browser run", defect: "Every page scrolled sideways on 320 and 390 pixel screens.", cause: "The colophon barcode had a fixed pixel width.", check: "B-02 checks overflow at six widths from 320 to 1920 pixels."}
+- {id: D-007, found: "This build, first browser run", defect: "Links in the 'Met by' column were smaller than the 24 pixel target size.", cause: "Plain inline links set side by side in a table cell.", check: "B-01 runs axe with the WCAG 2.2 AA target-size rule in light and dark modes."}
+- {id: D-008, found: "This build (version 1.1), content review", defect: "A bulk rename of the portal's owner in the open register also renamed the data owner in the quality escalation table.", cause: "A pattern replacement matched role names inside the playbook methods.", check: "The build refuses any escalation row that names the portal's service owner; a vaccination test proves it."}
+- {id: D-009, found: "This build (version 1.1), first browser run", defect: "Module outcomes and persona goals containing commas were split into fragments such as 'Frame' and 'Assign'.", cause: "Unquoted commas inside YAML flow lists.", check: "The build refuses list items under three words; a vaccination test proves it."}
+- {id: D-010, found: "This build (version 1.1), static checks", defect: "The external-assets check treated canonical links as remote loads.", cause: "The check looked at every link element, not only ones the browser fetches.", check: "C-05 now ignores canonical and alternate links; its existing vaccination still fails on a remote script."}
+- {id: D-011, found: "This build (version 1.1), screenshot review", defect: "The contact form's first error link pointed to a radio button with no id, so it went nowhere.", cause: "The error summary is written by script, so the static link check could not see it.", check: "B-09 now checks every error summary link resolves to a field."}
 - {id: D-012, found: First CI run on GitHub (version 1.1), defect: "The health step failed before running because its output folder did not exist on a fresh runner.", cause: "The build folder is ignored by git, so it exists locally but not in CI.", check: "The workflow creates the folder first; the CI run itself is the check and blocks publishing when it fails."}
 - {id: D-013, found: First external link check (version 1.2), defect: "The health run reported a working GOV.UK organisation page as broken (HTTP 406).", cause: "Page checks asked for JSON before HTML, which some GOV.UK pages refuse.", check: "A unit test proves page checks ask for HTML first; it fails when the old header is restored."}
 - {id: D-014, found: Browser checks (version 1.2), defect: "Stopping all table row headings from wrapping made the library, knowledge and policy pages scroll sideways on phones, and placed feature links too close together.", cause: "A global no-wrap rule applied to long titles as well as short identifiers.", check: "B-02 (sideways scrolling at six widths) and B-01 (target size) caught it; no-wrap now applies only to identifiers. A second cause was screen-reader-only labels inside wide tables escaping their scroll region; scroll regions are now positioned so they contain them."}
@@ -947,10 +947,10 @@ defects:
 - {id: D-020, found: Review of repository settings after release 1.4, defect: "A suggested Jekyll workflow was added and Pages was set to publish from main, which would have published the raw repository files instead of the built portal.", cause: "GitHub's Pages settings offer a Jekyll starter workflow by default; nothing in the repository explained that the built site lives on gh-pages.", check: "C-24 refused the workflow (unpinned third-party actions) and the build failed safely. The workflow is removed, Pages publishes from gh-pages, and C-25 now fails if any workflow other than the three expected ones appears, or if any workflow publishes from the repository root."}
 - {id: D-021, found: Owner report after release 1.4, defect: "GitHub listed an unrelated account called 'noreply' (location China) as a contributor. It never acted on the repository; four early commits were credited to it.", cause: "Automated build sessions committed with GitHub's generic noreply address under the username 'noreply', which GitHub links to the account with that username.", check: "C-26 fails the build if the latest commit uses any identity outside an allow-list of the owner, GitHub's bots and the named assistant. Removing the credit on GitHub itself needs those four commits rewritten (OR-17)."}
 - {id: D-022, found: Owner report on the live portal (version 1.4), defect: "The Playbooks and Frameworks menus opened but showed nothing and could not be clicked, on desktop and inside the More menu on phones.", cause: "The top bar hid overflow so it could measure when to fold items into More, and that also cut off the drop-down menus positioned inside it. No browser check opened the menus.", check: "The top bar no longer hides overflow; folding still works because it measures scroll width. B-14 opens every grouped menu at 1440 and 390 pixels, checks its first link can be hit and clicked, and follows it; a deliberate break that restores the clipping proves it fails."}
-- {id: D-023, found: Browser checks (version 1.7, before release), defect: "The DAMA wheel's segment links had spoken names that did not match their visible labels, and the wheel's area cards pushed the page sideways at 320 pixels.", cause: "Segment names were set separately from the visible text, and the card grid had a fixed minimum column width wider than a small phone.", check: "B-01 (axe label and name match) and B-02 (sideways scrolling) caught both before release. Segment names now come from the visible label with the detail in a title, and the grid columns shrink to the screen."}
-- {id: D-024, found: Browser checks (version 1.8, before release), defect: "Search found nothing on any page and Escape stopped closing it.", cause: "The new guided tour script declared a step counter called idx in the same scope as the search index, so the index was replaced by the number 0.", check: "B-05 (search finds results and Escape closes it) caught it before release. The tour counter is renamed and commented; B-16 now runs every tour and B-05 runs in the same browser session."}
-- {id: D-025, found: Browser checks (version 1.8, before release), defect: "Keyboard shortcut hints in the header failed colour contrast in light mode, and the example configuration on the Use and reuse page pushed the page sideways on phones.", cause: "A general style for keyboard keys overrode the header's own style, and the code block had no scrolling of its own.", check: "B-01 (axe colour contrast) and B-02 (sideways scrolling) caught both. Key styles now apply only inside the main content and code blocks scroll within themselves."}
-- {id: D-026, found: Comparison with the sister portals (version 1.8.0, after release), defect: "The new Tools and interoperability page covered the same ground as the Data Quality Commons Catalogues page released earlier the same day, which goes further, with named products, a lock-in checker, an RFI builder and a test script.", cause: "The page was written without first looking at what the sister portals already offer.", check: "The runbook now starts every new topic with a search of the sister portals. The tooling page keeps what the DAM Policy adds and signposts the Commons and the catalogue; C-34 checks those signposts go only to the sister portals and name them and their status."}
+- {id: D-023, found: "Browser checks (version 1.7, before release)", defect: "The DAMA wheel's segment links had spoken names that did not match their visible labels, and the wheel's area cards pushed the page sideways at 320 pixels.", cause: "Segment names were set separately from the visible text, and the card grid had a fixed minimum column width wider than a small phone.", check: "B-01 (axe label and name match) and B-02 (sideways scrolling) caught both before release. Segment names now come from the visible label with the detail in a title, and the grid columns shrink to the screen."}
+- {id: D-024, found: "Browser checks (version 1.8, before release)", defect: "Search found nothing on any page and Escape stopped closing it.", cause: "The new guided tour script declared a step counter called idx in the same scope as the search index, so the index was replaced by the number 0.", check: "B-05 (search finds results and Escape closes it) caught it before release. The tour counter is renamed and commented; B-16 now runs every tour and B-05 runs in the same browser session."}
+- {id: D-025, found: "Browser checks (version 1.8, before release)", defect: "Keyboard shortcut hints in the header failed colour contrast in light mode, and the example configuration on the Use and reuse page pushed the page sideways on phones.", cause: "A general style for keyboard keys overrode the header's own style, and the code block had no scrolling of its own.", check: "B-01 (axe colour contrast) and B-02 (sideways scrolling) caught both. Key styles now apply only inside the main content and code blocks scroll within themselves."}
+- {id: D-026, found: "Comparison with the sister portals (version 1.8.0, after release)", defect: "The new Tools and interoperability page covered the same ground as the Data Quality Commons Catalogues page released earlier the same day, which goes further, with named products, a lock-in checker, an RFI builder and a test script.", cause: "The page was written without first looking at what the sister portals already offer.", check: "The runbook now starts every new topic with a search of the sister portals. The tooling page keeps what the DAM Policy adds and signposts the Commons and the catalogue; C-34 checks those signposts go only to the sister portals and name them and their status."}
 - {id: D-027, found: "Continuous integration (version 1.8.2, before publishing)", defect: "The search vaccination crashed instead of running, so the release stopped before publishing.", cause: "Every deliberate-break script runs on every page. Adding the compass page, which has none of this portal's own objects, exposed a break script that assumed the search index exists. Only the new compass break was re-run locally after the page was added.", check: "Every break script now does nothing where its target is absent, and a test runs each one on an empty page (D-027 in tests). All break modes are run locally before a push that adds a page to the browser checks."}
 - {id: D-028, found: "Continuous integration (version 1.8.3, before publishing)", defect: "The Status page printed the owner's account name when the health run found a broken link to a sister portal.", cause: "The D-019 fix only replaced this portal's own repository address. Version 1.8.3 linked to a Commons page that was committed but not yet published, so the health run quoted the Commons address in full.", check: "Every address in the owner's account or Pages site is now named by what it is (this portal, the Commons, the catalogue), keeping the page name. A test feeds the Status page sister-portal problems and runs C-17 on it."}
 - {id: D-029, found: "Development (version 1.9.0)", defect: "Re-running the icon vendoring script would have dropped 11 icons the site uses, including the compass and tools page icons.", cause: "Icons added in versions 1.8.0 to 1.8.2 were written into site_src/icons.json directly, not added to the script's list.", check: "The script's list now covers every icon, and a test fails if any icon the site uses is missing from it."}
@@ -967,7 +967,10 @@ defects:
 - {id: D-040, found: "Code review (13 November 2026)", defect: "Defect numbers D-034 and D-035 were each used twice, by two sessions working at the same time.", cause: "Defect ids were not checked for uniqueness, and sessions pick the next number from their own copy.", check: "The build now rejects a duplicate defect id. The compass entries were renumbered D-037 and D-038; the earlier D-034 and D-035 keep their numbers."}
 - {id: D-041, found: "Visual inspection (13 November 2026)", defect: "The compass's own self-check said the Repos Asset Catalogue facts were 36 days old, and one figure in them (25,981 projects) could no longer be reproduced from that catalogue's data.", cause: "The 30-day freshness test ran only in the browser; nothing in CI or the daily sync looked at it.", check: "The daily sync now lists portal facts older than 30 days and opens an issue for them. The facts were rechecked against the catalogue's repository and the unreproducible figure replaced with its README's own wording."}
 - {id: D-042, found: "Taking over pull request 33 (13 November 2026)", defect: "The DAMA drill-down assessment still said eight areas had no activities and that data architecture had no steps, measures or standards, after the Knowledge areas page had added them.", cause: "Two pieces of work changed the same area in parallel; the assessment was written as text, with nothing tying it to the activities it describes.", check: "C-40 now fails if the assessment says areas have no activities, or that data architecture has no steps, measures or standards, while the Knowledge areas content has them. A test proves it."}
+- {id: D-043, found: "Development of the AI-ready pathway (version 1.15.0, before publishing)", defect: "A check-of-understanding option, 'Someone owns quality, drift and bias monitoring', was split into two options, so the marked answer would have pointed at a fragment.", cause: "The same class as D-009 and D-033: an unquoted comma in a YAML flow list starts a new item. D-009's guard covered outcomes and lists but not check options.", check: "The build now rejects any check option that starts with a lower-case letter, the sign of a split, and says to quote it; a test proves it."}
+- {id: D-044, found: "Browser checks (version 1.15.0, before publishing)", defect: "The new pathway card faded in, and axe reported every caption and line inside it as failing colour contrast in light and dark modes; two module links in the alignment table were also below the 24 pixel target size.", cause: "An opacity animation lowers contrast while it runs and axe reads the page mid-animation; adjacent inline links in a narrow cell had no minimum size.", check: "Motion on the card now moves without fading and the links have a 24 pixel minimum. C-44 fails if any keyframes animate opacity, with a test, and B-01 (axe) keeps checking contrast and target size."}
 - {id: D-045, found: "Health run issue 42 (13 November 2026)", defect: "The health run reported the EU Data Act link on EUR-Lex as broken (404), although the address is the one the European Commission itself publishes. Locally the same check passed it with a 202, for a made-up law as well as the real one.", cause: "EUR-Lex answers automated checks with an AWS WAF bot challenge instead of the page: 202 to some clients, 404 to others. The checker read the status alone, so a challenge counted as ok or as broken depending on the runner, and never as unchecked.", check: "A response carrying a bot challenge header (x-amzn-waf-action or cf-mitigated), or a 202, is now blocked: listed for a person to check, not counted as ok or broken. Three tests prove a challenge is blocked whether it comes as 202 or 404, and that a plain 404 is still broken."}
+- {id: D-046, found: "Screenshot review of the data portals compass (version 1.15.0, before publishing)", defect: "A compass route step title, 'What AI use adds to governance, cataloguing and quality', showed only up to the first comma. A new guard then found the same fault already published in 68 more values: the compass card 'Describe it once, the same way', and 67 values across playbooks.yaml (42) and frameworks.yaml (25), cut into 79 fragments, such as a facilitation option that lost ', magnifier or voice control' and escalation triggers that lost half their wording.", cause: "In a YAML flow mapping an unquoted comma ends the value and turns the rest into a key with an empty value, which the build ignored. D-009 and D-043 guarded outcomes, lists and check options only.", check: "The build now reads every flow mapping in playbooks.yaml, frameworks.yaml and areas.yaml by node position and rejects a key with an implicit empty value, naming the line; the compass rejects the same signature and unknown route-step keys. All 69 values were rejoined; a script proved that only the 79 empty fragments were removed and that every changed value starts with its old text. Four tests make deliberate breaks, and one proves an explicit null is still allowed."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -981,7 +984,7 @@ adversarial:
 pages:
   personas: {lede: "Choose the role closest to yours. Each route shows what you need to learn, what to do and in what order, and tracks your progress as you go.", audience: Everyone using the playbooks}
   learning: {lede: "Short modules that build from the basics of the policy to running all three capabilities as one yearly cycle. Each module lists what you will be able to do, the activities, and a quick check of understanding.", audience: Anyone new to the policy or to a role in it}
-  inclusion: {lede: "How the playbooks help you meet equality, diversity, inclusion and accessibility duties in your data work, and how this portal is designed so that everyone can use it.", audience: Everyone, especially data owners, stewards and governance boards}
+  inclusion: {lede: "How the playbooks help you meet equality, diversity, inclusion and accessibility duties in your data work, and how this portal is designed so that everyone can use it.", audience: "Everyone, especially data owners, stewards and governance boards"}
   contact: {lede: "Ask a question, report a problem or suggest an improvement.", audience: Everyone}
 
 # ---------------------------------------------------------------------------
@@ -1001,7 +1004,7 @@ personas:
   pains: ["Governance, cataloguing and quality run by different teams record the same facts in different places", "Evidence is assembled in a rush at the deadline"]
   design_for: [Reads on a phone between meetings, Wants the summary before the detail]
   success: Every critical data asset has a named owner, a current catalogue record and a DQAP, and the return goes in on time.
-  modules: [M01, M02, M03, M09, M10]
+  modules: [M01, M02, M03, M09, M10, M12]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M02}]}
   - {stage: Prepare, tasks: [{p: gov.mandate, label: Agree the mandate and scope}, {p: cat.mobilise, label: Appoint the coordinating team}]}
@@ -1021,7 +1024,7 @@ personas:
   pains: [Requests arrive from several directions with different deadlines, Owners change and nobody updates the record]
   design_for: [Works compressed or part-time hours and picks tasks up after gaps, New to data management]
   success: An assured return goes in on time, built from catalogue records rather than retyped.
-  modules: [M01, M02, M04, M06, M09, M10]
+  modules: [M01, M02, M04, M06, M09, M10, M12]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M04}]}
   - {stage: Prepare, tasks: [{p: cat.mobilise, label: Set up the team and ALB contacts}, {p: cat.discover, label: Build the candidate list}]}
@@ -1041,7 +1044,7 @@ personas:
   pains: [Unclear difference between data owner and information asset owner, Asked to sign things without the context]
   design_for: [Uses screen magnification at 200 per cent, Prefers checklists to long text]
   success: You can explain your assets' purpose, quality and risks, and your successor is named.
-  modules: [M01, M02, M07, M10]
+  modules: [M01, M02, M07, M10, M12, M14]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M02}]}
   - {stage: Prepare, tasks: [{p: gov.assign, label: Accept the role and name a successor}]}
@@ -1061,7 +1064,7 @@ personas:
   pains: [The same owner and review date recorded in three places, Quality rules kept only in one tool]
   design_for: [Dyslexic and prefers short steps, Uses a screen reader for long documents]
   success: Every asset you steward has a current record, rules with targets, and a quality statement users understand.
-  modules: [M01, M05, M07, M08, M10]
+  modules: [M01, M05, M07, M08, M10, M12, M13, M14, M17]
   journey:
   - {stage: Learn, tasks: [{m: M05}, {m: M07}]}
   - {stage: Prepare, tasks: [{p: dq.identify, label: Agree critical data elements}, {p: cat.describe, label: Complete the catalogue record}]}
@@ -1081,7 +1084,7 @@ personas:
   pains: [Guidance and model do not list the same properties, Internal-only links break outside the organisation]
   design_for: [Works mainly by keyboard, English is an additional language]
   success: Every critical data asset record is complete, conforms to the standard and can be harvested as DCAT.
-  modules: [M01, M05, M06, M10]
+  modules: [M01, M05, M06, M10, M13, M15]
   journey:
   - {stage: Learn, tasks: [{m: M05}, {m: M06}]}
   - {stage: Prepare, tasks: [{p: cat.discover, label: Search existing registers}]}
@@ -1101,7 +1104,7 @@ personas:
   pains: [Every team scores issues differently, Quality reported as one average]
   design_for: ["Colour-blind, so charts must not rely on colour alone", "Works across several devices"]
   success: Every critical data asset has scored issues, automated checks and quality reported by group where lawful.
-  modules: [M01, M07, M08, M09, M10]
+  modules: [M01, M07, M08, M09, M10, M12, M17]
   journey:
   - {stage: Learn, tasks: [{m: M07}, {m: M08}]}
   - {stage: Prepare, tasks: [{p: dq.define, label: Build the rule library}]}
@@ -1307,6 +1310,159 @@ modules:
   check:
   - {q: "Which guidance makes a register of data assets its second principle?", options: [Managing legacy technology, The Magenta Book, The Service Standard], answer: 0, why: "The GOV.UK guidance on managing legacy technology asks organisations to build a complete and accurate register of their data assets."}
   - {q: "How does the capability model flag a need the DAM Policy text does not state at all?", options: [Inferred, Implicit, Explicit], answer: 0, why: "Inferred means the need is not in the text and comes from good practice and adjacent rulebooks."}
+
+# ---------------------------------------------------------------------------
+# AI-ready data stewardship pathway (version 1.15.0). Six modules that join this portal to the
+# Data Quality Commons, DCAT-AP-UK, the xGov MEM, the NDL PubSec MCP server, the Knowledge Web and the
+# AI capability governance toolkit. Every external link was opened and its title checked on 14 November 2026.
+# ---------------------------------------------------------------------------
+- id: M12
+  title: What makes a critical data asset AI-ready
+  level: Foundation
+  minutes: 20
+  icon: sparkles
+  caps: [gov, cat, dq]
+  pathway: ai-ready
+  outcomes: ["Name the four pillars in the GDS guidelines on AI-ready datasets", "Decide whether an asset needs the AI-ready supplement", "Explain why AI-readiness is a stewardship question as well as a technical one"]
+  activities:
+  - {id: a1, type: Read, text: "Read the executive summary and the four pillars of the GDS guidelines on making government datasets ready for AI.", link: "https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai/guidelines-and-best-practices-for-making-government-datasets-ready-for-ai"}
+  - {id: a2, type: Do, text: "Answer the 'which supplements apply' questions for one asset. Note whether it is used, or may be used, for AI.", link: sectors.html#which}
+  - {id: a3, type: Read, text: "Read the AI-ready data supplement: what governance, cataloguing and quality each add.", link: sectors.html#SUP-AI}
+  - {id: a4, type: Reflect, text: "If someone asked tomorrow to train a model on your most important asset, who would say yes or no, and on what evidence?"}
+  check:
+  - {q: "Which of these is one of the four pillars of AI-ready data in the GDS guidelines?", options: [Data and metadata quality, Cloud hosting, Open source code], answer: 0, why: "The four pillars are technical optimisation; data and metadata quality; organisation and infrastructure context; and legal, security and ethical compliance."}
+  - {q: "When does the AI-ready supplement ask you to publish an algorithmic transparency record?", options: [For every data set, Where a tool supports decisions about people, Only when a supplier asks], answer: 1, why: "The supplement asks for a record where an algorithmic tool supports decisions about people, using the Algorithmic Transparency Recording Standard."}
+- id: M13
+  title: From FAIR to AI-ready metadata
+  level: Practitioner
+  minutes: 30
+  icon: badge-check
+  caps: [cat]
+  pathway: ai-ready
+  outcomes: ["Explain the four FAIR principles in plain English", "Add the AI-ready catalogue fields to a record", "See how the proposed DCAT-AP-UK profile extends the xGov MEM for AI use"]
+  activities:
+  - {id: a1, type: Read, text: "Read the FAIR Guiding Principles paper (Wilkinson and others, 2016) and note what each letter asks of metadata.", link: "https://doi.org/10.1038/sdata.2016.18"}
+  - {id: a2, type: Read, text: "Read the metadata properties this portal asks for, and the proposals to the Metadata Exchange Model.", link: cataloguing.html#metadata}
+  - {id: a3, type: Do, text: "For one record, add permitted AI uses, sensitive fields, provenance and version, as the AI-ready supplement lists.", link: sectors.html#t-cat-SUP-AI}
+  - {id: a4, type: Read, text: "Read the AI-ready metadata page of the proposed DCAT-AP-UK profile. It is proposed, not endorsed.", link: "https://cyberdudeuk.github.io/dcat-ap-uk/ai-ready.html"}
+  - {id: a5, type: Do, text: "Build your first record with the DCAT-AP-UK tutorial, then compare it with the endorsed xGov MEM.", link: "https://cyberdudeuk.github.io/dcat-ap-uk/tutorials.html"}
+  check:
+  - {q: "What do the letters FAIR stand for?", options: ["Findable, accessible, interoperable, reusable", "Fair, accurate, inclusive, responsible", "Federated, auditable, indexed, recorded"], answer: 0, why: "The FAIR Guiding Principles (Wilkinson and others, 2016) are findability, accessibility, interoperability and reusability, for people and for machines."}
+  - {q: "Why does the AI-ready supplement ask for a version on the record?", options: [To set the price, So a training set can be reconstructed exactly, Because DCAT forbids records without one], answer: 1, why: "The supplement asks for dcat:version so a training set can be reconstructed exactly."}
+  - {q: "Which metadata model is endorsed for UK government today?", options: [DCAT-AP-UK, The xGov MEM, Schema.org], answer: 1, why: "The UK Cross-Government Metadata Exchange Model (xGov MEM) is endorsed by the Data Standards Authority Steering Board. DCAT-AP-UK is a proposal for review."}
+- id: M14
+  title: Start from the question the data must answer
+  level: Practitioner
+  minutes: 20
+  icon: crosshair
+  caps: [gov, cat]
+  pathway: ai-ready
+  outcomes: ["Write down the decision or question an AI use of an asset serves", "Test that question against the seven purposes in the policy", "Record out-of-scope uses before anyone asks for them"]
+  activities:
+  - {id: a1, type: Read, text: "Read the seven purposes that make a data asset critical.", link: dam.html#DAM-R11}
+  - {id: a2, type: Do, text: "For one asset, write one sentence each: the decision it informs, who makes it, and what goes wrong if the data is wrong."}
+  - {id: a3, type: Do, text: "Fill in the purpose and legitimacy checks from the AI-ready supplement: the task, whether outputs affect individuals, and out-of-scope uses.", link: sectors.html#SUP-AI}
+  - {id: a4, type: Do, text: "Log the decision about which AI uses are allowed in your decision log.", link: governance.html#T-GOV-3}
+  - {id: a5, type: Reflect, text: "Who outside your team, including the people the data describes, should help frame the question?"}
+  check:
+  - {q: "What does the AI-ready supplement ask you to state before AI use begins?", options: [The model's vendor, "The task, whether outputs affect individuals and which uses are out of scope", The size of the training set], answer: 1, why: "Its first governance check is to record the AI task, whether outputs affect individuals and which uses are out of scope, such as automated decisions."}
+  - {q: "Which of these is one of the seven purposes?", options: [Official statistics, Advertising, Staff appraisal], answer: 0, why: "Official statistics is one of the seven purposes in the policy."}
+- id: M15
+  title: Connecting data to AI with linked data, knowledge graphs and MCP
+  level: Advanced
+  minutes: 35
+  icon: network
+  caps: [cat]
+  pathway: ai-ready
+  outcomes: ["Explain the RDF triple and why linked data helps machines read metadata", "Find and reuse this portal's knowledge graph and vocabulary files", "Describe how an MCP server lets an AI assistant check metadata against the xGov MEM"]
+  activities:
+  - {id: a1, type: Read, text: "Read the W3C RDF 1.1 Primer, sections on triples and vocabularies.", link: "https://www.w3.org/TR/rdf11-primer/"}
+  - {id: a2, type: Do, text: "Open this portal's knowledge graph, then download the same vocabulary as Turtle from the open data page.", link: knowledge.html#graph-tab}
+  - {id: a3, type: Read, text: "Read how an assistant reads a catalogue through an open protocol, and this portal's own reference MCP server.", link: reuse.html#mcp}
+  - {id: a4, type: Read, text: "Read what the NDL PubSec MCP server does: search data.gov.uk, describe a data set and validate a record against the xGov MEM. It is an alpha prototype.", link: "https://cyberdudeuk.github.io/ndl-pubsec-mcp/"}
+  - {id: a5, type: Read, text: "Browse the knowledge graph and thesaurus of the proposed DCAT-AP-UK profile.", link: "https://cyberdudeuk.github.io/dcat-ap-uk/knowledge.html"}
+  - {id: a6, type: Reflect, text: "Which of your catalogue's fields would an assistant need to answer 'can I use this for training?' without guessing?"}
+  check:
+  - {q: "What are the three parts of an RDF triple?", options: ["Subject, predicate and object", "Table, row and column", "Key, value and type"], answer: 0, why: "The RDF 1.1 Primer describes every statement as a triple of subject, predicate and object."}
+  - {q: "What does the NDL PubSec MCP tool metadata_validate do?", options: [Publishes a record to data.gov.uk, Checks a metadata record against the xGov MEM and lists errors and warnings, Trains a model on catalogue records], answer: 1, why: "Its README says it checks any metadata record against xGov MEM and lists errors and warnings with their paths. All its tools are read-only."}
+- id: M16
+  title: Making public data AI-ready together
+  level: Practitioner
+  minutes: 25
+  icon: users
+  caps: [gov, dq]
+  pathway: ai-ready
+  outcomes: ["Look for existing work before building, across public sector code and catalogues", "Involve the people the data describes when you judge whether it is fit for AI", "Use the shared assurance and community routes rather than working alone"]
+  activities:
+  - {id: a1, type: Do, text: "Search the GitHub Repos Asset Catalogue for public code that already uses your catalogue platform or metadata standard.", link: "https://cyberdudeuk.github.io/github-repos-asset-catalogue/"}
+  - {id: a2, type: Do, text: "Run the inclusion questions against one asset you might use for AI.", link: inclusion.html#questions}
+  - {id: a3, type: Read, text: "Read how the Data Quality Commons assures collections for the National Data Library.", link: "https://cyberdudeuk.github.io/dq-commons/ndl-assurance.html"}
+  - {id: a4, type: Do, text: "Pick one way to take part, from testing a page to joining a community.", link: involve.html#ways}
+  - {id: a5, type: Reflect, text: "Whose consent, trust or voice would change your answer to 'is this asset AI-ready'?"}
+  check:
+  - {q: "What does the GitHub Repos Asset Catalogue ask you to do first?", options: [Build a new tool, "Look for work that already exists before you build", Buy a catalogue product], answer: 1, why: "Its motto is 'Before you build it, look for it': find public sector code that already exists and decide whether you can reuse it."}
+  - {q: "Where should harvested catalogue records from government end up?", options: [On each department's intranet only, "The National Data Library gateway at data.gov.uk", In a supplier's private catalogue], answer: 1, why: "data.gov.uk is the cross-government gateway to public data and the destination for harvested catalogue records."}
+- id: M17
+  title: Governing AI use of critical data in practice
+  level: Advanced
+  minutes: 30
+  icon: scale
+  caps: [gov, dq]
+  pathway: ai-ready
+  outcomes: ["Run the AI-ready quality rules on a sample file", "Apply the transparency and ethics duties that go with AI use", "Plan who monitors drift and bias once AI use begins"]
+  activities:
+  - {id: a1, type: Do, text: "Run the AI-ready rules (AI-01 to AI-04) on a synthetic sample in the Data Quality Commons checker. Nothing is uploaded.", link: "https://cyberdudeuk.github.io/dq-commons/check.html"}
+  - {id: a2, type: Read, text: "Read the operating model checks in the AI-ready supplement: drift, re-approval and reconstruction.", link: sectors.html#t-rules-SUP-AI}
+  - {id: a3, type: Read, text: "Read the Algorithmic Transparency Recording Standard hub and the Data and AI Ethics Framework.", link: "https://www.gov.uk/government/collections/algorithmic-transparency-recording-standard-hub"}
+  - {id: a4, type: Read, text: "Use the AI capability governance toolkit for the controls, assurance and human oversight around AI-assisted work.", link: "https://cyberdudeuk.github.io/ai-capability-governance/"}
+  - {id: a5, type: Read, text: "Read how AI for data quality can be used safely in the Data Quality Commons.", link: "https://cyberdudeuk.github.io/dq-commons/ai.html"}
+  - {id: a6, type: Reflect, text: "If a model trained on your asset started giving worse answers for one group, how would you find out, and who would act?"}
+  check:
+  - {q: "Why does rule AI-03 check that each record appears once?", options: [To save storage, So training and test sets do not overlap, Because duplicates are illegal], answer: 1, why: "AI-03 is a uniqueness rule: each record appears once, so training and test sets do not overlap."}
+  - {q: "Which operating model check does the AI-ready supplement include?", options: ["Someone owns quality, drift and bias monitoring", The model is retrained weekly, The data is deleted after training], answer: 0, why: "Its operating model checks include that someone owns quality, drift and bias monitoring, and that training sets can be reconstructed exactly."}
+
+# ---------------------------------------------------------------------------
+# Learning pathways (version 1.15.0): themed routes through the modules, with what each covers elsewhere,
+# what is missing and the strongest case against. Alignment rows describe an independent course; they are
+# not an endorsement and the course is not affiliated with this portal.
+# ---------------------------------------------------------------------------
+pathways:
+- id: ai-ready
+  title: AI-ready data stewardship
+  icon: brain
+  summary: "Six modules for owners, stewards and catalogue managers who are asked whether a critical data asset can be used for AI. They build from what AI-ready means, through metadata and linked data, to governing AI use, and join this portal to five sister projects so you do not have to find them yourself."
+  modules: [M12, M13, M14, M15, M16, M17]
+  checked: '2026-11-14'
+  alignment:
+    course: Data Stewardship at a Time of AI, a deep-dive series
+    by: Data Stewards Academy (The Data Tank and The GovLab)
+    url: "https://datastewards.net/offerings/data-stewardship-at-a-time-of-ai-deep-dive-series"
+    when: "Five weekly live sessions of 90 minutes, Wednesdays 10 March to 7 April 2027, as published on 14 November 2026"
+    note: "An independent course, not connected with this portal. The rows below show where this pathway prepares you for, or follows up, each session. Check dates and details on the course page."
+    rows:
+    - {theme: "What does 'AI-ready' actually mean?", modules: [M12], cover: Strong, note: "Grounded in the GDS guidelines and the AI-ready supplement."}
+    - {theme: "From FAIR to AI-ready", modules: [M13, M14], cover: Partial, note: "FAIR and metadata are covered well. Demand-led problem definition is only started in M14."}
+    - {theme: "Connecting data to AI: MCP and knowledge graphs", modules: [M15], cover: Strong, note: "Uses working tools: this portal's graph and MCP server, NDL PubSec MCP and DCAT-AP-UK."}
+    - {theme: Making public data AI-ready, modules: [M16], cover: Partial, note: "Discoverability and assurance are covered. Participatory and community-led stewardship is a gap."}
+    - {theme: "AI-ready data in action", modules: [M17], cover: Strong, note: "Runnable rules, transparency duties and the AI governance toolkit."}
+  gaps:
+  - {id: PG-01, title: Participatory and community-led stewardship, status: Open, text: "No project in this estate yet gives guidance on data cooperatives, community charters or involving the public in decisions about AI use of their data. M16 points to the inclusion questions only."}
+  - {id: PG-02, title: Questions-led demand for data, status: Started, text: "M14 asks you to write down the question an AI use serves. There is no method yet for gathering and prioritising questions from users and the public."}
+  - {id: PG-03, title: International comparison, status: Open, text: "The pathway is UK-focused. It does not yet compare how other governments prepare public data for AI."}
+  against:
+    case: "Another learning route spreads people thin. Stewards could go straight to the GDS guidelines and an external course, and a pathway that links to five prototypes inherits their churn and their unendorsed status."
+    answer: "The pathway adds no new guidance of its own. It reuses the GDS guidelines, the existing AI-ready supplement and sister projects, labels each one's status, and keeps the checks of understanding to facts you can trace. If a sister project moves or closes, the weekly health run reports the broken link."
+  resources:
+  - {name: Making government datasets ready for AI, by: GDS, url: "https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai", status: Published guidance}
+  - {name: UK Cross-Government Metadata Exchange Model (xGov MEM), by: Data Standards Authority, url: "https://co-cddo.github.io/ukgov-metadata-exchange-model/", status: Endorsed for implementation}
+  - {name: DCAT Application Profile for the UK (DCAT-AP-UK), by: Sister project, url: "https://cyberdudeuk.github.io/dcat-ap-uk/", status: "Proposed, not endorsed"}
+  - {name: NDL PubSec MCP, by: Sister project, url: "https://cyberdudeuk.github.io/ndl-pubsec-mcp/", status: Alpha prototype}
+  - {name: Public Sector Data Quality Commons, by: Community project, url: "https://cyberdudeuk.github.io/dq-commons/", status: Community project}
+  - {name: GitHub Repos Asset Catalogue, by: Sister project, url: "https://cyberdudeuk.github.io/github-repos-asset-catalogue/", status: Working tool}
+  - {name: AI Capability Governance and Implementation, by: Sister project, url: "https://cyberdudeuk.github.io/ai-capability-governance/", status: Prototype}
+  - {name: The Knowledge Web, by: Sister project, url: "https://github.com/cyberdudeuk/knowledge-web", status: Prototype}
+  - {name: The FAIR Guiding Principles, by: "Wilkinson and others, Scientific Data, 2016", url: "https://doi.org/10.1038/sdata.2016.18", status: Peer-reviewed paper}
+  - {name: Model Context Protocol specification, by: Model Context Protocol project, url: "https://modelcontextprotocol.io/specification/latest", status: Open specification}
 
 # ---------------------------------------------------------------------------
 # Inclusion (diversity, equity, equality, inclusion and accessibility)
@@ -1724,7 +1880,7 @@ design:
   - {n: 10, point: Define what success looks like and publish performance data, rating: Partly, evidence: "Success measures defined per capability; no usage data collected by design."}
   - {n: 11, point: Choose the right tools and technology, rating: Met, evidence: "Static site on GitHub Pages; open standards; ADRs recorded."}
   - {n: 12, point: Make new source code open, rating: Met, evidence: "Public repository under MIT; content under OGL."}
-  - {n: 13, point: Use and contribute to open standards, components and patterns, rating: Met, evidence: "DCAT, SKOS, DQV, JSON-LD; GOV.UK Design System patterns."}
+  - {n: 13, point: "Use and contribute to open standards, components and patterns", rating: Met, evidence: "DCAT, SKOS, DQV, JSON-LD; GOV.UK Design System patterns."}
   - {n: 14, point: Operate a reliable service, rating: Partly, evidence: "Static hosting and health checks; single account dependency (OR-03)."}
 
 # ---------------------------------------------------------------------------
@@ -1748,7 +1904,7 @@ credits:
 - {who: Lucide Icons and contributors, what: "Icons", licence: "ISC"}
 - {who: Deque Systems (axe-core), what: "Accessibility testing in the build, not shipped", licence: "MPL 2.0"}
 - {who: Microsoft (Playwright), what: "Browser testing in the build, not shipped", licence: "Apache 2.0"}
-- {who: segno, python-barcode, Pillow and PyYAML maintainers, what: "QR code, barcode, image generation and content parsing at build time", licence: "BSD (segno), MIT (python-barcode, PyYAML), MIT-CMU (Pillow)"}
+- {who: "segno, python-barcode, Pillow and PyYAML maintainers", what: "QR code, barcode, image generation and content parsing at build time", licence: "BSD (segno), MIT (python-barcode, PyYAML), MIT-CMU (Pillow)"}
 
 # ---------------------------------------------------------------------------
 # Sector and domain supplements (version 1.3)
@@ -1965,7 +2121,7 @@ supplements:
   identifiers: []
   checks_from_guidance:
   - {area: Purpose and legitimacy, items: ["The task the data supports is known", "It is known whether outputs affect individuals", "Out-of-scope uses are stated", "A named owner approves AI uses"]}
-  - {area: Legal, rights and governance, items: ["Permitted uses (training, fine-tuning, inference, evaluation) are known", "Sensitive fields are flagged", "Permitted working environments are known", "There is a plan if the use case changes"]}
+  - {area: "Legal, rights and governance", items: ["Permitted uses (training, fine-tuning, inference, evaluation) are known", "Sensitive fields are flagged", "Permitted working environments are known", "There is a plan if the use case changes"]}
   - {area: Metadata fitness, items: ["Tables and fields are understood", "Event time, update frequency and history are clear", "Schema changes and versions are tracked", "Provenance is known", "Known issues and biases are documented", "Stable identifiers exist or their absence is stated"]}
   - {area: Unstructured data pipelines, items: ["Data is machine readable or has an extraction pipeline", "Rights, redaction and sensitivity travel with extracted content", "Outputs can be traced back to source files", "Humans review training data and outputs"]}
   - {area: Operating model and sustainability, items: ["Someone owns quality, drift and bias monitoring", "Breaks, drift and anomalies are detected", "Fixes are re-approved", "Training sets can be reconstructed exactly", "There is a process if AI causes service, cost or trust issues"]}
