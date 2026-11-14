@@ -1,0 +1,22 @@
+# Justice, policing and national security: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-justice-policing-and-national-security
+  title: 'Starter rules: Justice, policing and national security (adapt column names
+    to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: JUS-01
+  check: in_set
+  description: Every record carries a classification marking from the allowed list
+  dimension: validity
+  column: classification
+  values:
+  - OFFICIAL
+  - OFFICIAL-SENSITIVE
+- id: JUS-02
+  check: not_future
+  description: Event dates are not in the future
+  dimension: validity
+  column: event_date

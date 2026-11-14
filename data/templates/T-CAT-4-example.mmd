@@ -1,0 +1,16 @@
+erDiagram
+    PERSON {
+        string key "Person"
+    }
+    CASE {
+        string key "Case"
+    }
+    APPOINTMENT {
+        string key "Appointment"
+    }
+    OUTCOME {
+        string key "Outcome"
+    }
+    CASE }o--|| PERSON : "is about"
+    APPOINTMENT }o--|| CASE : "is held for"
+    OUTCOME ||--|| APPOINTMENT : "records"

@@ -1,0 +1,1440 @@
+{
+ "@context": {
+  "dcat": "http://www.w3.org/ns/dcat#",
+  "dcterms": "http://purl.org/dc/terms/"
+ },
+ "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/sources.jsonld",
+ "@type": "dcat:Catalog",
+ "dcterms:title": "Data Asset Management (DAM) capability playbooks: sources",
+ "dcterms:modified": "2026-11-06",
+ "dcat:contactPoint": {
+  "@type": "http://www.w3.org/2006/vcard/ns#Kind",
+  "http://www.w3.org/2006/vcard/ns#hasURL": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+ },
+ "dcat:resource": [
+  {
+   "@id": "https://www.gov.uk/government/publications/data-asset-management-policy-in-government/data-asset-management-policy-in-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data asset management policy in government",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Policy",
+   "dcterms:description": "The mandate. Mandatory for UK government departments and ALBs; optional for public corporations; not for councils."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/identify-and-record-critical-data-assets/identifying-and-recording-critical-data-assets",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Identifying and recording critical data assets",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Guidance",
+   "dcterms:description": "Criticality (provided or acquired), the seven purposes, how to identify, ownership and annual review."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/record-metadata-to-describe-critical-data-assets/recording-metadata-to-describe-critical-data-assets",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Recording metadata to describe critical data assets",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Guidance",
+   "dcterms:description": "The metadata properties to record for each critical data asset, and formatting rules."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/data-ownership-in-government/data-ownership-model",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data ownership model",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Guidance",
+   "dcterms:description": "Data owner, data steward and data custodian; relationship to IAOs and the SIRO; three compliance options."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/information-asset-owner-role-guidance",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The role of information asset owners in government",
+   "dcterms:publisher": "GOV.UK",
+   "dcterms:type": "Guidance",
+   "dcterms:description": "Mandatory IAO actions that any ownership option must still meet."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/the-government-data-quality-framework/the-government-data-quality-framework",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Government Data Quality Framework",
+   "dcterms:publisher": "GOV.UK",
+   "dcterms:type": "Framework",
+   "dcterms:description": "Five principles, six dimensions and the data lifecycle."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-action-plan-implementation-guide",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data quality action plan implementation guide",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Guidance",
+   "dcterms:description": "The seven DQAP steps, the DQAP template and its RACI matrix."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/implement-a-data-quality-action-plan/data-quality-issues-framework",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data quality issues framework",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Method",
+   "dcterms:description": "Importance x impact, target ranges, bands and resolution timescales."
+  },
+  {
+   "@id": "https://www.data.gov.uk/data-manual/data-management/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data manual, data management section (data.gov.uk)",
+   "dcterms:publisher": "GDS (National Data Library)",
+   "dcterms:type": "Index",
+   "dcterms:description": "The official index of the guidance above, plus the data maturity hub and capability framework."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/data-maturity-assessment-for-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data maturity assessment for government",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Framework",
+   "dcterms:description": "The self-assessment used to show maturity across all three capabilities."
+  },
+  {
+   "@id": "https://co-cddo.github.io/ukgov-metadata-exchange-model/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "UK Cross-Government Metadata Exchange Model (xGov MEM)",
+   "dcterms:publisher": "co-cddo on GitHub",
+   "dcterms:type": "Standard",
+   "dcterms:description": "LinkML model based on DCAT; classes Dataset, DataService, Distribution, CataloguedResource. Endorsed for implementation by the Data Standards Authority Steering Board."
+  },
+  {
+   "@id": "https://www.w3.org/TR/vocab-dcat-3/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Catalog Vocabulary (DCAT) version 3",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standard",
+   "dcterms:description": "The base vocabulary named in the metadata guidance and used by the MEM."
+  },
+  {
+   "@id": "https://www.w3.org/TR/vocab-dqv/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data on the Web Best Practices Data Quality Vocabulary (DQV)",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standard",
+   "dcterms:description": "How to publish quality measurements alongside a catalogue record."
+  },
+  {
+   "@id": "https://bitol-io.github.io/open-data-contract-standard/latest/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Open Data Contract Standard",
+   "dcterms:publisher": "Bitol (Linux Foundation AI and Data)",
+   "dcterms:type": "Standard",
+   "dcterms:description": "Quality rules written as a data contract that survives a change of tool or supplier."
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dq-commons/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Public Sector Data Quality Commons (portal and dqkit)",
+   "dcterms:publisher": "Open-source prototype on GitHub (not an official product)",
+   "dcterms:type": "Toolkit",
+   "dcterms:description": "The authoritative home of the data quality tools; this portal links to it and does not copy them."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/service-standard",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Service Standard",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "The 14 points any government service is assessed against; used for this portal's self-assessment."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/the-technology-code-of-practice",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Technology Code of Practice",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "Make things open, use open standards and make data reusable: the basis for catalogue and tool choices."
+  },
+  {
+   "@id": "https://gds-way.digital.cabinet-office.gov.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The GDS Way",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "Engineering practice this portal follows, including using GitHub and publishing a vulnerability disclosure route."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/open-standards-for-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Open standards for government",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "The recommended open standards, including those for metadata, identifiers and data exchange."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/open-standards-for-government/identifying-property-and-street-information",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Identifying property and street information (UPRN and USRN)",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "The open standard for property and street identifiers; the basis for address quality rules."
+  },
+  {
+   "@id": "https://ddat-capability-framework.service.gov.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Digital and Data Profession Capability Framework",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "Role and skill definitions for data governance and data roles."
+  },
+  {
+   "@id": "https://www.data.gov.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "National Data Library (data.gov.uk)",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "The cross-government gateway to public data; the destination for harvested catalogue records."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/data-ethics-framework",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data and AI Ethics Framework",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "Ethical questions for new or higher-risk uses of data, including AI."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Making government datasets ready for AI",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "The criteria to assess at the annual review when data is used for AI."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/ai-playbook-for-the-uk-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "AI Playbook for the UK Government",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "Safe and effective use of AI in government."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/algorithmic-transparency-recording-standard-hub",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Algorithmic Transparency Recording Standard hub",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "Transparency records for algorithmic tools that support decisions about people."
+  },
+  {
+   "@id": "https://www.legislation.gov.uk/ukpga/2025/18/contents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data (Use and Access) Act 2025",
+   "dcterms:publisher": "legislation.gov.uk",
+   "dcterms:type": "Legislation",
+   "dcterms:description": "Amends UK GDPR and the Data Protection Act 2018; affects the lawful basis for sharing."
+  },
+  {
+   "@id": "https://www.legislation.gov.uk/ukpga/2018/12/contents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Protection Act 2018",
+   "dcterms:publisher": "legislation.gov.uk",
+   "dcterms:type": "Legislation",
+   "dcterms:description": "Data protection law, including Part 3 for law enforcement processing."
+  },
+  {
+   "@id": "https://www.legislation.gov.uk/ukpga/2017/30/contents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Digital Economy Act 2017",
+   "dcterms:publisher": "legislation.gov.uk",
+   "dcterms:type": "Legislation",
+   "dcterms:description": "Data sharing powers for public authorities, including for fraud and debt."
+  },
+  {
+   "@id": "https://www.legislation.gov.uk/ukpga/2010/15/contents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Equality Act 2010",
+   "dcterms:publisher": "legislation.gov.uk",
+   "dcterms:type": "Legislation",
+   "dcterms:description": "Includes the public sector equality duty."
+  },
+  {
+   "@id": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "ICO data sharing code of practice",
+   "dcterms:publisher": "Information Commissioner's Office",
+   "dcterms:type": "Legislation",
+   "dcterms:description": "Statutory code on sharing personal data between controllers (in force since October 2021, according to search results)."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/government-security-classifications",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Security Classifications",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Security",
+   "dcterms:description": "Defines OFFICIAL and handling markings; the policy covers OFFICIAL assets only."
+  },
+  {
+   "@id": "https://www.gov.uk/help/report-vulnerability",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Report a vulnerability on a GOV.UK domain or subdomain",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Security",
+   "dcterms:description": "The government vulnerability disclosure approach this portal's security.txt follows in spirit."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Understanding accessibility requirements for public sector bodies",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Accessibility and equality",
+   "dcterms:description": "The accessibility regulations that apply to published records, statements and this portal."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/model-accessibility-statement",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Model accessibility statement",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Accessibility and equality",
+   "dcterms:description": "Mandatory wording used in this portal's accessibility statement."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/public-sector-equality-duty",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Public sector equality duty",
+   "dcterms:publisher": "GOV.UK",
+   "dcterms:type": "Accessibility and equality",
+   "dcterms:description": "How public bodies have due regard to equality in their functions, including data work."
+  },
+  {
+   "@id": "https://guidance.publishing.service.gov.uk/writing-to-gov-uk-standards/style-guides/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Writing to GOV.UK standards - style guides",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Content",
+   "dcterms:description": "The style this portal is written in (the old GOV.UK style guide address redirects here)."
+  },
+  {
+   "@id": "https://code.statisticsauthority.gov.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Code of Practice for Statistics",
+   "dcterms:publisher": "Office for Statistics Regulation",
+   "dcterms:type": "Statistics",
+   "dcterms:description": "Trustworthiness, quality and value for official statistics; read across to DQAPs for statistical sources."
+  },
+  {
+   "@id": "https://osr.statisticsauthority.gov.uk/guidance/administrative-data-and-official-statistics/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Quality assurance of administrative data",
+   "dcterms:publisher": "Office for Statistics Regulation",
+   "dcterms:type": "Statistics",
+   "dcterms:description": "How statistics producers assure administrative data; the site blocked automated checking."
+  },
+  {
+   "@id": "https://www.nationalarchives.gov.uk/information-management/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Information management guidance",
+   "dcterms:publisher": "The National Archives",
+   "dcterms:type": "Records",
+   "dcterms:description": "Records management, retention and disposal for public records."
+  },
+  {
+   "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Open Government Licence v3.0",
+   "dcterms:publisher": "The National Archives",
+   "dcterms:type": "Content",
+   "dcterms:description": "The licence for open government data and for this portal's content."
+  },
+  {
+   "@id": "https://www.dsptoolkit.nhs.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Security and Protection Toolkit",
+   "dcterms:publisher": "NHS England",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Annual self-assessment against data security standards for organisations with access to NHS patient data."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/the-caldicott-principles",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Caldicott Principles",
+   "dcterms:publisher": "National Data Guardian",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Principles for using confidential information about patients and service users."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/adult-social-care-client-level-data-england-background-quality-and-methodology",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Adult social care client level data, England: background quality and methodology",
+   "dcterms:publisher": "Department of Health and Social Care",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Quality and coverage of the national adult social care client level data collection."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/adult-social-care-outcomes-framework-handbook-of-definitions",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Adult social care outcomes framework: handbook of definitions",
+   "dcterms:publisher": "Department of Health and Social Care",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Definitions of measures derived from client level data."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/care-data-matters-a-roadmap-for-better-adult-social-care-data",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Care data matters: a roadmap for better adult social care data",
+   "dcterms:publisher": "Department of Health and Social Care",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "The roadmap for adult social care data, including client level data."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/children-in-need-census",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Children in need census: guide to submitting data",
+   "dcterms:publisher": "Department for Education",
+   "dcterms:type": "Children and education",
+   "dcterms:description": "Specification and validation for children in need data returns."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/best-practice-guidance-and-tools-for-geospatial-data-managers",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Best practice guidance and tools for managing geospatial data",
+   "dcterms:publisher": "Geospatial Commission",
+   "dcterms:type": "Geospatial",
+   "dcterms:description": "Guidance on managing and sharing geospatial data in a FAIR way."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/how-fair-are-the-uks-geospatial-assets",
+   "@type": "dcat:Resource",
+   "dcterms:title": "How FAIR are the UK's national geospatial data assets?",
+   "dcterms:publisher": "Geospatial Commission",
+   "dcterms:type": "Geospatial",
+   "dcterms:description": "The Q-FAIR assessment of national geospatial data assets."
+  },
+  {
+   "@id": "https://www.agi.org.uk/uk-gemini/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "UK GEMINI metadata standard",
+   "dcterms:publisher": "Association for Geographic Information",
+   "dcterms:type": "Geospatial",
+   "dcterms:description": "Geospatial metadata standard named in the GOV.UK metadata guidance; the AGI page says it has moved to GitHub."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/public-sector-fraud-authority",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Public Sector Fraud Authority",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Fraud and error",
+   "dcterms:description": "Counter-fraud standards and support for the fraud and error purpose."
+  },
+  {
+   "@id": "https://www.localdigital.gov.uk/declaration/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Local Digital Declaration",
+   "dcterms:publisher": "Local Digital",
+   "dcterms:type": "Local government",
+   "dcterms:description": "Shared commitments for councils, which can adopt the policy voluntarily."
+  },
+  {
+   "@id": "https://sdmx.org/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "SDMX",
+   "dcterms:publisher": "SDMX sponsors",
+   "dcterms:type": "Standards",
+   "dcterms:description": "Statistical data and metadata exchange standard."
+  },
+  {
+   "@id": "https://www.w3.org/TR/vocab-dcat-3/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Catalog Vocabulary (DCAT) version 3",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standards",
+   "dcterms:description": "The base vocabulary for catalogue records."
+  },
+  {
+   "@id": "https://www.w3.org/TR/vocab-dqv/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data on the Web Best Practices: Data Quality Vocabulary",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standards",
+   "dcterms:description": "Publishing quality measurements with catalogue records."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/the-green-book-and-accompanying-guidance-and-documents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Green Book and accompanying guidance",
+   "dcterms:publisher": "HM Treasury",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Appraisal and the five case business case model; where the cost of owning, cataloguing and improving data assets belongs in a programme business case."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/project-delivery-functional-standard",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Functional Standard GovS 002: Project Delivery",
+   "dcterms:publisher": "Government Project Delivery function",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "The life cycle, governance and roles every portfolio, programme and project must follow; data deliverables and data owners fit into it."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/government-functional-standard-govs-005-digital",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Functional Standard GovS 005: Digital",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "The digital and data functional standard that the Data Maturity Assessment and data management practice sit under."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/implementing-integrated-assurance-for-major-projects",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Implementing integrated assurance for major projects",
+   "dcterms:publisher": "National Infrastructure and Service Transformation Authority",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "How major projects plan assurance; DAM checks can be written into the integrated assurance and approval plan."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/national-infrastructure-and-service-transformation-authority",
+   "@type": "dcat:Resource",
+   "dcterms:title": "National Infrastructure and Service Transformation Authority",
+   "dcterms:publisher": "HM Treasury and Cabinet Office",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "The centre of expertise for major projects and service transformation, including the Government Major Projects Portfolio."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/government-major-projects-portfolio",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Major Projects Portfolio",
+   "dcterms:publisher": "National Infrastructure and Service Transformation Authority",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "The largest and riskiest projects; many create or replace critical data assets."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/set-up-a-commercial-or-digital-and-technology-spend-controls-pipeline",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Set up a commercial or digital and technology spend controls pipeline",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Spend control is the point at which central teams see new digital and technology spend, and so a natural checkpoint for DAM evidence."
+  },
+  {
+   "@id": "https://data.standards.nhs.uk/published-standards/hl7-fhir-uk-core",
+   "@type": "dcat:Resource",
+   "dcterms:title": "HL7 FHIR UK Core",
+   "dcterms:publisher": "NHS England (NHS Standards Directory)",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "API standards that use FHIR Release 4 to exchange health and care data consistently across England, Scotland, Wales and Northern Ireland. UK Core uses SNOMED CT, dm+d and the NHS Data Model and Dictionary for terminology."
+  },
+  {
+   "@id": "https://data.standards.nhs.uk/current-standards/snomed-ct",
+   "@type": "dcat:Resource",
+   "dcterms:title": "SNOMED CT",
+   "dcterms:publisher": "NHS England (NHS Standards Directory)",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "The information standard for clinical terminology (SCCI0034). Record it in conformsTo when an asset holds coded clinical data."
+  },
+  {
+   "@id": "https://data.standards.nhs.uk/current-standards/nhsd-clinical-risk-management-its-application-in-the-manufacture-of-health-it-systems",
+   "@type": "dcat:Resource",
+   "dcterms:title": "DCB0129: Clinical risk management in the manufacture of health IT systems",
+   "dcterms:publisher": "NHS England (NHS Standards Directory)",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Clinical risk management that suppliers of health IT must follow, including a clinical safety officer. Under national review with DCB0160."
+  },
+  {
+   "@id": "https://standards.nhs.uk/published-standards/clinical-risk-management-its-application-in-the-deployment-and-use-of-health-it-systems",
+   "@type": "dcat:Resource",
+   "dcterms:title": "DCB0160: Clinical risk management in the deployment and use of health IT systems",
+   "dcterms:publisher": "NHS England (NHS Standards Directory)",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Clinical risk management that health and care organisations must follow when they deploy and use health IT. A national review consulted until 11 September 2026."
+  },
+  {
+   "@id": "https://www.nationalarchives.gov.uk/information-management/manage-information/policy-process/disposal/advice-on-retention/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Advice on retention",
+   "dcterms:publisher": "The National Archives",
+   "dcterms:type": "Records and information management",
+   "dcterms:description": "Sets out short (up to two years), medium (up to eight years) and long retention categories, and says the model retention schedules are no longer maintained. Each organisation sets its own schedule."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/recommended-open-standards-for-government/using-metadata-to-describe-data-assets-in-a-data-catalogue",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Using metadata to describe data assets in a data catalogue",
+   "dcterms:publisher": "GOV.UK (recommended open standards)",
+   "dcterms:type": "Standards",
+   "dcterms:description": "Recommends DCAT version 3 for describing data sets and data services in a catalogue, in support of the UK Cross-Government Metadata Exchange Model."
+  },
+  {
+   "@id": "https://www.digital-economy-act-register.data.gov.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Register of information sharing agreements under the Digital Economy Act 2017",
+   "dcterms:publisher": "GOV.UK (data.gov.uk)",
+   "dcterms:type": "Legislation",
+   "dcterms:description": "The public register of agreements made under the public service delivery, debt, fraud and civil registration powers in Part 5 of the Act."
+  },
+  {
+   "@id": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/data-sharing-agreements/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data sharing: a code of practice - data sharing agreements",
+   "dcterms:publisher": "Information Commissioner's Office",
+   "dcterms:type": "Data protection",
+   "dcterms:description": "Says a data sharing agreement is good practice and lists what it should cover, including the parties, purpose, lawful basis, data items, formats, rights, retention, ending the sharing and review."
+  },
+  {
+   "@id": "https://www.hra.nhs.uk/about-us/committees-and-services/confidentiality-advisory-group/confidential-patient-information-and-regulations/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Confidential patient information and section 251",
+   "dcterms:publisher": "Health Research Authority",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Section 251 of the NHS Act 2006 and the Health Service (Control of Patient Information) Regulations 2002 let the common law duty of confidentiality be set aside for medical purposes, with Confidentiality Advisory Group support. Data protection law still applies."
+  },
+  {
+   "@id": "https://www.legislation.gov.uk/uksi/2002/618/contents/made",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Medical Devices Regulations 2002",
+   "dcterms:publisher": "legislation.gov.uk",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Govern medical devices in Great Britain, including software and AI used for a medical purpose. The MHRA is reforming them."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/medical-devices-software-applications-apps",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Medical devices: software applications (apps)",
+   "dcterms:publisher": "Medicines and Healthcare products Regulatory Agency",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Helps decide whether software, including an app or AI, is a medical device. A product is a medical device only if its manufacturer intends a medical purpose."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/data-saves-lives-reshaping-health-and-social-care-with-data",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data saves lives: reshaping health and social care with data",
+   "dcterms:publisher": "Department of Health and Social Care",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "DHSC's data strategy for health and social care in England, which commits to secure data environments as the default way to access NHS data for research and analysis."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/secure-data-environment-policy-guidelines",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Secure data environment for NHS health and social care data - policy guidelines",
+   "dcterms:publisher": "Department of Health and Social Care",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Twelve guidelines that organisations hosting NHS health and social care data for research and analysis must adopt."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/data-access-policy-update",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data access policy update",
+   "dcterms:publisher": "Department of Health and Social Care",
+   "dcterms:type": "Health and care",
+   "dcterms:description": "Builds on the secure data environment guidelines with the policy decisions made so far on 'data access as default' for secondary uses of NHS data."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/service-assessments",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Service assessments and applying the Service Standard",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Alpha, beta and live assessments; teams can show their critical data assets are catalogued, owned and quality-planned."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/agile-delivery/retiring-your-service",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Retiring your service",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "What to do with users and their data when a service closes, including passing data to a new owner."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/managing-legacy-technology",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Managing legacy technology",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Its second principle asks organisations to build a complete and accurate register of their data assets before migrating."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/prevent-technical-debt-and-legacy",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Prevent technical debt and legacy",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Stops new systems becoming the next concentration of hard-to-use data."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/orange-book",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Orange Book: management of risk",
+   "dcterms:publisher": "HM Treasury",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Principles for managing risk; data asset risks belong on the same registers as other risks."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/the-magenta-book",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Magenta Book",
+   "dcterms:publisher": "HM Treasury",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Evaluation in government; how to show whether DAM work delivered its intended benefits."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/the-aqua-book",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The AQuA Book",
+   "dcterms:publisher": "HM Treasury and the Analysis Function",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Quality assurance of analysis and models; analysis is only as reliable as the data quality plans behind it."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/the-sourcing-and-consultancy-playbooks",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Sourcing Playbook",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Outsourcing decisions; contracts should say who owns the data, how metadata is delivered and how data comes back at exit."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/the-digital-data-and-technology-playbook",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Digital, Data and Technology Playbook",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Commercial guidance for buying digital, data and technology products and services."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/ppn-020-guidance-on-data-protection-legislation",
+   "@type": "dcat:Resource",
+   "dcterms:title": "PPN 020: Guidance on data protection legislation",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Data protection terms in public contracts."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/data-sharing-governance-framework",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Sharing Governance Framework",
+   "dcterms:publisher": "Central Digital and Data Office",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "Cross-government principles for sharing data; the DAM Policy does not force sharing but expects safe reuse."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/a-blueprint-for-modern-digital-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "A blueprint for modern digital government",
+   "dcterms:publisher": "Department for Science, Innovation and Technology",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "The wider programme of digital reform that the DAM Policy supports."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/national-data-library",
+   "@type": "dcat:Resource",
+   "dcterms:title": "National Data Library",
+   "dcterms:publisher": "Department for Science, Innovation and Technology",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "Plans for making public sector data easier to find and use; catalogued critical assets are a natural input."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/data-maturity-assessment-for-government-framework",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Maturity Assessment for Government: Framework",
+   "dcterms:publisher": "Central Digital and Data Office (developed with the ONS Data Quality Hub)",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "10 topics, 6 themes and 5 levels for assessing data maturity. Licensed CC BY-NC-SA 4.0, so this portal links to it and does not copy its descriptions."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/data-maturity-assessment-for-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government data maturity hub",
+   "dcterms:publisher": "Central Digital and Data Office",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "The framework plus guidance on delivering an assessment."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/government-professions/government-professions",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government professions",
+   "dcterms:publisher": "Government Skills",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The list of functional and specialist professions every civil servant can join."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/government-skills",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Skills",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Runs the Government Campus, the recommended curriculum and the Government Skills Campus learning platform."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/the-civil-service-recommended-curriculum",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Civil Service recommended curriculum",
+   "dcterms:publisher": "Government Skills",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Recommended learning for all civil servants, searchable by subject."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/data-skills-for-all",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data skills for all",
+   "dcterms:publisher": "Government Skills",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Free data learning at awareness, working and practitioner levels."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/specialist-skills",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Specialist skills from government professions",
+   "dcterms:publisher": "Government Skills",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Strand 4 of the curriculum: how professions develop specialist skills."
+  },
+  {
+   "@id": "https://prospectus.governmentcampus.co.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Campus prospectus",
+   "dcterms:publisher": "Government Skills",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The online prospectus of courses by strand and subject, including data and analytics."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/national-school-of-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "National School of Government",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Opened in October 2026 to train civil servants and public sector leaders, including in AI."
+  },
+  {
+   "@id": "https://analysisfunction.civilservice.gov.uk/careers/career-framework/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Analysis Function career framework",
+   "dcterms:publisher": "Analysis Function",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Career framework and learning pathways for the analytical professions, including statistics."
+  },
+  {
+   "@id": "https://analysisfunction.civilservice.gov.uk/careers/role-profiles-and-career-pathways/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Analysis Function role profiles and career pathways",
+   "dcterms:publisher": "Analysis Function",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Role profiles for analysts, statisticians, economists, social researchers, operational researchers and geographers."
+  },
+  {
+   "@id": "https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Statistical Service and Statistician Group",
+   "dcterms:publisher": "Analysis Function",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The statistics profession, closest to data quality work on official statistics."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/civil-service-government-knowledge-information-management-profession/about",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Knowledge and Information Management Profession",
+   "dcterms:publisher": "Government KIM Profession",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Information, records and knowledge management; publishes a skills framework and runs communities for records officers."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/government-security-profession",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Security Profession",
+   "dcterms:publisher": "Government Security Group",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Security roles that work alongside data owners and the senior information risk owner."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/government-cyber-profession",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Cyber Profession",
+   "dcterms:publisher": "Government Cyber Profession",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Cyber security careers aligned to the digital function."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/success-profiles",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Success Profiles",
+   "dcterms:publisher": "Civil Service HR",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The recruitment framework; data responsibilities can be written into role descriptions and behaviours."
+  },
+  {
+   "@id": "https://sfia-online.org/en/sfia-9",
+   "@type": "dcat:Resource",
+   "dcterms:title": "SFIA 9: the global skills and competency framework for a digital world",
+   "dcterms:publisher": "SFIA Foundation",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Industry skills framework with data management and governance skills; widely used alongside the government framework."
+  },
+  {
+   "@id": "https://www.cilip.org.uk/page/PKSB",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Professional Knowledge and Skills Base (PKSB)",
+   "dcterms:publisher": "CILIP",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Knowledge and skills for information professionals, including metadata, taxonomy and records."
+  },
+  {
+   "@id": "https://www.rss.org.uk/membership/professional-development/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Royal Statistical Society professional development",
+   "dcterms:publisher": "Royal Statistical Society",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "Professional accreditation for statisticians and data scientists."
+  },
+  {
+   "@id": "https://www.instituteforapprenticeships.org/apprenticeship-standards/data-analyst-v1-1",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data analyst apprenticeship standard",
+   "dcterms:publisher": "Skills England",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "An entry route into data roles that public bodies can fund through the apprenticeship levy."
+  },
+  {
+   "@id": "https://www.dama.org/cpages/body-of-knowledge",
+   "@type": "dcat:Resource",
+   "dcterms:title": "DAMA-DMBOK: Data Management Body of Knowledge",
+   "dcterms:publisher": "DAMA International",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The most widely used body of knowledge for data management, with a professional certification (CDMP)."
+  },
+  {
+   "@id": "https://edmcouncil.org/frameworks/dcam/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "DCAM: Data Management Capability Assessment Model",
+   "dcterms:publisher": "EDM Council",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "An industry capability assessment model for data management, used here only to cross-check coverage."
+  },
+  {
+   "@id": "https://cmmiinstitute.com/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Capability Maturity Model Integration (CMMI)",
+   "dcterms:publisher": "ISACA (CMMI Institute)",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The origin of the five-level maturity pattern most data maturity models use."
+  },
+  {
+   "@id": "https://www.ncsc.gov.uk/collection/cyber-assessment-framework",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Cyber Assessment Framework (CAF)",
+   "dcterms:publisher": "National Cyber Security Centre",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "Outcome-based framework government uses to assess the cyber resilience of essential functions and the systems holding critical data."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/government-cyber-security-strategy-2022-to-2030",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Cyber Security Strategy: 2022 to 2030",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "Sets the aim for government organisations to be resilient to known vulnerabilities and attack methods, using the CAF."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/government-functional-standard-govs-007-security",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Functional Standard GovS 007: Security",
+   "dcterms:publisher": "Government Security Group",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "The security functional standard, including information and cyber security, that data owners and the SIRO work within."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/secure-by-design",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Secure by design",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "Building security into digital services from the start, including the systems that create and hold critical data assets."
+  },
+  {
+   "@id": "https://www.ncsc.gov.uk/collection/10-steps",
+   "@type": "dcat:Resource",
+   "dcterms:title": "10 Steps to Cyber Security",
+   "dcterms:publisher": "National Cyber Security Centre",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "Practical cyber risk management areas, including asset management and incident management."
+  },
+  {
+   "@id": "https://www.ncsc.gov.uk/collection/incident-management",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Incident management",
+   "dcterms:publisher": "National Cyber Security Centre",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "Planning and handling cyber incidents, including those that corrupt or expose critical data."
+  },
+  {
+   "@id": "https://www.ncsc.gov.uk/collection/cloud",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Cloud security guidance",
+   "dcterms:publisher": "National Cyber Security Centre",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "How to choose and configure cloud services securely when critical data moves to them."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/technology/securing-your-information",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Securing information in your service",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "How service teams protect the information their service holds."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/ai-open-code-and-vulnerability-risk-in-the-public-sector",
+   "@type": "dcat:Resource",
+   "dcterms:title": "AI, open code and vulnerability risk in the public sector",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "Risks when AI tools are used on open code, relevant to data pipelines and quality tooling."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/government-cloud-first-policy",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Cloud First policy",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "Public cloud first for new or migrating services; data assets move with them."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/gds-api-technical-and-data-standards",
+   "@type": "dcat:Resource",
+   "dcterms:title": "API technical and data standards",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "How to build and document APIs, the data services through which many critical data assets are reached."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/develop-your-data-and-apis-using-a-reference-architecture",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Develop your data and APIs using a reference architecture",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "Reference architecture for data and APIs in government."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/publish-reference-data-for-use-across-government",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Publish reference data for use across government",
+   "dcterms:publisher": "Government Digital Service and Central Digital and Data Office",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "How to publish reference data others can rely on, with a named owner, persistent identifiers, open formats and versioned change."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/accessibility-requirements-for-public-sector-websites-and-apps",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Understanding accessibility requirements for public sector bodies",
+   "dcterms:publisher": "Government Digital Service and Central Digital and Data Office",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "The accessibility regulations apply to the public sector's own websites and apps, including the interfaces staff use in data tools."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/technology/choosing-technology-an-introduction",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Choosing technology: an introduction",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "How to choose technology that avoids lock-in and stays maintainable."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/be-open-and-use-open-source",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Be open and use open source",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "Point 3 of the Technology Code of Practice; open code and open formats reduce future legacy."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/model-services-contract",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Model Services Contract",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "The model contract for complex services, including schedules on data, security and exit."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/the-mid-tier-contract-schedule-20-processing-data",
+   "@type": "dcat:Resource",
+   "dcterms:title": "The Mid-Tier Contract: Schedule 20 (Processing Data)",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "Standard data processing terms for mid-tier contracts."
+  },
+  {
+   "@id": "https://www.legislation.gov.uk/ukpga/2023/54/contents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Procurement Act 2023",
+   "dcterms:publisher": "legislation.gov.uk",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "The law governing public procurement, including transparency notices that suppliers and buyers publish."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/procurement-act-2023-guidance-documents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Procurement Act 2023: guidance documents",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "Guidance for each phase of a procurement under the Act."
+  },
+  {
+   "@id": "https://www.crowncommercial.gov.uk/agreements/RM1557.15",
+   "@type": "dcat:Resource",
+   "dcterms:title": "G-Cloud 15 framework",
+   "dcterms:publisher": "Crown Commercial Service",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "The main route for buying cloud hosting, software and support, including catalogue and data quality tools."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/government-commercial-function",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Commercial Function",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The commercial profession, which buys the services and tools that hold critical data assets."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/the-role-of-the-senior-responsible-owner",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Role of the senior responsible owner",
+   "dcterms:publisher": "National Infrastructure and Service Transformation Authority",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "What a senior responsible owner is accountable for; data assets the programme touches fall within it."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/the-team/what-each-role-does-in-service-team",
+   "@type": "dcat:Resource",
+   "dcterms:title": "What each role does in a service team",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "Service team roles, including the service owner and product manager who decide what data a service collects."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/how-to-join-the-project-delivery-profession",
+   "@type": "dcat:Resource",
+   "dcterms:title": "How to join the Project Delivery Profession",
+   "dcterms:publisher": "Government Project Delivery",
+   "dcterms:type": "Skills and professions",
+   "dcterms:description": "The profession for programme and project leaders."
+  },
+  {
+   "@id": "https://www.legislation.gov.uk/ukpga/Eliz2/6-7/51/contents",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Public Records Act 1958",
+   "dcterms:publisher": "legislation.gov.uk",
+   "dcterms:type": "Records and information management",
+   "dcterms:description": "The legal duty to manage, select and transfer public records, which includes many data assets."
+  },
+  {
+   "@id": "https://www.nationalarchives.gov.uk/information-management/manage-information/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Manage information: guidance for government",
+   "dcterms:publisher": "The National Archives",
+   "dcterms:type": "Records and information management",
+   "dcterms:description": "Guidance on information and records management policy, processes, retention and digital records."
+  },
+  {
+   "@id": "https://www.nationalarchives.gov.uk/information-management/manage-information/digital-records-transfer/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Digital records transfer",
+   "dcterms:publisher": "The National Archives",
+   "dcterms:type": "Records and information management",
+   "dcterms:description": "How digital records, including data, are selected and transferred to The National Archives."
+  },
+  {
+   "@id": "https://www.iso.org/standard/62542.html",
+   "@type": "dcat:Resource",
+   "dcterms:title": "ISO 15489-1:2016 Records management: concepts and principles",
+   "dcterms:publisher": "International Organization for Standardization",
+   "dcterms:type": "Records and information management",
+   "dcterms:description": "The international records management standard. Its site blocks automated checking."
+  },
+  {
+   "@id": "https://www.iso.org/standard/73172.html",
+   "@type": "dcat:Resource",
+   "dcterms:title": "ISO 23081-1:2017 Metadata for records: principles",
+   "dcterms:publisher": "International Organization for Standardization",
+   "dcterms:type": "Records and information management",
+   "dcterms:description": "Records metadata principles, the records-management counterpart to catalogue metadata. Its site blocks automated checking."
+  },
+  {
+   "@id": "https://www.gov.uk/government/groups/data-standards-authority",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Standards Authority",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "Sets and promotes the data standards organisations use to make data interoperable."
+  },
+  {
+   "@id": "https://www.gov.uk/government/organisations/government-data-quality-hub",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Government Data Quality Hub",
+   "dcterms:publisher": "Office for National Statistics",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "Cross-government centre for data quality guidance, tools and support."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/open-standards-principles/open-standards-principles",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Open Standards principles",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "How government selects and uses open standards for software interoperability, data and document formats, including to avoid vendor lock-in."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/make-use-of-open-standards",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Technology Code of Practice point 4: make use of open standards",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "What a plan must show about open standards and data to meet point 4, including avoiding lock-in."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/define-your-purchasing-strategy",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Technology Code of Practice point 11: define your purchasing strategy",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "A purchasing strategy must show commercial and technology aspects and contractual limitations have been considered; it is checked in spend control."
+  },
+  {
+   "@id": "https://www.gov.uk/guidance/managing-technical-lock-in-in-the-cloud",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Managing technical lock-in in the cloud",
+   "dcterms:publisher": "GDS",
+   "dcterms:type": "Technology and architecture",
+   "dcterms:description": "Types of lock-in, weighing value against portability, and including exit cost and time in business cases."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/procurement-policy-note-0715-open-standards-for-technology",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Procurement Policy Note 07/15: open standards for technology",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "Tells buyers to specify open standards in technology procurements."
+  },
+  {
+   "@id": "https://www.gov.uk/government/collections/metadata-standards-for-sharing-and-publishing-data",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Metadata standards for sharing and publishing data",
+   "dcterms:publisher": "Data Standards Authority",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "The recommended metadata standards for sharing data within government and for publishing it."
+  },
+  {
+   "@id": "https://www.gov.uk/government/publications/data-standards-authority-standards-catalogue",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Data Standards Authority: Standards Catalogue",
+   "dcterms:publisher": "Data Standards Authority",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "The standards the Data Standards Authority has endorsed, with their status."
+  },
+  {
+   "@id": "https://www.gov.uk/cma-cases/cloud-services-market-investigation",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Cloud services market investigation",
+   "dcterms:publisher": "Competition and Markets Authority",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "The CMA's final decision on public cloud infrastructure, covering egress fees, interoperability and software licensing."
+  },
+  {
+   "@id": "https://www.gov.uk/government/news/cma-announces-package-of-actions-on-business-software-and-cloud-services",
+   "@type": "dcat:Resource",
+   "dcterms:title": "CMA announces package of actions on business software and cloud services",
+   "dcterms:publisher": "Competition and Markets Authority",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "Follow-up actions to the cloud investigation, including commitments on egress fees and interoperability and a planned investigation into business software licensing."
+  },
+  {
+   "@id": "https://eur-lex.europa.eu/eli/reg/2023/2854/oj",
+   "@type": "dcat:Resource",
+   "dcterms:title": "EU Data Act (Regulation (EU) 2023/2854)",
+   "dcterms:publisher": "European Union",
+   "dcterms:type": "Legislation",
+   "dcterms:description": "Switching rules for cloud and other data processing services supplied into the EU, phasing out switching charges. Applies to services supplied into the EU, not to UK law."
+  },
+  {
+   "@id": "https://www.find-tender.service.gov.uk/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Find a Tender",
+   "dcterms:publisher": "Cabinet Office",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "Where public procurement notices are published; search it for other bodies' catalogue, data quality and data platform requirements."
+  },
+  {
+   "@id": "https://www.applytosupply.digitalmarketplace.service.gov.uk/g-cloud/search",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Digital Marketplace: search G-Cloud services",
+   "dcterms:publisher": "Crown Commercial Service",
+   "dcterms:type": "Commercial and procurement",
+   "dcterms:description": "Service descriptions on G-Cloud include standards, APIs and how buyers can get their data out at the end of a contract."
+  },
+  {
+   "@id": "https://www.w3.org/TR/prov-o/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "PROV-O: the PROV ontology",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standards",
+   "dcterms:description": "An open vocabulary for provenance, used to describe where data came from and what was done to it."
+  },
+  {
+   "@id": "https://www.w3.org/TR/skos-reference/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "SKOS: Simple Knowledge Organization System reference",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standards",
+   "dcterms:description": "The open format for glossaries, thesauri and taxonomies, so business terms can move between tools."
+  },
+  {
+   "@id": "https://www.w3.org/TR/tabular-data-primer/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "CSV on the Web (CSVW) primer",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standards",
+   "dcterms:description": "Describes the columns, types and constraints of CSV files, so files carry their own data dictionary."
+  },
+  {
+   "@id": "https://openlineage.io/docs/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "OpenLineage",
+   "dcterms:publisher": "LF AI & Data Foundation",
+   "dcterms:type": "Standards",
+   "dcterms:description": "An open specification for lineage events from running jobs, so lineage can be collected once and read by several tools."
+  },
+  {
+   "@id": "https://bitol-io.github.io/open-data-contract-standard/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Open Data Contract Standard (ODCS)",
+   "dcterms:publisher": "Bitol (LF AI & Data Foundation)",
+   "dcterms:type": "Standards",
+   "dcterms:description": "An open format for data contracts, including schema, quality rules and service levels, readable by more than one tool."
+  },
+  {
+   "@id": "https://bitol-io.github.io/open-data-product-standard/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Open Data Product Standard (ODPS)",
+   "dcterms:publisher": "Bitol (LF AI & Data Foundation)",
+   "dcterms:type": "Standards",
+   "dcterms:description": "An open format describing data products, designed to reference data contracts."
+  },
+  {
+   "@id": "https://egeria-project.org/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Egeria open metadata and governance",
+   "dcterms:publisher": "LF AI & Data Foundation",
+   "dcterms:type": "Standards",
+   "dcterms:description": "An open source project for exchanging metadata between tools from different vendors; useful as a reference for open metadata types and connectors."
+  },
+  {
+   "@id": "https://spec.openapis.org/oas/latest.html",
+   "@type": "dcat:Resource",
+   "dcterms:title": "OpenAPI Specification",
+   "dcterms:publisher": "OpenAPI Initiative",
+   "dcterms:type": "Standards",
+   "dcterms:description": "The open format for describing REST APIs; government API guidance recommends it."
+  },
+  {
+   "@id": "https://modelcontextprotocol.io/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Model Context Protocol",
+   "dcterms:publisher": "Model Context Protocol project",
+   "dcterms:type": "Standards",
+   "dcterms:description": "An open protocol for connecting AI assistants to tools and data, such as a catalogue."
+  },
+  {
+   "@id": "https://roadmap-for-modern-digital-government.campaign.gov.uk",
+   "@type": "dcat:Resource",
+   "dcterms:title": "A roadmap for modern digital government 2025 to 2030",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Delivery, change and investment",
+   "dcterms:description": "The government's action plan to 2030, with six priorities, from joining up public services to transparency and accountability."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/user-research/find-user-research-participants",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Service Manual: finding participants for user research",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "Participants must be actual or likely users, and research must include disabled people."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/user-research/getting-users-consent-for-research",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Service Manual: getting informed consent for user research",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "Every participant gives informed consent, even colleagues in the same organisation."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/user-research/managing-user-research-data-participant-privacy",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Service Manual: managing user research data and participant privacy",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "How to collect, store and delete participants' personal data."
+  },
+  {
+   "@id": "https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Service Manual: running research sessions with disabled people",
+   "dcterms:publisher": "GDS (GOV.UK Service Manual)",
+   "dcterms:type": "Service delivery and technology",
+   "dcterms:description": "Planning sessions that work for disabled participants and their assistive technology."
+  },
+  {
+   "@id": "https://data.gov.uk/roadmap",
+   "@type": "dcat:Resource",
+   "dcterms:title": "data.gov.uk roadmap",
+   "dcterms:publisher": "Government Digital Service",
+   "dcterms:type": "Data and AI",
+   "dcterms:description": "A public Now, Next, Later roadmap with feedback routes; the model this portal's roadmap follows."
+  },
+  {
+   "@id": "https://www.iso.org/standard/70907.html",
+   "@type": "dcat:Resource",
+   "dcterms:title": "ISO 8601-1:2019 Date and time: representations for information interchange",
+   "dcterms:publisher": "ISO",
+   "dcterms:type": "Standards",
+   "dcterms:description": "The date format the metadata guidance asks for, for example 2026-11-12."
+  },
+  {
+   "@id": "https://www.iso.org/standard/72482.html",
+   "@type": "dcat:Resource",
+   "dcterms:title": "ISO 3166-1:2020 Country codes",
+   "dcterms:publisher": "ISO",
+   "dcterms:type": "Standards",
+   "dcterms:description": "One list of country codes across every service, so country fields can be joined."
+  },
+  {
+   "@id": "https://www.iso.org/iso-4217-currency-codes.html",
+   "@type": "dcat:Resource",
+   "dcterms:title": "ISO 4217 Currency codes",
+   "dcterms:publisher": "ISO",
+   "dcterms:type": "Standards",
+   "dcterms:description": "Three-letter currency codes for spend and payments data."
+  },
+  {
+   "@id": "https://www.ons.gov.uk/methodology/geography/geographicalproducts/namescodesandlookups/namesandcodeslistings",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Names and codes listings (GSS geography codes)",
+   "dcterms:publisher": "Office for National Statistics",
+   "dcterms:type": "Geospatial",
+   "dcterms:description": "Definitive nine-character codes and names for UK statistical and administrative geographies."
+  },
+  {
+   "@id": "https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/gss-support/gss-harmonisation-support/harmonised-standards-and-guidance/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Harmonised standards and guidance",
+   "dcterms:publisher": "Government Analysis Function",
+   "dcterms:type": "Statistics",
+   "dcterms:description": "Shared definitions and questions for topics such as age, sex, ethnicity and language, so statistics are comparable."
+  },
+  {
+   "@id": "https://www.w3.org/TR/shacl/",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Shapes Constraint Language (SHACL)",
+   "dcterms:publisher": "W3C",
+   "dcterms:type": "Standards",
+   "dcterms:description": "Rules that check linked data, such as catalogue records or vocabularies, before they are published."
+  },
+  {
+   "@id": "https://www.ncsc.gov.uk/guidance/pqc-migration-timelines",
+   "@type": "dcat:Resource",
+   "dcterms:title": "Timelines for migration to post-quantum cryptography",
+   "dcterms:publisher": "National Cyber Security Centre",
+   "dcterms:type": "Cyber and security",
+   "dcterms:description": "Discovery and an initial plan by 2028, priority migration by 2031 and all systems by 2035. Knowing which critical assets depend on cryptography is the discovery step."
+  }
+ ]
+}

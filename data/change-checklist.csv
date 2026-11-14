@@ -1,0 +1,58 @@
+id,title,mode,stage,action,roles,rulebook,capabilities
+CH-01,Put data assets in the business case,Change,plan,Name each critical data asset in scope of the change in the strategic case.,CDO OWN COO SRO,RB-GREEN RB-AQUA,CR-24
+CH-01,Put data assets in the business case,Change,plan,"Cost owner, steward and catalogue effort and DQAP remediation in the financial case.",CDO OWN COO SRO,RB-GREEN RB-AQUA,CR-24
+CH-01,Put data assets in the business case,Change,plan,Count avoided duplicate collection and cleansing as benefits in the economic case.,CDO OWN COO SRO,RB-GREEN RB-AQUA,CR-24
+CH-01,Put data assets in the business case,Change,plan,Name the data owner in the management case.,CDO OWN COO SRO,RB-GREEN RB-AQUA,CR-24
+CH-02,Use spend control and service assessments as checkpoints,Change,alpha,"Add three questions to internal spend control: which assets, who owns them, are they catalogued.",COO CAT DQL SVO,RB-SPEND RB-SVCASSESS RB-TCOP RB-SVC,CR-25
+CH-02,Use spend control and service assessments as checkpoints,Change,alpha,"At alpha, show the planned metadata and quality rules; at beta, the catalogue entry and DQAP.",COO CAT DQL SVO,RB-SPEND RB-SVCASSESS RB-TCOP RB-SVC,CR-25
+CH-02,Use spend control and service assessments as checkpoints,Change,alpha,"Show the panel that data was considered: who owns each asset, how it is described and quality-planned, the DPIA, and that data professionals and users were involved. You do not need to hand in every template; keep them as your team's working record.",COO CAT DQL SVO,RB-SPEND RB-SVCASSESS RB-TCOP RB-SVC,CR-25
+CH-02,Use spend control and service assessments as checkpoints,Change,alpha,Record the answers so the next return reuses them.,COO CAT DQL SVO,RB-SPEND RB-SVCASSESS RB-TCOP RB-SVC,CR-25
+CH-03,Write DAM into programme assurance,Change,plan,Add DAM checkpoints to the integrated assurance and approval plan.,CDO BRD SRO PMO,RB-IAAP RB-NISTA RB-GMPP RB-GOVS002,CR-25 CR-03
+CH-03,Write DAM into programme assurance,Change,plan,"Ask reviewers to check asset ownership, catalogue entries and quality plans at each gate.",CDO BRD SRO PMO,RB-IAAP RB-NISTA RB-GMPP RB-GOVS002,CR-25 CR-03
+CH-03,Write DAM into programme assurance,Change,plan,Give the senior responsible owner a single line on data asset readiness in highlight reports.,CDO BRD SRO PMO,RB-IAAP RB-NISTA RB-GMPP RB-GOVS002,CR-25 CR-03
+CH-04,Plan legacy exits from the asset register,Change,retire,Build or update the register of data assets held in the legacy system.,OWN CUS DQL CAT MIG ARC,RB-LEGACY RB-TECHDEBT RB-RETIRE RB-TNA,CR-26 CR-15
+CH-04,Plan legacy exits from the asset register,Change,retire,"Profile quality before migration and set reconciliation rules for counts, totals and keys.",OWN CUS DQL CAT MIG ARC,RB-LEGACY RB-TECHDEBT RB-RETIRE RB-TNA,CR-26 CR-15
+CH-04,Plan legacy exits from the asset register,Change,retire,"Decide for each asset: migrate, archive under records rules, or dispose.",OWN CUS DQL CAT MIG ARC,RB-LEGACY RB-TECHDEBT RB-RETIRE RB-TNA,CR-26 CR-15
+CH-04,Plan legacy exits from the asset register,Change,retire,Keep the catalogue and ownership in step as each asset moves.,OWN CUS DQL CAT MIG ARC,RB-LEGACY RB-TECHDEBT RB-RETIRE RB-TNA,CR-26 CR-15
+CH-05,Target legacy where it blocks outcomes and widens inequalities,Both,plan,"Score each critical asset on legacy risk, quality, reuse value and impact on outcomes.",CDO BRD OWN,RB-PSED RB-LEGACY RB-DMAF,CR-02 CR-30 CR-26
+CH-05,Target legacy where it blocks outcomes and widens inequalities,Both,plan,"Check whether gaps or errors fall harder on some groups, using the equality duty.",CDO BRD OWN,RB-PSED RB-LEGACY RB-DMAF,CR-02 CR-30 CR-26
+CH-05,Target legacy where it blocks outcomes and widens inequalities,Both,plan,"Fund fixes first where risk, value and inequality overlap.",CDO BRD OWN,RB-PSED RB-LEGACY RB-DMAF,CR-02 CR-30 CR-26
+CH-05,Target legacy where it blocks outcomes and widens inequalities,Both,plan,Report the choice and its reasons to the data governance board.,CDO BRD OWN,RB-PSED RB-LEGACY RB-DMAF,CR-02 CR-30 CR-26
+CH-06,Build DAM into contracts,Both,discover,State who owns the data and its metadata.,OWN COO CML,RB-SOURCING RB-DDATPB RB-PPN020,CR-20
+CH-06,Build DAM into contracts,Both,discover,Require metadata in an agreed format and quality reporting against the DQAP.,OWN COO CML,RB-SOURCING RB-DDATPB RB-PPN020,CR-20
+CH-06,Build DAM into contracts,Both,discover,"Set data return, format and deletion terms for exit.",OWN COO CML,RB-SOURCING RB-DDATPB RB-PPN020,CR-20
+CH-06,Build DAM into contracts,Both,discover,Include data protection terms from the procurement policy note.,OWN COO CML,RB-SOURCING RB-DDATPB RB-PPN020,CR-20
+CH-07,Manage data asset risk on the same registers,Both,live,Record risks to critical assets on the corporate or programme register.,OWN BRD PDM,RB-ORANGE RB-GSC,CR-19
+CH-07,Manage data asset risk on the same registers,Both,live,"Link each to the asset, its owner and the senior information risk owner.",OWN BRD PDM,RB-ORANGE RB-GSC,CR-19
+CH-07,Manage data asset risk on the same registers,Both,live,Review alongside DQAP results each quarter.,OWN BRD PDM,RB-ORANGE RB-GSC,CR-19
+CH-08,Hand over to business as usual,Change,live,Confirm a named business-as-usual owner and steward before the project closes.,OWN STW COO PDM SVO,RB-GOVS002,CR-27
+CH-08,Hand over to business as usual,Change,live,"Hand over the DQAP, quality rules, runbook and open issues.",OWN STW COO PDM SVO,RB-GOVS002,CR-27
+CH-08,Hand over to business as usual,Change,live,Use the ownership model's transition steps and set the next review date.,OWN STW COO PDM SVO,RB-GOVS002,CR-27
+CH-09,"Plan people change, not just process change",Both,plan,"Assess who is affected: owners, stewards, custodians, analysts, suppliers.",CDO COO SRO PDM,RB-SUCCESS RB-DSFA RB-DDAT,CR-21 CR-22
+CH-09,"Plan people change, not just process change",Both,plan,Put data duties into role descriptions and objectives.,CDO COO SRO PDM,RB-SUCCESS RB-DSFA RB-DDAT,CR-21 CR-22
+CH-09,"Plan people change, not just process change",Both,plan,Train each role at the right level and give stewards protected time.,CDO COO SRO PDM,RB-SUCCESS RB-DSFA RB-DDAT,CR-21 CR-22
+CH-09,"Plan people change, not just process change",Both,plan,"Communicate why the policy matters in terms of services and people, not compliance.",CDO COO SRO PDM,RB-SUCCESS RB-DSFA RB-DDAT,CR-21 CR-22
+CH-10,Show the benefits,Both,live,"Agree a few measures before starting, such as reuse requests met, duplicate collections stopped or time spent cleansing.",COO DQL PMO,RB-MAGENTA,CR-29 CR-04
+CH-10,Show the benefits,Both,live,"Take a baseline, then measure each year with the return.",COO DQL PMO,RB-MAGENTA,CR-29 CR-04
+CH-10,Show the benefits,Both,live,Use proportionate evaluation methods.,COO DQL PMO,RB-MAGENTA,CR-29 CR-04
+CH-11,Keep the yearly cycle running in business as usual,BAU,live,"Set fixed dates for asset review, metadata updates, DQAP review and the board.",COO BRD,,CR-04 CR-03
+CH-11,Keep the yearly cycle running in business as usual,BAU,live,Track each owner's actions between returns.,COO BRD,,CR-04 CR-03
+CH-11,Keep the yearly cycle running in business as usual,BAU,live,Feed lessons into the next year's priorities.,COO BRD,,CR-04 CR-03
+CH-12,Assess maturity and set a target,BAU,plan,Run the government data maturity assessment or use the self-assessment here as a first pass.,CDO COO,RB-DMAF RB-DMAHUB,CR-23
+CH-12,Assess maturity and set a target,BAU,plan,Set a target level for each DAM strand with dates.,CDO COO,RB-DMAF RB-DMAHUB,CR-23
+CH-12,Assess maturity and set a target,BAU,plan,Repeat every one to two years.,CDO COO,RB-DMAF RB-DMAHUB,CR-23
+CH-13,Share and reuse safely across organisations,Both,discover,Check the catalogue for reusable assets before collecting new data.,OWN DPO,RB-DSGF RB-ICOSHARE RB-DEA,CR-17 CR-28
+CH-13,Share and reuse safely across organisations,Both,discover,Use the sharing framework and code for agreements.,OWN DPO,RB-DSGF RB-ICOSHARE RB-DEA,CR-17 CR-28
+CH-13,Share and reuse safely across organisations,Both,discover,Record sharing arrangements against the asset in the catalogue.,OWN DPO,RB-DSGF RB-ICOSHARE RB-DEA,CR-17 CR-28
+CH-14,Design out future legacy and lock-in,Change,alpha,"Require data in open, documented formats with a published schema.",CUS CAT OWN ARC CML,RB-OPEN RB-API RB-CHOOSE RB-TECHDEBT,CR-32 CR-26
+CH-14,Design out future legacy and lock-in,Change,alpha,Ask suppliers to show how a full export with metadata works before you sign.,CUS CAT OWN ARC CML,RB-OPEN RB-API RB-CHOOSE RB-TECHDEBT,CR-32 CR-26
+CH-14,Design out future legacy and lock-in,Change,alpha,Prefer open standards and APIs that follow the government API standards.,CUS CAT OWN ARC CML,RB-OPEN RB-API RB-CHOOSE RB-TECHDEBT,CR-32 CR-26
+CH-14,Design out future legacy and lock-in,Change,alpha,Record each system's exit route against its assets in the catalogue.,CUS CAT OWN ARC CML,RB-OPEN RB-API RB-CHOOSE RB-TECHDEBT,CR-32 CR-26
+CH-15,Prepare for a cyber incident affecting a critical asset,BAU,live,Mark critical data assets in the incident response plan and asset inventory.,OWN CUS DPO,RB-NCSCIR RB-CAF RB-NCSC10 RB-GOVS007,CR-31 CR-19
+CH-15,Prepare for a cyber incident affecting a critical asset,BAU,live,Agree recovery point and recovery time with each data owner.,OWN CUS DPO,RB-NCSCIR RB-CAF RB-NCSC10 RB-GOVS007,CR-31 CR-19
+CH-15,Prepare for a cyber incident affecting a critical asset,BAU,live,Test restoring an asset and check its quality afterwards against the DQAP rules.,OWN CUS DPO,RB-NCSCIR RB-CAF RB-NCSC10 RB-GOVS007,CR-31 CR-19
+CH-15,Prepare for a cyber incident affecting a critical asset,BAU,live,Agree who tells data users when an asset may be affected.,OWN CUS DPO,RB-NCSCIR RB-CAF RB-NCSC10 RB-GOVS007,CR-31 CR-19
+CH-16,Use the buying routes and contract terms that protect data,Change,discover,"Buy through an established framework where one fits, such as G-Cloud.",COO OWN CML,RB-GCLOUD RB-MSC RB-MTC20 RB-PA23 RB-PA23G RB-SOURCING,CR-20 CR-32
+CH-16,Use the buying routes and contract terms that protect data,Change,discover,"Use the model contract schedules for data, security and exit rather than supplier terms.",COO OWN CML,RB-GCLOUD RB-MSC RB-MTC20 RB-PA23 RB-PA23G RB-SOURCING,CR-20 CR-32
+CH-16,Use the buying routes and contract terms that protect data,Change,discover,"Make metadata delivery, quality reporting and data return measurable obligations with service credits.",COO OWN CML,RB-GCLOUD RB-MSC RB-MTC20 RB-PA23 RB-PA23G RB-SOURCING,CR-20 CR-32
+CH-16,Use the buying routes and contract terms that protect data,Change,discover,Publish transparency information as the Procurement Act requires.,COO OWN CML,RB-GCLOUD RB-MSC RB-MTC20 RB-PA23 RB-PA23G RB-SOURCING,CR-20 CR-32

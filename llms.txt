@@ -1,0 +1,48 @@
+# Data Asset Management (DAM) capability playbooks
+
+> Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government. A prototype, not official GOV.UK guidance; where it repeats GOV.UK, the GOV.UK page is the authority.
+
+Content is under the Open Government Licence v3.0. Cite the page each answer comes from.
+
+## Pages
+
+- [Home](https://cyberdudeuk.github.io/dam-capability-playbooks/): Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
+- [What the DAM Policy requires](https://cyberdudeuk.github.io/dam-capability-playbooks/dam.html): Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
+- [Data governance](https://cyberdudeuk.github.io/dam-capability-playbooks/governance.html): Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
+- [Data cataloguing](https://cyberdudeuk.github.io/dam-capability-playbooks/cataloguing.html): Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
+- [Data quality](https://cyberdudeuk.github.io/dam-capability-playbooks/quality.html): Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government
+- [Joined up](https://cyberdudeuk.github.io/dam-capability-playbooks/together.html): How data governance, data cataloguing and data quality hand off to each other, with one set of roles and one yearly cycle.
+- [Start from your role](https://cyberdudeuk.github.io/dam-capability-playbooks/personas.html): Routes through the DAM capability playbooks for chief data officers, coordinators, data owners, stewards, catalogue managers and analysts.
+- [Learning](https://cyberdudeuk.github.io/dam-capability-playbooks/learning.html): Short learning modules on the DAM Policy, data governance, cataloguing and data quality, with outcomes, activities and checks.
+- [Library](https://cyberdudeuk.github.io/dam-capability-playbooks/library.html): Guidance, standards, templates and tools for data governance, data cataloguing and data quality, with open data downloads.
+- [Knowledge](https://cyberdudeuk.github.io/dam-capability-playbooks/knowledge.html): Glossary, thesaurus, taxonomy, knowledge graph and data dictionary for data asset management in UK government.
+- [Inclusive data practice](https://cyberdudeuk.github.io/dam-capability-playbooks/inclusion.html): Equality, diversity, inclusion and accessibility checks for data governance, data cataloguing and data quality work.
+- [Sector supplements](https://cyberdudeuk.github.io/dam-capability-playbooks/sectors.html): Sector supplements for health, social care, geospatial, statistics, data sharing, AI and more: governance overlays, catalogue fields and quality rule libraries.
+- [Capability model](https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html): Every capability the DAM Policy and related guidance need, flagged explicit, implicit or inferred, with a data maturity model and self-assessment.
+- [Professions and skills](https://cyberdudeuk.github.io/dam-capability-playbooks/professions.html): Government professions, Digital and Data capability framework roles, career pathways, skills and learning routes for data asset management.
+- [Delivery and change](https://cyberdudeuk.github.io/dam-capability-playbooks/change.html): Embedding the DAM Policy in business as usual and in change programmes: business cases, assurance, legacy exits, contracts and handover.
+- [Perspectives](https://cyberdudeuk.github.io/dam-capability-playbooks/perspectives.html): The DAM Policy through data, digital, cyber, technology, commercial and legacy lenses: questions, actions by capability, pitfalls and verified sources.
+- [Working together](https://cyberdudeuk.github.io/dam-capability-playbooks/community.html): How data, records, security, digital, technology, analysis, commercial and delivery professionals can work together on critical data assets.
+- [About](https://cyberdudeuk.github.io/dam-capability-playbooks/about.html): Purpose, sources, open register, defect register, accessibility statement and build standard assessment for the DAM capability playbooks.
+- [Contact form](https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html): Ask a question, report a problem or suggest an improvement to the DAM capability playbooks using the contact form.
+- [Status and health](https://cyberdudeuk.github.io/dam-capability-playbooks/status.html): Latest automated health check of the DAM capability playbooks: source currency, review date and page weight.
+- [What's new](https://cyberdudeuk.github.io/dam-capability-playbooks/whats-new.html): Changes in each release of the Data Asset Management (DAM) capability playbooks, newest first.
+- [Service design and architecture](https://cyberdudeuk.github.io/dam-capability-playbooks/design.html): Theory of change, research plan, service blueprint, requirements traceability, architecture and Service Standard self-assessment for the portal.
+- [Disclaimers, credits and citations](https://cyberdudeuk.github.io/dam-capability-playbooks/notices.html): Disclaimers, transparency notices, credits and full citations for every source used by the DAM capability playbooks.
+- [Open data](https://cyberdudeuk.github.io/dam-capability-playbooks/data.html): Open data from the DAM capability playbooks: requirements, vocabulary, capability map, quality rules and more, with a DCAT catalogue for harvesting.
+- [Help us test](https://cyberdudeuk.github.io/dam-capability-playbooks/test.html): Help test the Data Asset Management (DAM) capability playbooks: short tasks for each role and a feedback form.
+- [Accessibility statement](https://cyberdudeuk.github.io/dam-capability-playbooks/accessibility.html): Accessibility statement for the DAM capability playbooks, following the GOV.UK model statement for public sector websites.
+- [User guide](https://cyberdudeuk.github.io/dam-capability-playbooks/guide.html): User guide for the DAM capability playbooks: getting around, what the colours and labels mean, guided tours, tutorials and keyboard shortcuts.
+- [Use and reuse](https://cyberdudeuk.github.io/dam-capability-playbooks/reuse.html): Ways to use the DAM capability playbooks content: intranet links, embedding, open data, white-label copies, AI assistants and an MCP server.
+- [Tools and interoperability](https://cyberdudeuk.github.io/dam-capability-playbooks/tooling.html): How catalogue, data quality, lineage, master data and governance tools work together, the open standards that connect them, and RFI questions to avoid lock-in.
+- [Have your say](https://cyberdudeuk.github.io/dam-capability-playbooks/research.html): Have your say: take part in user research, suggest and vote for ideas, and see the roadmap, backlog and how priorities are decided, in the open.
+- [Boards, councils and networks](https://cyberdudeuk.github.io/dam-capability-playbooks/bodies.html): Boards, councils and networks for data asset management in government: purpose, aims, outcomes, terms of reference and how to take part.
+- [Knowledge areas: what to do in each](https://cyberdudeuk.github.io/dam-capability-playbooks/areas.html): Activities for each DAMA knowledge area that support the DAM Policy: data architecture, modelling, operations, security, integration, records, reference data and reporting.
+- [Get involved](https://cyberdudeuk.github.io/dam-capability-playbooks/involve.html): Get involved: ways to take part, rules of engagement, a champions toolkit of emails and posts, and badges for your profile and signature.
+- [Site map](https://cyberdudeuk.github.io/dam-capability-playbooks/site-map.html): Every page on the DAM capability playbooks portal, grouped the way the menus are, with the main sections of each page.
+
+## Data
+
+- [Open data catalogue (DCAT, JSON-LD)](https://cyberdudeuk.github.io/dam-capability-playbooks/data/catalogue.jsonld)
+- [Full content (JSON)](https://cyberdudeuk.github.io/dam-capability-playbooks/data/playbooks.json)
+- [Full text for AI tools](https://cyberdudeuk.github.io/dam-capability-playbooks/llms-full.txt)

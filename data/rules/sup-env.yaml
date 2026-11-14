@@ -1,0 +1,25 @@
+# Environmental, sensor and time-series data: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-environmental-sensor-and-time-series-data
+  title: 'Starter rules: Environmental, sensor and time-series data (adapt column
+    names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: ENV-01
+  check: no_gaps
+  description: No gaps in the expected reading interval
+  dimension: completeness
+  column: reading_time
+- id: ENV-02
+  check: header_has_unit
+  description: Every measure column names its unit
+  dimension: consistency
+- id: ENV-03
+  check: outlier
+  description: Readings have no implausible outliers
+  dimension: accuracy
+  column: value
+  method: iqr
+  k: 3

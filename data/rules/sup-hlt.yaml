@@ -1,0 +1,51 @@
+# Health and care data: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-health-and-care-data
+  title: 'Starter rules: Health and care data (adapt column names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: HLT-01
+  check: not_null
+  description: NHS number is recorded
+  dimension: completeness
+  column: nhs_number
+- id: HLT-02
+  check: identifier
+  description: NHS number is 10 digits with a valid modulus 11 check digit
+  dimension: validity
+  column: nhs_number
+  scheme: nhs_number
+- id: HLT-03
+  check: not_future
+  description: Date of birth is not in the future
+  dimension: validity
+  column: date_of_birth
+- id: HLT-04
+  check: identifier
+  description: Provider organisation code is in ODS format
+  dimension: validity
+  column: provider_code
+  scheme: ods_code
+- id: HLT-05
+  check: regex
+  description: Primary diagnosis is in ICD-10 code format
+  dimension: validity
+  column: primary_diagnosis
+  pattern: '[A-Z][0-9]{2}(\.?[0-9X])?'
+- id: HLT-06
+  check: not_unknown
+  description: Ethnic category is not unknown or not stated
+  dimension: completeness
+  column: ethnic_category
+- id: HLT-07
+  check: group_disparity
+  description: NHS number completeness does not differ by more than 5 points between
+    ethnic groups
+  dimension: completeness
+  group: ethnic_category
+  tolerance: 5
+  inner:
+    check: not_null
+    column: nhs_number

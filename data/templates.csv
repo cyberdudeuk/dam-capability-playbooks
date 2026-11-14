@@ -1,0 +1,194 @@
+template_id,template,capability,field_order,field,mode
+T-GOV-1,Governance charter,gov,1,Purpose,Both
+T-GOV-1,Governance charter,gov,2,Scope and exclusions,Both
+T-GOV-1,Governance charter,gov,3,Authority and sponsor,Both
+T-GOV-1,Governance charter,gov,4,Membership,Both
+T-GOV-1,Governance charter,gov,5,Decision rights,Both
+T-GOV-1,Governance charter,gov,6,Review cadence,Both
+T-GOV-1,Governance charter,gov,7,Sign-off (role and date),Both
+T-GOV-2,Data ownership register entry,gov,1,Asset identifier,BAU
+T-GOV-2,Data ownership register entry,gov,2,Asset title,BAU
+T-GOV-2,Data ownership register entry,gov,3,"Ownership option (IAO, data owner or hybrid)",BAU
+T-GOV-2,Data ownership register entry,gov,4,Data owner (role),BAU
+T-GOV-2,Data ownership register entry,gov,5,Information asset owner (role),BAU
+T-GOV-2,Data ownership register entry,gov,6,Data steward (role),BAU
+T-GOV-2,Data ownership register entry,gov,7,Data custodian (role),BAU
+T-GOV-2,Data ownership register entry,gov,8,Successor (role),BAU
+T-GOV-2,Data ownership register entry,gov,9,Effective date,BAU
+T-GOV-2,Data ownership register entry,gov,10,Training completed,BAU
+T-GOV-2,Data ownership register entry,gov,11,Next review,BAU
+T-GOV-2,Data ownership register entry,gov,12,Retention schedule reference,BAU
+T-GOV-2,Data ownership register entry,gov,13,Retention period,BAU
+T-GOV-2,Data ownership register entry,gov,14,"Disposal action (destroy, review or transfer to archive)",BAU
+T-GOV-2,Data ownership register entry,gov,15,Retention review date,BAU
+T-GOV-2,Data ownership register entry,gov,16,Longer retention approved by (role),BAU
+T-GOV-3,Decision log entry,gov,1,Decision ID,Both
+T-GOV-3,Decision log entry,gov,2,Date,Both
+T-GOV-3,Decision log entry,gov,3,Decision,Both
+T-GOV-3,Decision log entry,gov,4,Decided by (role or forum),Both
+T-GOV-3,Decision log entry,gov,5,Rationale,Both
+T-GOV-3,Decision log entry,gov,6,Assets affected,Both
+T-GOV-3,Decision log entry,gov,7,Review trigger,Both
+T-GOV-4,Exception register entry,gov,1,Exception ID,Both
+T-GOV-4,Exception register entry,gov,2,Policy deviated from,Both
+T-GOV-4,Exception register entry,gov,3,Rationale,Both
+T-GOV-4,Exception register entry,gov,4,Owner (role),Both
+T-GOV-4,Exception register entry,gov,5,Risk accepted by (role),Both
+T-GOV-4,Exception register entry,gov,6,Start date,Both
+T-GOV-4,Exception register entry,gov,7,Expiry date,Both
+T-GOV-4,Exception register entry,gov,8,Review outcome,Both
+T-GOV-5,Day-to-day management workbook,gov,1,Risks: Risk ID,Both
+T-GOV-5,Day-to-day management workbook,gov,2,Risks: Date raised,Both
+T-GOV-5,Day-to-day management workbook,gov,3,Risks: Description,Both
+T-GOV-5,Day-to-day management workbook,gov,4,Risks: Cause,Both
+T-GOV-5,Day-to-day management workbook,gov,5,Risks: Effect,Both
+T-GOV-5,Day-to-day management workbook,gov,6,Risks: Likelihood (1-5),Both
+T-GOV-5,Day-to-day management workbook,gov,7,Risks: Impact (1-5),Both
+T-GOV-5,Day-to-day management workbook,gov,8,Risks: Score,Both
+T-GOV-5,Day-to-day management workbook,gov,9,Risks: Owner (role),Both
+T-GOV-5,Day-to-day management workbook,gov,10,Risks: Response,Both
+T-GOV-5,Day-to-day management workbook,gov,11,Risks: Status,Both
+T-GOV-5,Day-to-day management workbook,gov,12,Risks: Review date,Both
+T-GOV-5,Day-to-day management workbook,gov,13,Assumptions: Assumption ID,Both
+T-GOV-5,Day-to-day management workbook,gov,14,Assumptions: Date raised,Both
+T-GOV-5,Day-to-day management workbook,gov,15,Assumptions: Assumption,Both
+T-GOV-5,Day-to-day management workbook,gov,16,Assumptions: Why we believe it,Both
+T-GOV-5,Day-to-day management workbook,gov,17,Assumptions: How and when we will test it,Both
+T-GOV-5,Day-to-day management workbook,gov,18,Assumptions: Owner (role),Both
+T-GOV-5,Day-to-day management workbook,gov,19,Assumptions: Status,Both
+T-GOV-5,Day-to-day management workbook,gov,20,Issues: Issue ID,Both
+T-GOV-5,Day-to-day management workbook,gov,21,Issues: Date raised,Both
+T-GOV-5,Day-to-day management workbook,gov,22,Issues: Description,Both
+T-GOV-5,Day-to-day management workbook,gov,23,Issues: Impact,Both
+T-GOV-5,Day-to-day management workbook,gov,24,Issues: Priority,Both
+T-GOV-5,Day-to-day management workbook,gov,25,Issues: Owner (role),Both
+T-GOV-5,Day-to-day management workbook,gov,26,Issues: Action,Both
+T-GOV-5,Day-to-day management workbook,gov,27,Issues: Target date,Both
+T-GOV-5,Day-to-day management workbook,gov,28,Issues: Status,Both
+T-GOV-5,Day-to-day management workbook,gov,29,Dependencies: Dependency ID,Both
+T-GOV-5,Day-to-day management workbook,gov,30,Dependencies: Date raised,Both
+T-GOV-5,Day-to-day management workbook,gov,31,Dependencies: We depend on,Both
+T-GOV-5,Day-to-day management workbook,gov,32,Dependencies: For what,Both
+T-GOV-5,Day-to-day management workbook,gov,33,Dependencies: Needed by,Both
+T-GOV-5,Day-to-day management workbook,gov,34,Dependencies: Owner (role),Both
+T-GOV-5,Day-to-day management workbook,gov,35,Dependencies: Status,Both
+T-GOV-5,Day-to-day management workbook,gov,36,Decisions: Decision ID,Both
+T-GOV-5,Day-to-day management workbook,gov,37,Decisions: Date,Both
+T-GOV-5,Day-to-day management workbook,gov,38,Decisions: Decision,Both
+T-GOV-5,Day-to-day management workbook,gov,39,Decisions: Decided by (role or forum),Both
+T-GOV-5,Day-to-day management workbook,gov,40,Decisions: Rationale,Both
+T-GOV-5,Day-to-day management workbook,gov,41,Decisions: Assets affected,Both
+T-GOV-5,Day-to-day management workbook,gov,42,Decisions: Review trigger,Both
+T-GOV-5,Day-to-day management workbook,gov,43,Actions: Action ID,Both
+T-GOV-5,Day-to-day management workbook,gov,44,Actions: Date raised,Both
+T-GOV-5,Day-to-day management workbook,gov,45,Actions: Action,Both
+T-GOV-5,Day-to-day management workbook,gov,46,"Actions: From (meeting, decision or issue)",Both
+T-GOV-5,Day-to-day management workbook,gov,47,Actions: Owner (role),Both
+T-GOV-5,Day-to-day management workbook,gov,48,Actions: Due date,Both
+T-GOV-5,Day-to-day management workbook,gov,49,Actions: Status,Both
+T-GOV-5,Day-to-day management workbook,gov,50,Exceptions: Exception ID,Both
+T-GOV-5,Day-to-day management workbook,gov,51,Exceptions: Policy deviated from,Both
+T-GOV-5,Day-to-day management workbook,gov,52,Exceptions: Rationale,Both
+T-GOV-5,Day-to-day management workbook,gov,53,Exceptions: Owner (role),Both
+T-GOV-5,Day-to-day management workbook,gov,54,Exceptions: Risk accepted by (role),Both
+T-GOV-5,Day-to-day management workbook,gov,55,Exceptions: Start date,Both
+T-GOV-5,Day-to-day management workbook,gov,56,Exceptions: Expiry date,Both
+T-GOV-5,Day-to-day management workbook,gov,57,Exceptions: Review outcome,Both
+T-GOV-6,Data sharing agreement,gov,1,Agreement reference,Both
+T-GOV-6,Data sharing agreement,gov,2,Parties,Both
+T-GOV-6,Data sharing agreement,gov,3,"Controller at each stage, including after sharing",Both
+T-GOV-6,Data sharing agreement,gov,4,Data protection officer or responsible contact for each party (role),Both
+T-GOV-6,Data sharing agreement,gov,5,Purpose and specific aims,Both
+T-GOV-6,Data sharing agreement,gov,6,Why sharing is necessary to meet them,Both
+T-GOV-6,Data sharing agreement,gov,7,Benefits to people or society,Both
+T-GOV-6,Data sharing agreement,gov,8,Lawful basis for each party,Both
+T-GOV-6,Data sharing agreement,gov,9,Legal gateway or power,Both
+T-GOV-6,Data sharing agreement,gov,10,Data items shared (data specification),Both
+T-GOV-6,Data sharing agreement,gov,11,"Formats and standards (for example, how dates of birth are recorded)",Both
+T-GOV-6,Data sharing agreement,gov,12,Access and security arrangements,Both
+T-GOV-6,Data sharing agreement,gov,13,How people's rights are met,Both
+T-GOV-6,Data sharing agreement,gov,14,How accuracy is checked and errors corrected,Both
+T-GOV-6,Data sharing agreement,gov,15,Retention and deletion of shared data,Both
+T-GOV-6,Data sharing agreement,gov,16,Ending the sharing (deletion or return of data),Both
+T-GOV-6,Data sharing agreement,gov,17,"Review date and review triggers (for example, a complaint or breach)",Both
+T-GOV-6,Data sharing agreement,gov,18,Freedom of information publication scheme entry,Both
+T-GOV-6,Data sharing agreement,gov,19,DPIA reference,Both
+T-GOV-6,Data sharing agreement,gov,20,Catalogue record of the shared asset,Both
+T-CAT-1,Candidate and designation log,cat,1,Candidate,BAU
+T-CAT-1,Candidate and designation log,cat,2,"Found in (catalogue, IAR or sharing register)",BAU
+T-CAT-1,Candidate and designation log,cat,3,Provided to or acquired from,BAU
+T-CAT-1,Candidate and designation log,cat,4,Purpose (one or more of seven),BAU
+T-CAT-1,Candidate and designation log,cat,5,Scope tests passed,BAU
+T-CAT-1,Candidate and designation log,cat,6,Designated (yes or no),BAU
+T-CAT-1,Candidate and designation log,cat,7,Reason,BAU
+T-CAT-1,Candidate and designation log,cat,8,Decided by (role),BAU
+T-CAT-1,Candidate and designation log,cat,9,Date,BAU
+T-CAT-2,Critical data asset catalogue record,cat,1,title,BAU
+T-CAT-2,Critical data asset catalogue record,cat,2,alternativeTitle,BAU
+T-CAT-2,Critical data asset catalogue record,cat,3,description,BAU
+T-CAT-2,Critical data asset catalogue record,cat,4,identifier,BAU
+T-CAT-2,Critical data asset catalogue record,cat,5,creator,BAU
+T-CAT-2,Critical data asset catalogue record,cat,6,dateCreated,BAU
+T-CAT-2,Critical data asset catalogue record,cat,7,temporalCoverage,BAU
+T-CAT-2,Critical data asset catalogue record,cat,8,conformsTo,BAU
+T-CAT-2,Critical data asset catalogue record,cat,9,accessRights,BAU
+T-CAT-2,Critical data asset catalogue record,cat,10,securityClassification,BAU
+T-CAT-2,Critical data asset catalogue record,cat,11,licence,BAU
+T-CAT-2,Critical data asset catalogue record,cat,12,mediaType,BAU
+T-CAT-2,Critical data asset catalogue record,cat,13,expires,BAU
+T-CAT-2,Critical data asset catalogue record,cat,14,supersededBy,BAU
+T-CAT-2,Critical data asset catalogue record,cat,15,Owner (role),BAU
+T-CAT-2,Critical data asset catalogue record,cat,16,Contact point (team or form),BAU
+T-CAT-2,Critical data asset catalogue record,cat,17,Purpose,BAU
+T-CAT-2,Critical data asset catalogue record,cat,18,Last reviewed,BAU
+T-CAT-2,Critical data asset catalogue record,cat,19,Next review,BAU
+T-CAT-2,Critical data asset catalogue record,cat,20,Retention period,BAU
+T-CAT-2,Critical data asset catalogue record,cat,21,Disposal action,BAU
+T-CAT-3,Annual record review,cat,1,Asset,BAU
+T-CAT-3,Annual record review,cat,2,Date,BAU
+T-CAT-3,Annual record review,cat,3,Still critical (and why),BAU
+T-CAT-3,Annual record review,cat,4,Owner and successor confirmed,BAU
+T-CAT-3,Annual record review,cat,5,Metadata checked against the guidance,BAU
+T-CAT-3,Annual record review,cat,6,Changes made,BAU
+T-CAT-3,Annual record review,cat,7,Signed off by (role),BAU
+T-CAT-4,Entity and relationship list,cat,1,Entity,Both
+T-CAT-4,Entity and relationship list,cat,2,Description,Both
+T-CAT-4,Entity and relationship list,cat,3,Key attributes,Both
+T-CAT-4,Entity and relationship list,cat,4,Related entity,Both
+T-CAT-4,Entity and relationship list,cat,5,"Relationship (for example, places)",Both
+T-CAT-4,Entity and relationship list,cat,6,"Cardinality (one to one, one to many or many to many)",Both
+T-CAT-4,Entity and relationship list,cat,7,Optional or mandatory,Both
+T-CAT-4,Entity and relationship list,cat,8,Source system,Both
+T-CAT-4,Entity and relationship list,cat,9,Data dictionary link,Both
+T-DQ-1,Data quality rule,dq,1,Rule ID,Both
+T-DQ-1,Data quality rule,dq,2,Data element,Both
+T-DQ-1,Data quality rule,dq,3,Plain-English rule,Both
+T-DQ-1,Data quality rule,dq,4,Dimension,Both
+T-DQ-1,Data quality rule,dq,5,Test,Both
+T-DQ-1,Data quality rule,dq,6,Importance (1-4),Both
+T-DQ-1,Data quality rule,dq,7,Impact (1-4),Both
+T-DQ-1,Data quality rule,dq,8,Combined score,Both
+T-DQ-1,Data quality rule,dq,9,Target (%),Both
+T-DQ-1,Data quality rule,dq,10,Owner (role),Both
+T-DQ-1,Data quality rule,dq,11,Date agreed,Both
+T-DQ-2,Issue log entry,dq,1,Issue ID,Both
+T-DQ-2,Issue log entry,dq,2,Date found,Both
+T-DQ-2,Issue log entry,dq,3,Rule ID,Both
+T-DQ-2,Issue log entry,dq,4,Records affected,Both
+T-DQ-2,Issue log entry,dq,5,Users or groups affected,Both
+T-DQ-2,Issue log entry,dq,6,Performance and target,Both
+T-DQ-2,Issue log entry,dq,7,Band,Both
+T-DQ-2,Issue log entry,dq,8,Priority,Both
+T-DQ-2,Issue log entry,dq,9,Target resolution date,Both
+T-DQ-2,Issue log entry,dq,10,Root cause,Both
+T-DQ-2,Issue log entry,dq,11,Action and owner (role),Both
+T-DQ-2,Issue log entry,dq,12,Status,Both
+T-DQ-3,Data quality statement,dq,1,Asset and version,BAU
+T-DQ-3,Data quality statement,dq,2,Date,BAU
+T-DQ-3,Data quality statement,dq,3,Summary in plain English,BAU
+T-DQ-3,Data quality statement,dq,4,Scores by dimension and trend,BAU
+T-DQ-3,Data quality statement,dq,5,Known issues,BAU
+T-DQ-3,Data quality statement,dq,6,Quality by group where lawful,BAU
+T-DQ-3,Data quality statement,dq,7,Fit for,BAU
+T-DQ-3,Data quality statement,dq,8,Not fit for,BAU
+T-DQ-3,Data quality statement,dq,9,How to report a problem (form),BAU

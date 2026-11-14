@@ -1,0 +1,1056 @@
+{
+ "as_of": "2026-11-06",
+ "version": "1.10.1",
+ "wip_limit": 5,
+ "criteria": [
+  {
+   "id": "demand",
+   "name": "User demand",
+   "weight": 25,
+   "icon": "users-round",
+   "ask": "How many people need it, and how strong is the evidence?",
+   "scale": [
+    "No evidence",
+    "One source",
+    "Several sources or 5+ votes",
+    "Research finding or 15+ votes"
+   ]
+  },
+  {
+   "id": "policy",
+   "name": "DAM Policy",
+   "weight": 20,
+   "icon": "landmark",
+   "ask": "Does it help organisations meet the DAM Policy?",
+   "scale": [
+    "No link",
+    "Indirect",
+    "Supports a should",
+    "Supports a must"
+   ]
+  },
+  {
+   "id": "strategy",
+   "name": "Government strategy",
+   "weight": 20,
+   "icon": "compass",
+   "ask": "Does it fit the government's direction for digital and data?",
+   "scale": [
+    "No fit",
+    "Weak fit",
+    "Clear fit",
+    "Named in a strategy"
+   ]
+  },
+  {
+   "id": "feasibility",
+   "name": "Feasibility",
+   "weight": 15,
+   "icon": "wrench",
+   "ask": "Can it be done with what exists, safely and lawfully?",
+   "scale": [
+    "Not feasible now",
+    "Major unknowns",
+    "Some unknowns",
+    "Straightforward"
+   ]
+  },
+  {
+   "id": "capacity",
+   "name": "Capacity and effort",
+   "weight": 10,
+   "icon": "clock",
+   "ask": "Does it fit the time and people available?",
+   "scale": [
+    "Needs new capacity",
+    "Large",
+    "Medium",
+    "Small"
+   ]
+  },
+  {
+   "id": "inclusion",
+   "name": "Inclusion",
+   "weight": 10,
+   "icon": "heart-handshake",
+   "ask": "Does it make the portal work for more people?",
+   "scale": [
+    "No effect",
+    "Slight",
+    "Clear benefit",
+    "Removes a barrier"
+   ]
+  }
+ ],
+ "vote_bands": [
+  [
+   1,
+   1
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   15,
+   3
+  ]
+ ],
+ "bands": [
+  [
+   70,
+   "now",
+   "Strong candidate for Now"
+  ],
+  [
+   50,
+   "next",
+   "Candidate for Next"
+  ],
+  [
+   0,
+   "later",
+   "Later or not yet"
+  ]
+ ],
+ "strategies": [
+  {
+   "id": "dam",
+   "name": "Data asset management policy",
+   "ref": "SRC-DAM"
+  },
+  {
+   "id": "rmdg",
+   "name": "A roadmap for modern digital government 2025 to 2030",
+   "ref": "RB-RMDG"
+  },
+  {
+   "id": "blueprint",
+   "name": "A blueprint for modern digital government",
+   "ref": "RB-BLUEPRINT"
+  },
+  {
+   "id": "ndl",
+   "name": "National Data Library",
+   "ref": "RB-NDLPUB"
+  },
+  {
+   "id": "sdr",
+   "name": "Strategic roadmap for public sector data (in development by the Office of the Chief Data Officer; announced for April 2026 and not found published on GOV.UK on 5 November 2026)",
+   "ref": null
+  }
+ ],
+ "decisions": [
+  {
+   "date": "2026-11-11",
+   "item": "BL-34",
+   "decision": "Health and care obligations stay in Now",
+   "why": "The score says Later because demand is one pilot team and the rest depends on its feedback. Signposts were released in 1.12.0, and finishing needs only that feedback and the expert review (BL-14), so it should not wait behind unrelated work."
+  },
+  {
+   "date": "2026-11-11",
+   "item": "BL-33",
+   "decision": "Data architecture judged After the MVP even though it is built",
+   "why": "It sits outside the three DAM capabilities on the DAMA wheel and most organisations will not need it for the baseline return; only its authoritative source question is pulled forward."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-05",
+   "decision": "Research",
+   "roadmap and ideas published in the open": null,
+   "why": "Working in the open lets users see and shape priorities; modelled on the data.gov.uk roadmap."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-25",
+   "decision": "A hosted chatbot is out of scope",
+   "why": "No server, nothing sent anywhere; open data and the MCP server serve approved assistants instead."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-10",
+   "decision": "Round 1 waits until Round 0 has recruited for every role",
+   "why": "Usability sessions need 5 to 8 people per role, including disabled people."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-11",
+   "decision": "Accessibility sessions wait until Round 0 has recruited assistive technology users",
+   "why": "The score says Now, but sessions cannot start without participants; the sign-up form (BL-12) and recruitment (BL-13) come first."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-18",
+   "decision": "Asking questions in your own words stays in Later",
+   "why": "The score says Next, but it needs a way to answer without a server or sending anything anywhere; the open data and MCP server already let approved assistants do this."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-23",
+   "decision": "Agreed metadata terms stay in Later",
+   "why": "The score says Next, but the terms are for the metadata standards owner to agree, not this portal; the proposed crosswalk stays on the cataloguing page meanwhile."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-18",
+   "decision": "Asking questions built without a server",
+   "why": "Answers come from the portal's own search index in the reader's browser; nothing is sent anywhere, so the earlier feasibility concern is met."
+  },
+  {
+   "date": "2026-11-05",
+   "item": "BL-21",
+   "decision": "Offline copy built as a download of the whole site",
+   "why": "A single file would need every page inlined; a zip of the built site opens offline in any browser and stays in step with each release."
+  }
+ ],
+ "items": [
+  {
+   "id": "BL-01",
+   "type": "feature",
+   "title": "Private feedback route",
+   "story": "As someone without a GitHub account, I need a private way to give feedback, so that I can take part without publishing my views.",
+   "source": "OR-02",
+   "status": "done",
+   "release": "1.8.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 72,
+   "band": "now",
+   "scored": {
+    "demand": 2,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 3
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-02",
+   "type": "feature",
+   "title": "Share",
+   "site map": null,
+   "guided tours and tutorials": null,
+   "story": "As a first-time visitor, I need to see how the portal fits together, so that I can find my way without help.",
+   "source": "Owner request",
+   "status": "done",
+   "release": "1.8.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 68,
+   "band": "next",
+   "scored": {
+    "demand": 2,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 3
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-03",
+   "type": "feature",
+   "title": "Signposts to the sister portals",
+   "story": "As a practitioner, I need to know when another portal goes deeper, so that I do not miss tools or evidence.",
+   "source": "Owner request",
+   "status": "done",
+   "release": "1.8.1",
+   "strategy": [
+    "rmdg",
+    "ndl"
+   ],
+   "score": 72,
+   "band": "now",
+   "scored": {
+    "demand": 2,
+    "policy": 2,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-04",
+   "type": "feature",
+   "title": "Data portals compass",
+   "story": "As someone working across policy, practice and technology, I need to know where to start and in what order, so that I take the shortest route to a result.",
+   "source": "Owner request",
+   "status": "done",
+   "release": "1.8.2",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 72,
+   "band": "now",
+   "scored": {
+    "demand": 2,
+    "policy": 2,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-05",
+   "type": "feature",
+   "title": "Research",
+   "roadmap and ideas in the open": null,
+   "story": "As a user, I need to see what is planned and how decisions are made, and to suggest and vote for ideas, so that the portal meets real needs.",
+   "source": "Owner request",
+   "status": "done",
+   "release": "1.9.0",
+   "strategy": [
+    "rmdg",
+    "dam"
+   ],
+   "score": 78,
+   "band": "now",
+   "scored": {
+    "demand": 2,
+    "policy": 2,
+    "strategy": 3,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-10",
+   "type": "research",
+   "title": "Round 1: can each role find and follow its steps?",
+   "story": "As the service owner, I need evidence from 5 to 8 people per role, so that changes rest on what users do, not what we assume.",
+   "source": "OR-04",
+   "status": "next",
+   "strategy": [
+    "dam",
+    "rmdg"
+   ],
+   "score": 78,
+   "band": "now",
+   "scored": {
+    "demand": 3,
+    "policy": 3,
+    "strategy": 2,
+    "feasibility": 2,
+    "capacity": 1,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-11",
+   "type": "research",
+   "title": "Test with disabled people and assistive technology",
+   "story": "As someone who uses a screen reader, magnifier or voice control, I need the portal to work with my set-up, so that I can follow the policy like anyone else.",
+   "source": "OR-09",
+   "status": "next",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 75,
+   "band": "now",
+   "scored": {
+    "demand": 3,
+    "policy": 2,
+    "strategy": 2,
+    "feasibility": 2,
+    "capacity": 1,
+    "inclusion": 3
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-12",
+   "type": "feature",
+   "title": "Private research sign-up form",
+   "story": "As a prospective participant, I need to sign up privately, so that my contact details are not published.",
+   "source": "OR-02",
+   "status": "now",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 77,
+   "band": "now",
+   "scored": {
+    "demand": 3,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-13",
+   "type": "research",
+   "title": "Round 0: introduce the portal and recruit participants",
+   "story": "As the service owner, I need a pool of participants from every role, organisation type and nation, so that research rounds can start quickly.",
+   "source": "OR-04",
+   "status": "now",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 80,
+   "band": "now",
+   "scored": {
+    "demand": 3,
+    "policy": 2,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-14",
+   "type": "content",
+   "title": "Expert review of the sector supplements",
+   "story": "As a sector specialist, I need the supplements checked by people who know the sector, so that I can trust them.",
+   "source": "OR-12",
+   "status": "next",
+   "strategy": [
+    "dam"
+   ],
+   "score": 53,
+   "band": "next",
+   "scored": {
+    "demand": 2,
+    "policy": 2,
+    "strategy": 1,
+    "feasibility": 2,
+    "capacity": 1,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-15",
+   "type": "feature",
+   "title": "Check this flag",
+   "story": "As a policy coordinator, I need to tell you when a capability flag looks wrong, so that the capability model stays accurate.",
+   "source": "OR-15",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "dam"
+   ],
+   "score": 72,
+   "band": "now",
+   "scored": {
+    "demand": 2,
+    "policy": 3,
+    "strategy": 1,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-16",
+   "type": "feature",
+   "title": "Embed a step or table on an intranet",
+   "story": "As a department's data team, I need to show one policy step or table on our intranet, so that colleagues see it where they work.",
+   "source": "Comparison with the Data Quality Commons",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 60,
+   "band": "next",
+   "scored": {
+    "demand": 1,
+    "policy": 2,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-17",
+   "type": "feature",
+   "title": "Level labels and easy read summaries",
+   "story": "As someone new to data management, I need to know which pages are pitched at me and to read short plain summaries, so that I am not put off.",
+   "source": "Comparison with the Data Quality Commons",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 60,
+   "band": "next",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 3
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-18",
+   "type": "feature",
+   "title": "Ask questions answered from the portal",
+   "story": "As a busy reader, I need to ask a question in my own words and get the page that answers it, so that I do not have to know where things are.",
+   "source": "Comparison with the Data Quality Commons and the catalogue",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 55,
+   "band": "next",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 3,
+    "feasibility": 2,
+    "capacity": 1,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-19",
+   "type": "feature",
+   "title": "Releases feed",
+   "story": "As a returning user, I need to know when something changes, so that I keep up without checking the site.",
+   "source": "Comparison with the Data Quality Commons",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 57,
+   "band": "next",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-20",
+   "type": "feature",
+   "title": "Lineage and ontology downloads",
+   "story": "As a metadata specialist, I need the requirement-to-check lineage and the ontology in open formats, so that I can reuse them in our tools.",
+   "source": "Comparison with the catalogue",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "ndl",
+    "dam"
+   ],
+   "score": 45,
+   "band": "later",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 2,
+    "capacity": 2,
+    "inclusion": 0
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-21",
+   "type": "feature",
+   "title": "Offline copy",
+   "story": "As someone whose network blocks GitHub Pages, I need a copy I can open offline, so that I can still use the guidance.",
+   "source": "Comparison with the catalogue",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 42,
+   "band": "later",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 1,
+    "feasibility": 2,
+    "capacity": 1,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-22",
+   "type": "decision",
+   "title": "Clearance and an official home",
+   "story": "As a department, I need to know whether this is guidance I can rely on, so that I can use it in my organisation.",
+   "source": "OR-03",
+   "status": "now",
+   "strategy": [
+    "dam",
+    "rmdg"
+   ],
+   "score": 70,
+   "band": "now",
+   "scored": {
+    "demand": 3,
+    "policy": 3,
+    "strategy": 2,
+    "feasibility": 1,
+    "capacity": 1,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-23",
+   "type": "content",
+   "title": "Agreed metadata terms for the four missing properties",
+   "story": "As a catalogue manager, I need agreed terms for every required property, so that our records match everyone else's.",
+   "source": "OR-06",
+   "status": "later",
+   "strategy": [
+    "dam",
+    "ndl"
+   ],
+   "score": 58,
+   "band": "next",
+   "scored": {
+    "demand": 2,
+    "policy": 3,
+    "strategy": 2,
+    "feasibility": 1,
+    "capacity": 1,
+    "inclusion": 0
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-24",
+   "type": "research",
+   "title": "Welsh language needs",
+   "story": "As someone in a Welsh public body, I may need the portal in Welsh, so that we can meet our language duties.",
+   "source": "Research question",
+   "status": "later",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 28,
+   "band": "later",
+   "scored": {
+    "demand": 0,
+    "policy": 1,
+    "strategy": 1,
+    "feasibility": 1,
+    "capacity": 0,
+    "inclusion": 3
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-26",
+   "type": "content",
+   "title": "Boards, councils and networks",
+   "story": "As a data leader, I need to know which boards decide, which advise and where practitioners meet, so that I can take issues to the right place.",
+   "source": "Owner request",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "dam",
+    "rmdg"
+   ],
+   "score": 68,
+   "band": "next",
+   "scored": {
+    "demand": 2,
+    "policy": 2,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-27",
+   "type": "feature",
+   "title": "Get involved and champions toolkit",
+   "story": "As a champion in my organisation, I need ready-made posts, emails and a walk-through, so that I can bring my team in without extra work.",
+   "source": "Owner request",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 65,
+   "band": "next",
+   "scored": {
+    "demand": 2,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 2,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-28",
+   "type": "feature",
+   "title": "Badges for taking part",
+   "story": "As someone who helps improve the portal, I want a badge for my profile and signature, so that my contribution is recognised.",
+   "source": "Owner request",
+   "status": "done",
+   "release": "1.10.0",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 52,
+   "band": "next",
+   "scored": {
+    "demand": 2,
+    "policy": 0,
+    "strategy": 1,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-29",
+   "type": "content",
+   "title": "Welsh language summaries",
+   "story": "As someone in a Welsh public body, I need key pages summarised in Welsh, so that we can meet our language duties.",
+   "source": "BL-24",
+   "status": "later",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 28,
+   "band": "later",
+   "scored": {
+    "demand": 0,
+    "policy": 1,
+    "strategy": 1,
+    "feasibility": 1,
+    "capacity": 0,
+    "inclusion": 3
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-30",
+   "type": "feature",
+   "title": "Governance layers and what each may change",
+   "story": "As a data owner, I need to know what each governance layer may and may not change, so that decisions go to the right place and survive a team handover.",
+   "source": "Project Compass pilot (issue 21)",
+   "status": "done",
+   "release": "1.12.0",
+   "strategy": [
+    "dam"
+   ],
+   "dama": [
+    "DM-GOV"
+   ],
+   "mvp": {
+    "verdict": "in",
+    "usability": "One section on the Roles tab and a CSV; uses the 19 role names people already know.",
+    "condition": "Align with the GDS Data Ownership Model before it is promoted; until then it stays labelled as proposed."
+   },
+   "score": 70,
+   "band": "now",
+   "scored": {
+    "demand": 1,
+    "policy": 3,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-31",
+   "type": "content",
+   "title": "Retention fields in the ownership register and catalogue record",
+   "story": "As a data owner, I need retention and disposal recorded with each asset, so that data is neither kept too long nor destroyed early.",
+   "source": "Project Compass pilot (issue 19)",
+   "status": "done",
+   "release": "1.12.0",
+   "strategy": [
+    "dam"
+   ],
+   "dama": [
+    "DM-DOC",
+    "DM-GOV",
+    "DM-META"
+   ],
+   "mvp": {
+    "verdict": "optional",
+    "usability": "Adds five fields to the ownership register and two to the catalogue record, which adds burden if made required.",
+    "condition": "Keep the fields optional and out of the return template; agree read-across to records schedules with the government knowledge and information management team."
+   },
+   "score": 47,
+   "band": "later",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 1,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 0
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-32",
+   "type": "content",
+   "title": "Data sharing agreement template and gateways",
+   "story": "As a data owner, I need a data sharing agreement that covers the lawful basis and legal gateway, so that shared critical assets are on a sound footing.",
+   "source": "Project Compass pilot (issue 20)",
+   "status": "done",
+   "release": "1.12.0",
+   "strategy": [
+    "dam",
+    "ndl"
+   ],
+   "dama": [
+    "DM-SEC",
+    "DM-INT",
+    "DM-GOV"
+   ],
+   "mvp": {
+    "verdict": "lite",
+    "usability": "A 20-field template for owners and data protection officers, not for every user; reached from the data sharing supplement.",
+    "condition": "Have the government data protection team review it before it is promoted; a gateway lookup waits until after the MVP."
+   },
+   "score": 52,
+   "band": "next",
+   "scored": {
+    "demand": 1,
+    "policy": 2,
+    "strategy": 2,
+    "feasibility": 2,
+    "capacity": 2,
+    "inclusion": 0
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-33",
+   "type": "content",
+   "title": "Data architecture and models supplement",
+   "story": "As a data architect, I need to describe a critical asset's entities, relationships and authoritative source, so that others can build on it and returns do not count it twice.",
+   "source": "Project Compass pilot (issue 18)",
+   "status": "done",
+   "release": "1.12.0",
+   "strategy": [
+    "blueprint"
+   ],
+   "dama": [
+    "DM-ARC",
+    "DM-MOD"
+   ],
+   "mvp": {
+    "verdict": "after",
+    "usability": "Useful to architects and design authorities; most owners and coordinators will not need it for the baseline return.",
+    "condition": "Only the authoritative source question belongs in the MVP, because it helps apply the policy's source data test; the rest follows the baseline return."
+   },
+   "score": 53,
+   "band": "next",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 3,
+    "capacity": 3,
+    "inclusion": 0
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-34",
+   "type": "content",
+   "title": "Health and care obligations from DHSC and MedTech",
+   "story": "As a health or care body, I need the laws, standards and frameworks that apply to our data assets in one place, so that we meet them alongside the DAM Policy.",
+   "source": "Project Compass pilot (issue 22)",
+   "status": "now",
+   "strategy": [
+    "dam"
+   ],
+   "dama": [
+    "DM-GOV",
+    "DM-SEC",
+    "DM-META"
+   ],
+   "mvp": {
+    "verdict": "lite",
+    "usability": "Signposts sit in the health supplement that health and care bodies already reach from the sector finder.",
+    "condition": "Signposts now; complete with the pilot's feedback and an expert review (BL-14) before implementation begins in January 2027."
+   },
+   "score": 43,
+   "band": "later",
+   "scored": {
+    "demand": 1,
+    "policy": 2,
+    "strategy": 1,
+    "feasibility": 1,
+    "capacity": 2,
+    "inclusion": 1
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-35",
+   "type": "feature",
+   "title": "Drill down from the DAMA wheel to activities and tasks",
+   "story": "As someone building an enterprise data management capability, I need to go from a knowledge area on the wheel to its activities and tasks, so that I can see what good looks like beyond the three DAM capabilities.",
+   "source": "Owner request, 11 November 2026",
+   "status": "done",
+   "release": "1.14.0",
+   "strategy": [
+    "dam",
+    "blueprint"
+   ],
+   "dama": [
+    "DM-GOV",
+    "DM-ARC",
+    "DM-MOD",
+    "DM-OPS",
+    "DM-SEC",
+    "DM-INT",
+    "DM-DOC",
+    "DM-REF",
+    "DM-BI",
+    "DM-META",
+    "DM-DQ"
+   ],
+   "mvp": {
+    "verdict": "after",
+    "usability": "Governance, metadata and data quality already drill down to their playbook steps; the other areas would add reading that most organisations do not need for the return.",
+    "condition": "Build the structure with data architecture first (BL-36). Add other areas only when the profession that owns each agrees to own its content."
+   },
+   "score": 42,
+   "band": "later",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 1,
+    "feasibility": 2,
+    "capacity": 1,
+    "inclusion": 2
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-36",
+   "type": "content",
+   "title": "Data architecture capability playbook",
+   "story": "As a data architect or design authority, I need a step-by-step playbook for data architecture, so that critical assets have a known structure and authoritative source that others can build on.",
+   "source": "Owner request, 11 November 2026",
+   "status": "later",
+   "strategy": [
+    "blueprint"
+   ],
+   "dama": [
+    "DM-ARC",
+    "DM-MOD"
+   ],
+   "mvp": {
+    "verdict": "after",
+    "usability": "Useful to architects; owners and coordinators need only the authoritative source question, which is already in the cataloguing guidance and the supplement.",
+    "condition": "Phase 2, from January 2027, once architecture leads agree to own and review it; see the assessment on the DAMA wheel."
+   },
+   "score": 38,
+   "band": "later",
+   "scored": {
+    "demand": 1,
+    "policy": 1,
+    "strategy": 2,
+    "feasibility": 2,
+    "capacity": 0,
+    "inclusion": 0
+   },
+   "votes": 0,
+   "idea_url": ""
+  },
+  {
+   "id": "BL-25",
+   "type": "feature",
+   "title": "A chatbot hosted by this portal",
+   "story": "As a reader, I would like to chat with the guidance.",
+   "source": "Reuse decision",
+   "status": "out",
+   "reason": "Out of scope: the portal runs no server and sends nothing anywhere. Assistants your organisation approves can use its open data and MCP server instead (Use and reuse).",
+   "strategy": [
+    "rmdg"
+   ],
+   "score": 22,
+   "band": "later",
+   "scored": {
+    "demand": 1,
+    "policy": 0,
+    "strategy": 2,
+    "feasibility": 0,
+    "capacity": 0,
+    "inclusion": 0
+   },
+   "votes": 0,
+   "idea_url": ""
+  }
+ ],
+ "ideas": {
+  "available": true,
+  "as_of": "2026-11-14",
+  "count": 0
+ }
+}

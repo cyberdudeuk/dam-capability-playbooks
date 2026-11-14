@@ -1,0 +1,36 @@
+id,term,alt_labels,broader,definition,capabilities,provenance
+data-asset,Data asset,,,"One or more data sets plus, where relevant, the data services used to access them.",cat gov,V
+data-set,Data set,dataset,data-asset,A structured collection of data selected and organised for a defined outcome or need. It can be a subset of a larger system.,cat,V
+data-service,Data service,API; access service,data-asset,"A controlled means of accessing one or more data sets, such as an API or secure access mechanism.",cat,V
+distribution,Distribution,representation,data-set,"A specific representation of a data set, for example a CSV file or a feed.",cat,V
+cda,Critical data asset,CDA; essential shared data asset; ESDA,data-asset,A data asset shared across government where losing access could stop an organisation from fulfilling important functions. 'Essential shared data asset' is the older term it replaced.,cat gov dq,V
+provided,Provided data,,cda,Data one organisation gives to another to support an essential process or purpose the receiver is responsible for.,cat,V
+acquired,Acquired data,,cda,Data one organisation obtains from another to support an essential process or purpose it is responsible for.,cat,V
+purpose,Purpose,the seven purposes,cda,"One of the seven reasons a critical data asset matters, such as public service delivery or official statistics. Each asset supports at least one.",cat,V
+scope-tests,Scope tests,,cda,"The conditions an asset must meet to be in scope of the policy: classified OFFICIAL, critical, and within the provider's ownership accountabilities.",cat gov,V
+metadata,Metadata,data about data,,"Information that describes a data asset so it can be found, understood, validated, reused and shared.",cat,V
+catalogue,Data catalogue,catalog; metadata catalogue,,"A managed collection of metadata records that helps people and systems find, understand and reuse data assets. It holds descriptions, not the data.",cat,O
+dcat,DCAT,Data Catalog Vocabulary,metadata,"The W3C vocabulary for describing data sets and data services in catalogues, so catalogues can be harvested and searched together.",cat,K
+mem,Metadata Exchange Model,xGov MEM; MEM,metadata,"The UK cross-government model, based on DCAT, for the metadata exchanged about data assets.",cat,V
+discoverability,Discoverability Platform,discovery service,catalogue,The GDS service being scoped to link to departments' own catalogues and make critical data asset metadata discoverable across government.,cat,P
+return,Return,CDA return; baseline return; annual return,,"An organisation's report of its in-scope assets and their metadata to GDS, assured by the department for its ALBs.",cat gov,O
+data-owner,Data owner,,role,"A senior leader accountable for the meaning, content, quality and management of a data asset.",gov cat dq,V
+iao,Information asset owner,IAO,role,"The role accountable to the SIRO for protecting the whole information asset. Related to, but not the same as, the data owner.",gov,V
+data-steward,Data steward,,role,"The role running an asset day to day: standards, access, quality processes and documentation.",gov cat dq,V
+data-custodian,Data custodian,,role,"The technical expert for the system holding the data: storage, access controls, auditable change and disposal.",gov cat,V
+role,Data role,,,"A defined set of accountabilities for data. Records name roles, not people.",gov,O
+ownership-option,Ownership option,IAO model; hybrid model,data-owner,"The choice between keeping the IAO model, adopting the data ownership model, or a hybrid. Each must still meet the mandatory IAO actions.",gov,V
+recipe,Recipe,governance recipe,,"One of the five repeatable governance activities: Mandate, Frame, Assign, Operate, Assure.",gov,P
+charter,Governance charter,charter,recipe,"A one-page statement of a governance body's purpose, scope, authority and review cadence.",gov,P
+decision-log,Decision log,,recipe,"A running record of governance decisions: what, who, why, when and the review trigger.",gov,P
+exception,Exception,policy exception,recipe,"A logged, time-bound deviation from policy with an owner and an expiry date. An exception without an expiry is an undocumented policy change.",gov,P
+raci,RACI,decision rights,,"Responsible, Accountable, Consulted, Informed. One accountable role per activity.",gov cat dq,O
+dqap,Data quality action plan,DQAP,,"The plan every identified asset must have, or an equivalent mechanism, for managing its quality across seven steps.",dq,V
+cde,Critical data element,CDE,dqap,A data item whose quality drives the most important decisions made with the asset.,dq cat,P
+dimension,Data quality dimension,dimension,dqap,"A measurable aspect of quality. The framework's six are completeness, uniqueness, consistency, timeliness, validity and accuracy.",dq,V
+issues-framework,Issues framework,data quality issues framework,dqap,"The GDS method that scores importance times impact to set targets, and uses the band below target to set priority and time to resolve.",dq,V
+dq-statement,Data quality statement,quality statement,dqap,"A plain-English summary of an asset's quality, known issues and what it should not be used for.",dq cat,P
+dqv,Data Quality Vocabulary,DQV,metadata,The W3C vocabulary for publishing quality measurements with a catalogue record.,dq cat,K
+data-contract,Data contract,ODCS,dqap,Quality rules and promises written down as a file that suppliers and users share.,dq,K
+maturity,Data maturity,DMA,,"An organisation's capability around data, self-assessed with the government framework.",gov,V
+coordinator,Lead policy coordinator,policy coordinator,role,"The person each organisation nominates to coordinate DAM Policy adoption and the return, and to sit on the Working Group.",gov cat,P

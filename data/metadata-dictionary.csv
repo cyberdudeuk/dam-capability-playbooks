@@ -1,0 +1,15 @@
+property,mem_slot,obligation,rule,type,format,cardinality,value_list,example
+title,CataloguedResource.title,must,Plain English name; avoid acronyms and jargon,Text,"Plain English, up to about 100 characters",1,,"Outpatient attendances, England"
+alternativeTitle,CataloguedResource.alternativeTitle,optional,A short name to keep titles concise,Text,Plain text,0 or more,,OPA monthly
+description,CataloguedResource.description,must,Describes the data; usage warnings go elsewhere,Text,Plain English paragraphs,1,,Monthly counts of outpatient attendances by provider and specialty.
+identifier,CataloguedResource.identifier,should,Your own system's identifier or an opaque random one,Text,"Your system's identifier, or a random UUID",0 or 1,,3f6c1d2e-8a4b-4c1e-9d7f-2b5a6e0c9a41
+creator,CataloguedResource.creator,must,The organisation that created the data,Organisation,Link to an organisation in a published list,1 or more,organisations,https://www.gov.uk/government/organisations/department-of-health-and-social-care
+dateCreated,CataloguedResource.created,should,ISO 8601 date or date-time,Date,ISO 8601 date (YYYY-MM-DD) or date and time,0 or 1,,2024-04-01
+temporalCoverage,none in MEM (gap),listed,The period the data applies to,Period of time,"ISO 8601 start and end dates, written start/end",0 or more,,2024-04-01/2025-03-31
+conformsTo,none in MEM (gap),listed,The standard or schema the data follows,Standard,Link to the standard or schema,0 or more,,A link to the NHS data set specification the extract follows
+accessRights,CataloguedResource.accessRights,should,"open, commercial or internal, with any handling caveat",Controlled value,One value from the list,0 or 1,access-rights,internal
+securityClassification,CataloguedResource.securityClassification,listed,Sensitivity level,Controlled value,One value from the list,1,classification,OFFICIAL
+licence,CataloguedResource.licence,should,OGL URL for open data; the agreement for restricted data,Licence,Link to the licence or agreement,0 or 1,,https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+mediaType,Distribution.mediaType,should,IANA media type,Media type,IANA media type,0 or 1 for each distribution,media-types,text/csv
+expires,none in MEM (gap),listed,How long this version is valid,Date,ISO 8601 date (YYYY-MM-DD),0 or 1,,2026-03-31
+supersededBy,none in MEM (gap),listed,The newer version that replaces this one,Link,Link to the record that replaces this one,0 or 1,,A link to the 2026 version's catalogue record

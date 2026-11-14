@@ -1,0 +1,31 @@
+# Official statistics and administrative sources: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-official-statistics-and-administrative-sources
+  title: 'Starter rules: Official statistics and administrative sources (adapt column
+    names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: STA-01
+  check: no_gaps
+  description: Reference period is complete with no missing months
+  dimension: completeness
+  column: period
+- id: STA-02
+  check: outlier
+  description: Monthly totals are not implausible outliers
+  dimension: accuracy
+  column: total
+  method: iqr
+  k: 3
+- id: STA-03
+  check: identifier
+  description: Area codes are valid GSS codes
+  dimension: validity
+  column: area_code
+  scheme: gss_code
+- id: STA-04
+  check: header_has_unit
+  description: Every measure column names its unit
+  dimension: consistency

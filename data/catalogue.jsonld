@@ -1,0 +1,1859 @@
+{
+ "@context": {
+  "dcat": "http://www.w3.org/ns/dcat#",
+  "dcterms": "http://purl.org/dc/terms/",
+  "foaf": "http://xmlns.com/foaf/0.1/",
+  "vcard": "http://www.w3.org/2006/vcard/ns#",
+  "xsd": "http://www.w3.org/2001/XMLSchema#"
+ },
+ "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/catalogue.jsonld",
+ "@type": "dcat:Catalog",
+ "dcterms:title": {
+  "@value": "Data Asset Management (DAM) capability playbooks: open data",
+  "@language": "en-GB"
+ },
+ "dcterms:description": {
+  "@value": "Open data published by the DAM capability playbooks prototype. Not an official government catalogue.",
+  "@language": "en-GB"
+ },
+ "dcterms:publisher": {
+  "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+  "@type": "foaf:Agent",
+  "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+ },
+ "dcterms:license": {
+  "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+ },
+ "dcterms:modified": {
+  "@value": "2026-11-06",
+  "@type": "xsd:date"
+ },
+ "dcat:contactPoint": {
+  "@type": "vcard:Kind",
+  "vcard:fn": "Contact form",
+  "vcard:hasURL": {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+  }
+ },
+ "foaf:homepage": {
+  "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/"
+ },
+ "dcat:dataset": [
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#requirements",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-requirements",
+   "dcterms:title": {
+    "@value": "DAM Policy requirements",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Every requirement in the DAM Policy and its guidance, with strength, capability, source and provenance.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "requirements",
+    "policy"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#requirements"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/requirements.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "requirements.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/requirements.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/requirements.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#capability-map",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-capability-map",
+   "dcterms:title": {
+    "@value": "Capability requirements map",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "32 capabilities the policy and adjacent guidance need, flagged explicit, implicit or inferred, with signposts to the exact GOV.UK sections.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "capability model",
+    "maturity"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#capability-map"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/capability-map.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "capability-map.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/capability-map.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/capability-map.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#maturity-structure",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-maturity-structure",
+   "dcterms:title": {
+    "@value": "Data maturity model structure",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Topics, themes and row counts of the Data Maturity Assessment for Government, with links to each topic. Structure only; the framework text is not copied.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "data maturity"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#maturity-structure"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/maturity-structure.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "maturity-structure.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/maturity-structure.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/maturity-structure.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#vocabulary",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-vocabulary",
+   "dcterms:title": {
+    "@value": "Data asset management vocabulary",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Glossary and thesaurus as SKOS concepts, with definitions, alternative labels and broader terms.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "glossary",
+    "SKOS",
+    "thesaurus"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#vocabulary"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/vocabulary.ttl#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "vocabulary.ttl",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/vocabulary.ttl"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/vocabulary.ttl"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/turtle"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/vocabulary.jsonld#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "vocabulary.jsonld",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/vocabulary.jsonld"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/vocabulary.jsonld"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/ld+json"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/glossary.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "glossary.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/glossary.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/glossary.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#metadata-dictionary",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-metadata-dictionary",
+   "dcterms:title": {
+    "@value": "Metadata data dictionary",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "The metadata properties to record for critical data assets, with obligation and Metadata Exchange Model slot.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "metadata",
+    "DCAT"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#metadata-dictionary"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/metadata-dictionary.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "metadata-dictionary.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/metadata-dictionary.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/metadata-dictionary.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#templates",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-templates",
+   "dcterms:title": {
+    "@value": "Playbook templates",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Fields of every template in the three playbooks, all together and one template at a time; workbooks also as tabbed spreadsheets.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "templates"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#templates"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-1.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-1.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-1.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-1.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-2.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-2.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-2.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-2.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-3.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-3.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-3.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-3.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-4.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-4.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-4.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-4.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5.ods#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5.ods",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5.ods"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5.ods"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.spreadsheet"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-risks.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5-risks.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-risks.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-risks.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-assumptions.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5-assumptions.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-assumptions.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-assumptions.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-issues.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5-issues.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-issues.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-issues.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-dependencies.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5-dependencies.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-dependencies.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-dependencies.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-decisions.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5-decisions.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-decisions.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-decisions.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-actions.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5-actions.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-actions.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-actions.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-exceptions.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-5-exceptions.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-exceptions.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-5-exceptions.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-6.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-GOV-6.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-6.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-GOV-6.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-1.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-CAT-1.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-1.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-1.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-2.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-CAT-2.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-2.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-2.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-3.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-CAT-3.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-3.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-3.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-CAT-4.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-1.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-DQ-1.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-1.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-1.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-2.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-DQ-2.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-2.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-2.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-3.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-DQ-3.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-3.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-DQ-3.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#governance-layers",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-governance-layers",
+   "dcterms:title": {
+    "@value": "Governance layers",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Five governance layers with the roles in each and what each may and may not change. Proposed by this portal.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "governance"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#governance-layers"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/governance-layers.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "governance-layers.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/governance-layers.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/governance-layers.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#erd-example",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-erd-example",
+   "dcterms:title": {
+    "@value": "Entity and relationship example",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "A synthetic worked entity and relationship list and the Mermaid relationship diagram drawn from it.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "cataloguing"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#erd-example"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4-example.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-CAT-4-example.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4-example.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4-example.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4-example.mmd#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "templates/T-CAT-4-example.mmd",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4-example.mmd"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/templates/T-CAT-4-example.mmd"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/vnd.mermaid"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#sector-rules",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-sector-rules",
+   "dcterms:title": {
+    "@value": "Sector data quality rules",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "51 starter quality rules for 15 kinds of data, runnable with the Data Quality Commons kit.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "data quality",
+    "rules",
+    "dqkit"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#sector-rules"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/sector-rules.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "sector-rules.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/sector-rules.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/sector-rules.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-hlt.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-hlt.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-hlt.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-hlt.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-soc.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-soc.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-soc.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-soc.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-geo.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-geo.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-geo.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-geo.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-sta.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-sta.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-sta.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-sta.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-shr.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-shr.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-shr.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-shr.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-ai.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-ai.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-ai.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-ai.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-frd.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-frd.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-frd.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-frd.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-jus.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-jus.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-jus.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-jus.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-per.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-per.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-per.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-per.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-ref.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-ref.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-ref.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-ref.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-rec.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-rec.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-rec.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-rec.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-arc.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-arc.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-arc.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-arc.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-dev.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-dev.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-dev.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-dev.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-env.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-env.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-env.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-env.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-edu.yaml#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rules/sup-edu.yaml",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-edu.yaml"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rules/sup-edu.yaml"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/yaml"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#change-checklist",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-change-checklist",
+   "dcterms:title": {
+    "@value": "Delivery and change actions",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Actions for embedding the DAM Policy in business as usual and change programmes.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "change",
+    "delivery"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#change-checklist"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/change-checklist.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "change-checklist.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/change-checklist.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/change-checklist.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#xref",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-xref",
+   "dcterms:title": {
+    "@value": "Cross-reference manifest",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "The shared keys this portal uses (DAMA areas, requirements, capabilities, practices, sectors, roles, tool categories) and where each lives, so sister portals and tools can link to them.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "interoperability",
+    "linked data"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#xref"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/xref.json#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "xref.json",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/xref.json"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/xref.json"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/json"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#interoperability-questions",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-interoperability-questions",
+   "dcterms:title": {
+    "@value": "Tool interoperability questions",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Questions for a request for information or tender for catalogue, data quality, lineage and governance tools, to test interoperability and avoid lock-in.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "procurement",
+    "interoperability",
+    "RFI"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#interoperability-questions"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/interoperability-questions.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "interoperability-questions.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/interoperability-questions.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/interoperability-questions.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#backlog",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-backlog",
+   "dcterms:title": {
+    "@value": "Product backlog and roadmap",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Every backlog item with its user story, source, status, strategy links, assessment and score, and the roadmap it produces.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "roadmap",
+    "backlog",
+    "user research"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#backlog"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/backlog.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "backlog.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/backlog.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/backlog.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/backlog.json#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "backlog.json",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/backlog.json"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/backlog.json"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/json"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#lineage",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-lineage",
+   "dcterms:title": {
+    "@value": "Ontology and lineage",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "An OWL ontology of the portal and PROV-O lineage from sources to policy requirements, capabilities, portal requirements, pages and checks.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "lineage",
+    "PROV-O",
+    "OWL"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#lineage"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/ontology.ttl#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "ontology.ttl",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/ontology.ttl"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/ontology.ttl"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/turtle"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/lineage.ttl#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "lineage.ttl",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/lineage.ttl"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/lineage.ttl"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/turtle"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#ddat-role-skills",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-ddat-role-skills",
+   "dcterms:title": {
+    "@value": "Data role skills and levels",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Skills and skill levels for Digital and Data capability framework roles with data asset management duties.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "skills",
+    "professions"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#ddat-role-skills"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/ddat-role-skills.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "ddat-role-skills.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/ddat-role-skills.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/ddat-role-skills.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#rulebook",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-rulebook",
+   "dcterms:title": {
+    "@value": "Related policies, standards and legislation",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Every policy, standard, piece of legislation and framework the portal links to, with publisher and update date.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "rulebook",
+    "standards"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#rulebook"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rulebook.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "rulebook.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rulebook.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/rulebook.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    },
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/sources.jsonld#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "sources.jsonld",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/sources.jsonld"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/sources.jsonld"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/ld+json"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#traceability",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-traceability",
+   "dcterms:title": {
+    "@value": "Portal requirements traceability",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Each portal requirement, the features that meet it and the checks that prove it.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "traceability"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#traceability"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/traceability.csv#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "traceability.csv",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/traceability.csv"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/traceability.csv"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/text/csv"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#playbooks",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-playbooks",
+   "dcterms:title": {
+    "@value": "Full portal content",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Everything on the portal in one JSON file.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "playbooks"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#playbooks"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/playbooks.json#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "playbooks.json",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/playbooks.json"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/playbooks.json"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/json"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  },
+  {
+   "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#status",
+   "@type": "dcat:Dataset",
+   "dcterms:identifier": "DAMCP-status",
+   "dcterms:title": {
+    "@value": "Portal health",
+    "@language": "en-GB"
+   },
+   "dcterms:description": {
+    "@value": "Latest automated health run: source currency, signposted sections, links and page weight.",
+    "@language": "en-GB"
+   },
+   "dcat:keyword": [
+    "status"
+   ],
+   "dcterms:license": {
+    "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+   },
+   "dcterms:publisher": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/#publisher",
+    "@type": "foaf:Agent",
+    "foaf:name": "Data Asset Management (DAM) capability playbooks (prototype)"
+   },
+   "dcat:contactPoint": {
+    "@type": "vcard:Kind",
+    "vcard:fn": "Contact form",
+    "vcard:hasURL": {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/contact.html"
+    }
+   },
+   "dcterms:modified": {
+    "@value": "2026-11-06",
+    "@type": "xsd:date"
+   },
+   "dcat:version": "1.10.1",
+   "dcat:landingPage": {
+    "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data.html#status"
+   },
+   "dcat:distribution": [
+    {
+     "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/status.json#distribution",
+     "@type": "dcat:Distribution",
+     "dcterms:title": "status.json",
+     "dcat:downloadURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/status.json"
+     },
+     "dcat:accessURL": {
+      "@id": "https://cyberdudeuk.github.io/dam-capability-playbooks/data/status.json"
+     },
+     "dcat:mediaType": {
+      "@id": "https://www.iana.org/assignments/media-types/application/json"
+     },
+     "dcterms:license": {
+      "@id": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+     }
+    }
+   ]
+  }
+ ]
+}
