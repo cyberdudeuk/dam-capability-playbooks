@@ -9,6 +9,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
 import build  # noqa: E402
@@ -1198,6 +1200,32 @@ class Vaccination(unittest.TestCase):
 
     def test_build_rejects_body_without_terms_status(self):
         self._rejects('    tor: Terms of reference not found published on GOV.UK.\n', "    tor: ''\n")
+
+
+class HealthHandChecks(unittest.TestCase):
+    """Issue 42: hand-checked links count as blocked only while the check is fresh."""
+
+    HAND = {'expire_days': 90, 'links': [{'url': 'https://example.org/a', 'checked': '2026-11-14', 'how': 'opened'}]}
+
+    def rows(self):
+        return [{'url': 'https://example.org/a', 'state': 'broken', 'code': 404}, {'url': 'https://example.org/b', 'state': 'broken', 'code': 404}]
+
+    def test_fresh_hand_check_is_not_broken(self):
+        import health, datetime as dt
+        r = health.apply_hand_checks(self.rows(), dt.date(2026, 12, 1), self.HAND)
+        self.assertEqual(r[0]['state'], 'blocked')
+        self.assertEqual(r[1]['state'], 'broken')  # a link the register does not name stays broken
+
+    def test_expired_hand_check_is_broken_again(self):
+        import health, datetime as dt
+        r = health.apply_hand_checks(self.rows(), dt.date(2027, 3, 1), self.HAND)
+        self.assertEqual(r[0]['state'], 'broken')
+        self.assertIn('expired', r[0]['detail'])
+
+    def test_register_entries_are_complete(self):
+        h = yaml.safe_load((ROOT / 'content' / 'hand-checked-links.yaml').read_text(encoding='utf-8'))
+        for x in h['links']:
+            self.assertTrue(x['url'].startswith('https://') and x.get('how') and x.get('why') and x.get('checked'), x)
 
 
 class CompassSync(unittest.TestCase):
