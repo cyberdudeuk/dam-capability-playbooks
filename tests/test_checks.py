@@ -69,15 +69,15 @@ class HealthRun(unittest.TestCase):
             calls.append(url)
             if len(calls) == 1:
                 raise health.urllib.error.HTTPError(url, 504, 'Gateway Timeout', {}, None)
-            return 200, b''
+            return 200, b'', {}
         d = Path(tempfile.mkdtemp(prefix='dcp-h-'))
         (d / 'a.html').write_text('<a href="https://example.org/x">x</a>')
-        orig, sleep = health.fetch, health.time.sleep
-        health.fetch, health.time.sleep = flaky, (lambda s: None)
+        orig, sleep = health.fetch_meta, health.time.sleep
+        health.fetch_meta, health.time.sleep = flaky, (lambda s: None)
         try:
             rows = health.external_links(d)
         finally:
-            health.fetch, health.time.sleep = orig, sleep
+            health.fetch_meta, health.time.sleep = orig, sleep
             shutil.rmtree(d, ignore_errors=True)
         self.assertEqual(rows[0]['state'], 'ok', 'a single 504 followed by success must not be reported as broken (D-019)')
 
@@ -87,14 +87,46 @@ class HealthRun(unittest.TestCase):
             raise health.urllib.error.HTTPError(url, 503, 'Service Unavailable', {}, None)
         d = Path(tempfile.mkdtemp(prefix='dcp-h-'))
         (d / 'a.html').write_text('<a href="https://example.org/y">y</a>')
-        orig, sleep = health.fetch, health.time.sleep
-        health.fetch, health.time.sleep = down, (lambda s: None)
+        orig, sleep = health.fetch_meta, health.time.sleep
+        health.fetch_meta, health.time.sleep = down, (lambda s: None)
         try:
             rows = health.external_links(d)
         finally:
-            health.fetch, health.time.sleep = orig, sleep
+            health.fetch_meta, health.time.sleep = orig, sleep
             shutil.rmtree(d, ignore_errors=True)
         self.assertEqual(rows[0]['state'], 'unavailable')
+
+    def _links_with(self, fake):
+        import health
+        d = Path(tempfile.mkdtemp(prefix='dcp-h-'))
+        (d / 'a.html').write_text('<a href="https://example.org/law">x</a>')
+        orig, sleep = health.fetch_meta, health.time.sleep
+        health.fetch_meta, health.time.sleep = fake, (lambda s: None)
+        try:
+            return health.external_links(d)
+        finally:
+            health.fetch_meta, health.time.sleep = orig, sleep
+            shutil.rmtree(d, ignore_errors=True)
+
+    def test_d045_bot_challenge_202_is_blocked_not_ok(self):
+        rows = self._links_with(lambda url, timeout=20, accept=None: (202, b'', {'x-amzn-waf-action': 'challenge'}))
+        self.assertEqual(rows[0]['state'], 'blocked', 'a WAF challenge is not evidence the page exists (D-045)')
+
+    def test_d045_bot_challenge_404_is_blocked_not_broken(self):
+        import health
+
+        def waf404(url, timeout=20, accept=None):
+            raise health.urllib.error.HTTPError(url, 404, 'Not Found', {'X-Amzn-Waf-Action': 'challenge'}, None)
+        rows = self._links_with(waf404)
+        self.assertEqual(rows[0]['state'], 'blocked', 'a 404 from a WAF challenge is not a broken link (D-045)')
+
+    def test_d045_plain_404_is_still_broken(self):
+        import health
+
+        def gone(url, timeout=20, accept=None):
+            raise health.urllib.error.HTTPError(url, 404, 'Not Found', {}, None)
+        rows = self._links_with(gone)
+        self.assertEqual(rows[0]['state'], 'broken')
 
     def test_hl02_missing_anchor_is_reported(self):
         import json as _json
