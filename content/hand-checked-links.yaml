@@ -1,0 +1,9 @@
+# Links a person has opened and checked by hand because the site answers automated link checks with a "not found" (404) page.
+# The weekly health run treats each one as checked until it expires; after that it reports the link again, so a person opens it
+# and records a new date. Never add a link here without opening it first, and say how you checked it. (Issue 42, 14 November 2026)
+expire_days: 90
+links:
+  - url: https://eur-lex.europa.eu/eli/reg/2023/2854/oj
+    checked: '2026-11-14'
+    how: Opened with a web fetch. The page shows Regulation (EU) 2023/2854 of 13 December 2023 (Data Act).
+    why: EUR-Lex answers automated checks with a bot challenge (D-045). The CI runner saw it as a plain 404 with no challenge header, which the header test cannot catch.
