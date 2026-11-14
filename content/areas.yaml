@@ -557,6 +557,56 @@ areas:
         reqs: [DAM-R12]
         caps: [CR-14, CR-12]
         refs: [RB-UPRN, RB-REFARCH]
+      - id: REF-5
+        stage: build
+        title: Find peers before you buy or build
+        goal: You learn from public bodies that already run the tool or keep the list, before you commit.
+        steps:
+          - Look up the tool in the repos asset catalogue's register of expertise, which lists the public bodies that buy or build with it, from tender and contract notices and their public code.
+          - Check whether the list you need is already published, for example the GOV.UK organisations, the planning data registers, the NHS Organisation Data Service, Get Information about Schools or Companies House.
+          - Ask in the cross-government data management community, and note who has done it before.
+          - Read any public code peers share, such as deployment and pipeline code, before you design your own.
+        outputs: [A list of peers and existing sources, Questions to ask them]
+        evidence: The business case names peers asked and existing sources considered.
+        measure: Proposals that name peers and existing sources.
+        raci: {STW: R, ARC: R, OWN: A}
+        reqs: [DAM-R16]
+        caps: [CR-14]
+        refs: [RB-OPENSRC, RB-CHOOSE]
+      - id: REF-6
+        stage: build
+        title: Choose a master data tool with exit in mind
+        goal: The tool fits how you run services, and your master data can leave it.
+        steps:
+          - Ask how it is hosted and supported, and whether your cloud and support teams can run it without the supplier.
+          - Ask how releases and upgrades work, and how you test them before they reach live data.
+          - Ask how security vulnerabilities are found, reported and fixed, and how fast.
+          - Check the screens your stewards and developers will use meet the accessibility regulations, not only the public ones.
+          - Make export a contract term. Master and reference data, with match and survivorship rules and history, must come out in an open format through a documented API.
+        outputs: [Evaluation against hosting, releases, support, vulnerabilities, accessibility and exit, Exit terms in the contract]
+        evidence: The contract names the export format and the API.
+        measure: Master data tools with tested export.
+        raci: {ARC: R, OWN: A, STW: C}
+        reqs: [DAM-R12]
+        caps: [CR-14, CR-12]
+        refs: [RB-TCOP11, RB-TCOP4, RB-NCSCCLOUD, RB-A11YREQ, RB-API]
+      - id: REF-7
+        stage: embed
+        title: Publish shared lists as open, versioned data
+        goal: Others reuse your list instead of copying it, and every copy can tell when it is out of date.
+        steps:
+          - Name an owner and a steward for each list you publish.
+          - Give every entry a persistent identifier that does not change when its name or web address does.
+          - Publish JSON first, with CSV and its metadata for spreadsheets, and a catalogue record so others can find it.
+          - Take changes as proposals a steward accepts or rejects in the open, and version every release.
+          - Join other bodies' lists by their identifiers rather than copying their values.
+        outputs: [Published list with owner, identifiers and versions, Catalogue record]
+        evidence: The list has a named owner, persistent identifiers and a version history.
+        measure: Published lists reused by another team.
+        raci: {STW: R, OWN: A, CAT: R, USR: I}
+        reqs: [DAM-R04]
+        caps: [CR-14, CR-11]
+        refs: [RB-REFDATA, RB-SKOS, RB-API]
       - id: REF-4
         stage: embed
         title: Govern changes to code lists
