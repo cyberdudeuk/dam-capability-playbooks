@@ -684,3 +684,14 @@ a.std{text-decoration-style:dotted}
 .std-grid .link-list li{margin-bottom:.4rem}
 .std-refs{font-size:.95em}
 .drill-steps{margin:.25rem 0 .5rem;padding-left:1.4em}
+/* Learning pathways (version 1.15.0) */
+.pathway{border-left:.35rem solid var(--o);padding:1rem 1.25rem;margin:1rem 0 2rem}
+.chip.pw{color:var(--o);border-color:var(--o)}
+.chip.pw svg.i{margin-right:.25rem}
+.pill[class*="cover-"]{white-space:nowrap}
+.pill.cover-strong{color:var(--v)}.pill.cover-partial{color:var(--k)}.pill.cover-none{color:var(--u)}
+.pathway-steps li{margin:.35rem 0}
+.pathway-steps svg.i{margin-right:.35rem;vertical-align:-.15em}
+/* D-044: an opacity fade-in failed colour contrast while it ran, so motion here moves, never fades */
+@media (prefers-reduced-motion:no-preference){.pathway{animation:pw-in .4s ease-out both}@keyframes pw-in{from{transform:translateY(.4rem)}to{transform:none}}}
+.pw-mods a{display:inline-block;min-height:24px;min-width:24px;padding:.1rem .4rem;margin:.1rem .25rem .1rem 0;line-height:1.4}

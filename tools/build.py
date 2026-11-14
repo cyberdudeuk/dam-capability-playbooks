@@ -240,6 +240,36 @@ def validate(d):
         if len(aids) != len(set(aids)): errs.append(f"{m['id']}: duplicate activity ids")
         for q in m['check']:
             if len(q['options']) < 2 or not (0 <= q['answer'] < len(q['options'])): errs.append(f"{m['id']}: bad question '{q['q']}'")
+            # D-043: an unquoted comma inside a flow-list option splits one answer into two, so the marked answer can point at a fragment
+            for o in q['options']:
+                if str(o)[:1].islower(): errs.append(f"{m['id']}: option '{o}' looks like a fragment; quote options that contain commas")
+        for a in m['activities']:
+            if a['type'] not in ACTIVITY_ICONS: errs.append(f"{m['id']}.{a['id']}: unknown activity type {a['type']}")
+            if a.get('link', '').startswith('http') and not a['link'].startswith('https://'): errs.append(f"{m['id']}.{a['id']}: external link must be https")
+    # Version 1.15.0: learning pathways. Each pathway's modules exist, carry the pathway's id, and nothing claims a pathway that does not list it.
+    pws = d.get('pathways', [])
+    pw_ids = [p['id'] for p in pws]
+    if len(pw_ids) != len(set(pw_ids)): errs.append('duplicate pathway ids')
+    for p in pws:
+        for k in ('title', 'icon', 'summary', 'modules', 'checked', 'alignment', 'gaps', 'against', 'resources'):
+            if not p.get(k): errs.append(f"pathway {p['id']}: missing {k}")
+        if p.get('icon') not in ICON_SET: errs.append(f"pathway {p['id']}: unknown icon {p.get('icon')}")
+        for mid in p.get('modules', []):
+            if mid not in mods: errs.append(f"pathway {p['id']}: unknown module {mid}")
+            elif next(m for m in d['modules'] if m['id'] == mid).get('pathway') != p['id']: errs.append(f"pathway {p['id']}: module {mid} is not tagged with this pathway")
+        al = p.get('alignment') or {}
+        if not str(al.get('url', '')).startswith('https://'): errs.append(f"pathway {p['id']}: alignment url must be https")
+        for r in al.get('rows', []):
+            if r['cover'] not in ('Strong', 'Partial', 'None'): errs.append(f"pathway {p['id']}: bad cover '{r['cover']}'")
+            for mid in r['modules']:
+                if mid not in p['modules']: errs.append(f"pathway {p['id']}: alignment row '{r['theme']}' names {mid}, which is not in the pathway")
+        for g in p.get('gaps', []):
+            if g['status'] not in ('Open', 'Started', 'Closed'): errs.append(f"pathway {p['id']} {g['id']}: bad status")
+        for r in p.get('resources', []):
+            if not r['url'].startswith('https://') or not r.get('status'): errs.append(f"pathway {p['id']}: resource {r['name']} needs an https url and a status")
+    for m in d['modules']:
+        if m.get('pathway') and m['pathway'] not in pw_ids: errs.append(f"{m['id']}: unknown pathway {m['pathway']}")
+        elif m.get('pathway') and m['id'] not in next(p for p in pws if p['id'] == m['pathway'])['modules']: errs.append(f"{m['id']}: tagged {m['pathway']} but the pathway does not list it")
     for p in d['personas']:
         if p['role'] not in roles: errs.append(f"persona {p['id']}: unknown role {p['role']}")
         for mid in p['modules']:
@@ -861,6 +891,7 @@ class Site:
         self.caps = {c['id']: c for c in d['capabilities']}
         self.concepts = {c['id']: c for c in d['concepts']}
         self.mods = {m['id']: m for m in d['modules']}
+        self.pws = {p['id']: p for p in d.get('pathways', [])}
         self.stage = {f"{c['id']}.{st['id']}": (c, st) for c in d['capabilities'] for st in c['stages']}
         self.rb = {x['id']: x for x in d.get('rulebook', [])}
         self.cr = {c['id']: c for c in d.get('capmap', [])}
@@ -1892,11 +1923,12 @@ class Site:
         for mm in d['modules']:
             units = self.mod_units(mm['id'])
             caps = ' '.join(f'<span class="pill {c}">{E(self.caps[c]["short"])}</span>' for c in mm['caps'])
-            cards += (f'<li class="mod-card" data-item data-level="{slug(mm["level"])}" data-cap="{" ".join(mm["caps"])}"><a href="#{mm["id"]}">{tile(mm["icon"], "sm")}'
+            pw_tag = f' <span class="chip pw">{icon(self.pws[mm["pathway"]]["icon"])}{E(self.pws[mm["pathway"]]["title"])}</span>' if mm.get('pathway') else ''
+            cards += (f'<li class="mod-card" data-item data-level="{slug(mm["level"])}" data-cap="{" ".join(mm["caps"])}" data-pathway="{E(mm.get("pathway", "core"))}"><a href="#{mm["id"]}">{tile(mm["icon"], "sm")}'
                       f'<span><strong>{E(mm["id"])} {E(mm["title"])}</strong><span class="hint">{icon(LEVELS[mm["level"]])}{E(mm["level"])} · {icon("timer")}{mm["minutes"]} min</span></span></a>'
-                      f'{caps}{status_tag(units)}</li>')
+                      f'{caps}{pw_tag}{status_tag(units)}</li>')
             acts = ''.join(f'<li class="activity">{icon(ACTIVITY_ICONS[a["type"]])}<div><strong>{E(a["type"])}.</strong> '
-                           + (f'<a href="{E(a["link"])}">{E(a["text"])}</a>' if a.get('link') else E(a['text']))
+                           + ((f'<a href="{E(a["link"])}" rel="noopener">{E(a["text"])}</a> <span class="hint">({E(self.link_owner(a["link"]))})</span>' if a['link'].startswith('https://') else f'<a href="{E(a["link"])}">{E(a["text"])}</a>') if a.get('link') else E(a['text']))
                            + f'{mark_done(mm["id"] + "." + a["id"], "Done")}</div></li>' for a in mm['activities'])
             qs = ''
             for qi, q in enumerate(mm['check']):
@@ -1907,7 +1939,7 @@ class Site:
                        f'<p class="kc-feedback" aria-live="polite"></p>'
                        f'<details class="kc-answer"><summary>Show the answer</summary><p><strong>{E(q["options"][q["answer"]])}.</strong> {E(q["why"])}</p></details></fieldset>')
             details += f'''<section class="module" id="{mm["id"]}" aria-labelledby="h-{mm["id"]}">
-<div class="mod-head">{tile(mm["icon"], "lg")}<div><p class="caption">{E(mm["id"])} · {E(mm["level"])} · {mm["minutes"]} minutes</p><h3 id="h-{mm["id"]}">{E(mm["title"])}</h3>{caps}</div></div>
+<div class="mod-head">{tile(mm["icon"], "lg")}<div><p class="caption">{E(mm["id"])} · {E(mm["level"])} · {mm["minutes"]} minutes</p><h3 id="h-{mm["id"]}">{E(mm["title"])}</h3>{caps}{pw_tag}</div></div>
 {progress_widget(units, "Activities done")}
 <div class="cols"><div><h4>{icon("target")} By the end you will be able to</h4>{ul(mm["outcomes"], cls="ticks")}</div>
 <div><h4>{icon("list-checks")} Activities</h4><ol class="activities">{acts}</ol></div></div>
@@ -1915,23 +1947,61 @@ class Site:
         filt = '''<div class="filters" data-filter="mod-list" role="group" aria-label="Filter modules">
 <div><label for="m-level">Level</label><select id="m-level" name="level"><option value="">All</option><option value="foundation">Foundation</option><option value="practitioner">Practitioner</option><option value="advanced">Advanced</option></select></div>
 <div><label for="m-cap">Capability</label><select id="m-cap" name="cap"><option value="">All</option><option value="gov">Data governance</option><option value="cat">Data cataloguing</option><option value="dq">Data quality</option></select></div>
+<div><label for="m-pw">Pathway</label><select id="m-pw" name="pathway"><option value="">All</option><option value="core">Core DAM modules</option>''' + ''.join(f'<option value="{E(p["id"])}">{E(p["title"])}</option>' for p in d.get('pathways', [])) + '''</select></div>
 <p class="count-out" aria-live="polite"></p></div>'''
+        pw_html = ''.join(self.pathway_html(p) for p in d.get('pathways', []))
         body = self.hero('graduation-cap', 'Learning journeys', 'Learn the playbooks', E(d['pages']['learning']['lede']),
                          brief=[f'{n["modules"]} modules, about {n["minutes"]} minutes in total, at three levels.',
                                 'Each module has outcomes, a short set of activities and a check of understanding.',
+                                f'{len(d.get("pathways", []))} themed pathway, on AI-ready data stewardship, joins the modules to sister projects.' if len(d.get('pathways', [])) == 1 else f'{len(d.get("pathways", []))} themed pathways join the modules to sister projects.',
                                 'Follow the journey for your role, or pick any module.'],
                          meta=[('graduation-cap', f'{n["modules"]} modules'), ('timer', f'{n["minutes"]} minutes'), ('layers', '3 levels')])
         body += f'''<h2 id="levels">{icon("layers")} Levels</h2><ul class="icon-list three">{levels}</ul>
 <h2 id="journeys">{icon("route")} Journeys by role</h2><ul class="icon-list paths">{paths}</ul>
+<h2 id="pathways">{icon("brain")} Pathways</h2><p>Themed routes through the modules. Each one says what it covers in other projects, what is still missing and the strongest case against it.</p>{pw_html}
 <h2 id="modules">{icon("book-open")} All modules</h2>{filt}<ul class="mod-grid" id="mod-list">{cards}</ul>
 <h2 id="module-detail">{icon("graduation-cap")} Modules in full</h2>{details}'''
         drawer = [{'label': 'Learning', 'icon': 'graduation-cap', 'items': [
             {'id': 'levels', 'label': 'Levels', 'icon': 'layers', 'count': 3}, {'id': 'journeys', 'label': 'Journeys by role', 'icon': 'route', 'count': len(d['personas'])},
+            {'id': 'pathways', 'label': 'Pathways', 'icon': 'brain', 'count': len(d.get('pathways', []))},
             {'id': 'modules', 'label': 'All modules', 'icon': 'book-open', 'count': len(d['modules'])}]},
                   {'label': 'Modules', 'icon': 'book-open', 'items': [{'id': mm['id'], 'label': f'{mm["id"]} {mm["title"]}', 'icon': mm['icon']} for mm in d['modules']]}]
         return self.page('learning', 'Learning', body, drawer, crumbs=['Learning'],
                          jsonld={'@type': ['WebPage', 'Course'], 'name': 'DAM capability playbooks learning modules',
-                                 'hasPart': [{'@type': 'LearningResource', 'name': mm['title'], 'educationalLevel': mm['level'], 'timeRequired': f'PT{mm["minutes"]}M', 'teaches': mm['outcomes']} for mm in d['modules']]})
+                                 'hasPart': [{'@type': 'LearningResource', 'name': mm['title'], 'educationalLevel': mm['level'], 'timeRequired': f'PT{mm["minutes"]}M', 'teaches': mm['outcomes']} for mm in d['modules']]
+                                 + [{'@type': 'Course', 'name': p['title'], 'description': p['summary'], 'hasPart': [{'@type': 'LearningResource', 'name': self.mods[x]['title']} for x in p['modules']]} for p in d.get('pathways', [])]})
+
+    def link_owner(self, url):
+        """Name the website an external activity link opens, without showing account names (C-17): a pathway resource or sister portal by its name, otherwise the host."""
+        named = [(r['url'].rstrip('/'), r['name']) for p in self.d.get('pathways', []) for r in p['resources']]
+        named += [(x['url'].rstrip('/'), x['name']) for x in (self.d.get('related') or {}).get('portals', [])]
+        for u, n in sorted(named, key=lambda x: -len(x[0])):
+            if url.startswith(u):
+                return n
+        host = urllib.parse.urlparse(url).netloc.removeprefix('www.')
+        return {'gov.uk': 'GOV.UK', 'w3.org': 'W3C', 'doi.org': 'journal article'}.get(host, host)
+
+    def pathway_html(self, p):
+        """A themed learning pathway (version 1.15.0): modules, alignment with an independent course, gaps, the case against, and resources with their status."""
+        mods = [self.mods[x] for x in p['modules']]
+        units = [u for x in p['modules'] for u in self.mod_units(x)]
+        mins = sum(m['minutes'] for m in mods)
+        steps = ''.join(f'<li><a href="#{E(m["id"])}">{icon(m["icon"])}{E(m["id"])} {E(m["title"])}</a> <span class="chip">{E(m["level"])}</span> <span class="chip">{m["minutes"]} min</span>{status_tag(["mod:" + m["id"]])}</li>' for m in mods)
+        al = p['alignment']
+        rows = [[E(r['theme']), '<span class="pw-mods">' + ' '.join(f'<a href="#{E(x)}">{E(x)}</a>' for x in r['modules']) + '</span>', f'<span class="pill cover-{slug(r["cover"])}">{E(r["cover"])}</span>', E(r['note'])] for r in al['rows']]
+        gaps = ''.join(f'<li id="{E(g["id"])}">{tile("triangle-alert" if g["status"] == "Open" else "construction", "sm")}<div><strong>{E(g["id"])} {E(g["title"])}</strong> <span class="chip">{E(g["status"])}</span><br>{E(g["text"])}</div></li>' for g in p['gaps'])
+        res = ''.join(f'<li><a href="{E(r["url"])}" rel="noopener">{E(r["name"])}</a> <span class="chip">{E(r["status"])}</span><br><span class="hint">{E(r["by"])}</span></li>' for r in p['resources'])
+        pid = E(p['id'])
+        return f'''<section class="pathway card" id="pathway-{pid}" aria-labelledby="h-pathway-{pid}">
+<div class="mod-head">{tile(p["icon"], "lg")}<div><p class="caption">{len(mods)} modules · about {mins} minutes · links checked {E(p["checked"])}</p><h3 id="h-pathway-{pid}">{E(p["title"])}</h3></div></div>
+<p>{E(p["summary"])}</p>{progress_widget(units, "Activities done")}
+<h4>{icon("route")} The route</h4><ol class="path pathway-steps">{steps}</ol>
+<h4>{icon("compass")} How it lines up with {E(al["course"])}</h4>
+<p class="hint">{E(al["by"])}. {E(al["when"])}. {E(al["note"])} <a href="{E(al["url"])}" rel="noopener">Course page</a>.</p>
+{table(f"t-pw-{pid}", "Course theme, pathway modules and how well they cover it", ["Course theme", "Modules", "Cover", "Note"], rows)}
+<h4>{icon("triangle-alert")} What is still missing</h4><ul class="icon-list">{gaps}</ul>
+<div class="cols"><div><h4>{icon("scale")} The case against</h4><p>{E(p["against"]["case"])}</p></div><div><h4>{icon("circle-check")} Our answer</h4><p>{E(p["against"]["answer"])}</p></div></div>
+<h4>{icon("link")} Where the pathway sends you, and each source's status</h4><ul class="ticks">{res}</ul></section>'''
 
     def p_inclusion(self):
         d, inc = self.d, self.d['inclusion']

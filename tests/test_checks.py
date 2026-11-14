@@ -581,6 +581,51 @@ class Vaccination(unittest.TestCase):
         self.fails('c39_backlog_18_22')
 
     # the old compass name stayed in every footer after the rename (C-43)
+    # Version 1.15.0: the AI-ready data stewardship pathway (C-44)
+    def test_c44_pathway_module_dropped_from_route(self):
+        edit(self.s / 'learning.html', '<ol class="path pathway-steps"><li><a href="#M12">', '<ol class="path pathway-steps"><li><a href="#M99">')
+        self.fails('c44_pathways')
+
+    def test_c44_pathway_gap_hidden(self):
+        edit(self.s / 'learning.html', 'id="PG-01"', 'id="PG-X"')
+        self.fails('c44_pathways')
+
+    def test_c44_resource_status_dropped(self):
+        edit(self.s / 'learning.html', '<span class="chip">Alpha prototype</span>', '<span class="chip"></span>')
+        self.fails('c44_pathways')
+
+    def test_c44_external_link_without_owner(self):
+        edit(self.s / 'learning.html', ' <span class="hint">(NDL PubSec MCP)</span>', '')
+        self.fails('c44_pathways')
+
+    def test_c44_pathways_missing_from_json(self):
+        import json as _j
+        f = self.s / 'data' / 'playbooks.json'
+        j = _j.loads(f.read_text(encoding='utf-8'))
+        j.pop('pathways')
+        f.write_text(_j.dumps(j), encoding='utf-8')
+        self.fails('c44_pathways')
+
+    def test_c44_fading_keyframes(self):
+        edit(self.s / 'assets' / 'style.css', '@keyframes pw-in{from{transform:translateY(.4rem)}', '@keyframes pw-in{from{opacity:0;transform:translateY(.4rem)}')
+        self.fails('c44_pathways')
+
+    def test_build_rejects_untagged_pathway_module(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '  pathway: ai-ready\n  outcomes: ["Explain the RDF triple', '  outcomes: ["Explain the RDF triple')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_unknown_pathway(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '  pathway: ai-ready\n  outcomes: ["Name the four pillars', '  pathway: ai-nope\n  outcomes: ["Name the four pillars')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    # D-043: an unquoted comma in a check option split one answer into two
+    def test_build_rejects_split_option(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'options: ["Someone owns quality, drift and bias monitoring",', 'options: [Someone owns quality, drift and bias monitoring,')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
     def test_c43_old_compass_name_in_footer(self):
         edit(self.s / 'index.html', 'Data portals compass: find your way', 'Estate compass: find your way')
         self.fails('c43_compass_name')

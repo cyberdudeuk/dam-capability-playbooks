@@ -967,6 +967,8 @@ defects:
 - {id: D-040, found: "Code review (13 November 2026)", defect: "Defect numbers D-034 and D-035 were each used twice, by two sessions working at the same time.", cause: "Defect ids were not checked for uniqueness, and sessions pick the next number from their own copy.", check: "The build now rejects a duplicate defect id. The compass entries were renumbered D-037 and D-038; the earlier D-034 and D-035 keep their numbers."}
 - {id: D-041, found: "Visual inspection (13 November 2026)", defect: "The compass's own self-check said the Repos Asset Catalogue facts were 36 days old, and one figure in them (25,981 projects) could no longer be reproduced from that catalogue's data.", cause: "The 30-day freshness test ran only in the browser; nothing in CI or the daily sync looked at it.", check: "The daily sync now lists portal facts older than 30 days and opens an issue for them. The facts were rechecked against the catalogue's repository and the unreproducible figure replaced with its README's own wording."}
 - {id: D-042, found: "Taking over pull request 33 (13 November 2026)", defect: "The DAMA drill-down assessment still said eight areas had no activities and that data architecture had no steps, measures or standards, after the Knowledge areas page had added them.", cause: "Two pieces of work changed the same area in parallel; the assessment was written as text, with nothing tying it to the activities it describes.", check: "C-40 now fails if the assessment says areas have no activities, or that data architecture has no steps, measures or standards, while the Knowledge areas content has them. A test proves it."}
+- {id: D-043, found: "Development of the AI-ready pathway (version 1.15.0, before publishing)", defect: "A check-of-understanding option, 'Someone owns quality, drift and bias monitoring', was split into two options, so the marked answer would have pointed at a fragment.", cause: "The same class as D-009 and D-033: an unquoted comma in a YAML flow list starts a new item. D-009's guard covered outcomes and lists but not check options.", check: "The build now rejects any check option that starts with a lower-case letter, the sign of a split, and says to quote it; a test proves it."}
+- {id: D-044, found: "Browser checks (version 1.15.0, before publishing)", defect: "The new pathway card faded in, and axe reported every caption and line inside it as failing colour contrast in light and dark modes; two module links in the alignment table were also below the 24 pixel target size.", cause: "An opacity animation lowers contrast while it runs and axe reads the page mid-animation; adjacent inline links in a narrow cell had no minimum size.", check: "Motion on the card now moves without fading and the links have a 24 pixel minimum. C-44 fails if any keyframes animate opacity, with a test, and B-01 (axe) keeps checking contrast and target size."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1000,7 +1002,7 @@ personas:
   pains: ["Governance, cataloguing and quality run by different teams record the same facts in different places", "Evidence is assembled in a rush at the deadline"]
   design_for: [Reads on a phone between meetings, Wants the summary before the detail]
   success: Every critical data asset has a named owner, a current catalogue record and a DQAP, and the return goes in on time.
-  modules: [M01, M02, M03, M09, M10]
+  modules: [M01, M02, M03, M09, M10, M12]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M02}]}
   - {stage: Prepare, tasks: [{p: gov.mandate, label: Agree the mandate and scope}, {p: cat.mobilise, label: Appoint the coordinating team}]}
@@ -1020,7 +1022,7 @@ personas:
   pains: [Requests arrive from several directions with different deadlines, Owners change and nobody updates the record]
   design_for: [Works compressed or part-time hours and picks tasks up after gaps, New to data management]
   success: An assured return goes in on time, built from catalogue records rather than retyped.
-  modules: [M01, M02, M04, M06, M09, M10]
+  modules: [M01, M02, M04, M06, M09, M10, M12]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M04}]}
   - {stage: Prepare, tasks: [{p: cat.mobilise, label: Set up the team and ALB contacts}, {p: cat.discover, label: Build the candidate list}]}
@@ -1040,7 +1042,7 @@ personas:
   pains: [Unclear difference between data owner and information asset owner, Asked to sign things without the context]
   design_for: [Uses screen magnification at 200 per cent, Prefers checklists to long text]
   success: You can explain your assets' purpose, quality and risks, and your successor is named.
-  modules: [M01, M02, M07, M10]
+  modules: [M01, M02, M07, M10, M12, M14]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M02}]}
   - {stage: Prepare, tasks: [{p: gov.assign, label: Accept the role and name a successor}]}
@@ -1060,7 +1062,7 @@ personas:
   pains: [The same owner and review date recorded in three places, Quality rules kept only in one tool]
   design_for: [Dyslexic and prefers short steps, Uses a screen reader for long documents]
   success: Every asset you steward has a current record, rules with targets, and a quality statement users understand.
-  modules: [M01, M05, M07, M08, M10]
+  modules: [M01, M05, M07, M08, M10, M12, M13, M14, M17]
   journey:
   - {stage: Learn, tasks: [{m: M05}, {m: M07}]}
   - {stage: Prepare, tasks: [{p: dq.identify, label: Agree critical data elements}, {p: cat.describe, label: Complete the catalogue record}]}
@@ -1080,7 +1082,7 @@ personas:
   pains: [Guidance and model do not list the same properties, Internal-only links break outside the organisation]
   design_for: [Works mainly by keyboard, English is an additional language]
   success: Every critical data asset record is complete, conforms to the standard and can be harvested as DCAT.
-  modules: [M01, M05, M06, M10]
+  modules: [M01, M05, M06, M10, M13, M15]
   journey:
   - {stage: Learn, tasks: [{m: M05}, {m: M06}]}
   - {stage: Prepare, tasks: [{p: cat.discover, label: Search existing registers}]}
@@ -1100,7 +1102,7 @@ personas:
   pains: [Every team scores issues differently, Quality reported as one average]
   design_for: ["Colour-blind, so charts must not rely on colour alone", "Works across several devices"]
   success: Every critical data asset has scored issues, automated checks and quality reported by group where lawful.
-  modules: [M01, M07, M08, M09, M10]
+  modules: [M01, M07, M08, M09, M10, M12, M17]
   journey:
   - {stage: Learn, tasks: [{m: M07}, {m: M08}]}
   - {stage: Prepare, tasks: [{p: dq.define, label: Build the rule library}]}
@@ -1306,6 +1308,159 @@ modules:
   check:
   - {q: "Which guidance makes a register of data assets its second principle?", options: [Managing legacy technology, The Magenta Book, The Service Standard], answer: 0, why: "The GOV.UK guidance on managing legacy technology asks organisations to build a complete and accurate register of their data assets."}
   - {q: "How does the capability model flag a need the DAM Policy text does not state at all?", options: [Inferred, Implicit, Explicit], answer: 0, why: "Inferred means the need is not in the text and comes from good practice and adjacent rulebooks."}
+
+# ---------------------------------------------------------------------------
+# AI-ready data stewardship pathway (version 1.15.0). Six modules that join this portal to the
+# Data Quality Commons, DCAT-AP-UK, the xGov MEM, the NDL PubSec MCP server, the Knowledge Web and the
+# AI capability governance toolkit. Every external link was opened and its title checked on 14 November 2026.
+# ---------------------------------------------------------------------------
+- id: M12
+  title: What makes a critical data asset AI-ready
+  level: Foundation
+  minutes: 20
+  icon: sparkles
+  caps: [gov, cat, dq]
+  pathway: ai-ready
+  outcomes: ["Name the four pillars in the GDS guidelines on AI-ready datasets", "Decide whether an asset needs the AI-ready supplement", "Explain why AI-readiness is a stewardship question as well as a technical one"]
+  activities:
+  - {id: a1, type: Read, text: "Read the executive summary and the four pillars of the GDS guidelines on making government datasets ready for AI.", link: "https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai/guidelines-and-best-practices-for-making-government-datasets-ready-for-ai"}
+  - {id: a2, type: Do, text: "Answer the 'which supplements apply' questions for one asset. Note whether it is used, or may be used, for AI.", link: sectors.html#which}
+  - {id: a3, type: Read, text: "Read the AI-ready data supplement: what governance, cataloguing and quality each add.", link: sectors.html#SUP-AI}
+  - {id: a4, type: Reflect, text: "If someone asked tomorrow to train a model on your most important asset, who would say yes or no, and on what evidence?"}
+  check:
+  - {q: "Which of these is one of the four pillars of AI-ready data in the GDS guidelines?", options: [Data and metadata quality, Cloud hosting, Open source code], answer: 0, why: "The four pillars are technical optimisation; data and metadata quality; organisation and infrastructure context; and legal, security and ethical compliance."}
+  - {q: "When does the AI-ready supplement ask you to publish an algorithmic transparency record?", options: [For every data set, Where a tool supports decisions about people, Only when a supplier asks], answer: 1, why: "The supplement asks for a record where an algorithmic tool supports decisions about people, using the Algorithmic Transparency Recording Standard."}
+- id: M13
+  title: From FAIR to AI-ready metadata
+  level: Practitioner
+  minutes: 30
+  icon: badge-check
+  caps: [cat]
+  pathway: ai-ready
+  outcomes: ["Explain the four FAIR principles in plain English", "Add the AI-ready catalogue fields to a record", "See how the proposed DCAT-AP-UK profile extends the xGov MEM for AI use"]
+  activities:
+  - {id: a1, type: Read, text: "Read the FAIR Guiding Principles paper (Wilkinson and others, 2016) and note what each letter asks of metadata.", link: "https://doi.org/10.1038/sdata.2016.18"}
+  - {id: a2, type: Read, text: "Read the metadata properties this portal asks for, and the proposals to the Metadata Exchange Model.", link: cataloguing.html#metadata}
+  - {id: a3, type: Do, text: "For one record, add permitted AI uses, sensitive fields, provenance and version, as the AI-ready supplement lists.", link: sectors.html#t-cat-SUP-AI}
+  - {id: a4, type: Read, text: "Read the AI-ready metadata page of the proposed DCAT-AP-UK profile. It is proposed, not endorsed.", link: "https://cyberdudeuk.github.io/dcat-ap-uk/ai-ready.html"}
+  - {id: a5, type: Do, text: "Build your first record with the DCAT-AP-UK tutorial, then compare it with the endorsed xGov MEM.", link: "https://cyberdudeuk.github.io/dcat-ap-uk/tutorials.html"}
+  check:
+  - {q: "What do the letters FAIR stand for?", options: ["Findable, accessible, interoperable, reusable", "Fair, accurate, inclusive, responsible", "Federated, auditable, indexed, recorded"], answer: 0, why: "The FAIR Guiding Principles (Wilkinson and others, 2016) are findability, accessibility, interoperability and reusability, for people and for machines."}
+  - {q: "Why does the AI-ready supplement ask for a version on the record?", options: [To set the price, So a training set can be reconstructed exactly, Because DCAT forbids records without one], answer: 1, why: "The supplement asks for dcat:version so a training set can be reconstructed exactly."}
+  - {q: "Which metadata model is endorsed for UK government today?", options: [DCAT-AP-UK, The xGov MEM, Schema.org], answer: 1, why: "The UK Cross-Government Metadata Exchange Model (xGov MEM) is endorsed by the Data Standards Authority Steering Board. DCAT-AP-UK is a proposal for review."}
+- id: M14
+  title: Start from the question the data must answer
+  level: Practitioner
+  minutes: 20
+  icon: crosshair
+  caps: [gov, cat]
+  pathway: ai-ready
+  outcomes: ["Write down the decision or question an AI use of an asset serves", "Test that question against the seven purposes in the policy", "Record out-of-scope uses before anyone asks for them"]
+  activities:
+  - {id: a1, type: Read, text: "Read the seven purposes that make a data asset critical.", link: dam.html#DAM-R11}
+  - {id: a2, type: Do, text: "For one asset, write one sentence each: the decision it informs, who makes it, and what goes wrong if the data is wrong."}
+  - {id: a3, type: Do, text: "Fill in the purpose and legitimacy checks from the AI-ready supplement: the task, whether outputs affect individuals, and out-of-scope uses.", link: sectors.html#SUP-AI}
+  - {id: a4, type: Do, text: "Log the decision about which AI uses are allowed in your decision log.", link: governance.html#T-GOV-3}
+  - {id: a5, type: Reflect, text: "Who outside your team, including the people the data describes, should help frame the question?"}
+  check:
+  - {q: "What does the AI-ready supplement ask you to state before AI use begins?", options: [The model's vendor, "The task, whether outputs affect individuals and which uses are out of scope", The size of the training set], answer: 1, why: "Its first governance check is to record the AI task, whether outputs affect individuals and which uses are out of scope, such as automated decisions."}
+  - {q: "Which of these is one of the seven purposes?", options: [Official statistics, Advertising, Staff appraisal], answer: 0, why: "Official statistics is one of the seven purposes in the policy."}
+- id: M15
+  title: Connecting data to AI with linked data, knowledge graphs and MCP
+  level: Advanced
+  minutes: 35
+  icon: network
+  caps: [cat]
+  pathway: ai-ready
+  outcomes: ["Explain the RDF triple and why linked data helps machines read metadata", "Find and reuse this portal's knowledge graph and vocabulary files", "Describe how an MCP server lets an AI assistant check metadata against the xGov MEM"]
+  activities:
+  - {id: a1, type: Read, text: "Read the W3C RDF 1.1 Primer, sections on triples and vocabularies.", link: "https://www.w3.org/TR/rdf11-primer/"}
+  - {id: a2, type: Do, text: "Open this portal's knowledge graph, then download the same vocabulary as Turtle from the open data page.", link: knowledge.html#graph-tab}
+  - {id: a3, type: Read, text: "Read how an assistant reads a catalogue through an open protocol, and this portal's own reference MCP server.", link: reuse.html#mcp}
+  - {id: a4, type: Read, text: "Read what the NDL PubSec MCP server does: search data.gov.uk, describe a data set and validate a record against the xGov MEM. It is an alpha prototype.", link: "https://cyberdudeuk.github.io/ndl-pubsec-mcp/"}
+  - {id: a5, type: Read, text: "Browse the knowledge graph and thesaurus of the proposed DCAT-AP-UK profile.", link: "https://cyberdudeuk.github.io/dcat-ap-uk/knowledge.html"}
+  - {id: a6, type: Reflect, text: "Which of your catalogue's fields would an assistant need to answer 'can I use this for training?' without guessing?"}
+  check:
+  - {q: "What are the three parts of an RDF triple?", options: ["Subject, predicate and object", "Table, row and column", "Key, value and type"], answer: 0, why: "The RDF 1.1 Primer describes every statement as a triple of subject, predicate and object."}
+  - {q: "What does the NDL PubSec MCP tool metadata_validate do?", options: [Publishes a record to data.gov.uk, Checks a metadata record against the xGov MEM and lists errors and warnings, Trains a model on catalogue records], answer: 1, why: "Its README says it checks any metadata record against xGov MEM and lists errors and warnings with their paths. All its tools are read-only."}
+- id: M16
+  title: Making public data AI-ready together
+  level: Practitioner
+  minutes: 25
+  icon: users
+  caps: [gov, dq]
+  pathway: ai-ready
+  outcomes: ["Look for existing work before building, across public sector code and catalogues", "Involve the people the data describes when you judge whether it is fit for AI", "Use the shared assurance and community routes rather than working alone"]
+  activities:
+  - {id: a1, type: Do, text: "Search the GitHub Repos Asset Catalogue for public code that already uses your catalogue platform or metadata standard.", link: "https://cyberdudeuk.github.io/github-repos-asset-catalogue/"}
+  - {id: a2, type: Do, text: "Run the inclusion questions against one asset you might use for AI.", link: inclusion.html#questions}
+  - {id: a3, type: Read, text: "Read how the Data Quality Commons assures collections for the National Data Library.", link: "https://cyberdudeuk.github.io/dq-commons/ndl-assurance.html"}
+  - {id: a4, type: Do, text: "Pick one way to take part, from testing a page to joining a community.", link: involve.html#ways}
+  - {id: a5, type: Reflect, text: "Whose consent, trust or voice would change your answer to 'is this asset AI-ready'?"}
+  check:
+  - {q: "What does the GitHub Repos Asset Catalogue ask you to do first?", options: [Build a new tool, "Look for work that already exists before you build", Buy a catalogue product], answer: 1, why: "Its motto is 'Before you build it, look for it': find public sector code that already exists and decide whether you can reuse it."}
+  - {q: "Where should harvested catalogue records from government end up?", options: [On each department's intranet only, "The National Data Library gateway at data.gov.uk", In a supplier's private catalogue], answer: 1, why: "data.gov.uk is the cross-government gateway to public data and the destination for harvested catalogue records."}
+- id: M17
+  title: Governing AI use of critical data in practice
+  level: Advanced
+  minutes: 30
+  icon: scale
+  caps: [gov, dq]
+  pathway: ai-ready
+  outcomes: ["Run the AI-ready quality rules on a sample file", "Apply the transparency and ethics duties that go with AI use", "Plan who monitors drift and bias once AI use begins"]
+  activities:
+  - {id: a1, type: Do, text: "Run the AI-ready rules (AI-01 to AI-04) on a synthetic sample in the Data Quality Commons checker. Nothing is uploaded.", link: "https://cyberdudeuk.github.io/dq-commons/check.html"}
+  - {id: a2, type: Read, text: "Read the operating model checks in the AI-ready supplement: drift, re-approval and reconstruction.", link: sectors.html#t-rules-SUP-AI}
+  - {id: a3, type: Read, text: "Read the Algorithmic Transparency Recording Standard hub and the Data and AI Ethics Framework.", link: "https://www.gov.uk/government/collections/algorithmic-transparency-recording-standard-hub"}
+  - {id: a4, type: Read, text: "Use the AI capability governance toolkit for the controls, assurance and human oversight around AI-assisted work.", link: "https://cyberdudeuk.github.io/ai-capability-governance/"}
+  - {id: a5, type: Read, text: "Read how AI for data quality can be used safely in the Data Quality Commons.", link: "https://cyberdudeuk.github.io/dq-commons/ai.html"}
+  - {id: a6, type: Reflect, text: "If a model trained on your asset started giving worse answers for one group, how would you find out, and who would act?"}
+  check:
+  - {q: "Why does rule AI-03 check that each record appears once?", options: [To save storage, So training and test sets do not overlap, Because duplicates are illegal], answer: 1, why: "AI-03 is a uniqueness rule: each record appears once, so training and test sets do not overlap."}
+  - {q: "Which operating model check does the AI-ready supplement include?", options: ["Someone owns quality, drift and bias monitoring", The model is retrained weekly, The data is deleted after training], answer: 0, why: "Its operating model checks include that someone owns quality, drift and bias monitoring, and that training sets can be reconstructed exactly."}
+
+# ---------------------------------------------------------------------------
+# Learning pathways (version 1.15.0): themed routes through the modules, with what each covers elsewhere,
+# what is missing and the strongest case against. Alignment rows describe an independent course; they are
+# not an endorsement and the course is not affiliated with this portal.
+# ---------------------------------------------------------------------------
+pathways:
+- id: ai-ready
+  title: AI-ready data stewardship
+  icon: brain
+  summary: "Six modules for owners, stewards and catalogue managers who are asked whether a critical data asset can be used for AI. They build from what AI-ready means, through metadata and linked data, to governing AI use, and join this portal to five sister projects so you do not have to find them yourself."
+  modules: [M12, M13, M14, M15, M16, M17]
+  checked: '2026-11-14'
+  alignment:
+    course: Data Stewardship at a Time of AI, a deep-dive series
+    by: Data Stewards Academy (The Data Tank and The GovLab)
+    url: "https://datastewards.net/offerings/data-stewardship-at-a-time-of-ai-deep-dive-series"
+    when: "Five weekly live sessions of 90 minutes, Wednesdays 10 March to 7 April 2027, as published on 14 November 2026"
+    note: "An independent course, not connected with this portal. The rows below show where this pathway prepares you for, or follows up, each session. Check dates and details on the course page."
+    rows:
+    - {theme: "What does 'AI-ready' actually mean?", modules: [M12], cover: Strong, note: "Grounded in the GDS guidelines and the AI-ready supplement."}
+    - {theme: "From FAIR to AI-ready", modules: [M13, M14], cover: Partial, note: "FAIR and metadata are covered well. Demand-led problem definition is only started in M14."}
+    - {theme: "Connecting data to AI: MCP and knowledge graphs", modules: [M15], cover: Strong, note: "Uses working tools: this portal's graph and MCP server, NDL PubSec MCP and DCAT-AP-UK."}
+    - {theme: Making public data AI-ready, modules: [M16], cover: Partial, note: "Discoverability and assurance are covered. Participatory and community-led stewardship is a gap."}
+    - {theme: "AI-ready data in action", modules: [M17], cover: Strong, note: "Runnable rules, transparency duties and the AI governance toolkit."}
+  gaps:
+  - {id: PG-01, title: Participatory and community-led stewardship, status: Open, text: "No project in this estate yet gives guidance on data cooperatives, community charters or involving the public in decisions about AI use of their data. M16 points to the inclusion questions only."}
+  - {id: PG-02, title: Questions-led demand for data, status: Started, text: "M14 asks you to write down the question an AI use serves. There is no method yet for gathering and prioritising questions from users and the public."}
+  - {id: PG-03, title: International comparison, status: Open, text: "The pathway is UK-focused. It does not yet compare how other governments prepare public data for AI."}
+  against:
+    case: "Another learning route spreads people thin. Stewards could go straight to the GDS guidelines and an external course, and a pathway that links to five prototypes inherits their churn and their unendorsed status."
+    answer: "The pathway adds no new guidance of its own. It reuses the GDS guidelines, the existing AI-ready supplement and sister projects, labels each one's status, and keeps the checks of understanding to facts you can trace. If a sister project moves or closes, the weekly health run reports the broken link."
+  resources:
+  - {name: Making government datasets ready for AI, by: GDS, url: "https://www.gov.uk/government/publications/making-government-datasets-ready-for-ai", status: Published guidance}
+  - {name: UK Cross-Government Metadata Exchange Model (xGov MEM), by: Data Standards Authority, url: "https://co-cddo.github.io/ukgov-metadata-exchange-model/", status: Endorsed for implementation}
+  - {name: DCAT Application Profile for the UK (DCAT-AP-UK), by: Sister project, url: "https://cyberdudeuk.github.io/dcat-ap-uk/", status: "Proposed, not endorsed"}
+  - {name: NDL PubSec MCP, by: Sister project, url: "https://cyberdudeuk.github.io/ndl-pubsec-mcp/", status: Alpha prototype}
+  - {name: Public Sector Data Quality Commons, by: Community project, url: "https://cyberdudeuk.github.io/dq-commons/", status: Community project}
+  - {name: GitHub Repos Asset Catalogue, by: Sister project, url: "https://cyberdudeuk.github.io/github-repos-asset-catalogue/", status: Working tool}
+  - {name: AI Capability Governance and Implementation, by: Sister project, url: "https://cyberdudeuk.github.io/ai-capability-governance/", status: Prototype}
+  - {name: The Knowledge Web, by: Sister project, url: "https://github.com/cyberdudeuk/knowledge-web", status: Prototype}
+  - {name: The FAIR Guiding Principles, by: "Wilkinson and others, Scientific Data, 2016", url: "https://doi.org/10.1038/sdata.2016.18", status: Peer-reviewed paper}
+  - {name: Model Context Protocol specification, by: Model Context Protocol project, url: "https://modelcontextprotocol.io/specification/latest", status: Open specification}
 
 # ---------------------------------------------------------------------------
 # Inclusion (diversity, equity, equality, inclusion and accessibility)
