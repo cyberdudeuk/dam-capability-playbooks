@@ -108,11 +108,11 @@ class HealthRun(unittest.TestCase):
             health.fetch_meta, health.time.sleep = orig, sleep
             shutil.rmtree(d, ignore_errors=True)
 
-    def test_d043_bot_challenge_202_is_blocked_not_ok(self):
+    def test_d045_bot_challenge_202_is_blocked_not_ok(self):
         rows = self._links_with(lambda url, timeout=20, accept=None: (202, b'', {'x-amzn-waf-action': 'challenge'}))
         self.assertEqual(rows[0]['state'], 'blocked', 'a WAF challenge is not evidence the page exists (D-045)')
 
-    def test_d043_bot_challenge_404_is_blocked_not_broken(self):
+    def test_d045_bot_challenge_404_is_blocked_not_broken(self):
         import health
 
         def waf404(url, timeout=20, accept=None):
@@ -120,7 +120,7 @@ class HealthRun(unittest.TestCase):
         rows = self._links_with(waf404)
         self.assertEqual(rows[0]['state'], 'blocked', 'a 404 from a WAF challenge is not a broken link (D-045)')
 
-    def test_d043_plain_404_is_still_broken(self):
+    def test_d045_plain_404_is_still_broken(self):
         import health
 
         def gone(url, timeout=20, accept=None):
