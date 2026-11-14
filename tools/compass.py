@@ -299,7 +299,7 @@ def validate(c, d):
     for s in sit:
         if s not in c['routes']:
             errs.append(f'compass: situation {s} has no route')
-    # D-045: an unquoted comma in a flow mapping turns the rest of a value into a key with no value, silently cutting the
+    # D-046: an unquoted comma in a flow mapping turns the rest of a value into a key with no value, silently cutting the
     # text short (a route step title lost ", cataloguing and quality"). Steps take known keys only, and nowhere may a key
     # with spaces in it have an empty value.
     def split_keys(o, where):

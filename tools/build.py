@@ -33,7 +33,7 @@ class ContentError(Exception):
 # Load and validate: refuse to build on any broken reference
 # ---------------------------------------------------------------------------
 def split_values(text, name):
-    """D-045: in a YAML flow mapping, an unquoted comma ends a value and turns the rest into a key with an implicit empty value,
+    """D-046: in a YAML flow mapping, an unquoted comma ends a value and turns the rest into a key with an implicit empty value,
     so published text is silently cut short ('such as a screen reader' lost ', magnifier or voice control'). D-009 and D-043
     guarded outcomes, lists and options; this checks every flow mapping in a file, by node position, and names the line.
     An explicit 'null' (src: null) is not flagged."""
