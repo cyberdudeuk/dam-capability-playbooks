@@ -163,6 +163,29 @@ def external_links(site):
     return out
 
 
+HAND = ROOT / 'content' / 'hand-checked-links.yaml'
+
+
+def apply_hand_checks(links, today, hand=None):
+    """Backstop for D-045 (issue 42): a bot challenge can reach a runner as a plain 404 with no challenge header. A link a person checked by hand within
+    expire_days counts as blocked, not broken, and says when it was checked. An expired check, or a link the register does not
+    name, stays broken, so nothing is waved through for good."""
+    if hand is None:
+        hand = yaml.safe_load(HAND.read_text(encoding='utf-8')) if HAND.exists() else {'links': []}
+    days = int(hand.get('expire_days', 90))
+    by_url = {h['url']: h for h in hand.get('links', [])}
+    for row in links:
+        h = by_url.get(row['url'])
+        if row['state'] != 'broken' or not h:
+            continue
+        age = (today - dt.date.fromisoformat(str(h['checked']))).days
+        if 0 <= age <= days:
+            row['state'], row['detail'] = 'blocked', f'checked by hand on {h["checked"]}: {h["how"]}'
+        else:
+            row['detail'] = f'the hand check of {h["checked"]} has expired ({age} days, limit {days}); open it again and record a new date'
+    return links
+
+
 def page_weights(site):
     shared = sum(f.stat().st_size for f in (site / 'assets').glob('*') if f.is_file()) if (site / 'assets').exists() else 0
     rows = []
@@ -192,7 +215,7 @@ def main(argv=None):
         return 0
     anchors = check_anchors(d) if not a.no_links else []
     weights = page_weights(Path(a.site))
-    links = external_links(Path(a.site)) if not a.no_links else []
+    links = apply_hand_checks(external_links(Path(a.site)), today) if not a.no_links else []
     problems = []
     if today > review:
         problems.append(f'Review date {review} has passed')

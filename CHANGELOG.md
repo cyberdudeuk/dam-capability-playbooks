@@ -18,6 +18,7 @@
   - REF-6 "Choose a master data tool with exit in mind": open standards, exportable data, accessibility and NCSC cloud principles before you sign.
   - REF-7 "Publish shared lists as open, versioned data": follow GOV.UK's reference data guidance (first published 11 March 2021) and SKOS.
   - New framework references: RB-REFDATA ("Publish reference data for use across government") and RB-A11YREQ ("Understanding accessibility requirements for public sector bodies").
+- Health run backstop (D-045 follow-on): a runner may still get a plain 404 from EUR-Lex with no bot challenge header. A new register, content/hand-checked-links.yaml, records links a person has opened by hand, with how and when. A 404 on a listed link is reported as blocked for 90 days, then as broken again until someone rechecks it. Links not in the register keep the normal rules.
 - Data portals compass 2.1 (issue 28):
   - The directory now lists every page of the four websites: 72 more from the Data Quality Commons and DCAT-AP-UK. Their titles and descriptions come from the live pages, checked on 13 November 2026.
   - Data management areas point to the newly mapped pages.
