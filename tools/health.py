@@ -41,6 +41,24 @@ def fetch(url, timeout=20, accept=HTML_ACCEPT):
         return r.status, r.read()
 
 
+def fetch_meta(url, timeout=20, accept=HTML_ACCEPT):
+    """Like fetch, but also returns the response headers, so a bot challenge can be told apart from the page (D-043)."""
+    req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': accept})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.status, r.read(), dict(r.headers)
+
+
+# D-043: some sites answer automated checks with a bot challenge instead of the page. EUR-Lex returns 202 with
+# x-amzn-waf-action: challenge, for real and made-up laws alike, and a 404 to some runners. Either way the checker never
+# saw the page, so the link is neither ok nor broken: it is blocked, and a person checks it.
+CHALLENGE_HEADERS = ('x-amzn-waf-action', 'cf-mitigated')
+
+
+def is_challenge(code, headers):
+    h = {k.lower(): v for k, v in (headers or {}).items()}
+    return any(k in h for k in CHALLENGE_HEADERS) or code == 202
+
+
 def govuk_updated(url):
     """Use the GOV.UK Content API for a page's public_updated_at date."""
     path = urllib.parse.urlparse(url).path
@@ -118,20 +136,22 @@ def external_links(site):
     out = []
     for u in sorted(urls):
         row = {'url': u, 'state': 'ok'}
-        code = None
+        code, headers = None, {}
         for attempt in range(3):  # D-019: retry, because a single 5xx or timeout is not evidence of a broken link
             try:
-                code, _ = fetch(u)
+                code, _, headers = fetch_meta(u)
                 row.pop('detail', None)
             except urllib.error.HTTPError as e:
-                code = e.code
+                code, headers = e.code, dict(e.headers or {})
             except (urllib.error.URLError, TimeoutError, ValueError, OSError) as e:
                 code, row['detail'] = None, str(e)[:120]
             if code is not None and code < 500:
                 break
             time.sleep(2 * (attempt + 1))
         row['code'] = code
-        if code in (401, 403, 405, 429):
+        if code is not None and is_challenge(code, headers):
+            row['state'], row['detail'] = 'blocked', 'bot challenge; the page was never seen, so a person checks it (D-043)'
+        elif code in (401, 403, 405, 429):
             row['state'] = 'blocked'  # the site refuses automated checks; not a broken link
         elif code in (404, 410):
             row['state'] = 'broken'

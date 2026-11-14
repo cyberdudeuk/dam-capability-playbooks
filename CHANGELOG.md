@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fixed (D-043): the weekly health run reported the EU Data Act link on EUR-Lex as broken. The address is correct; EUR-Lex answers automated checks with a bot challenge instead of the page, which some runners see as a 404 and others as a 202. A bot challenge is now reported as blocked, to be checked by a person, rather than as ok or broken. A plain 404 is still broken.
 - Data portals compass 2.1 (issue 28):
   - The directory now lists every page of the four websites: 72 more from the Data Quality Commons and DCAT-AP-UK. Their titles and descriptions come from the live pages, checked on 13 November 2026.
   - Data management areas point to the newly mapped pages.
