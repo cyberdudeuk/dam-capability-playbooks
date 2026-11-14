@@ -32,17 +32,48 @@ class ContentError(Exception):
 # ---------------------------------------------------------------------------
 # Load and validate: refuse to build on any broken reference
 # ---------------------------------------------------------------------------
+def split_values(text, name):
+    """D-045: in a YAML flow mapping, an unquoted comma ends a value and turns the rest into a key with an implicit empty value,
+    so published text is silently cut short ('such as a screen reader' lost ', magnifier or voice control'). D-009 and D-043
+    guarded outcomes, lists and options; this checks every flow mapping in a file, by node position, and names the line.
+    An explicit 'null' (src: null) is not flagged."""
+    from yaml.nodes import MappingNode, SequenceNode, ScalarNode
+    hits = []
+
+    def walk(n):
+        if isinstance(n, MappingNode):
+            for i, (k, v) in enumerate(n.value):
+                if (n.flow_style and i and isinstance(k, ScalarNode) and k.style is None and isinstance(v, ScalarNode)
+                        and v.tag == 'tag:yaml.org,2002:null' and v.start_mark.index == v.end_mark.index):
+                    hits.append(f"{name} line {k.start_mark.line + 1}: '{k.value}' is text cut off by an unquoted comma; quote the value before it")
+                walk(k)
+                walk(v)
+        elif isinstance(n, SequenceNode):
+            for x in n.value:
+                walk(x)
+    walk(yaml.compose(text))
+    return hits
+
+
 def load(path):
     path = Path(path)
-    d = yaml.safe_load(path.read_text(encoding='utf-8'))
+    text = path.read_text(encoding='utf-8')
+    cut = split_values(text, path.name)
+    d = yaml.safe_load(text)
     extra = path.parent / 'frameworks.yaml'
     if extra.exists():
-        f = yaml.safe_load(extra.read_text(encoding='utf-8'))
+        ftext = extra.read_text(encoding='utf-8')
+        cut += split_values(ftext, extra.name)
+        f = yaml.safe_load(ftext)
         d['rulebook'] = list(d.get('rulebook', [])) + list(f.pop('rulebook_more', []))
         d.update(f)
     areas_f = path.parent / 'areas.yaml'
     if areas_f.exists():
-        d['area_guide'] = yaml.safe_load(areas_f.read_text(encoding='utf-8'))
+        atext = areas_f.read_text(encoding='utf-8')
+        cut += split_values(atext, areas_f.name)
+        d['area_guide'] = yaml.safe_load(atext)
+    if cut:
+        raise ContentError('\n'.join(cut))
     anchors = path.parent / 'source-anchors.json'
     d['_anchors'] = json.loads(anchors.read_text())['anchors'] if anchors.exists() else {}
     resolve_workbooks(d)

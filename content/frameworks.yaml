@@ -4984,32 +4984,32 @@ related:
     quality:
     - {portal: dqc, title: Check a CSV file, path: check.html, why: Run quality rules on a file in your browser; nothing is uploaded.}
     - {portal: dqc, title: Issues framework calculator, path: guidance.html, why: Score an issue's priority and time to fix with the GOV.UK issues framework.}
-    - {portal: dqc, title: Data quality management playbook, path: playbook.html, why: The community's eight-stage practice guide, for more depth than the policy steps here.}
+    - {portal: dqc, title: Data quality management playbook, path: playbook.html, why: "The community's eight-stage practice guide, for more depth than the policy steps here."}
     cataloguing:
     - {portal: ap, title: The proposed UK profile of DCAT, path: index.html, why: "How the MEM may evolve: every property with its obligation and lineage from the MEM, and a record builder. Proposed, not endorsed."}
-    - {portal: cat, title: Data catalogues and standards, path: '#standards', why: Which public bodies' code shows a catalogue platform or applies DCAT, SKOS or the Metadata Exchange Model.}
-    - {portal: dqc, title: Metadata weaver, path: weaver.html, why: Describe a dataset once and output it in several metadata standards, with its metadata quality as DQV.}
+    - {portal: cat, title: Data catalogues and standards, path: '#standards', why: "Which public bodies' code shows a catalogue platform or applies DCAT, SKOS or the Metadata Exchange Model."}
+    - {portal: dqc, title: Metadata weaver, path: weaver.html, why: "Describe a dataset once and output it in several metadata standards, with its metadata quality as DQV."}
     - {portal: dqc, title: Standards catalogue, path: 'interop.html#catalogue', why: 'Open standards for data, digital, cyber and technology with their GOV.UK status, including DCAT, the Metadata Exchange Model and DQV.'}
     tooling:
-    - {portal: dqc, title: Catalogues and data quality tools, path: catalogues.html, why: Named products and how they connect, a lock-in risk checker, an RFI and RFP question builder and a proof-of-concept test script.}
+    - {portal: dqc, title: Catalogues and data quality tools, path: catalogues.html, why: "Named products and how they connect, a lock-in risk checker, an RFI and RFP question builder and a proof-of-concept test script."}
     - {portal: dqc, title: Commercial clause builder, path: commercial.html, why: Contract clauses that make suppliers responsible for data quality and exit.}
-    - {portal: cat, title: Data tools and suppliers, path: '#suppliers', why: Which data tools appear in public bodies' code, and where.}
+    - {portal: cat, title: Data tools and suppliers, path: '#suppliers', why: "Which data tools appear in public bodies' code, and where."}
     - {portal: cat, title: Data catalogues and standards, path: '#standards', why: Catalogue platforms and metadata standards found in public code.}
     - {portal: dqc, title: Standards catalogue, path: 'interop.html#catalogue', why: 'The open standards that connect tools, with their GOV.UK status and the concepts each one carries.'}
     perspectives:
-    - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: Legacy and debt signals in each organisation's public code, with the evidence.}
+    - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: "Legacy and debt signals in each organisation's public code, with the evidence."}
     - {portal: dqc, title: Data debt and migration, path: legacy.html, why: A data debt self-assessment and quality gates for a migration.}
     change:
-    - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: Evidence of legacy in an organisation's public code, to plan exits from.}
+    - {portal: cat, title: Legacy and technical debt, path: '#legacy', why: "Evidence of legacy in an organisation's public code, to plan exits from."}
     - {portal: dqc, title: Data debt and migration, path: legacy.html, why: Data quality gates to carry through a modernisation programme.}
     - {portal: dqc, title: Data quality in change programmes, path: 'roles.html#change', why: 'Gate questions, a RACI and a service blueprint for data quality during delivery.'}
     capability-model:
     - {portal: cat, title: Data management wheel, path: '#dama', why: Public code projects with evidence of each DAMA knowledge area.}
-    - {portal: dqc, title: Data quality capability model, path: models.html, why: The data quality capability in more detail, with workflows and downloads.}
+    - {portal: dqc, title: Data quality capability model, path: models.html, why: "The data quality capability in more detail, with workflows and downloads."}
     - {portal: dqc, title: Data management wheel (Commons), path: wheel.html, why: 'The same eleven areas from a data quality angle, shaded by your own maturity answers.'}
-    - {portal: dqc, title: Three portals, one journey, path: ecosystem.html, why: 'Trace a DAMA area, role or standard through all three portals.'}
+    - {portal: dqc, title: "Three portals, one journey", path: ecosystem.html, why: 'Trace a DAMA area, role or standard through all three portals.'}
     reuse:
-    - {portal: dqc, title: Use the Commons your way, path: reuse.html, why: The Commons' own API, embed mode and MCP tools.}
+    - {portal: dqc, title: Use the Commons your way, path: reuse.html, why: "The Commons' own API, embed mode and MCP tools."}
     - {portal: cat, title: Search all code projects, path: '#search', why: Download catalogue records as DCAT or CSV.}
 research:
   intro: This portal is a prototype. What it becomes depends on the people who use it. Take part in research, suggest and vote for ideas, and see how every decision is made, in the open.
@@ -5019,12 +5019,12 @@ research:
   - Make sure it works for your role, your organisation and your access needs
   - Help other organisations avoid duplicated effort
   methods:
-  - {id: M-INT, name: Interview, icon: message-square-text, time: 45 to 60 minutes, how: Online, one to one, what: How you manage data assets today and what gets in the way}
-  - {id: M-USE, name: Usability session, icon: list-checks, time: 45 to 60 minutes, how: Online, one to one, you share your screen, what: Try real tasks on the portal while thinking aloud}
-  - {id: M-TREE, name: Tree test or card sort, icon: network, time: 10 to 15 minutes, how: Online, in your own time, what: Find things using only the menu labels, so we can test the structure}
-  - {id: M-SURVEY, name: Survey, icon: clipboard-list, time: 5 to 10 minutes, how: Online, in your own time, what: How you use the portal and what you need next}
-  - {id: M-A11Y, name: Accessibility session, icon: accessibility, time: 60 to 90 minutes, how: Online or in person, with your own set-up, what: Use the portal with your assistive technology, such as a screen reader, magnifier or voice control}
-  - {id: M-PANEL, name: Review panel, icon: users-round, time: About an hour a month, how: Online, as a group, what: Review drafts of new content, such as sector supplements, before they are published}
+  - {id: M-INT, name: Interview, icon: message-square-text, time: 45 to 60 minutes, how: "Online, one to one", what: How you manage data assets today and what gets in the way}
+  - {id: M-USE, name: Usability session, icon: list-checks, time: 45 to 60 minutes, how: "Online, one to one, you share your screen", what: Try real tasks on the portal while thinking aloud}
+  - {id: M-TREE, name: Tree test or card sort, icon: network, time: 10 to 15 minutes, how: "Online, in your own time", what: "Find things using only the menu labels, so we can test the structure"}
+  - {id: M-SURVEY, name: Survey, icon: clipboard-list, time: 5 to 10 minutes, how: "Online, in your own time", what: How you use the portal and what you need next}
+  - {id: M-A11Y, name: Accessibility session, icon: accessibility, time: 60 to 90 minutes, how: "Online or in person, with your own set-up", what: "Use the portal with your assistive technology, such as a screen reader, magnifier or voice control"}
+  - {id: M-PANEL, name: Review panel, icon: users-round, time: About an hour a month, how: "Online, as a group", what: "Review drafts of new content, such as sector supplements, before they are published"}
   who: Anyone who works with data assets in the UK public sector, in any of the roles below, at any level. We especially need people who use assistive technology, people outside central government, and people from all four nations.
   signup:
     url: ''
@@ -5079,10 +5079,10 @@ research:
   - {id: sdr, name: "Strategic roadmap for public sector data (in development by the Office of the Chief Data Officer; announced for April 2026 and not found published on GOV.UK on 5 November 2026)", ref: null}
   backlog:
   - {id: BL-01, type: feature, title: Private feedback route, story: "As someone without a GitHub account, I need a private way to give feedback, so that I can take part without publishing my views.", source: OR-02, status: done, release: 1.8.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 3}}
-  - {id: BL-02, type: feature, title: Share, site map, guided tours and tutorials, story: "As a first-time visitor, I need to see how the portal fits together, so that I can find my way without help.", source: Owner request, status: done, release: 1.8.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 3}}
+  - {id: BL-02, type: feature, title: "Share, site map, guided tours and tutorials", story: "As a first-time visitor, I need to see how the portal fits together, so that I can find my way without help.", source: Owner request, status: done, release: 1.8.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 3}}
   - {id: BL-03, type: feature, title: Signposts to the sister portals, story: "As a practitioner, I need to know when another portal goes deeper, so that I do not miss tools or evidence.", source: Owner request, status: done, release: 1.8.1, strategy: [rmdg, ndl], assess: {demand: 2, policy: 2, strategy: 2, feasibility: 3, capacity: 3, inclusion: 1}}
   - {id: BL-04, type: feature, title: Data portals compass, story: "As someone working across policy, practice and technology, I need to know where to start and in what order, so that I take the shortest route to a result.", source: Owner request, status: done, release: 1.8.2, strategy: [rmdg], assess: {demand: 2, policy: 2, strategy: 2, feasibility: 3, capacity: 2, inclusion: 2}}
-  - {id: BL-05, type: feature, title: Research, roadmap and ideas in the open, story: "As a user, I need to see what is planned and how decisions are made, and to suggest and vote for ideas, so that the portal meets real needs.", source: Owner request, status: done, release: 1.9.0, strategy: [rmdg, dam], assess: {demand: 2, policy: 2, strategy: 3, feasibility: 3, capacity: 2, inclusion: 2}}
+  - {id: BL-05, type: feature, title: "Research, roadmap and ideas in the open", story: "As a user, I need to see what is planned and how decisions are made, and to suggest and vote for ideas, so that the portal meets real needs.", source: Owner request, status: done, release: 1.9.0, strategy: [rmdg, dam], assess: {demand: 2, policy: 2, strategy: 3, feasibility: 3, capacity: 2, inclusion: 2}}
   - {id: BL-10, type: research, title: "Round 1: can each role find and follow its steps?", story: "As the service owner, I need evidence from 5 to 8 people per role, so that changes rest on what users do, not what we assume.", source: OR-04, status: next, strategy: [dam, rmdg], assess: {demand: 3, policy: 3, strategy: 2, feasibility: 2, capacity: 1, inclusion: 2}}
   - {id: BL-11, type: research, title: Test with disabled people and assistive technology, story: "As someone who uses a screen reader, magnifier or voice control, I need the portal to work with my set-up, so that I can follow the policy like anyone else.", source: OR-09, status: next, strategy: [rmdg], assess: {demand: 3, policy: 2, strategy: 2, feasibility: 2, capacity: 1, inclusion: 3}}
   - {id: BL-12, type: feature, title: Private research sign-up form, story: "As a prospective participant, I need to sign up privately, so that my contact details are not published.", source: OR-02, status: now, strategy: [rmdg], assess: {demand: 3, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 2}}
@@ -5115,7 +5115,7 @@ research:
   decisions:
   - {date: '2026-11-11', item: BL-34, decision: "Health and care obligations stay in Now", why: "The score says Later because demand is one pilot team and the rest depends on its feedback. Signposts were released in 1.12.0, and finishing needs only that feedback and the expert review (BL-14), so it should not wait behind unrelated work."}
   - {date: '2026-11-11', item: BL-33, decision: "Data architecture judged After the MVP even though it is built", why: "It sits outside the three DAM capabilities on the DAMA wheel and most organisations will not need it for the baseline return; only its authoritative source question is pulled forward."}
-  - {date: '2026-11-05', item: BL-05, decision: Research, roadmap and ideas published in the open, why: "Working in the open lets users see and shape priorities; modelled on the data.gov.uk roadmap."}
+  - {date: '2026-11-05', item: BL-05, decision: "Research, roadmap and ideas published in the open", why: "Working in the open lets users see and shape priorities; modelled on the data.gov.uk roadmap."}
   - {date: '2026-11-05', item: BL-25, decision: A hosted chatbot is out of scope, why: "No server, nothing sent anywhere; open data and the MCP server serve approved assistants instead."}
   - {date: '2026-11-05', item: BL-10, decision: "Round 1 waits until Round 0 has recruited for every role", why: "Usability sessions need 5 to 8 people per role, including disabled people."}
   - {date: '2026-11-05', item: BL-11, decision: "Accessibility sessions wait until Round 0 has recruited assistive technology users", why: "The score says Now, but sessions cannot start without participants; the sign-up form (BL-12) and recruitment (BL-13) come first."}
@@ -5424,10 +5424,10 @@ involve:
   badges:
   - {id: explorer, name: Explorer, colour: '#1d70b8', icon: compass, earn: "Used the portal for real work and gave feedback.", evidence: Self-declared., claim: self}
   - {id: tester, name: Tester, colour: '#00703c', icon: list-checks, earn: "Completed at least three testing tasks, or took part in a research session.", evidence: Self-declared; research participants are told after their session., claim: self}
-  - {id: contributor, name: Contributor, colour: '#6a1b9a', icon: pencil-line, earn: "An idea, report or change of yours was accepted onto the backlog or published.", evidence: A link to the idea, issue or pull request., claim: request}
+  - {id: contributor, name: Contributor, colour: '#6a1b9a', icon: pencil-line, earn: "An idea, report or change of yours was accepted onto the backlog or published.", evidence: "A link to the idea, issue or pull request.", claim: request}
   - {id: reviewer, name: Reviewer, colour: '#00695c', icon: badge-check, earn: "Reviewed a draft as part of the review panel or an expert review.", evidence: Confirmed by the service owner., claim: request}
-  - {id: champion, name: Champion, colour: '#b23a14', icon: megaphone, earn: "Introduced the portal to your team and ran a walk-through or passed on your team's feedback.", evidence: A short note of what you did, with no names., claim: request}
-  - {id: ambassador, name: Ambassador, colour: '#3949ab', icon: users-round, earn: "Presented the portal at a community, network or working group, or championed it across organisations.", evidence: The community or event, with no names of attendees., claim: request}
+  - {id: champion, name: Champion, colour: '#b23a14', icon: megaphone, earn: "Introduced the portal to your team and ran a walk-through or passed on your team's feedback.", evidence: "A short note of what you did, with no names.", claim: request}
+  - {id: ambassador, name: Ambassador, colour: '#3949ab', icon: users-round, earn: "Presented the portal at a community, network or working group, or championed it across organisations.", evidence: "The community or event, with no names of attendees.", claim: request}
   badge_note: "Badges recognise help with a prototype. They are not an official government credential or qualification."
 easy_read:
   index: [This website helps people follow the Data Asset Management Policy., The policy is about looking after important government data., It shows the steps for your role., It is a test version. It is not official GOV.UK guidance.]

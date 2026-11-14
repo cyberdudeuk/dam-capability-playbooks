@@ -620,6 +620,24 @@ class Vaccination(unittest.TestCase):
         with self.assertRaises(build.ContentError):
             build.load(self.r / 'content' / 'playbooks.yaml')
 
+    # D-045: an unquoted comma in any flow mapping silently cut published text short (69 values, 79 fragments)
+    def test_build_rejects_value_cut_by_comma(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'trigger: "Access, quality or sharing decision within remit"', 'trigger: Access, quality or sharing decision within remit')
+        with self.assertRaises(build.ContentError) as e:
+            build.load(self.r / 'content' / 'playbooks.yaml')
+        self.assertIn('cut off by an unquoted comma', str(e.exception))
+
+    def test_build_rejects_value_cut_by_comma_in_frameworks(self):
+        f = self.r / 'content' / 'frameworks.yaml'
+        t = f.read_text(encoding='utf-8')
+        i = t.index('"A link to the idea, issue or pull request."')
+        f.write_text(t[:i] + 'A link to the idea, issue or pull request.' + t[i + len('"A link to the idea, issue or pull request."'):], encoding='utf-8')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_allows_explicit_null(self):
+        self.assertEqual(build.split_values('- {id: X, src: null, a: "b, c"}\n', 't.yaml'), [])
+
     # D-043: an unquoted comma in a check option split one answer into two
     def test_build_rejects_split_option(self):
         edit(self.r / 'content' / 'playbooks.yaml', 'options: ["Someone owns quality, drift and bias monitoring",', 'options: [Someone owns quality, drift and bias monitoring,')
@@ -859,6 +877,20 @@ class Vaccination(unittest.TestCase):
         c['glossary'][0]['related'] = ['no-such-term']
         d = build.load(self.r / 'content' / 'playbooks.yaml')
         self.assertTrue(any('unknown term' in e for e in compass.validate(c, d)))
+
+    # D-045: an unquoted comma in a compass route step cut its title short and left a stray key
+    def test_build_rejects_compass_value_cut_by_comma(self):
+        y = self.r / 'compass' / 'compass.yaml'
+        edit(y, 'title: "What AI use adds to governance, cataloguing and quality", path:', 'title: What AI use adds to governance, cataloguing and quality, path:')
+        sys.path.insert(0, str(self.r / 'tools'))
+        import compass
+        compass.SRC = self.r / 'compass'
+        try:
+            errs = compass.validate(compass.load(), build.load(self.r / 'content' / 'playbooks.yaml'))
+        finally:
+            compass.SRC = ROOT / 'compass'
+        self.assertTrue(any('cut off by an unquoted comma' in e for e in errs), errs)
+        self.assertTrue(any('unknown keys' in e for e in errs), errs)
 
     def test_c35_rose_without_portal_link(self):
         edit(self.s / 'compass' / 'index.html', 'class="rose-link"', 'class="rose-label"', count=1)
