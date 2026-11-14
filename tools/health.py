@@ -42,13 +42,13 @@ def fetch(url, timeout=20, accept=HTML_ACCEPT):
 
 
 def fetch_meta(url, timeout=20, accept=HTML_ACCEPT):
-    """Like fetch, but also returns the response headers, so a bot challenge can be told apart from the page (D-043)."""
+    """Like fetch, but also returns the response headers, so a bot challenge can be told apart from the page (D-045)."""
     req = urllib.request.Request(url, headers={'User-Agent': UA, 'Accept': accept})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.status, r.read(), dict(r.headers)
 
 
-# D-043: some sites answer automated checks with a bot challenge instead of the page. EUR-Lex returns 202 with
+# D-045: some sites answer automated checks with a bot challenge instead of the page. EUR-Lex returns 202 with
 # x-amzn-waf-action: challenge, for real and made-up laws alike, and a 404 to some runners. Either way the checker never
 # saw the page, so the link is neither ok nor broken: it is blocked, and a person checks it.
 CHALLENGE_HEADERS = ('x-amzn-waf-action', 'cf-mitigated')
@@ -150,7 +150,7 @@ def external_links(site):
             time.sleep(2 * (attempt + 1))
         row['code'] = code
         if code is not None and is_challenge(code, headers):
-            row['state'], row['detail'] = 'blocked', 'bot challenge; the page was never seen, so a person checks it (D-043)'
+            row['state'], row['detail'] = 'blocked', 'bot challenge; the page was never seen, so a person checks it (D-045)'
         elif code in (401, 403, 405, 429):
             row['state'] = 'blocked'  # the site refuses automated checks; not a broken link
         elif code in (404, 410):
