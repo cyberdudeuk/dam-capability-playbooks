@@ -372,7 +372,6 @@ class Vaccination(unittest.TestCase):
         self.fails('c25_workflow_inventory')
 
     def test_d019_status_page_hides_owner_account(self):
-        import json as _json
         st = {'generated': 'x', 'today': '2026-11-05', 'review_date': '2027-02-05', 'review_due': False, 'healthy': False,
               'problems': ['Broken link: https://github.com/cyberdudeuk/dam-capability-playbooks/releases (404)'], 'sources': [], 'pages': [],
               'envelope_bytes': 1, 'links': [], 'anchors': []}
@@ -1001,7 +1000,7 @@ class Vaccination(unittest.TestCase):
         j = t.index('  learn:', i)
         y.write_text(t[:i] + t[i:j].replace('{p: dam,', '{p: cat,').replace('{p: dqc,', '{p: cat,') + t[j:], encoding='utf-8')
         sys.path.insert(0, str(self.r / 'tools'))
-        import importlib, compass
+        import compass
         compass.SRC = self.r / 'compass'
         try:
             errs = compass.validate(compass.load(), build.load(self.r / 'content' / 'playbooks.yaml'))
@@ -1376,12 +1375,12 @@ class BreakScripts(unittest.TestCase):
         self.assertEqual(bad, [], 'break scripts must do nothing where their target is absent (D-027)')
 
     def test_null_safety_test_catches_unsafe_script(self):
-        from playwright.sync_api import sync_playwright
+        from playwright.sync_api import Error as PlaywrightError, sync_playwright
         with sync_playwright() as p:
             b = p.chromium.launch()
             pg = b.new_page()
             pg.set_content('<!DOCTYPE html><html><body></body></html>')
-            with self.assertRaises(Exception):
+            with self.assertRaises(PlaywrightError):
                 pg.evaluate("window.DCP_INDEX.length = 0;")
             b.close()
 

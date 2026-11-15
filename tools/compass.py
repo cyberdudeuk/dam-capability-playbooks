@@ -5,7 +5,6 @@ with the DAMA areas and capabilities taken from this repository's own content. C
 """
 import json
 import re
-import sys
 from pathlib import Path
 
 import yaml
@@ -212,7 +211,7 @@ def directory(c, d, pb, page_names, page_desc):
         seen.add(u)
         add({'id': f'{g["portal"]}-{len(out)}', 'kind': 'Website page', 'title': g['title'], 'url': u, 'where': g['portal'], 'by': P[g['portal']]['name'],
              'topic': P[g['portal']]['short'], 'desc': g['desc'], 'status': P[g['portal']]['binding'], 'areas': list(g['areas'])})
-    for pg, items in (d.get('related', {}).get('placements') or {}).items():
+    for _pg, items in (d.get('related', {}).get('placements') or {}).items():
         for x in items:
             u = P[x['portal']]['url'] + x['path'] if x['portal'] in P else ''
             if not u or u in seen:
@@ -397,7 +396,7 @@ def rose(c):
     """The compass rose: four portals on their bearings, you at the centre, and a needle the page turns to your starting portal."""
     P = {p['bearing']: p for p in c['portals']}
     pts = ''
-    for k, r in (('N', 0), ('E', 90), ('S', 180), ('W', 270)):
+    for _k, r in (('N', 0), ('E', 90), ('S', 180), ('W', 270)):
         pts += f'<path d="M150 150 L141 150 L150 {28} Z" fill="#f2c14e" transform="rotate({r} 150 150)"/><path d="M150 150 L159 150 L150 28 Z" fill="#c9a23a" transform="rotate({r} 150 150)"/>'
     for r in (45, 135, 225, 315):
         pts += f'<path d="M150 150 L145 150 L150 70 Z" fill="#8fa3bf" transform="rotate({r} 150 150)"/><path d="M150 150 L155 150 L150 70 Z" fill="#6d84a3" transform="rotate({r} 150 150)"/>'

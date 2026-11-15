@@ -4,7 +4,10 @@
   "description": "Test-only dependencies. Nothing here is shipped in the site.",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "9.39.5",
     "axe-core": "4.14.0",
+    "eslint": "9.39.5",
+    "globals": "16.5.0",
     "lucide-static": "1.71.0"
   }
 }
