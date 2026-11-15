@@ -4,7 +4,7 @@ The content of this portal (the text in `content/playbooks.yaml` and everything 
 [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/), except where stated.
 
 Material quoted or summarised from GOV.UK guidance remains Crown copyright under the same licence; the GOV.UK page is the authority.
-Material summarised from the Public Sector Data Quality Commons is used under its OGL v3.0 content licence.
+Material summarised from the Public Sector Data Quality Commons is used under its content licence, with credit: OGL v3.0 for material taken up to its release 2.16.0, and CC BY 4.0 from release 2.16.1 (15 November 2026).
 The W3C and Bitol standards referenced are linked, not reproduced.
 
 Code (`tools/`, `site_src/`, `tests/`) is under the MIT licence in `LICENSE`.
