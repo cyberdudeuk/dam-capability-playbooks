@@ -3727,7 +3727,7 @@ class Site:
         pat = r'https?://(?:github\.com/' + re.escape(owner) + r'/|' + re.escape(owner) + r'\.github\.io/)([A-Za-z0-9._-]+)/?([^\s)]*)'
 
         def sub(m):
-            kind = 'repository' if 'github.com' in m.group(0) else 'site'
+            kind = 'repository' if urllib.parse.urlparse(m.group(0)).hostname == 'github.com' else 'site'  # whole host (CodeQL #22)
             what = names.get(m.group(1), "another project in the owner's account")
             return f'{kind} of {what}' + (f', {m.group(2)}' if m.group(2) else '')
         return re.sub(pat, sub, text)
@@ -3827,7 +3827,7 @@ class Site:
         items.sort(key=lambda t: (t[0].lower(), t[2].lower()))
         def shown(u):
             # addresses on a personal GitHub Pages host are linked but not printed, so no account name appears in the text (C-17)
-            return 'GitHub Pages' if '.github.io/' in u else u
+            return 'GitHub Pages' if (urllib.parse.urlparse(u).hostname or '').endswith('.github.io') else u  # whole host (CodeQL #2)
         return ''.join(f'<li id="cite-{E(i)}">{E(pub)} ({E(y)}) <cite>{E(t)}</cite>. Available at: <a href="{E(u)}">{E(shown(u))}</a> (Accessed: {acc}).</li>' for pub, y, t, u, i in items), len(items)
 
     def p_notices(self):

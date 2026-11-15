@@ -9,6 +9,7 @@ import csv
 import html
 import json
 import re
+import urllib.parse
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -1064,7 +1065,8 @@ def c36_have_your_say(site, repo, pages):
     if not sec:
         errs.append('research: no sign-up section')
     for u in re.findall(r'href="([^"]+)"', sec):
-        if 'github.com' in u or 'github.io' in u:
+        host = (urllib.parse.urlparse(u).hostname or '').lower()
+        if host == 'github.com' or host == 'github.io' or host.endswith('.github.io'):  # whole host (CodeQL #23, #24)
             errs.append(f'research: sign-up links to GitHub ({u}); sign-up must be a private form')
     btn = re.search(r'<a class="btn" href="([^"]+)"[^>]*>.*?Sign up to take part', sec)
     if btn and not btn.group(1).startswith(('https://forms.cloud.microsoft/', 'https://forms.office.com/', 'https://forms.microsoft.com/', 'https://forms.service.gov.uk/')):

@@ -254,7 +254,10 @@
     p.set('template', 'contact.yml'); p.set('title', '[Contact] ' + kind.value);
     p.set('kind', kind.value); p.set('capability', $('#cf-part', cf).value);
     p.set('page', $('#cf-page', cf).value); p.set('detail', detail.value);
-    location.href = cf.getAttribute('data-target') + '?' + p.toString();
+    var target = cf.getAttribute('data-target') || '';
+    // CodeQL #1: only ever send people to this repository's GitHub issue form (fail closed otherwise).
+    if (!/^https:\/\/github\.com\/[A-Za-z0-9-]+\/[A-Za-z0-9._-]+\/issues\/new$/.test(target)) return;
+    location.href = target + '?' + p.toString();
   });
 
   /* search palette */
