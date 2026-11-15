@@ -53,3 +53,11 @@ SOFTWARE.
 ## axe-core (test only, not shipped)
 
 Used by `tools/check_browser.py` for accessibility testing. Mozilla Public License 2.0.
+
+## ESLint, @eslint/js and globals (test only, not shipped)
+
+Used by CI to lint the site's own JavaScript in `site_src/` (D-LINT-01). MIT License.
+
+## Ruff (test only, not shipped)
+
+Used by CI to lint the Python tools and tests (D-LINT-01). MIT License.

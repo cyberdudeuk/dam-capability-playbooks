@@ -699,7 +699,7 @@ FLAGS = {'E': ('Explicit', 'The text names this as a requirement or responsibili
          'I': ('Implicit', 'The text depends on it to meet an explicit requirement but does not name it as one.'),
          'N': ('Inferred', 'Not in the text. This portal\'s judgement from good practice and adjacent rulebooks.')}
 CLUSTERS = ['Direction and oversight', 'Core DAM capabilities', 'Data management enablers', 'Protection, ethics and trust', 'People and culture', 'Delivery, change and value']
-CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-check', 'users-round', 'workflow']))
+CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-check', 'users-round', 'workflow'], strict=False))
 
 
 # ---------------------------------------------------------------------------
@@ -1429,7 +1429,7 @@ class Site:
         return (f'<div class="notice-box ms-form" id="private-feedback">{icon("lock-keyhole")}<div><h2 class="fs-h">Prefer not to use GitHub?</h2>'
                 f'<p>{E(f["note"])}</p><p><a class="btn secondary" href="{E(link)}" rel="noopener" data-ms-form>{icon("message-square-text")}{E(f["title"])}</a></p>'
                 + (f'<details><summary>How we use your answers and any contact details</summary><ul>{priv}</ul></details>' if priv else '')
-                + f'<p class="hint">Apart from your own contact details, if you choose to give them, do not include names, personal data or anything above OFFICIAL.</p></div></div>')
+                + '<p class="hint">Apart from your own contact details, if you choose to give them, do not include names, personal data or anything above OFFICIAL.</p></div></div>')
 
     def ms_privacy_html(self):
         """The private feedback form's privacy wording on About > Privacy, which the form itself links to (version 1.10.2)."""
@@ -1500,7 +1500,7 @@ class Site:
         try:
             self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg, pb=self.d, page_names={k: l for k, l, _ in NAV}, page_desc=PAGE_DESC)
         except ValueError as e:
-            raise ContentError(str(e))
+            raise ContentError(str(e)) from e
         # The site map is built last, from the registry every other page has filled
         (self.out / 'site-map.html').write_text(self.p_sitemap(), encoding='utf-8')
         self.write_llms()
@@ -2319,7 +2319,7 @@ class Site:
             if x.get('four_nations'):
                 extra += (f'<h4>{icon("map")} Four nations view</h4>' + table(f't-4n-{x["id"]}', 'Who the policy applies to, by nation and tier', ['Who', 'Position'],
                           [[E(n['nation']), E(n['position']) + prov(n['prov'], self.m['verified_on'])] for n in x['four_nations']]) + f'<p class="hint">Source: {self.src_link("SRC-IDC")}</p>')
-            checklist = ''.join(f'<li>{mark_done(cid, "Done")}<span>{E(c)}</span></li>' for cid, c in zip(cl_ids, x['checklist']))
+            checklist = ''.join(f'<li>{mark_done(cid, "Done")}<span>{E(c)}</span></li>' for cid, c in zip(cl_ids, x['checklist'], strict=False))
             ids_html = f'<h4>{icon("tag")} Identifiers</h4><ul>{ids}</ul>' if ids else ''
             detail += f'''<section class="module supplement" id="{x["id"]}" aria-labelledby="h-{x["id"]}">
 <div class="mod-head">{tile(x["icon"], "lg")}<div><p class="caption">{E(x["id"])} · <strong class="moscow m-{slug(t["moscow"])}">{E(t["moscow"])} have</strong></p><h3 id="h-{x["id"]}">{E(x["title"])}</h3>{caps}</div></div>
@@ -2502,7 +2502,7 @@ class Site:
                          brief=[f'{fc["E"]} capabilities are explicit in the policy, {fc["I"]} implicit and {fc["N"]} inferred.', 'Every flag points to the section of GOV.UK guidance it comes from.', 'Assess yourself against the government maturity model and four DAM strands.'],
                          meta=[('radar', f'{len(cm)} capabilities'), ('signpost', f'{sum(len(c["signposts"]) for c in cm)} signposts'), ('layers', '10 topics, 6 themes, 5 levels')])
         body += self.tabbed(tabs, 'Capability model views')
-        drawer = [{'label': 'Views', 'icon': 'radar', 'items': [{'id': k, 'label': l, 'icon': ic} for (k, l, _), ic in zip(tabs, ['grid-3x3', 'signpost', 'layers', 'circle', 'chart-column', 'arrow-right-left'])]},
+        drawer = [{'label': 'Views', 'icon': 'radar', 'items': [{'id': k, 'label': l, 'icon': ic} for (k, l, _), ic in zip(tabs, ['grid-3x3', 'signpost', 'layers', 'circle', 'chart-column', 'arrow-right-left'], strict=False)]},
                   {'label': 'Clusters', 'icon': 'layers', 'items': [{'id': f'band-{slug(cl)}', 'label': cl, 'icon': CLUSTER_ICONS[cl], 'count': sum(1 for c in cm if c['cluster'] == cl)} for cl in CLUSTERS]}]
         return self.page('capability-model', 'Capability model', body, drawer, crumbs=['Frameworks', 'Capability model'], extra_json={'sa-data': {
             'levels': mt['levels'], 'strands': [{'id': s['id'], 'name': s['name']} for s in mt['strands']], 'topics': [{'id': f't{t["n"]}', 'name': t['name']} for t in mt['topics']]}})
@@ -2539,7 +2539,7 @@ class Site:
                       f'<ol class="ladder" aria-label="Role levels for {E(r["title"].lower())}">{ladder}</ol>{grid}</section>')
         pathways = (f'<p>Roles from the <a href="{E(self.rb["RB-DDAT"]["url"])}">Government Digital and Data capability framework</a>{prov("V", v)} that carry DAM responsibilities. '
                     'Each shows its levels, the Civil Service grades they are most often done at, and the skill level needed at each step: awareness, working, practitioner or expert. Grades are typical, not mandatory.</p>'
-                    + paths + f'<p>Download every role and skill as <a href="data/ddat-role-skills.csv">CSV</a>. Framework content is Crown copyright under the Open Government Licence.</p>')
+                    + paths + '<p>Download every role and skill as <a href="data/ddat-role-skills.csv">CSV</a>. Framework content is Crown copyright under the Open Government Licence.</p>')
         # professions
         pcards = ''
         for p in pf['profs']:
@@ -2574,7 +2574,7 @@ class Site:
                          brief=['Find the framework roles and professions closest to your role in the policy.', 'See each career pathway with grades and skill levels.', 'Follow a learning route and track your progress.'],
                          meta=[('briefcase', f'{len(pf["roles"])} framework roles'), ('users-round', f'{len(pf["profs"])} professions'), ('graduation-cap', f'{len(set(allids))} learning resources')])
         body += self.tabbed(tabs, 'Professions and skills views')
-        drawer = [{'label': 'Views', 'icon': 'briefcase', 'items': [{'id': k, 'label': l, 'icon': ic} for (k, l, _), ic in zip(tabs, ['users-round', 'route', 'building-2', 'graduation-cap', 'book-marked'])]},
+        drawer = [{'label': 'Views', 'icon': 'briefcase', 'items': [{'id': k, 'label': l, 'icon': ic} for (k, l, _), ic in zip(tabs, ['users-round', 'route', 'building-2', 'graduation-cap', 'book-marked'], strict=False)]},
                   {'label': 'Career pathways', 'icon': 'route', 'items': [{'id': f'role-{r["id"]}', 'label': r['title'], 'icon': 'route'} for r in pf['roles']]}]
         return self.page('professions', 'Professions and skills', body, drawer, crumbs=['Frameworks', 'Professions and skills'])
 
@@ -2587,7 +2587,7 @@ class Site:
         for x in ch['items']:
             ids = [f'{x["id"]}.a{i}' for i in range(len(x['actions']))]
             all_ids += ids
-            acts = ''.join(f'<li>{mark_done(i, "Done")}<span>{E(a)}</span></li>' for i, a in zip(ids, x['actions']))
+            acts = ''.join(f'<li>{mark_done(i, "Done")}<span>{E(a)}</span></li>' for i, a in zip(ids, x['actions'], strict=False))
             refs = ''.join(f'<li>{self.rb_link(r)}</li>' for r in x['refs'])
             cards += f'''<li class="cr-card ch-card" id="{x["id"]}" data-item data-mode="{x["mode"].lower()} {"bau change" if x["mode"] == "Both" else ""}" data-stage="{x["stage"]}">
 <div class="cr-head">{tile(x["icon"], "sm")}<div><p class="caption">{E(x["id"])} · {E({"BAU": "Business as usual", "Change": "Change programmes", "Both": "Business as usual and change"}[x["mode"]])} · {E(stg[x["stage"]]["name"])}</p><h3>{E(x["title"])}</h3></div>{status_tag(ids)}</div>
@@ -2779,9 +2779,8 @@ class Site:
         return ' '.join(f'<a class="pill" href="change.html#{c}" data-tip="{E(t[c]["why"])}">{E(c)} {E(t[c]["title"])}</a>' for c in ids)
 
     def p_lenses(self):
-        d, L = self.d, self.d['lenses']
+        L = self.d['lenses']
         caps = L['caps_order']
-        lvl = {'Strong': 3, 'Partial': 2, 'Gap': 1}
         def cell(v, before=None):
             arrow = f' <span class="hint">(was {E(before)})</span>' if before and before != v else ''
             return f'<span class="cov cov-{v.lower()}">{E(v)}</span>{arrow}'
@@ -2823,7 +2822,7 @@ class Site:
         bp += ''.join(f'<tr><th scope="row">{E(lbl)}</th>' + ''.join(f'<td>{E(b[k])}</td>' for b in pr['blueprint']) + '</tr>' for k, lbl in lanes) + '</tbody></table></div>'
         return (f'<h2 id="programme-roles">{icon("users-round")} Programme roles with data responsibilities</h2><p>{E(pr["intro"])}{prov("O")}</p>'
                 + table('t-prg-roles', 'Data responsibilities of programme and project roles', ['Role', 'Data responsibilities', 'Stages', 'Works with', 'Rules'], rows)
-                + f'<p>These roles also appear on the <a href="together.html#roles">roles list</a>, the <a href="personas.html#persona-prg">programme or project lead route</a> and in the practices below.</p>'
+                + '<p>These roles also appear on the <a href="together.html#roles">roles list</a>, the <a href="personas.html#persona-prg">programme or project lead route</a> and in the practices below.</p>'
                 + f'<h2 id="blueprint">{icon("workflow")} Service blueprint for a programme</h2><p>What happens to critical data at each stage, front stage and back stage{prov("O")}.</p>{bp}')
 
     def dama_wheel_svg(self, areas, counts):
@@ -2864,12 +2863,10 @@ class Site:
         pers = {p['id']: p for p in d['personas']}
         caps_for = {a['id']: [c for c in d['capmap'] if a['dmbok'] in c['dmbok']] for a in dm['areas']}
         counts = {k: len(v) for k, v in caps_for.items()}
-        mt = d['maturity']
         cards = ''
         for a in dm['areas']:
             cs = caps_for[a['id']]
             topics = sorted({t for c in cs for t in c['dma']})
-            urows = ''.join(f'<tr data-r="{pid}"><th scope="row">{E(pers[pid]["title"])}</th><td>{E(u)}</td></tr>' for pid, u in a['uses'].items())
             cards += (f'<section class="cr-card dama-area" id="{a["id"].lower()}" aria-labelledby="h-{a["id"]}"><h3 id="h-{a["id"]}">{E(a["name"])}</h3>'
                       f'<p>{E(a["desc"])}{prov("O")}</p>'
                       f'<dl class="cr-dl"><dt>{icon("radar")} DAM capabilities</dt><dd>{" ".join(self.cr_pill(c["id"]) for c in cs) or "None directly; it supports analysis built on critical assets."}</dd>'
@@ -2908,7 +2905,7 @@ class Site:
             if ga['id'] == aid:
                 acts = ''.join(f'<li><a href="areas.html#{x["id"]}" data-tip="{E(x["goal"])}">{E(x["title"])}</a></li>' for x in ga['activities'])
                 out.append(f'<p><a href="areas.html#{aid}">Knowledge area activities</a>: {len(ga["activities"])} activities, each with steps, outputs, evidence and who does what.</p><ol class="drill-steps">{acts}</ol>')
-        return ''.join(out) or f'Not yet: this portal has no activities for this area. <a href="#drilldown">See what it would take</a>.'
+        return ''.join(out) or 'Not yet: this portal has no activities for this area. <a href="#drilldown">See what it would take</a>.'
 
     def dama_assessment(self):
         """Version 1.13.0: what it would take to drill down from every slice of the wheel, and to make data architecture a playbook."""
@@ -2950,7 +2947,7 @@ class Site:
                  f'<ul class="rulebook" id="com-list">{com}</ul>'
                  f'<h2 id="map">{icon("grid-3x3")} Who contributes to what</h2><p>Professions that contribute to each capability, from the capability model. Use it to decide who to bring to the table for each asset.</p>'
                  + table('t-prof-map', 'Professions contributing to each capability', ['Capability'] + [p['name'].split(' (')[0] for p in profs], mrows)
-                 + f'<p>See also <a href="perspectives.html">Perspectives</a> for what each community should ask and do, and <a href="professions.html">Professions and skills</a> for career routes.</p>')
+                 + '<p>See also <a href="perspectives.html">Perspectives</a> for what each community should ask and do, and <a href="professions.html">Professions and skills</a> for career routes.</p>')
         drawer = [{'label': 'Working together', 'icon': 'handshake', 'items': [{'id': 'recommendations', 'label': 'Recommendations', 'icon': 'list-checks', 'count': len(j['recs'])},
                                                                               {'id': 'communities', 'label': 'Communities', 'icon': 'users-round', 'count': len(j['communities'])},
                                                                               {'id': 'map', 'label': 'Who contributes to what', 'icon': 'grid-3x3', 'count': len(d['capmap'])}]}]
@@ -3024,7 +3021,6 @@ class Site:
                   ('Frameworks', 'grid-3x3', NAV_GROUPS['Frameworks']),
                   ('Reference', 'library', ['library', 'knowledge', 'inclusion', 'data', 'reuse']),
                   ('About and help', 'info', ['about', 'research', 'involve', 'test', 'contact', 'status', 'whats-new', 'design', 'notices', 'accessibility'])]
-        colours = {'Start here': '#1d70b8', 'Playbooks': '#00703c', 'Frameworks': '#3949ab', 'Reference': '#455a64', 'About and help': '#505a5f'}
         seen, out = set(), ''
         for name, ic, keys in groups:
             items = ''
@@ -3221,7 +3217,7 @@ class Site:
         return out
 
     def p_research(self):
-        d, m, R = self.d, self.m, self.d['research']
+        m, R = self.m, self.d['research']
         gh = f'https://github.com/{m["repo"]}'
         items = self.research_items()
         crit = {c['id']: c for c in R['criteria']}
@@ -3424,7 +3420,7 @@ class Site:
                  f'<h2 id="boards">{icon("building-2")} Boards and groups that decide or advise</h2><ul class="cr-list two">{"".join(card(x) for x in boards)}</ul>'
                  f'<h2 id="networks">{icon("handshake")} Communities and networks you can join</h2><p>Most are open to anyone working in the public sector. Join details are on each source page; this portal never lists email addresses.</p><ul class="cr-list two">{"".join(card(x) for x in nets)}</ul>'
                  f'<h2 id="where">{icon("signpost")} Where to take an issue</h2>' + table('t-where', 'Where to take each kind of issue', ['Your issue', 'Where to take it'], route)
-                 + f'<p class="hint">Bodies change. If an entry is out of date, <a href="contact.html">tell us</a>. Membership lists and minutes are on the source pages.</p>')
+                 + '<p class="hint">Bodies change. If an entry is out of date, <a href="contact.html">tell us</a>. Membership lists and minutes are on the source pages.</p>')
         drawer = [{'label': 'Boards and networks', 'icon': 'building-2', 'items': [
             {'id': 'how-decisions', 'label': 'How decisions flow', 'icon': 'workflow', 'new': True},
             {'id': 'boards', 'label': 'Boards and groups', 'icon': 'building-2', 'count': len(boards)},
@@ -3515,7 +3511,7 @@ class Site:
                  f'<ol class="flow" aria-label="Adoption stages">{flow}</ol>'
                  f'<h2 id="overview">{icon("layers")} All activities at a glance</h2>'
                  + table('t-areas', 'Activities by knowledge area and stage', ['Knowledge area'] + [f'{s["name"]}: {s["when"].lower()}' for s in G['stages']], rows)
-                 + f'<p class="hint">The DAMA wheel in the <a href="compass/index.html#lineage">data portals compass</a> drills down to every activity here. Governance, cataloguing and quality activities are the three <a href="together.html">capability playbooks</a>.</p>'
+                 + '<p class="hint">The DAMA wheel in the <a href="compass/index.html#lineage">data portals compass</a> drills down to every activity here. Governance, cataloguing and quality activities are the three <a href="together.html">capability playbooks</a>.</p>'
                  + f'<h2 id="sources">{icon("book-marked")} Sources</h2>' + ul([f'{E(i["label"])}{prov(i["prov"])}' for i in G['meta']['inputs']], raw=True))
         body += draft + self.tabbed([('p-start', 'Start here', start)] + secs, 'Knowledge areas')
         drawer = [{'label': 'Knowledge areas', 'icon': 'target', 'items': [
@@ -3584,7 +3580,7 @@ class Site:
                          f'<p>Downloads: <a href="badges/{b["id"]}.svg" download>SVG</a> · <a href="badges/{b["id"]}.png" download>PNG for social media and email</a></p></details>')
         badges = (f'<h2 id="badges">{icon("award")} Badges</h2><p>Every way of taking part earns a badge you can show on your GitHub profile, on social media or in your email signature. {E(I["badge_note"])}</p>'
                   + table('t-badges', 'Badges and how to earn them', ['Badge', 'How to earn it', 'How to get it'], brows)
-                  + f'<p class="hint">Claims are public GitHub issues that show your GitHub username only. Do not include your name or anything above OFFICIAL. No GitHub account? Use the private feedback form and say which badge.</p>'
+                  + '<p class="hint">Claims are public GitHub issues that show your GitHub username only. Do not include your name or anything above OFFICIAL. No GitHub account? Use the private feedback form and say which badge.</p>'
                   + f'<h3 id="badge-code">{icon("code-xml")} Add a badge to your profile or signature</h3>{snippets}'
                   + f'<h2 id="recognition">{icon("trophy")} Recognition</h2><p>People who claim Contributor, Reviewer, Champion or Ambassador badges can be listed here by GitHub username, if they choose. None yet: be the first.</p>')
         rules = f'<h2 id="rules">{icon("scale")} Rules of engagement</h2>{ul(I["rules"])}'
@@ -3592,7 +3588,7 @@ class Site:
                          brief=[f'{len(I["routes"])} ways to take part, from 2 minutes to an ongoing role.', 'A toolkit of emails, posts and a walk-through to bring your team in.', f'{len(I["badges"])} badges for your profile and signature.'],
                          meta=[('route', f'{len(I["routes"])} ways'), ('send', f'{len(I["toolkit"])} templates'), ('award', f'{len(I["badges"])} badges')])
         body += (f'<h2 id="ways">{icon("route")} Ways to take part</h2><ul class="approach-grid">{routes}</ul>' + rules + contrib + champ + toolkit + badges
-                 + f'<p>See also <a href="research.html">Have your say</a> for research, the roadmap and ideas, and <a href="bodies.html#networks">Boards, councils and networks</a> for government communities to join.</p>')
+                 + '<p>See also <a href="research.html">Have your say</a> for research, the roadmap and ideas, and <a href="bodies.html#networks">Boards, councils and networks</a> for government communities to join.</p>')
         drawer = [{'label': 'Get involved', 'icon': 'hand-helping', 'items': [
             {'id': 'ways', 'label': 'Ways to take part', 'icon': 'route', 'count': len(I['routes']), 'new': True},
             {'id': 'rules', 'label': 'Rules of engagement', 'icon': 'scale', 'count': len(I['rules'])},

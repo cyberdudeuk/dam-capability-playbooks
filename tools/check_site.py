@@ -1479,7 +1479,7 @@ def c43_compass_name(site, repo, pages):
         h = f.read_text(encoding='utf-8')
         if f.name == 'whats-new.html':
             h = h.split('Unreleased', 1)[-1].split('<h2', 2)[0] if 'Unreleased' in h else ''
-        for m in re.findall(r'[Ee]state compass', h):
+        for _m in re.findall(r'[Ee]state compass', h):
             errs.append(f'{f.name}: still calls the compass the estate compass')
             break
     return errs

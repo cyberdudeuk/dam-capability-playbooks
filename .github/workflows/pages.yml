@@ -56,6 +56,10 @@ jobs:
             echo "::warning::System packages could not be installed; installing the browser alone"
             timeout 600 python -m playwright install chromium
           fi
+      - name: Linters, failing on any finding (D-LINT-01)
+        run: |
+          ruff check .
+          npx eslint .
       - name: Build (first pass, for page weights)
         run: python tools/build.py
       - name: Health run (sources, review date, page weight)

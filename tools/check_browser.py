@@ -89,8 +89,8 @@ def run(site, axe_path, brk=None, pages=None):
             ctx = b.new_context(viewport={'width': 1280, 'height': 900}, color_scheme=scheme, bypass_csp=bool(brk))
             pg = ctx.new_page()
             errors = []
-            pg.on('console', lambda m: errors.append(m.text) if m.type == 'error' else None)
-            pg.on('pageerror', lambda e: errors.append(str(e)))
+            pg.on('console', lambda m, errors=errors: errors.append(m.text) if m.type == 'error' else None)
+            pg.on('pageerror', lambda e, errors=errors: errors.append(str(e)))
             for name in pages:
                 errors.clear()
                 pg.goto(f'{base}/{name}')

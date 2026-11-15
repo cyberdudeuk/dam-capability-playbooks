@@ -61,7 +61,7 @@
     if (narrow.addEventListener) narrow.addEventListener('change', onMq); else if (narrow.addListener) narrow.addListener(onMq);
   }
 
-  /* global bar: fold overflowing items into a More menu */
+  /* Global navigation bar: fold overflowing items into a More menu */
   var bar = $('#gbar');
   function fold() {
     if (!bar) return;
@@ -397,13 +397,13 @@
   /* DAMA view: role selector opens each area's role guidance and highlights the chosen role (version 1.7) */
   var dr = $('#dama-role');
   if (dr) {
-    var names = {};
-    $$('#dama-role option').forEach(function (o) { names[o.value] = o.textContent; });
+    var roleNames = {};
+    $$('#dama-role option').forEach(function (o) { roleNames[o.value] = o.textContent; });
     var applyDr = function () {
       var v = dr.value;
       $$('.dama-uses').forEach(function (det) {
         det.open = !!v;
-        $$('tbody tr', det).forEach(function (tr) { var th = tr.querySelector('th'); tr.classList.toggle('me', !!v && th && th.textContent === names[v]); });
+        $$('tbody tr', det).forEach(function (tr) { var th = tr.querySelector('th'); tr.classList.toggle('me', !!v && th && th.textContent === roleNames[v]); });
       });
       store.set('dcp-dama-role', v);
     };
@@ -466,7 +466,7 @@
     var m = /[#&]tour=([a-z0-9-]+)/.exec(location.hash); if (m) setTimeout(function () { start(m[1]); }, 200);
   }
   /* the portal's own address, filled from the page address (version 1.10) */
-  var siteBase = location.protocol === 'file:' ? '' : location.href.split('#')[0].split('?')[0].replace(/[^\/]*$/, '');
+  var siteBase = location.protocol === 'file:' ? '' : location.href.split('#')[0].split('?')[0].replace(/[^/]*$/, '');
   if (siteBase) $$('[data-site-addr]').forEach(function (s) { s.textContent = siteBase; });
 
   /* copy text blocks (version 1.10): toolkit templates, badge code and embed code */
