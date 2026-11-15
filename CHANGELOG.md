@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fixed (D-048): links are recognised by their host name rather than by text inside the address, and the contact form only ever opens this repository's GitHub issue form (code scanning findings 1, 2 and 22 to 24). Nothing a reader sees changes.
 - Fixed (D-047): linters now run in CI and fail on any finding (Ruff for Python, ESLint for the site's own JavaScript), part of applying the secure development standard to every project. They found a latent clash in the site script, where two pages' name tables shared one variable, plus dead code in the build; all fixed. Nothing a reader sees changes.
 - Fixed (D-045): the weekly health run reported the EU Data Act link on EUR-Lex as broken. The address is correct; EUR-Lex answers automated checks with a bot challenge instead of the page, which some runners see as a 404 and others as a 202. A bot challenge is now reported as blocked, to be checked by a person, rather than as ok or broken. A plain 404 is still broken.
 - AI-ready data stewardship pathway (version 1.15.0):
