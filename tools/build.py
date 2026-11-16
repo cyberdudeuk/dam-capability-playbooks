@@ -1447,7 +1447,7 @@ class Site:
 <div><h2>{icon("info")} About this portal</h2>
 <p>{E(m["status"])}</p>
 <p>Written with help from an AI assistant (Claude). Every fact is labelled with where it came from, and a person reviews each release before it is published.</p>
-<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="involve.html">Get involved, champions and badges</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Data portals compass: find your way across four websites</a></li></ul></div>
+<ul class="foot-links"><li><a href="accessibility.html">Accessibility statement</a></li><li><a href="notices.html">Disclaimers, credits and citations</a></li><li><a href="design.html">Service design</a></li><li><a href="status.html">Status and health</a></li><li><a href="whats-new.html">What's new</a></li><li><a href="about.html#provenance">How sources are labelled</a></li><li><a href="about.html#privacy">Privacy</a></li><li><a href="about.html#limitations">Known limitations</a></li><li><a href="data.html">Open data</a></li><li><a href="research.html">Have your say: research, roadmap and ideas</a></li><li><a href="involve.html">Get involved, champions and badges</a></li><li><a href="test.html">Help us test</a></li><li><a href="guide.html">User guide and tours</a></li><li><a href="site-map.html">Site map</a></li><li><a href="reuse.html">Use and reuse this content</a></li><li><a href="compass/">Data portals compass: find your way across four websites</a></li><li><a href="explorer/">Asset governance explorer: where data and information asset governance meet</a></li></ul></div>
 <div><h2>{icon("message-square-text")} Contact</h2>
 <p><a href="contact.html">Use the contact form</a> to ask a question, report a problem or suggest an improvement.</p>{f'<p>Or <a href="{E(self.ms_form_link(self.ms_where(key, title) if key else ""))}" rel="noopener" data-ms-form>give feedback privately about this page</a> (Microsoft Forms, no sign-in or GitHub account needed).</p>' if self.ms_form_url() else ''}
 <p>{E(m["contact_note"])}</p></div>
@@ -1463,7 +1463,7 @@ class Site:
     def build(self):
         d, m = self.d, self.m
         h = hashlib.sha256(json.dumps(d, sort_keys=True, default=str).encode())
-        for f in sorted((ROOT / 'site_src').glob('*')) + sorted((ROOT / 'compass').glob('*')) + [Path(__file__), ROOT / 'tools' / 'compass.py']:
+        for f in sorted((ROOT / 'site_src').glob('*')) + sorted((ROOT / 'compass').glob('*')) + sorted((ROOT / 'explorer').glob('*')) + [Path(__file__), ROOT / 'tools' / 'compass.py']:
             h.update(f.read_bytes())
         self.build_id = f'{m["id"]}-{m["version"]}-{h.hexdigest()[:8].upper()}'
         self.codes = (f'<figure>{barcode_svg(self.build_id, "Barcode of build identifier " + self.build_id)}<figcaption>{E(self.build_id)}</figcaption></figure>'
@@ -1501,6 +1501,9 @@ class Site:
             self.compass_id = _compass.build(self.out, self.d, ICON_SET, barcode_svg, qr_svg, pb=self.d, page_names={k: l for k, l, _ in NAV}, page_desc=PAGE_DESC)
         except ValueError as e:
             raise ContentError(str(e)) from e
+        # The asset governance explorer: a standalone page where data and information asset governance meet (public edition).
+        # It is published as committed, with its own Content Security Policy and self-checks (docs/explorer.md).
+        shutil.copytree(ROOT / 'explorer', self.out / 'explorer')
         # The site map is built last, from the registry every other page has filled
         (self.out / 'site-map.html').write_text(self.p_sitemap(), encoding='utf-8')
         self.write_llms()
