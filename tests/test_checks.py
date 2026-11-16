@@ -796,6 +796,14 @@ class Vaccination(unittest.TestCase):
         edit(self.r / 'content' / 'frameworks.yaml', '{part: Step by step, now: "5 activities', '{part: Step by step, now: None, x: "5 activities')
         self.fails('c40_tooltips_and_standards')
 
+    def test_c17_retired_directorate_name_d050(self):
+        edit(self.r / 'docs' / 'backlog-packs.md', 'offer it to the Government Data Directorate', 'offer it to the OCDO')
+        self.fails('c17_no_personal_details')
+
+    def test_c17_team_named_in_docs_d050(self):
+        edit(self.r / 'docs' / 'backlog-packs.md', 'then the Government Data Directorate.', 'then the data management team.')
+        self.fails('c17_no_personal_details')
+
     def test_build_rejects_unknown_dama_area(self):
         edit(self.r / 'content' / 'frameworks.yaml', 'dama: [DM-ARC, DM-MOD]', 'dama: [DM-XYZ]')
         with self.assertRaises(build.ContentError):

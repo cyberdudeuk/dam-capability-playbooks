@@ -5097,7 +5097,7 @@ research:
   - {id: rmdg, name: A roadmap for modern digital government 2025 to 2030, ref: RB-RMDG}
   - {id: blueprint, name: A blueprint for modern digital government, ref: RB-BLUEPRINT}
   - {id: ndl, name: National Data Library, ref: RB-NDLPUB}
-  - {id: sdr, name: "Strategic roadmap for public sector data (in development by the Office of the Chief Data Officer; announced for April 2026 and not found published on GOV.UK on 5 November 2026)", ref: null}
+  - {id: sdr, name: "Strategic roadmap for public sector data (in development by the Government Data Directorate; announced for April 2026 and not found published on GOV.UK on 5 November 2026)", ref: null}
   backlog:
   - {id: BL-01, type: feature, title: Private feedback route, story: "As someone without a GitHub account, I need a private way to give feedback, so that I can take part without publishing my views.", source: OR-02, status: done, release: 1.8.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 3, inclusion: 3}}
   - {id: BL-02, type: feature, title: "Share, site map, guided tours and tutorials", story: "As a first-time visitor, I need to see how the portal fits together, so that I can find my way without help.", source: Owner request, status: done, release: 1.8.0, strategy: [rmdg], assess: {demand: 2, policy: 1, strategy: 2, feasibility: 3, capacity: 2, inclusion: 3}}

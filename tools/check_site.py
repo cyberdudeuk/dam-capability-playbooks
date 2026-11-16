@@ -340,6 +340,17 @@ def c17_no_personal_details(site, repo, pages):
         if f.exists():
             for m in re.finditer(r'emanuel|silva', f.read_text(encoding='utf-8'), re.I):
                 errs.append(f'{f.name}: names "{m.group(0)}"')
+    # D-050: the Office of the Chief Data Officer was restructured and renamed the Government Data Directorate, and the
+    # owner's team is never named. Check what readers see and every source file a reader of the repository sees.
+    retired = re.compile(r'office of the chief data officer|\bOCDO\b|data management team', re.I)
+    for name in pages:
+        for m in retired.finditer(visible_text(site / name)):
+            errs.append(f'{name}: visible text says "{m.group(0)}" (D-050)')
+    srcs = [repo / 'README.md', repo / 'CHANGELOG.md'] + sorted((repo / 'content').glob('*.yaml')) + sorted((repo / 'docs').glob('*.md')) + sorted((repo / 'compass').glob('*.yaml'))
+    for f in srcs:
+        if f.exists():
+            for m in retired.finditer(f.read_text(encoding='utf-8')):
+                errs.append(f'{f.relative_to(repo)}: says "{m.group(0)}" (D-050)')
     return sorted(set(errs))
 
 
