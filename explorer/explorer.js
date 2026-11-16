@@ -322,13 +322,13 @@ document.getElementById('toc').addEventListener('click',e=>{const a=e.target.clo
 
 /* router */
 function route(){const H=parseHash();let v=H.v;if(!VIEWS.some(x=>x[0]===v))v='overview';const p=H.p;
- if(p.has('lens')||p.has('tx')){const l=p.get('lens')||'',t=p.get('tx')||'';LENS.lens=['','BAU','Change'].includes(l)?l:'';LENS.tx=['',...TX].includes(t)?t:'';renderLensViews()}
+ if(p.has('lens')||p.has('tx')){const l=p.get('lens')||'',t=p.get('tx')||'';LENS.lens=['','BAU','Change'].includes(l)?l:'';LENS.tx=['',...TX].includes(t)?t:'';renderLensViews();}
  if(p.has('pw')&&PATHS.some(x=>x.id===p.get('pw')))PATH={id:p.get('pw'),s:Math.max(0,parseInt(p.get('s'),10)||0)};
  if(v==='start'&&p.get('tab'))selectTab('wtabs','wt-'+p.get('tab'));
  if(v==='wheel'&&typeof wheelParams==='function')wheelParams(p);
  document.querySelectorAll('.view').forEach(s=>s.hidden=s.dataset.view!==v);
  document.querySelectorAll('nav.global a').forEach(a=>a.getAttribute('href')==='#'+v?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
- buildToc();lensBar();trail();if(typeof mastH==='function')mastH();const to=p.get('to'),el=to&&document.getElementById(to);if(el&&!el.closest('[hidden]')){el.scrollIntoView()}else window.scrollTo(0,0);}
+ buildToc();lensBar();trail();if(typeof mastH==='function')mastH();const to=p.get('to'),el=to&&document.getElementById(to);if(el&&!el.closest('[hidden]')){el.scrollIntoView();}else window.scrollTo(0,0);}
 addEventListener('hashchange',route);
 
 /* more menu */
@@ -796,14 +796,14 @@ function dispInit(){const row=document.querySelector('.mrow'),st=document.getEle
  m.addEventListener('change',()=>dispApply([...m.querySelectorAll('input:checked')].map(i=>i.value)));
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!m.hidden){m.hidden=true;b.setAttribute('aria-expanded','false');b.focus()}});
  document.addEventListener('click',e=>{if(!m.hidden&&!e.target.closest('.disp')){m.hidden=true;b.setAttribute('aria-expanded','false')}});
- let saved='';try{saved=localStorage.getItem('age-display')||''}catch(e){}dispApply(saved.split(',').filter(x=>DISP.some(d=>d[0]===x)));}
+ let saved='';try{saved=localStorage.getItem('age-display')||'';}catch(e){}dispApply(saved.split(',').filter(x=>DISP.some(d=>d[0]===x)));}
 Object.assign(DATA,{H2ICON,DISP});
 
 /* boot */
 dispInit();
 figs();board();cbars();capFilters();capTable();gaps();moreGaps();renderLensViews();stdCards();matrix();xwalk();startView();guideView();wheelView();easyRead();lensHelp();DATA.SECTIONS=sectionMap();glossary();about();window.__NCHK=selfCheck(DATA,TODAY).length;
 wireTabs('stabs');wireTabs('wtabs');
-let open=innerWidth>900;try{const s=localStorage.getItem('age-drawer');if(s!==null&&innerWidth>900)open=s==='1'}catch(e){}setDrawer(open);
+let open=innerWidth>900;try{const s=localStorage.getItem('age-drawer');if(s!==null&&innerWidth>900)open=s==='1';}catch(e){}setDrawer(open);
 function mastH(){const M=document.querySelector('header.mast'),h=getComputedStyle(M).position==='sticky'?M.offsetHeight:0,t=document.getElementById('trail');document.documentElement.style.setProperty('--mast-h',h+'px');document.documentElement.style.scrollPaddingTop=(h+(t.hidden?0:t.offsetHeight+12)+8)+'px'}
 route();fitNav();mastH();new ResizeObserver(()=>{fitNav();mastH()}).observe(document.querySelector('header.mast'));
 window.__AGE={selfCheck,DATA};
