@@ -2658,7 +2658,10 @@ class Site:
             ('playbooks', 'Full portal content', 'Everything on the portal in one JSON file.', ['playbooks.json'], ['playbooks']),
             ('status', 'Portal health', 'Latest automated health run: source currency, signposted sections, links and page weight.', ['status.json'], ['status']),
         ]
-        return [dict(id=a, title=b, desc=c, files=[f for f in fs if (self.out / 'data' / f).exists() or f == 'status.json' and self.status], kw=k) for a, b, c, fs, k in ds]
+        out = [dict(id=a, title=b, desc=c, files=[f for f in fs if (self.out / 'data' / f).exists() or f == 'status.json' and self.status], kw=k) for a, b, c, fs, k in ds]
+        # A dataset with no published file (for example Portal health before tools/health.py has run, as in
+        # release.yml) is left out, so the catalogue never lists a dataset without a distribution (C-28).
+        return [x for x in out if x['files']]
 
     MEDIA = {'.csv': 'text/csv', '.mmd': 'text/vnd.mermaid', '.ods': 'application/vnd.oasis.opendocument.spreadsheet', '.json': 'application/json', '.jsonld': 'application/ld+json', '.ttl': 'text/turtle', '.yaml': 'application/yaml'}
 

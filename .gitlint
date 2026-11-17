@@ -1,0 +1,11 @@
+# Commit messages the GDS Way: capitalised summary, 50 characters or fewer, no full stop.
+[general]
+ignore=body-is-missing
+
+[title-max-length]
+line-length=50
+
+[title-trailing-punctuation]
+
+[title-match-regex]
+regex=^[A-Z]

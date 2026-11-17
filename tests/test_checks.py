@@ -1446,3 +1446,15 @@ class SectorRulesRun(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class CatalogueWithoutHealthRun(unittest.TestCase):
+    """Regression: a build without build/status.json (release.yml runs no health check) listed a Portal health
+    dataset with no distribution, so C-28 failed. Every catalogued dataset must have at least one file."""
+
+    def test_every_dataset_has_a_file_without_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            site = build.Site(build.load(ROOT / 'content' / 'playbooks.yaml'), Path(tmp))
+            site.status = None
+            empty = [x['id'] for x in site.datasets() if not x['files']]
+            self.assertEqual(empty, [], f'datasets with no files: {empty}')
