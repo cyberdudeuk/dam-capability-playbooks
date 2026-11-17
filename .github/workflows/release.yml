@@ -28,4 +28,11 @@ jobs:
       - run: cd site && zip -qr "../dam-capability-playbooks-${GITHUB_REF_NAME}.zip" .
       - env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" "dam-capability-playbooks-${GITHUB_REF_NAME}.zip" --generate-notes --title "$GITHUB_REF_NAME"
+        # D-052 (issue 50): a person may make the release by hand first. Attach the files to it rather than fail.
+        run: |
+          zip="dam-capability-playbooks-${GITHUB_REF_NAME}.zip"
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$zip" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$zip" --generate-notes --title "$GITHUB_REF_NAME"
+          fi

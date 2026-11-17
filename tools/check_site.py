@@ -1013,8 +1013,12 @@ def c35_estate_compass(site, repo, pages):
         _reg = []
     _base = {p['id']: p['url'] for p in d.get('portals', [])}
     _durls = {e['url'] for e in d.get('directory', [])}
+    # D-051: the daily sync drops a page it finds gone and flags it for a person, so that page may be missing from the directory.
+    # Any other missing page is still an error, so a page cannot drop out silently.
+    _gone = set((d.get('sync') or {}).get('bad') or [])
     for g in _reg:
-        if g['portal'] in _base and _base[g['portal']] + g['path'] not in _durls:
+        _u = _base.get(g['portal'], '') + g['path']
+        if g['portal'] in _base and _u not in _durls and _u not in _gone:
             errs.append(f'compass: {g["portal"]} page {g["path"]} is in the pages register but not in the directory')
     # compass 2.0: the directory and the profession hub. Every entry has a unique id, a secure link, a known kind and known professions;
     # entries placed in one of the four portals link into it; links into this portal land on a page and anchor that exist.

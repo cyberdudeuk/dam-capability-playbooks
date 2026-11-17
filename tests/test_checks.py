@@ -890,6 +890,32 @@ class Vaccination(unittest.TestCase):
         fn(d['wheel'])
         f.write_text(h[:i] + json.dumps(d).replace('</', '<\\/') + h[j:], encoding='utf-8')
 
+    def _data(self, fn):
+        import json
+        f = self.s / 'compass' / 'index.html'
+        h = f.read_text(encoding='utf-8')
+        i = h.index('<script type="application/json" id="data">') + len('<script type="application/json" id="data">')
+        j = h.index('</script>', i)
+        d = json.loads(h[i:j].replace('<\\/', '</'))
+        fn(d)
+        f.write_text(h[:i] + json.dumps(d).replace('</', '<\\/') + h[j:], encoding='utf-8')
+
+    AP_REUSE = 'https://cyberdudeuk.github.io/dcat-ap-uk/reuse.html'
+
+    def test_c35_d051_register_page_dropped_silently(self):
+        def br(d):
+            d['directory'] = [e for e in d['directory'] if e['url'] != self.AP_REUSE]
+        self._data(br)
+        self.fails('c35_estate_compass')
+
+    def test_c35_d051_page_the_sync_found_gone_may_be_dropped(self):
+        def drop(d):
+            d['directory'] = [e for e in d['directory'] if e['url'] != self.AP_REUSE]
+            d['sync']['bad'] = [self.AP_REUSE]
+        self._data(drop)
+        r = check_site.run(self.s, self.r, quiet=True)
+        self.assertNotIn('c35_estate_compass', r, r.get('c35_estate_compass'))
+
     def test_c35_wheel_activity_to_missing_anchor(self):
         def br(w):
             w['acts'][0]['url'] = w['acts'][0]['url'].split('#')[0] + '#no-such-stage'
