@@ -1,0 +1,1192 @@
+# Capability playbooks (version 1.16.0).
+# Activities and templates for the capabilities in the capability model that the three core playbooks and the knowledge
+# area guide did not yet take down to activity level. Same shape as content/areas.yaml: every activity has steps, outputs,
+# evidence, a measure, who does what, the DAM Policy requirements it supports, the capabilities it builds and the rulebook
+# entries that apply. "see" lists activities elsewhere in the portal that already build the capability, so nothing is
+# written twice. "change" links to the actions on the Delivery and change page that an activity takes further.
+#
+# Also the route for people who are new to data asset management or are leading it: what to aim for, outcomes and
+# targets, a first 30, 60 and 90 days, and checkpoints at 6 and 12 months, measured against the maturity strands on the
+# Capability model page (Data Maturity Assessment for Government levels).
+#
+# Everything here is this portal's own synthesis (provenance O) of the sources it cites. Example targets are examples:
+# set your own from your baseline. The build rejects unknown references, missing fields and duplicate identifiers.
+meta:
+  as_of: '2026-11-17'
+  status: Draft by this portal for review by the professions that own each capability. Not government guidance.
+  intro: >-
+    The DAM Policy names three capabilities, but meeting it rests on more: strategy, tools, risk, suppliers, skills, culture,
+    maturity, investment, assurance, legacy, handover, benefits and exit. Each capability below has activities for before your first
+    return, before your second, and for business as usual, with a template to start from.
+
+playbooks:
+  - id: CR-02
+    mode: Both
+    short: Strategy
+    lead: CDO
+    owner: The chief data officer, with strategy and portfolio teams
+    why: >-
+      The policy asks you to identify critical data assets, but not which to improve first. A short, published way of ranking them by
+      reuse value, outcomes and risk turns the list into a plan and shows why some assets come first.
+    see: [BI-1]
+    change: [CH-05]
+    activities:
+      - id: STR-1
+        stage: start
+        title: Rank critical assets by what they make possible
+        goal: You can say which critical assets matter most and why, in one page.
+        steps:
+          - List the critical assets you are reporting.
+          - Score each on reuse value, the outcomes it supports, the people affected and the risk if it fails, using the scorecard.
+          - Note where legacy systems, poor quality or missing ownership hold an asset back.
+          - Agree the top ten with the data governance board and record the decision.
+        outputs: [Prioritisation scorecard, Board decision on the top ten]
+        evidence: The board's decision log records the ranking and the reasons.
+        measure: Share of critical assets scored.
+        raci: {CDO: A, COO: R, OWN: C, BRD: C}
+        reqs: [DAM-R14, DAM-R11]
+        caps: [CR-02, CR-05]
+        refs: [RB-BLUEPRINT, RB-NDLPUB]
+        templates: [T-STR-1]
+      - id: STR-2
+        stage: build
+        title: Put the ranking into the data strategy
+        goal: The data strategy names the assets it depends on and the outcomes they serve.
+        steps:
+          - Link each strategic objective to the critical assets it needs.
+          - Set a target for each top asset, such as owner in post, metadata complete or quality in range.
+          - Publish the ranking method with the strategy so teams can apply it to new assets.
+        outputs: [Data strategy with named assets and targets]
+        evidence: The strategy names critical assets and targets for them.
+        measure: Strategic objectives that name the assets they depend on.
+        raci: {CDO: A, COO: R, BRD: C, OWN: I}
+        reqs: [DAM-R08]
+        caps: [CR-02, CR-24]
+        refs: [RB-BLUEPRINT, RB-RMDG]
+      - id: STR-3
+        stage: embed
+        title: Re-rank every year with the return
+        goal: Priorities follow what changed, not what was decided once.
+        steps:
+          - Re-score assets during the annual review, using the same scorecard.
+          - Show what moved up or down and why.
+          - Feed the changes into investment and business planning.
+        outputs: [Updated ranking]
+        evidence: Each year's ranking is kept with the reasons for changes.
+        measure: Years with a re-ranking on record.
+        raci: {CDO: A, COO: R, OWN: C, BRD: C}
+        reqs: [DAM-R04]
+        caps: [CR-02, CR-04]
+        refs: [RB-DMAF]
+    templates:
+      - {id: T-STR-1, mode: Both, name: Critical data asset prioritisation scorecard, fields: [Asset identifier, Asset title, Reuse value (1 to 5), Outcomes supported, People affected, Effect on inequality if it fails, Legacy or technical debt risk (1 to 5), Quality risk (1 to 5), Ownership in place (yes or no), Total score, Rank, Reason, Agreed by (role or forum), Date]}
+
+  - id: CR-13
+    mode: Both
+    short: Tools
+    lead: CML
+    owner: Commercial, digital and data teams together
+    why: >-
+      Catalogues, quality checks, lineage and master data need tools, and a tool chosen badly locks data in. The ready-made requirements
+      and procurement templates on the Tools and interoperability page let you ask for what the policy needs and test it before you sign.
+    change: [CH-16, CH-14]
+    activities:
+      - id: TOOL-1
+        stage: start
+        title: Map the tools you have against what the policy needs
+        goal: You know which capabilities your tools cover, which they miss and when contracts end.
+        steps:
+          - List the tools used for cataloguing, quality, lineage, master data, governance workflow and records.
+          - Record the owner, contract end date and how each connects to the others.
+          - Mark each against the functional requirements for its kind of tool, Musts first.
+          - Note gaps the next return would expose.
+        outputs: [Tool inventory and gap list]
+        evidence: Each tool has an owner, a contract end date and a gap assessment.
+        measure: Tools assessed against the Must requirements.
+        raci: {ARC: R, CML: R, CDO: A, CAT: C, DQL: C}
+        reqs: [DAM-R02, DAM-R16]
+        caps: [CR-13, CR-12]
+        refs: [RB-TCOP, RB-CHOOSE]
+        templates: [T-PRC-1]
+      - id: TOOL-2
+        stage: build
+        title: Run a request for information with ready-made requirements
+        goal: Suppliers answer the same questions, so answers can be compared.
+        steps:
+          - Choose the kinds of tool you need and copy their requirements into the schedule.
+          - Change priorities to suit, and agree them with your commercial team.
+          - Publish the RFI through your usual route, and search Find a Tender and G-Cloud for how others specified similar tools.
+          - Score the answers, then shortlist for a proof of concept.
+        outputs: [RFI pack, Scored responses, Shortlist]
+        evidence: Every response is scored against the same requirements.
+        measure: Requirements answered with evidence.
+        raci: {CML: A, ARC: R, CAT: C, DQL: C, STW: C}
+        reqs: [DAM-R16]
+        caps: [CR-13, CR-32]
+        refs: [RB-PA23G, RB-GCLOUD, RB-FTS, RB-SOURCING]
+        templates: [T-PRC-2]
+      - id: TOOL-3
+        stage: build
+        title: Prove it with your own data before you sign
+        goal: The tool does what the supplier says, with your data and your other tools.
+        steps:
+          - Load test copies of two of your critical assets.
+          - Export everything and import it into another product or an empty instance; record what is lost.
+          - Show quality results in the catalogue through an open route, and capture lineage from a pipeline you own.
+          - Score each requirement on what you saw.
+        outputs: [Proof of concept test log, Evaluation scores]
+        evidence: A test log with a result for every Must.
+        measure: Must requirements proved, not only claimed.
+        raci: {ARC: A, CAT: R, DQL: R, CML: C}
+        reqs: [DAM-R16]
+        caps: [CR-13, CR-32]
+        refs: [RB-LOCKIN, RB-CHOOSE]
+        templates: [T-PRC-3, T-PRC-4]
+      - id: TOOL-4
+        stage: embed
+        title: Check before every renewal
+        goal: You can still leave, and the tool still meets the policy.
+        steps:
+          - Repeat the full export test each year before renewal.
+          - Re-score the Must requirements, and record any that have slipped.
+          - Decide to renew, renegotiate or replace, and record the decision.
+        outputs: [Renewal check]
+        evidence: An export test and a decision before each renewal.
+        measure: Renewals with an export test on record.
+        raci: {CML: A, ARC: R, CAT: C}
+        reqs: [DAM-R04]
+        caps: [CR-13, CR-32]
+        refs: [RB-LOCKIN, RB-TCOP11]
+    templates:
+      - {id: T-PRC-1, mode: Both, name: Tool requirements schedule, sheets: [{name: Functional requirements, fields: [Requirement ID, Kind of tool, Requirement, Priority (MoSCoW), Weight, How to prove it, Capability, DAM Policy requirement, Supplier response, Supplier evidence, Score (0 to 4), Evaluator notes]}, {name: Non-functional requirements, fields: [Requirement ID, Theme, Requirement, Priority (MoSCoW), Weight, How to prove it, Supplier response, Supplier evidence, Score (0 to 4), Evaluator notes]}, {name: Contract clauses, fields: [Clause ID, Clause, What to include, Why it matters, Agreed by commercial (yes or no), Notes]}]}
+      - {id: T-PRC-2, mode: Change, name: Request for information response form, fields: [Section, Question ID, Question, Supplier answer, Meets now or partly or roadmap (with date) or no, Evidence offered, Clarification asked, Score (0 to 4), Evaluator notes]}
+      - {id: T-PRC-3, mode: Change, name: Evaluation and moderation sheet, fields: [Supplier, Requirement ID, Priority (MoSCoW), Must met (pass or fail), Evaluator 1 score, Evaluator 2 score, Moderated score, Weight, Weighted score, Reason for moderated score, Moderated by (role), Date]}
+      - {id: T-PRC-4, mode: Change, name: Proof of concept test log, fields: [Test ID, Requirement ID, Test carried out, Data used (test copy), Expected result, Actual result, Pass or fail, Content lost on export, Tested by (role), Date, Evidence location]}
+
+  - id: CR-19
+    mode: Both
+    short: Risk
+    lead: OWN
+    owner: Data owners, with the risk and assurance teams
+    why: >-
+      A critical data asset that is lost, wrong or misused is a risk to services and people. Recording those risks on the same registers
+      as other risks puts them in front of the people who decide.
+    see: [MOD-4, SEC-3, BI-3]
+    change: [CH-07]
+    activities:
+      - id: RISK-1
+        stage: start
+        title: Record the main risk to each critical asset
+        goal: Every critical asset has at least one risk on a register someone reviews.
+        steps:
+          - For each critical asset, ask what would happen if it was unavailable, wrong, exposed or not kept.
+          - Record the worst credible risk on the corporate or programme risk register, with the owner as risk owner.
+          - Score it with your organisation's risk method, and link it to the asset's catalogue record.
+        outputs: [Data risks on the register]
+        evidence: Each critical asset has a linked risk with an owner.
+        measure: Critical assets with a recorded risk.
+        raci: {OWN: A, STW: R, COO: C, BRD: I}
+        reqs: [DAM-R05]
+        caps: [CR-19]
+        refs: [RB-ORANGE]
+        templates: [T-RSK-1]
+      - id: RISK-2
+        stage: build
+        title: Set risk appetite for data
+        goal: Owners know how much risk they can accept and when to escalate.
+        steps:
+          - Agree a risk appetite statement for data with the board, for availability, accuracy, privacy and retention.
+          - Set escalation thresholds and who they go to.
+          - Use exceptions, with an expiry date, for risks accepted outside appetite.
+        outputs: [Data risk appetite statement]
+        evidence: The board has approved a data risk appetite.
+        measure: Risks outside appetite with an action or a dated exception.
+        raci: {BRD: A, CDO: R, OWN: C, DPO: C}
+        reqs: [DAM-R08]
+        caps: [CR-19, CR-01]
+        refs: [RB-ORANGE]
+      - id: RISK-3
+        stage: embed
+        title: Review data risks with the asset review
+        goal: Risks stay current as assets and systems change.
+        steps:
+          - Review each asset's risks in its annual review.
+          - Close risks that have gone and add new ones from quality issues, incidents and audits.
+          - Report the top data risks to the board each quarter.
+        outputs: [Reviewed risks, Quarterly board report]
+        evidence: Each risk shows a review date in the last year.
+        measure: Data risks reviewed in the last 12 months.
+        raci: {OWN: A, STW: R, BRD: I}
+        reqs: [DAM-R04]
+        caps: [CR-19, CR-04]
+        refs: [RB-ORANGE]
+    templates:
+      - {id: T-RSK-1, mode: Both, name: Data risk register entry, fields: [Risk ID, Asset identifier, "Risk (cause, event, effect)", "Kind (availability, accuracy, privacy, security, retention, supplier)", Risk owner (role), Likelihood, Impact, Score, Within appetite (yes or no), Controls in place, Actions, Action owner (role), Due date, Exception reference, Last reviewed]}
+
+  - id: CR-20
+    mode: Both
+    short: Suppliers
+    lead: CML
+    owner: Commercial teams with data owners
+    why: >-
+      Many critical assets sit with suppliers or come from them. If the contract does not say who owns the data and how it comes back,
+      the organisation can lose the asset or its history.
+    see: [INT-4]
+    change: [CH-06, CH-16]
+    activities:
+      - id: SUPP-1
+        stage: start
+        title: Find the critical assets held or supplied by third parties
+        goal: You know which critical assets depend on a supplier, and on which contract.
+        steps:
+          - For each critical asset, record any supplier that holds, processes or provides it.
+          - Name the contract, its end date and whether it covers data ownership, processing and return.
+          - Mark gaps for the next renewal.
+        outputs: [Third-party data register]
+        evidence: Every critical asset held by a supplier names the contract.
+        measure: Supplier-held critical assets with ownership and return covered in the contract.
+        raci: {CML: R, OWN: A, DPO: C, CAT: C}
+        reqs: [DAM-R01, DAM-R02]
+        caps: [CR-20, CR-17]
+        refs: [RB-MTC20, RB-MSC]
+        templates: [T-SUP-1]
+      - id: SUPP-2
+        stage: build
+        title: Put data terms in every new contract
+        goal: New contracts protect critical data from the start.
+        steps:
+          - Use the contract clauses on the Tools and interoperability page as a checklist.
+          - Include a data processing schedule wherever personal data is processed.
+          - Require metadata to be supplied with the data, in the government format.
+        outputs: [Contract clause checklist completed]
+        evidence: New contracts that touch critical assets include the clauses.
+        measure: New contracts with the data clauses.
+        raci: {CML: A, OWN: C, DPO: C, ARC: C}
+        reqs: [DAM-R16]
+        caps: [CR-20, CR-32]
+        refs: [RB-MSC, RB-MTC20, RB-PPN020]
+      - id: SUPP-3
+        stage: embed
+        title: Test the return of data before contracts end
+        goal: Data comes back complete when a contract ends.
+        steps:
+          - A year before a contract ends, ask for a test return of the data and its metadata.
+          - Check completeness and format against what the contract says.
+          - Fix gaps before the exit, not after.
+        outputs: [Return test result]
+        evidence: A test return before each relevant contract ends.
+        measure: Contracts ending with a successful test return.
+        raci: {OWN: A, CML: R, CUS: R, DQL: C}
+        reqs: [DAM-R10]
+        caps: [CR-20, CR-26]
+        refs: [RB-LOCKIN]
+    templates:
+      - {id: T-SUP-1, mode: Both, name: Third-party data register entry, fields: [Asset identifier, Supplier, "Role (holds, processes, provides)", Contract reference, Contract end date, Data ownership stated (yes or no), Data processing schedule in place (yes or no), Return of data and metadata stated (yes or no), Last test return date, Gaps, Action owner (role), Renewal decision due]}
+
+  - id: CR-21
+    mode: BAU
+    short: Skills
+    lead: CDO
+    owner: The chief data officer with learning and development teams
+    why: >-
+      Owners, stewards and catalogue managers are often new to the role and doing it part time. Knowing what each role needs to know,
+      and giving them a short route to it, is what makes the other capabilities work.
+    change: [CH-09]
+    activities:
+      - id: SKILL-1
+        stage: start
+        title: Check what each data role needs to know
+        goal: Everyone named in a data role knows what is expected of them.
+        steps:
+          - List everyone named as owner, steward, custodian or catalogue manager.
+          - Ask each to rate themselves against the learning outcomes for their role on the Learning page.
+          - Point each to the modules that close their gaps.
+        outputs: [Skills assessment, Learning plan per person]
+        evidence: Every named role holder has a learning plan.
+        measure: Named role holders who have completed their core modules.
+        raci: {CDO: A, COO: R, OWN: I, STW: I}
+        reqs: [DAM-R05, DAM-R14]
+        caps: [CR-21, CR-07]
+        refs: [RB-DSFA, RB-DDAT]
+        templates: [T-SKL-1]
+      - id: SKILL-2
+        stage: build
+        title: Build data roles into jobs and objectives
+        goal: Data roles are part of the job, not extra to it.
+        steps:
+          - Add data ownership and stewardship to job descriptions and objectives where they apply.
+          - Map specialist roles to the Digital and Data Capability Framework.
+          - Give time for the role, and recognise it in performance reviews.
+        outputs: [Updated objectives and job descriptions]
+        evidence: Named role holders have the role in their objectives.
+        measure: Role holders with the role in their objectives.
+        raci: {CDO: A, COO: R, OWN: C}
+        reqs: [DAM-R05]
+        caps: [CR-21, CR-22]
+        refs: [RB-DDAT, RB-SUCCESS]
+      - id: SKILL-3
+        stage: embed
+        title: Keep a community of practice going
+        goal: People in data roles learn from each other, inside and across organisations.
+        steps:
+          - Run a regular session for owners and stewards to share problems and fixes.
+          - Join the cross-government data management community and its boards.
+          - Induct new role holders within a month of appointment.
+        outputs: [Community sessions, Induction for new role holders]
+        evidence: New role holders are inducted within a month.
+        measure: Days from appointment to induction.
+        raci: {COO: A, STW: R, OWN: I}
+        reqs: [DAM-R10]
+        caps: [CR-21, CR-28]
+        refs: [RB-DSFA, RB-KIM]
+    templates:
+      - {id: T-SKL-1, mode: BAU, name: Data role skills assessment and learning plan, fields: [Person (role in published copies), Data role, Learning outcome, Self-rating (1 to 4), Gap, Module or course, Due date, Completed date, Line manager agreed (yes or no)]}
+
+  - id: CR-22
+    mode: BAU
+    short: Culture
+    lead: CDO
+    owner: The chief data officer with communications and user research
+    why: >-
+      People use data well when they can find it, trust it and see why it matters. Talking to the people who use and are described by
+      critical data shows what to fix first and keeps the work grounded.
+    activities:
+      - id: CULT-1
+        stage: start
+        title: Find out who uses each critical asset and what gets in their way
+        goal: Owners know their users and their main problems.
+        steps:
+          - For each top critical asset, list the teams and services that use it.
+          - Ask a few users what stops them using it well, and record the answers.
+          - Feed the main problems into the quality plan and the catalogue record.
+        outputs: [User list and problems per asset]
+        evidence: Top critical assets have a list of users and their problems.
+        measure: Top assets with user feedback in the last year.
+        raci: {OWN: A, STW: R, USR: C}
+        reqs: [DAM-R04, DAM-R06]
+        caps: [CR-22, CR-08]
+        refs: [RB-SVC, RB-SMUR]
+        templates: [T-ENG-1]
+      - id: CULT-2
+        stage: build
+        title: Tell people what changed because of their feedback
+        goal: Users see that raising a problem leads to a fix.
+        steps:
+          - Publish a short note each quarter on what was fixed and what is planned.
+          - Name the owner and the way to raise new problems.
+          - Include the people the data describes where the asset is about them.
+        outputs: [Quarterly note]
+        evidence: A note published each quarter.
+        measure: Problems raised that have a response.
+        raci: {COO: A, OWN: R, STW: R, PUB: I}
+        reqs: [DAM-R04]
+        caps: [CR-22, CR-30]
+        refs: [RB-STYLE, RB-ETH]
+      - id: CULT-3
+        stage: embed
+        title: Make data work visible to leaders
+        goal: Leaders ask about data assets as they ask about money and people.
+        steps:
+          - Report the state of critical assets to the executive board with other corporate measures.
+          - Include one story a quarter of a decision or service improved by better data.
+          - Thank people in data roles publicly.
+        outputs: [Board report, Stories of use]
+        evidence: Critical assets appear in executive reporting.
+        measure: Executive board meetings that discuss data assets.
+        raci: {CDO: A, COO: R, BRD: I}
+        reqs: [DAM-R08]
+        caps: [CR-22, CR-01]
+        refs: [RB-DMAF]
+    templates:
+      - {id: T-ENG-1, mode: BAU, name: Data user feedback log, fields: [Date, Asset identifier, User group, Problem or request, Effect on their work, Owner (role), Action, Status, Response sent (date)]}
+
+  - id: CR-23
+    mode: BAU
+    short: Maturity
+    lead: CDO
+    owner: The chief data officer and the lead policy coordinator
+    why: >-
+      Maturity assessment shows where you are, sets a realistic target and shows progress to leaders and the centre. Using the government
+      framework means your results can be compared and built on.
+    change: [CH-12]
+    activities:
+      - id: MAT-1
+        stage: start
+        title: Take a baseline
+        goal: You know your starting level for each strand of data asset management.
+        steps:
+          - Use the self-assessment on the Capability model page for a first view.
+          - Where you can, run the Data Maturity Assessment for Government with the people who do the work.
+          - Record the level for each strand, with the evidence for it.
+        outputs: [Baseline levels with evidence]
+        evidence: A baseline with evidence for each level.
+        measure: Strands with an evidenced baseline.
+        raci: {CDO: A, COO: R, OWN: C, STW: C}
+        reqs: [DAM-R14]
+        caps: [CR-23]
+        refs: [RB-DMAF, RB-DMAHUB]
+        templates: [T-MAT-1]
+      - id: MAT-2
+        stage: build
+        title: Set targets and an improvement plan
+        goal: Each strand has a target level, a date and the actions to reach it.
+        steps:
+          - Set a target level for each strand, starting with the level the DAM Policy needs for critical assets.
+          - Choose the actions from the playbooks that move each strand up.
+          - Agree owners and dates with the board.
+        outputs: [Improvement plan]
+        evidence: The board has approved targets and a plan.
+        measure: Plan actions on track.
+        raci: {BRD: A, CDO: R, COO: R}
+        reqs: [DAM-R08]
+        caps: [CR-23, CR-02]
+        refs: [RB-DMAF]
+      - id: MAT-3
+        stage: embed
+        title: Reassess every year
+        goal: Progress is measured, not assumed.
+        steps:
+          - Repeat the assessment each year, with the same method.
+          - Compare with the baseline and explain changes.
+          - Reset targets and actions.
+        outputs: [Annual reassessment]
+        evidence: An assessment each year with evidence.
+        measure: Strands that moved up a level.
+        raci: {CDO: A, COO: R, BRD: I}
+        reqs: [DAM-R04]
+        caps: [CR-23, CR-04]
+        refs: [RB-DMAF, RB-CMMI]
+    templates:
+      - {id: T-MAT-1, mode: Both, name: Maturity baseline and improvement plan, fields: [Strand, Baseline level, Evidence for baseline, Target level, Target date, Actions (playbook activity IDs), Action owner (role), Checkpoint level at 6 months, Checkpoint level at 12 months, Notes]}
+
+  - id: CR-24
+    mode: Change
+    short: Investment
+    lead: SRO
+    owner: Senior responsible owners and finance business partners
+    why: >-
+      Data work competes for money. A business case that names the critical assets, the benefits and the cost of doing nothing gets
+      funded; one that talks about data in general does not.
+    see: [BI-4]
+    change: [CH-01]
+    activities:
+      - id: INV-1
+        stage: start
+        title: Name the critical assets in every business case
+        goal: Business cases say which critical assets they create, change or depend on.
+        steps:
+          - Add a data assets section to your business case template.
+          - For each asset, state its owner, its catalogue record and what the change does to it.
+          - Ask for this at the first approval point.
+        outputs: [Data assets section in business cases]
+        evidence: Business cases list the critical assets they affect.
+        measure: Business cases approved with the section completed.
+        raci: {SRO: A, PDM: R, OWN: C, CDO: C}
+        reqs: [DAM-R01, DAM-R05]
+        caps: [CR-24, CR-25]
+        refs: [RB-GREEN]
+        templates: [T-INV-1]
+      - id: INV-2
+        stage: build
+        title: Make the case for investing in data assets
+        goal: Investment in data assets is argued with costs, benefits and the cost of doing nothing.
+        steps:
+          - Use the five cases of the Green Book business case structure.
+          - Count the cost of the current state, such as manual cleansing, duplicate collection and failed sharing.
+          - Show benefits as measures you will track, with an owner for each.
+        outputs: [Business case for data investment]
+        evidence: A business case with measurable benefits and owners.
+        measure: Benefits with an owner and a baseline.
+        raci: {SRO: A, PDM: R, CDO: C}
+        reqs: [DAM-R08]
+        caps: [CR-24, CR-29]
+        refs: [RB-GREEN, RB-MAGENTA]
+      - id: INV-3
+        stage: embed
+        title: Fund the yearly cycle in business as usual
+        goal: The annual review, catalogue and quality work have a budget that does not end with a project.
+        steps:
+          - "Cost the yearly cycle: reviews, catalogue upkeep, quality checks and the return."
+          - Put it in the business-as-usual budget of the teams that own the assets.
+          - Review the cost each year with the ranking of assets.
+        outputs: [Business-as-usual budget line]
+        evidence: A budget line for the yearly cycle.
+        measure: Owning teams with a budget for the cycle.
+        raci: {CDO: A, OWN: R, SRO: C}
+        reqs: [DAM-R04]
+        caps: [CR-24, CR-27]
+        refs: [RB-GREEN]
+    templates:
+      - {id: T-INV-1, mode: Change, name: Data assets section for a business case, fields: [Asset identifier, Asset title, Created or changed or depends on, Owner (role), Catalogue record, Current cost of the problem, Benefit expected, Measure, Baseline, Target, Benefit owner (role), Risk if not done]}
+
+  - id: CR-25
+    mode: Change
+    short: Assurance
+    lead: PMO
+    owner: Programme offices, spend control and assurance teams
+    why: >-
+      Programmes create and retire critical assets. Asking three questions at existing checkpoints, which assets, who owns them and are
+      they catalogued, catches problems before they become legacy.
+    see: [ARC-5]
+    change: [CH-02, CH-03]
+    activities:
+      - id: ASSR-1
+        stage: start
+        title: Add data asset questions to existing checkpoints
+        goal: Spend control, gate reviews and service assessments ask about critical data.
+        steps:
+          - Add three questions to internal spend control and gate review templates.
+          - Agree with the assessment team that service assessments will look for the evidence.
+          - Brief programme managers on what good evidence looks like.
+        outputs: [Updated checkpoint templates]
+        evidence: Checkpoint templates include the questions.
+        measure: Checkpoints that asked the questions this year.
+        raci: {PMO: A, COO: R, ARC: C, SRO: I}
+        reqs: [DAM-R05, DAM-R02]
+        caps: [CR-25]
+        refs: [RB-SPEND, RB-SVCASSESS, RB-IAAP]
+        templates: [T-ASR-1]
+      - id: ASSR-2
+        stage: build
+        title: Put data checkpoints into the assurance plan
+        goal: Large programmes plan their data assurance from the start.
+        steps:
+          - Add data asset checkpoints to the integrated assurance and approval plan.
+          - Name who gives the assurance and what evidence they need.
+          - Record findings and actions with the other assurance findings.
+        outputs: [Assurance plan with data checkpoints]
+        evidence: Major programmes have data checkpoints in their assurance plans.
+        measure: Programmes with data checkpoints planned.
+        raci: {SRO: A, PMO: R, CDO: C}
+        reqs: [DAM-R08]
+        caps: [CR-25, CR-19]
+        refs: [RB-IAAP, RB-GOVS002]
+      - id: ASSR-3
+        stage: embed
+        title: Learn from checkpoint findings
+        goal: Common problems are fixed in guidance, not found again and again.
+        steps:
+          - Collect findings about data assets from all checkpoints each quarter.
+          - Spot repeated problems and fix the guidance or templates.
+          - Share the lessons with programme managers.
+        outputs: [Quarterly lessons]
+        evidence: A quarterly summary of findings and fixes.
+        measure: Repeated findings falling over time.
+        raci: {PMO: A, COO: R, ARC: C}
+        reqs: [DAM-R04]
+        caps: [CR-25, CR-23]
+        refs: [RB-GOVS002]
+    templates:
+      - {id: T-ASR-1, mode: Change, name: Data asset checkpoint questions, fields: [Checkpoint (spend control or gate or service assessment), Programme, Critical assets created or changed or retired, Owner named for each (yes or no), Catalogue record for each (yes or no), Quality plan for each (yes or no), Migration and exit planned (yes or no), Evidence seen, Finding, Action, Action owner (role), Due date]}
+
+  - id: CR-26
+    mode: Change
+    short: Legacy
+    lead: MIG
+    owner: Data migration leads with data owners
+    why: >-
+      Legacy systems hold critical data that is hard to get out. A migration that does not reconcile the data, or a switch-off that
+      forgets an asset, loses data the organisation must keep.
+    see: [OPS-4, DOC-3]
+    change: [CH-04, CH-05]
+    activities:
+      - id: LEG-1
+        stage: start
+        title: List the critical assets in each legacy system
+        goal: You know what data each legacy system holds before anyone plans to replace it.
+        steps:
+          - For each system with a planned end, list the critical assets it holds or feeds.
+          - Record what depends on them downstream.
+          - Mark data that must be kept for records or legal reasons.
+        outputs: [Legacy data asset register]
+        evidence: Each system with a planned end has its assets listed.
+        measure: Legacy systems with an asset register.
+        raci: {MIG: R, OWN: A, CUS: R, CAT: C}
+        reqs: [DAM-R01, DAM-R12]
+        caps: [CR-26, CR-05]
+        refs: [RB-LEGACY, RB-TECHDEBT]
+        templates: [T-LEG-1]
+      - id: LEG-2
+        stage: build
+        title: Migrate with reconciliation
+        goal: Data arrives complete and correct, and you can prove it.
+        steps:
+          - Agree mapping and transformation rules with the owner before migration.
+          - Reconcile counts, totals and samples between old and new, and record differences.
+          - Fix or accept differences, with the owner's decision recorded.
+        outputs: [Migration plan, Reconciliation report]
+        evidence: A signed-off reconciliation for each migrated asset.
+        measure: Migrated assets with a signed-off reconciliation.
+        raci: {OWN: A, MIG: R, DQL: R, CUS: C}
+        reqs: [DAM-R06]
+        caps: [CR-26, CR-08]
+        refs: [RB-LEGACY]
+      - id: LEG-3
+        stage: embed
+        title: Switch off safely
+        goal: Nothing needed is lost when a system is turned off.
+        steps:
+          - Check every asset on the register is migrated, archived or disposed of under the schedule.
+          - Update the catalogue records, marking retired assets and what replaced them.
+          - Get the owner's sign-off before switch-off.
+        outputs: [Decommissioning sign-off]
+        evidence: The owner signs off before switch-off.
+        measure: Switch-offs with owner sign-off.
+        raci: {OWN: A, MIG: R, CAT: R, CUS: R}
+        reqs: [DAM-R04]
+        caps: [CR-26, CR-15]
+        refs: [RB-RETIRE, RB-TNAIM]
+    templates:
+      - {id: T-LEG-1, mode: Change, name: Legacy exit and migration plan, sheets: [{name: Assets in the system, fields: [Asset identifier, Asset title, Owner (role), Downstream dependants, Must be kept (records or legal), "Disposition (migrate, archive, dispose)", Target system]}, {name: Reconciliation, fields: [Asset identifier, Check, Old value, New value, Difference, Decision, Decided by (role), Date]}, {name: Switch-off checklist, fields: [Item, Done (yes or no), Evidence, Signed off by (role), Date]}]}
+
+  - id: CR-27
+    mode: Change
+    short: Handover
+    lead: SRO
+    owner: Senior responsible owners and the receiving business owners
+    why: >-
+      Projects create assets and then close. If no one in business as usual takes over ownership, stewardship and the yearly cycle, the
+      asset decays and becomes the next legacy problem.
+    change: [CH-08, CH-11]
+    activities:
+      - id: HAND-1
+        stage: start
+        title: Name the business-as-usual owner early
+        goal: Every asset a project creates has an owner who will be there after the project.
+        steps:
+          - At the start of delivery, name the business-as-usual owner and steward for each new asset.
+          - Involve them in design decisions about the data.
+          - Record them in the catalogue from the first release.
+        outputs: [Named owners for new assets]
+        evidence: New assets have a business-as-usual owner in the catalogue.
+        measure: New assets with a named business-as-usual owner.
+        raci: {SRO: A, PDM: R, OWN: R}
+        reqs: [DAM-R05]
+        caps: [CR-27, CR-07]
+        refs: [RB-SRO, RB-SMROLES]
+        templates: [T-HND-1]
+      - id: HAND-2
+        stage: build
+        title: Hand over with a checklist
+        goal: Business as usual receives everything needed to run the asset.
+        steps:
+          - "Use the handover checklist: owner, steward, catalogue record, quality plan, risks, contracts, documentation and budget."
+          - Walk through it with the receiving owner.
+          - Do not close the project until the owner signs.
+        outputs: [Signed handover checklist]
+        evidence: A signed checklist for each asset.
+        measure: Projects closed with signed handovers.
+        raci: {SRO: A, PDM: R, OWN: R, PMO: C}
+        reqs: [DAM-R05, DAM-R06]
+        caps: [CR-27]
+        refs: [RB-GOVS002]
+      - id: HAND-3
+        stage: embed
+        title: Check six months after handover
+        goal: The asset is still owned, catalogued and checked after the project team has gone.
+        steps:
+          - Six months after handover, check the owner, catalogue record and quality plan are current.
+          - Record and fix any gaps.
+          - Share lessons with the programme office.
+        outputs: [Post-handover check]
+        evidence: A check six months after each handover.
+        measure: Handovers still complete at six months.
+        raci: {COO: A, OWN: R, PMO: I}
+        reqs: [DAM-R04]
+        caps: [CR-27, CR-23]
+        refs: [RB-GOVS002]
+    templates:
+      - {id: T-HND-1, mode: Change, name: Handover to business as usual checklist, fields: [Asset identifier, Business-as-usual owner (role), Steward (role), Catalogue record current (yes or no), Quality plan in place (yes or no), Risks transferred (yes or no), Contracts and licences transferred (yes or no), Documentation and runbooks (location), Budget for the yearly cycle (yes or no), Open issues, Signed by receiving owner (role), Date]}
+
+  - id: CR-29
+    mode: Change
+    short: Benefits
+    lead: SRO
+    owner: Benefit owners, with analysts
+    why: >-
+      Showing what better data asset management achieved keeps funding and support. Benefits that are named, measured and owned can be
+      evaluated; general claims cannot.
+    see: [BI-4]
+    change: [CH-10]
+    activities:
+      - id: BEN-1
+        stage: start
+        title: Pick a few measures and record the baseline
+        goal: You can show change, because you know where you started.
+        steps:
+          - Choose three to five measures, such as reuse requests met, duplicate collections stopped or time spent cleansing.
+          - Record today's value for each, and how you measured it.
+          - Name an owner for each benefit.
+        outputs: [Benefits register with baselines]
+        evidence: Each measure has a baseline and an owner.
+        measure: Benefits with a recorded baseline.
+        raci: {SRO: A, PDM: R, OWN: C}
+        reqs: [DAM-R08]
+        caps: [CR-29]
+        refs: [RB-MAGENTA]
+        templates: [T-BEN-1]
+      - id: BEN-2
+        stage: build
+        title: Track and report the benefits
+        goal: Leaders see progress against the baseline each quarter.
+        steps:
+          - Measure each benefit on its schedule, the same way as the baseline.
+          - Report progress to the board with the other data measures.
+          - Explain changes, including those not caused by the work.
+        outputs: [Quarterly benefits report]
+        evidence: Benefits reported each quarter against the baseline.
+        measure: Benefits on track.
+        raci: {SRO: A, PDM: R, BRD: I}
+        reqs: [DAM-R04]
+        caps: [CR-29, CR-04]
+        refs: [RB-MAGENTA, RB-AQUA]
+      - id: BEN-3
+        stage: embed
+        title: Evaluate after a year
+        goal: You know what worked, what did not and why.
+        steps:
+          - Plan a proportionate evaluation using the Magenta Book.
+          - Compare results with the business case.
+          - Publish the lessons for other organisations.
+        outputs: [Evaluation report]
+        evidence: An evaluation within a year of the main change.
+        measure: Lessons published.
+        raci: {SRO: A, PDM: R, CDO: C}
+        reqs: [DAM-R08]
+        caps: [CR-29, CR-23]
+        refs: [RB-MAGENTA]
+    templates:
+      - {id: T-BEN-1, mode: Both, name: Benefits register, fields: [Benefit ID, Benefit, Measure, How measured, Baseline, Baseline date, Target, Target date, Measurement frequency, Latest value, Benefit owner (role), Assets involved, Notes]}
+
+  - id: CR-32
+    mode: Both
+    short: Exit
+    lead: ARC
+    owner: Design authorities and commercial teams
+    why: >-
+      Today's new system is tomorrow's legacy. Requiring open formats, documented schemas and a tested exit at the start keeps critical
+      data movable for as long as it is needed.
+    see: [ARC-4, SEC-5]
+    change: [CH-14]
+    activities:
+      - id: EXIT-1
+        stage: start
+        title: Ask three questions of every new system
+        goal: No new system holds critical data you cannot get out.
+        steps:
+          - Ask whether the data can be exported in full, in an open format, with a published schema.
+          - Ask whether the export has been tested.
+          - Ask what leaving would cost and how long it would take.
+        outputs: [Answers recorded at design review]
+        evidence: Design reviews record the three answers.
+        measure: New systems with recorded answers.
+        raci: {ARC: A, CML: C, OWN: C}
+        reqs: [DAM-R16]
+        caps: [CR-32, CR-11]
+        refs: [RB-TECHDEBT, RB-OPEN]
+        templates: [T-EXT-1]
+      - id: EXIT-2
+        stage: build
+        title: Write and cost the exit plan
+        goal: Leaving is planned and costed before you sign.
+        steps:
+          - Write an exit plan for each system holding critical data, with the formats, steps and time it would take.
+          - Cost it and put the cost in the business case.
+          - Put the plan in the contract.
+        outputs: [Exit plan]
+        evidence: Systems holding critical data have a costed exit plan.
+        measure: Systems with a costed exit plan.
+        raci: {ARC: A, CML: R, OWN: C}
+        reqs: [DAM-R16]
+        caps: [CR-32, CR-20]
+        refs: [RB-LOCKIN, RB-MSC]
+      - id: EXIT-3
+        stage: embed
+        title: Test the exit every year
+        goal: The exit plan still works.
+        steps:
+          - Run a full export each year and check it against the plan.
+          - Record anything lost or changed.
+          - Update the plan and raise any gap with the supplier.
+        outputs: [Annual exit test]
+        evidence: An exit test each year.
+        measure: Systems with an exit test in the last year.
+        raci: {ARC: A, CUS: R, CML: C}
+        reqs: [DAM-R04]
+        caps: [CR-32]
+        refs: [RB-LOCKIN]
+    templates:
+      - {id: T-EXT-1, mode: Both, name: Exit and portability plan, fields: [System, Critical assets held, Export formats, Schema published (location), Last full export test, Content lost in test, Steps to exit, Time to exit, Cost to exit, In contract (yes or no), Owner (role), Next test due]}
+
+# --- For people new to data asset management, and for those leading it --------------------------------------------
+leader:
+  intro: >-
+    New to data asset management, or asked to lead it? This route tells you what to aim for, how to know it is working, and what to do
+    in your first 30, 60 and 90 days, with checkpoints at 6 and 12 months. Targets use the maturity levels on the Capability model page,
+    which follow the Data Maturity Assessment for Government.
+  who:
+    - {id: new, icon: lightbulb, name: New to this, text: "You have joined a data team, or been named as an owner or steward, and the terms are new."}
+    - {id: team, icon: users-round, name: Leading a team, text: "You run a catalogue, quality or governance team and need a plan for it."}
+    - {id: capability, icon: compass, name: Leading the capability, text: "You are defining, designing, deploying or enabling data asset management across an organisation."}
+  basics:
+    - {term: Critical data asset, text: "Data that matters most to services and decisions. The DAM Policy asks you to find these, describe them, name an owner and manage their quality.", link: "dam.html"}
+    - {term: Data owner, text: "The person accountable for decisions about a data asset. Every critical asset must have one.", link: "governance.html"}
+    - {term: Catalogue record, text: "The description of an asset: what it is, who owns it, where it is and how it can be used.", link: "cataloguing.html"}
+    - {term: Data quality action plan, text: "How you know, prove and improve the quality of an asset, in seven steps.", link: "quality.html"}
+    - {term: The yearly cycle, text: "Find, describe, own, check and report, every year, so the return stays true.", link: "together.html"}
+    - {term: Maturity, text: "How established the practice is, from Beginning to Mastering. You do not need Mastering everywhere.", link: "capability-model.html"}
+  aims:
+    - {moscow: Must, aim: "Every critical asset is identified, has a named owner, a catalogue record and a quality plan, and is reported on time.", outcome: "The organisation meets the DAM Policy.", caps: [CR-05, CR-06, CR-07, CR-08, CR-03]}
+    - {moscow: Must, aim: "The chief data officer leads, a board meets, and decisions are recorded.", outcome: "Someone is accountable and decisions stick.", caps: [CR-01]}
+    - {moscow: Should, aim: "Critical assets are ranked by value and risk, with a plan for the top ten.", outcome: "Effort goes where it matters most.", caps: [CR-02, CR-19]}
+    - {moscow: Should, aim: "Business cases, spend control and contracts ask about critical data.", outcome: "New work does not create new legacy.", caps: [CR-24, CR-25, CR-20, CR-32]}
+    - {moscow: Should, aim: "Owners and stewards know their role and have it in their objectives.", outcome: "The work continues when people move.", caps: [CR-21, CR-27]}
+    - {moscow: Could, aim: "Quality results show in the catalogue, and users can find and request data themselves.", outcome: "Data is reused instead of collected again.", caps: [CR-13, CR-22]}
+    - {moscow: Could, aim: "Critical assets are prepared for AI use and wider sharing.", outcome: "The organisation can use AI safely on its best data.", caps: [CR-18, CR-28]}
+    - {moscow: "Won't (this year)", aim: "Every data asset in the organisation described and quality-managed.", outcome: "Start with critical assets; extend once the cycle runs.", caps: [CR-10]}
+  outcomes:
+    - {id: OUT-1, outcome: Critical assets are known and owned, indicator: "Share of critical assets with a named owner and a catalogue record", example: "100% of reported assets by the return date", strand: own}
+    - {id: OUT-2, outcome: The return is complete and on time, indicator: "Return submitted on time with core metadata complete", example: "On time, with no core field blank", strand: cat}
+    - {id: OUT-3, outcome: Quality is known and improving, indicator: "Share of critical assets with a DQAP and quality in their target range", example: "Every asset with a DQAP; half in range within a year", strand: dq}
+    - {id: OUT-4, outcome: Change does not create legacy, indicator: "Share of business cases and checkpoints that asked about critical data", example: "All major programmes within a year", strand: chg}
+    - {id: OUT-5, outcome: People know their role, indicator: "Share of named role holders who completed core learning", example: "80% within six months of appointment", strand: own}
+  # Each checkpoint: what to do, what you have at the end, the questions to ask, and the maturity level to aim for by strand.
+  plan:
+    - id: d30
+      name: First 30 days
+      icon: flag
+      focus: Learn, listen and find out where you are.
+      do:
+        - "Read the DAM Policy page and the guide for your role."
+        - "Meet the chief data officer, the board chair and a few owners and stewards."
+        - "Find last year's return, the asset list and any catalogue."
+        - "Take a first baseline with the self-assessment on the Capability model page."
+      have: [A baseline, A list of the people involved, A first view of gaps]
+      ask:
+        - "Do we know our critical assets?"
+        - "Does each have an owner who knows it?"
+        - "When is the next return due, and what will it show?"
+      activities: [MAT-1, SKILL-1]
+      targets: {own: Beginning, cat: Beginning, dq: Beginning, chg: Beginning}
+    - id: d60
+      name: Days 31 to 60
+      icon: map
+      focus: Agree what to aim for and who does what.
+      do:
+        - "Rank critical assets with the prioritisation scorecard and agree the top ten with the board."
+        - "Agree your Must, Should and Could aims, and the outcomes and indicators."
+        - "Fill gaps in ownership for the top ten."
+        - "Map your tools against the Must requirements."
+      have: [Agreed aims and outcomes, Ranked asset list, Owners for the top ten, Tool gap list]
+      ask:
+        - "Has the board agreed the aims?"
+        - "Are the top ten owned?"
+        - "Which gaps would the next return expose?"
+      activities: [STR-1, TOOL-1, RISK-1]
+      targets: {own: Emerging, cat: Beginning, dq: Beginning, chg: Beginning}
+    - id: d90
+      name: Days 61 to 90
+      icon: trending-up
+      focus: Start the cycle on the assets that matter most.
+      do:
+        - "Complete catalogue records for the top ten."
+        - "Start a data quality action plan for each of the top ten."
+        - "Add the three data questions to spend control and gate reviews."
+        - "Give every named role holder a learning plan."
+      have: [Top ten catalogued, DQAPs started, Checkpoint questions in place, Learning plans]
+      ask:
+        - "Could we report the top ten today?"
+        - "Is each top asset's quality known?"
+        - "Are new programmes asked about critical data?"
+      activities: [ASSR-1, SKILL-1, BEN-1]
+      targets: {own: Emerging, cat: Emerging, dq: Emerging, chg: Emerging}
+    - id: m6
+      name: Six-month checkpoint
+      icon: gauge
+      focus: Check progress and fix what is stuck.
+      do:
+        - "Reassess against the baseline, strand by strand."
+        - "Extend ownership and catalogue records to all critical assets."
+        - "Report benefits against the baseline to the board."
+        - "Run a request for information if a tool gap blocks you."
+      have: [Six-month assessment, All critical assets owned, Benefits report]
+      ask:
+        - "Which strands moved, and which did not? Why?"
+        - "Are we on track for the return?"
+        - "What would we stop, start or change?"
+      activities: [MAT-2, BEN-2, TOOL-2, RISK-2]
+      targets: {own: Learning, cat: Emerging, dq: Emerging, chg: Emerging}
+    - id: m12
+      name: Twelve-month checkpoint
+      icon: calendar-check
+      focus: Meet the policy and make the cycle routine.
+      do:
+        - "Submit a complete, on-time return."
+        - "Reassess maturity and reset targets for the next year."
+        - "Re-rank critical assets and update the plan."
+        - "Evaluate what worked, and share the lessons."
+      have: [Return submitted, Annual assessment, Updated plan, Evaluation]
+      ask:
+        - "Do we meet the Must aims?"
+        - "Is the cycle owned in business as usual, with a budget?"
+        - "Which Should aims come next?"
+      activities: [MAT-3, STR-3, BEN-3, INV-3]
+      targets: {own: Learning, cat: Learning, dq: Learning, chg: Learning}
+  # Which maturity model or journey fits which outcome.
+  models:
+    - {need: "A view of the whole organisation's data maturity, comparable across government", use: Data Maturity Assessment for Government, ref: RB-DMAF, link: "capability-model.html"}
+    - {need: "Targets for data asset management specifically, by strand", use: "The DAM strands on the Capability model page (same five levels)", ref: RB-DMAF, link: "capability-model.html"}
+    - {need: "Quality targets for one asset", use: "The government data quality issues framework, through the DQAP", ref: RB-DQHUB, link: "quality.html"}
+    - {need: "Process discipline in a delivery or service team", use: "A CMMI-style ladder, crosswalked to the same levels", ref: RB-CMMI, link: "capability-model.html"}
+    - {need: "Comparing with industry data management programmes", use: DCAM, ref: RB-DCAM, link: "capability-model.html"}
+  evaluation:
+    - "Measure the same way each time, so change is real."
+    - "Report against the baseline, not against an ideal."
+    - "Ask users and owners as well as counting."
+    - "Plan a proportionate evaluation with the Magenta Book once the main change is in."
+  templates:
+    - {id: T-LDR-1, mode: Both, name: Capability plan for the first year, sheets: [{name: Aims, fields: [Priority (MoSCoW), Aim, Outcome, Capabilities, Owner (role)]}, {name: Outcomes and targets, fields: [Outcome ID, Outcome, Indicator, Baseline, Target, Target date, Maturity strand, Owner (role)]}, {name: Plan, fields: ["Checkpoint (30, 60, 90 days, 6 or 12 months)", Action, Playbook activity ID, Owner (role), Due date, Status]}, {name: Maturity, fields: [Strand, Baseline level, Target at 90 days, Target at 6 months, Target at 12 months, Evidence]}, {name: Risks, fields: [Risk, Owner (role), Action, Due date]}]}
+    - {id: T-LDR-2, mode: Both, name: Checkpoint review record, fields: [Checkpoint, Date, Strand, Level at last checkpoint, Level now, Evidence, What worked, What did not, Decision (continue or change or stop), Actions, Owner (role), Reviewed by (role or forum)]}
+
+# --- Learning support (version 1.16.0): acquire, retain and share; careers, certifications and CPD -------------------
+# Certification and CPD facts were checked on 17 November 2026 and are signposted (provenance S): schemes change their
+# rules, so the page sends readers to each scheme's own pages before they rely on a number.
+learning:
+  intro: >-
+    Learning sticks when you use it, come back to it and explain it to someone else. These tips help you learn from the playbooks and
+    the sources they cite, keep what you learn, share it, and count it towards your role, your career and continuing professional
+    development (CPD).
+  methods:
+    - id: acquire
+      name: Learn it
+      icon: book-open
+      tips:
+        - "Start from a real asset you look after. Read each module with that asset in mind, not in the abstract."
+        - "Do the activities, not only the reading. Each one produces something you need for the return anyway."
+        - "Read the source behind a point when it matters: every fact links to the GOV.UK page or standard it comes from."
+        - "Use the glossary and tooltips the first time a term is new. Hover or focus on a dotted term to see what it means."
+        - "Follow the journey for your role first, then pick other modules as your work needs them."
+    - id: retain
+      name: Keep it
+      icon: brain
+      tips:
+        - "Try the check of understanding before you reread the module. Recalling an answer helps you keep it more than reading again."
+        - "Come back to a module a week later and a month later. The page reminds you when a module is due for a refresher."
+        - "Write one sentence after each module: what you will do differently on Monday."
+        - "Keep your filled templates. They are a record of what you did and a reminder next year."
+        - "Use your progress record as a checklist before each annual return."
+    - id: share
+      name: Share it
+      icon: share-2
+      tips:
+        - "Explain one module to a colleague in ten minutes. Teaching it is the quickest way to find what you have not understood."
+        - "Run a lunch-and-learn on a playbook with your owners and stewards, using the module activities as the agenda."
+        - "Post a question or a lesson in the cross-government data management community, and in the playbooks' discussions."
+        - "Suggest a fix when something here is unclear: every page has a link to report a problem or suggest a change."
+        - "Share your filled templates inside your organisation so the next person starts from yours."
+  role_tips:
+    - {role: OWN, tip: "Take M01 and M02 first. Your job is decisions, not data entry: know your assets, your steward and your review date."}
+    - {role: STW, tip: "Take M04 to M08. Keep a short list of the questions users ask you; it tells you what to fix first."}
+    - {role: CAT, tip: "Take M05 and M06 and keep the metadata guidance open while you work. Check one record a week against it."}
+    - {role: DQL, tip: "Take M07 and M08. Score one real issue with the issues framework before reading further."}
+    - {role: CDO, tip: "Take M01, M09 and M11, then the leader route. Ask for the maturity baseline in your first month."}
+    - {role: COO, tip: "Take M01 to M03 and M09. Put the yearly cycle in the calendar before anything else."}
+  career:
+    intro: >-
+      What you learn here counts towards your role, your profession and your next job. The modules map to roles in the Digital and Data
+      Capability Framework and to government professions, so you can use them as evidence in a development conversation, a job application
+      or a promotion.
+    steps:
+      - "Find your role, or the one you want, on the Professions and skills page, and note its skills."
+      - "Pick the modules that build those skills, and add them to your development plan."
+      - "Record each module you finish, what you did with it and the evidence, in your CPD log."
+      - "Use the record in your performance review and in Success Profiles applications."
+      - "When you are ready, choose a certification that fits your role and aim for it."
+    refs: [RB-DDAT, RB-PROFS, RB-SUCCESS, RB-DSFA, RB-PROSPECTUS, RB-KIM, RB-AFCAREER, RB-SFIA]
+  certifications:
+    - {id: CERT-CDMP, name: Certified Data Management Professional (CDMP), body: DAMA International, ref: RB-CDMP, fit: "Data management professionals across all knowledge areas, including governance, metadata and quality.", cpd: "Holders recertify every three years; schemes commonly cite 120 hours of continuing education per three-year cycle. Check the current rules on the scheme's own pages.", prov: S}
+    - {id: CERT-BCSDME, name: BCS Practitioner Certificate in Data Management Essentials, body: BCS, ref: RB-BCSDME, fit: "Business analysts, managers and project managers who need a grounding in data management in an organisation.", cpd: "A certificate gained by exam. Log the study hours as CPD.", prov: S}
+    - {id: CERT-CILIP, name: "CILIP professional registration (certification, chartership and knowledge management chartership)", body: CILIP, ref: RB-CILIPREG, fit: "Knowledge and information management professionals, including records and catalogue roles.", cpd: "Revalidation asks for at least 20 hours of CPD a year and a short statement. Check the current rules on CILIP's pages.", prov: S}
+    - {id: CERT-RSS, name: Royal Statistical Society professional development, body: Royal Statistical Society, ref: RB-RSS, fit: "Statisticians and analysts working on data quality and official statistics.", cpd: "Professional status includes keeping a CPD record. Check the society's pages.", prov: S}
+  cpd:
+    - "Each module gives its time in minutes. Count the time you actually spent, including activities and reading the sources."
+    - "Most schemes count reflection and applying learning at work, not only courses. Record what you did with each module."
+    - "Download your learning record from this page as a start for your CPD log, then add your own notes and evidence."
+    - "This portal does not award credits or certificates. Your professional body decides what counts."
+  templates:
+    - {id: T-LRN-1, mode: BAU, name: CPD and learning log, fields: [Date, Activity (module or source), Kind (course or reading or practice or teaching), Hours, What I learned, How I applied it at work, Evidence (location), Skill or role it supports, Certification or scheme it counts towards, Refresher due]}
+
+# --- Tailoring (version 1.16.0): recommendations by role, profession, organisation maturity and data literacy --------
+# Maturity levels are those of the Data Maturity Assessment for Government. The rules below are this portal's own
+# synthesis (provenance O): they pick a starting point, not a verdict on the organisation.
+tailoring:
+  intro: >-
+    Tell us about your role and your organisation, and the page suggests where to start: the modules, the activities and the next
+    checkpoint that fit. If you have taken the self-assessment on the Capability model page in this browser, your organisation's
+    maturity is filled in from it. Nothing leaves your browser.
+  maturity:
+    - {level: Beginning, stage: start, checkpoint: d30, advice: "Start small: name owners and list critical assets before buying tools or writing strategies."}
+    - {level: Emerging, stage: start, checkpoint: d90, advice: "Finish the basics for your most important assets, then make them repeatable."}
+    - {level: Learning, stage: build, checkpoint: m6, advice: "You meet the policy for critical assets. Make the next return easier and fix your weakest strand."}
+    - {level: Developing, stage: embed, checkpoint: m12, advice: "Make the cycle routine in business as usual, with a budget, and prepare assets for wider reuse."}
+    - {level: Mastering, stage: embed, checkpoint: m12, advice: "Share what works across government, and help others in your sector."}
+  literacy:
+    - id: starting
+      name: Starting out
+      text: "Few people outside the data team use terms such as owner, metadata or data quality with confidence."
+      levels: [Foundation]
+      tips:
+        - "Start everyone with module M01 and the six things to know first."
+        - "Use the glossary and the easy read summaries when you brief people."
+        - "Explain the policy with one real asset people already know."
+    - id: building
+      name: Building
+      text: "People in data roles know the terms; others are learning. Some teams already catalogue or check quality."
+      levels: [Foundation, Practitioner]
+      tips:
+        - "Give each role holder the modules on their route, and a date to finish them."
+        - "Share filled templates between teams so they start from good examples."
+        - "Run a short session on the yearly cycle before each return."
+    - id: confident
+      name: Confident
+      text: "Data roles are established, and people across the organisation ask good questions about data."
+      levels: [Foundation, Practitioner, Advanced]
+      tips:
+        - "Use the open data downloads and the standards on the Tools and interoperability page."
+        - "Take on the AI-ready data stewardship pathway."
+        - "Mentor another organisation in your sector."
+  # Version 1.16.0: business as usual and change. Roles come from the one set of roles in playbooks.yaml.
+  contexts:
+    - id: bau
+      name: Business as usual
+      text: "Running critical data assets day to day: the yearly cycle of review, catalogue upkeep, quality checks and the return."
+      roles: [CDO, COO, BRD, OWN, IAO, STW, CUS, CAT, DQL, DPO, USR]
+      tips:
+        - "Put the yearly cycle in the calendar: asset review, metadata update, DQAP review, board and return."
+        - "Budget the cycle in the teams that own the assets, so it does not depend on a project."
+        - "Check handovers six months after each project closes."
+    - id: change
+      name: Change programme
+      text: "A programme or project that creates, changes, moves or retires critical data assets, from business case to handover."
+      roles: [SRO, PDM, PMO, SVO, ARC, MIG, CML, OWN, STW, DPO]
+      tips:
+        - "Name the critical assets in the business case, and the business-as-usual owner for each before build."
+        - "Use spend control, gate reviews and service assessments as checkpoints for data."
+        - "Plan migration, reconciliation, exit and handover from the start, not at the end."
+    - id: both
+      name: Both
+      text: "Your organisation runs business as usual and change at the same time, and the same people often do both."
+      roles: [CDO, COO, OWN, STW, ARC, CML]
+      tips:
+        - "Keep one asset register, one set of roles and one catalogue for both, so change feeds business as usual."
+        - "Make programmes hand their assets into the yearly cycle with the handover checklist."
+  persona_context: {cdo: both, coo: bau, own: both, stw: bau, cat: bau, dql: bau, prg: change, buy: both}
+
+# --- Stages, gates and assessments (version 1.16.0) ----------------------------------------------------------------
+# What these capabilities need at each stage of designing and delivering a service, at each gate, and to pass its
+# assessment. The Service Standard, the service assessment guidance, spend control and NISTA's gate reviews are
+# published elsewhere and are linked, not repeated: points are cited by number only. What this portal adds is the
+# critical data evidence for each, and where in the portal it comes from. This is its own synthesis (provenance O),
+# not an assessment checklist: assessors and reviewers judge against their own published criteria.
+assessments:
+  intro: >-
+    Service assessments and gate reviews ask whether data management has been thought about, not for every template. Show that the
+    critical data assets the service creates, changes or retires are known, owned, described, of known quality, protected and
+    handed over, and keep the templates as your working evidence.
+  principles:
+    - "Show decisions and their reasons, not documents for their own sake. One page of evidence per point is usually enough."
+    - "Use the same asset list, owners and catalogue records the organisation reports under the DAM Policy, so nothing is written twice."
+    - "Name the business-as-usual owner of each critical asset before beta, not at handover."
+    - "Bring the data people to the assessment: the owner or steward can answer questions a delivery manager cannot."
+  stages:
+    - id: plan
+      gates: ["Spend control", "Gate 0 strategic assessment (programmes)", "Gate 1 business justification"]
+      points: []
+      look_for:
+        - "Which critical data assets the programme creates, changes, depends on or retires, and who owns them."
+        - "The cost of the data work, and of not doing it, in the business case."
+        - "Data risks on the programme register."
+      evidence:
+        - {text: "Data assets section of the business case", ref: T-INV-1}
+        - {text: "Critical assets ranked by value and risk", ref: STR-1}
+        - {text: "Data risks recorded", ref: RISK-1}
+        - {text: "Benefits with baselines", ref: BEN-1}
+      gaps: ["Data appears as an IT cost line with no named assets", "No owner is consulted before the case is approved"]
+      refs: [RB-SPEND, RB-GATE0, RB-GREEN]
+    - id: discover
+      gates: ["Discovery peer review, where your organisation runs one", "Spend control"]
+      points: [1, 2, 3]
+      look_for:
+        - "That the team searched the catalogue for existing data before planning to collect more."
+        - "Who holds the data the service needs today, inside and outside the organisation, and under what agreements."
+        - "The people the data describes, and what they would expect."
+      evidence:
+        - {text: "Catalogue searched and existing assets listed", ref: cat.discover}
+        - {text: "Third-party and supplier data found", ref: SUPP-1}
+        - {text: "Users of the critical assets and their problems", ref: CULT-1}
+        - {text: "Reuse checked before new collection", ref: CH-13}
+      gaps: ["Data collected again because nobody looked for it", "Supplier-held data discovered only at contract end"]
+      refs: [RB-SVCASSESS, RB-SVC]
+    - id: alpha
+      gates: ["Alpha service assessment", "Gate 2 delivery strategy", "Spend control"]
+      points: [2, 6, 9, 11, 13]
+      look_for:
+        - "A data model with entities, relationships, identifiers and authoritative sources."
+        - "Quality rules and targets agreed with owners before build."
+        - "Open standards and government identifiers chosen, and how data would leave the chosen tools."
+        - "Data roles in the team, and the protection and lawful basis for personal data."
+      evidence:
+        - {text: "Entities, relationships and authoritative sources", ref: MOD-1}
+        - {text: "Quality rules and targets defined", ref: dq.define}
+        - {text: "Identifiers and standards chosen", ref: INT-1}
+        - {text: "Exit questions answered for each new tool", ref: EXIT-1}
+        - {text: "Request for information with ready-made requirements, if buying", ref: TOOL-2}
+      gaps: ["Local code lists invented where national ones exist", "A tool chosen before its export was tested"]
+      refs: [RB-SVCASSESS, RB-SVC, RB-OPEN, RB-API]
+    - id: beta
+      gates: ["Beta service assessment", "Gate 3 investment decision", "Spend control"]
+      points: [5, 9, 10, 13, 14]
+      look_for:
+        - "Catalogue records for every critical asset before go-live, owned and reported."
+        - "A quality baseline and a data quality action plan, with results the owner has seen."
+        - "Data protection, sharing agreements and security controls in place for the classification."
+        - "Migration reconciled and signed off, and the business-as-usual owner named."
+        - "Contracts that keep the data and metadata yours and let you leave."
+      evidence:
+        - {text: "Assets described in the catalogue", ref: cat.describe}
+        - {text: "Quality baseline measured", ref: dq.baseline}
+        - {text: "Proof of concept with your own data, if buying", ref: TOOL-3}
+        - {text: "Data clauses in contracts", ref: SUPP-2}
+        - {text: "Migration reconciled", ref: LEG-2}
+        - {text: "Business-as-usual owner named", ref: HAND-1}
+      gaps: ["Catalogue records written after go-live", "Quality known only from test data", "No named owner after the project"]
+      refs: [RB-SVCASSESS, RB-SVC, RB-GSC, RB-ICODSA, RB-A11YREQ]
+    - id: live
+      gates: ["Live service assessment", "Gate 4 readiness for service", "Gate 5 operations review and benefits realisation"]
+      points: [8, 10, 14]
+      look_for:
+        - "The yearly cycle running in business as usual: review, catalogue upkeep, quality checks and the return."
+        - "Handover complete, with budget, and checked after six months."
+        - "Benefits measured against the baseline, and data risks reviewed."
+        - "An exit test each year for tools holding critical data."
+      evidence:
+        - {text: "Handover checklist signed", ref: HAND-2}
+        - {text: "Records kept current", ref: cat.maintain}
+        - {text: "Benefits reported", ref: BEN-2}
+        - {text: "Data risks reviewed", ref: RISK-3}
+        - {text: "Exit tested", ref: EXIT-3}
+      gaps: ["The project team leaves and nobody reviews the asset", "Benefits claimed with no baseline"]
+      refs: [RB-SVCASSESS, RB-GATE5, RB-MAGENTA]
+    - id: retire
+      gates: ["Retirement decision", "Gate 5 operations review, where it applies"]
+      points: [14]
+      look_for:
+        - "Every critical asset in the system migrated, archived or disposed of under the retention schedule."
+        - "Catalogue records marked retired, with what replaced them."
+        - "The owner's sign-off before switch-off."
+      evidence:
+        - {text: "Assets in the legacy system listed", ref: LEG-1}
+        - {text: "Switch-off signed off", ref: LEG-3}
+        - {text: "Legacy exit planned from the asset register", ref: CH-04}
+      gaps: ["Data needed for records or legal reasons lost at switch-off", "Retired assets vanish from the catalogue"]
+      refs: [RB-RETIRE, RB-TNAIM, RB-LEGACY]

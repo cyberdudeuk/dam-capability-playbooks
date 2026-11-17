@@ -21,7 +21,7 @@ def fresh():
     tmp = Path(tempfile.mkdtemp(prefix='dcp-'))
     repo = tmp / 'repo'
     (repo / 'content').mkdir(parents=True)
-    for f in ('playbooks.yaml', 'frameworks.yaml', 'areas.yaml', 'source-anchors.json'):
+    for f in ('playbooks.yaml', 'frameworks.yaml', 'areas.yaml', 'capability-playbooks.yaml', 'procurement.yaml', 'source-anchors.json'):
         shutil.copy(ROOT / 'content' / f, repo / 'content' / f)
     for f in ('README.md', 'LICENSE', 'CITATION.cff'):
         shutil.copy(ROOT / f, repo / f)
@@ -853,6 +853,140 @@ class Vaccination(unittest.TestCase):
         edit(y, '  placements:\n    quality:', '  placements:\n    qualityx:')
         with self.assertRaises(build.ContentError):
             build.load(self.r / 'content' / 'playbooks.yaml')
+
+    # Version 1.16.0: capability playbooks, the leader route, the three views kept in sync, procurement and learning support
+    def test_c45_activity_missing_from_page(self):
+        edit(self.s / 'capabilities.html', 'class="cr-card area-act" id="RISK-1"', 'class="cr-card area-act" id="RISK-X"')
+        self.fails('c45_capability_playbooks')
+
+    def test_c45_d053_capability_still_marked_new(self):
+        y = self.r / 'content' / 'frameworks.yaml'
+        t = y.read_text(encoding='utf-8')
+        i = t.index('- id: CR-12\n')
+        j = t.index('  coverage: Covered', i)
+        y.write_text(t[:j] + '  coverage: New' + t[j + len('  coverage: Covered'):], encoding='utf-8')
+        self.fails('c45_capability_playbooks')
+
+    def test_c45_capability_without_guidance(self):
+        import yaml
+        y = self.r / 'content' / 'capability-playbooks.yaml'
+        G = yaml.safe_load(y.read_text(encoding='utf-8'))
+        G['playbooks'] = [pl for pl in G['playbooks'] if pl['id'] != 'CR-21']
+        y.write_text(yaml.safe_dump(G, allow_unicode=True, sort_keys=False), encoding='utf-8')
+        self.fails('c45_capability_playbooks')
+
+    def test_c46_checkpoint_missing(self):
+        edit(self.s / 'leading.html', 'class="cr-card plan-step" id="m12"', 'class="cr-card plan-step" id="m13"')
+        self.fails('c46_leader_route')
+
+    def test_c46_no_could_aims(self):
+        edit(self.s / 'leading.html', 'moscow-could', 'moscow-maybe', count=99)
+        self.fails('c46_leader_route')
+
+    def test_c47_page_cannot_reach_explorer(self):
+        edit(self.s / 'quality.html', 'href="explorer/index.html"', 'href="library.html"')
+        self.fails('c47_portals_in_sync')
+
+    def test_c47_explorer_renames_a_capability(self):
+        edit(self.s / 'explorer' / 'explorer.js', 'Data risk management', 'Data risk handling', count=99)
+        self.fails('c47_portals_in_sync')
+
+    def test_c47_capability_without_cross_links(self):
+        edit(self.s / 'capability-model.html', 'data-xlinks="CR-07"', 'data-x="CR-07"')
+        self.fails('c47_portals_in_sync')
+
+    def test_c48_requirement_missing_from_tooling(self):
+        edit(self.s / 'tooling.html', 'id="FR-MDM-03"', 'id="FR-MDM-3X"')
+        self.fails('c48_procurement_and_learning')
+
+    def test_c48_not_advice_notice_removed(self):
+        edit(self.s / 'tooling.html', 'not commercial or legal advice', 'commercial guidance', count=99)
+        self.fails('c48_procurement_and_learning')
+
+    def test_c48_cpd_credit_claim(self):
+        edit(self.s / 'learning.html', 'does not award credits', 'awards credits', count=99)
+        self.fails('c48_procurement_and_learning')
+
+    def test_c48_learning_record_unwired(self):
+        edit(self.s / 'assets' / 'app.js', 'dcp-progress-dates-v1', 'dates', count=99)
+        self.fails('c48_procurement_and_learning')
+
+    def test_c49_tailoring_control_missing(self):
+        edit(self.s / 'personas.html', 'id="tl-lit"', 'id="tl-literacy"', count=99)
+        self.fails('c49_tailoring_and_journeys')
+
+    def test_c49_persona_missing_from_tailoring_data(self):
+        edit(self.s / 'personas.html', '"id":"buy","title":"Commercial or technology lead"', '"id":"bux","title":"Commercial or technology lead"')
+        self.fails('c49_tailoring_and_journeys')
+
+    def test_c49_tailoring_ignores_self_assessment(self):
+        js = self.s / 'assets' / 'app.js'
+        t = js.read_text(encoding='utf-8')
+        i = t.index('tailor recommendations')
+        js.write_text(t[:i] + t[i:].replace("'dcp-selfassess-v1'", "'other-key'"), encoding='utf-8')
+        self.fails('c49_tailoring_and_journeys')
+
+    def test_c49_change_context_missing(self):
+        edit(self.s / 'personas.html', 'id="tl-phase"', 'id="tl-stage"', count=99)
+        self.fails('c49_tailoring_and_journeys')
+
+    def test_c49_activity_modes_lost(self):
+        edit(self.s / 'personas.html', '"x":"Change"', '"x":"Both"', count=999)
+        self.fails('c49_tailoring_and_journeys')
+
+    def test_build_rejects_capability_playbook_without_mode(self):
+        edit(self.r / 'content' / 'capability-playbooks.yaml', '  - id: CR-24\n    mode: Change\n', '  - id: CR-24\n    mode: Sometimes\n')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_c50_service_standard_point_unlinked(self):
+        edit(self.s / 'change.html', 'https://www.gov.uk/service-manual/service-standard/point-9-create-a-secure-service', 'https://example.org/point-9', count=99)
+        self.fails('c50_stages_gates_assessments')
+
+    def test_c50_stage_missing(self):
+        edit(self.s / 'change.html', 'id="assess-beta"', 'id="assess-gamma"')
+        self.fails('c50_stages_gates_assessments')
+
+    def test_build_rejects_unknown_evidence(self):
+        edit(self.r / 'content' / 'capability-playbooks.yaml', 'ref: LEG-3}', 'ref: LEG-9}')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_service_standard_point_15(self):
+        edit(self.r / 'content' / 'capability-playbooks.yaml', 'points: [8, 10, 14]', 'points: [8, 10, 15]')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_journey_with_unknown_activity(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '{a: TOOL-4}', '{a: TOOL-9}')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_capability_playbook_missing_a_stage(self):
+        edit(self.r / 'content' / 'capability-playbooks.yaml', '      - id: RISK-3\n        stage: embed', '      - id: RISK-3\n        stage: build')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_leader_target_going_down(self):
+        edit(self.r / 'content' / 'capability-playbooks.yaml', 'targets: {own: Learning, cat: Learning, dq: Learning, chg: Learning}', 'targets: {own: Beginning, cat: Learning, dq: Learning, chg: Learning}')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_requirement_without_test(self):
+        edit(self.r / 'content' / 'procurement.yaml', 'test: "Export everything and call the API for one entity."', 'test: ""')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_unknown_kind_of_tool(self):
+        edit(self.r / 'content' / 'procurement.yaml', 'id: FR-REC-01, cat: TL-REC', 'id: FR-REC-01, cat: TL-RECX')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_new_templates_reach_the_library(self):
+        h = (self.s / 'library.html').read_text(encoding='utf-8')
+        for tid in ('T-RSK-1', 'T-PRC-1', 'T-LDR-1', 'T-LRN-1'):
+            self.assertIn(f'#{tid}"', h, tid)
+            self.assertTrue((self.s / 'data' / 'templates' / (tid + ('.ods' if tid in ('T-PRC-1', 'T-LDR-1') else '.csv'))).exists(), tid)
 
     def test_c35_compass_can_call_network(self):
         edit(self.s / 'compass' / 'index.html', "default-src 'none';", "default-src 'none'; connect-src https:;")

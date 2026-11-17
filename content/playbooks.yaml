@@ -899,6 +899,15 @@ concepts:
 - {id: data-contract, term: Data contract, alt: [ODCS], broader: dqap, caps: [dq], src: SRC-ODCS, prov: K, def: "Quality rules and promises written down as a file that suppliers and users share."}
 - {id: maturity, term: Data maturity, alt: [DMA], broader: null, caps: [gov], src: SRC-DMA, prov: V, def: "An organisation's capability around data, self-assessed with the government framework."}
 - {id: coordinator, term: Lead policy coordinator, alt: [policy coordinator], broader: role, caps: [gov, cat], src: null, prov: P, def: "The person each organisation nominates to coordinate DAM Policy adoption and the return, and to sit on the Working Group."}
+- {id: moscow, term: MoSCoW, alt: [Must Should Could Won't, priority], broader: null, caps: [gov], src: null, prov: O, def: "A way of ranking requirements or aims: Must have, Should have, Could have and Won't have this time."}
+- {id: rfi, term: Request for information, alt: [RFI], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "Questions sent to suppliers before a tender to learn what the market offers and how products meet your requirements."}
+- {id: tender, term: Tender, alt: [invitation to tender, ITT, request for proposal, RFP], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "The formal invitation to suppliers to bid, with the requirements schedule, how bids will be evaluated and the contract terms."}
+- {id: functional-req, term: Functional requirement, alt: [FR], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "What a tool must do, such as export catalogue records as DCAT."}
+- {id: nonfunctional-req, term: Non-functional requirement, alt: [NFR], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "How well a tool must do it, such as accessibility, security, availability or the ability to export everything and leave."}
+- {id: poc, term: Proof of concept, alt: [PoC], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "A short test of a product with your own data, to see whether it does what the supplier says before you buy."}
+- {id: exit-plan, term: Exit plan, alt: [exit strategy], broader: null, caps: [gov], src: null, prov: O, def: "How you would move your data and content out of a product, with the formats, steps, time and cost, written before you sign and tested each year."}
+- {id: cpd, term: Continuing professional development, alt: [CPD], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "The learning you record to keep your skills current, often required by a professional body to keep a certification or chartered status."}
+- {id: data-literacy, term: Data literacy, alt: [data skills], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "How well people across an organisation can read, understand, question and use data, and talk about it with confidence."}
 
 # ---------------------------------------------------------------------------
 # Accountability records shown on the About page
@@ -977,6 +986,8 @@ defects:
 - {id: D-050, found: "Owner instruction (15 November 2026)", defect: "One strategy entry still gave the Government Data Directorate's former name, and an internal backlog note named the owner's team.", cause: "The directorate was restructured and renamed, and the rule never to name the team covered only what readers see on the site, not the source and documentation files.", check: "C-17 now fails on the former name, its abbreviation or the team's name in any page, the README, the changelog, the content and compass files and docs. A test proves it."}
 - {id: D-051, found: "Weekly operations digest, issue 51 (17 November 2026)", defect: "Build run 121 failed because one page of DCAT-AP-UK was missing from the compass directory, although the page was fine.", cause: "The daily sync drops a page it cannot reach and flags it, but C-35 required every registered page to be in the directory, so one failed fetch on another website failed the whole build.", check: 'C-35 accepts a missing page only when the sync reported it gone. Two tests prove a page dropped without that report still fails, and one the sync reported does not.'}
 - {id: D-052, found: "Reuse scan, issue 50 (17 November 2026)", defect: "The release workflow failed if a person had already made the release, so the site zip was never attached.", cause: "The step always ran gh release create, with no check for an existing release.", check: "The step now attaches the files to an existing release. tests/test_release.py runs the step with a stand-in gh, and a deliberate break proves the old step is caught."}
+- {id: D-053, found: "Check C-45 on its first run (17 November 2026)", defect: "The capability model said data architecture, records and cyber resilience had no guidance in this portal, although the knowledge area activities cover them.", cause: "Coverage was typed by hand when the capability model was written and never updated when later releases added activities.", check: "C-45 fails if any capability is still marked New, or has no activity in a playbook, a capability playbook or a knowledge area. A test proves it."}
+- {id: D-054, found: "Release checks (17 November 2026)", defect: "Browser check B-17 failed now and then with a term has no tooltip, though the tooltip worked.", cause: "The check waited a fixed 150 milliseconds after hovering; under load the tooltip took longer to appear.", check: "B-17 now waits for the tooltip itself, for up to two seconds, so it fails only when the tooltip does not appear. Its deliberate break (compass) still fails it."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
@@ -1010,13 +1021,13 @@ personas:
   pains: ["Governance, cataloguing and quality run by different teams record the same facts in different places", "Evidence is assembled in a rush at the deadline"]
   design_for: [Reads on a phone between meetings, Wants the summary before the detail]
   success: Every critical data asset has a named owner, a current catalogue record and a DQAP, and the return goes in on time.
-  modules: [M01, M02, M03, M09, M10, M12]
+  modules: [M01, M02, M03, M09, M10, M12, M18]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M02}]}
   - {stage: Prepare, tasks: [{p: gov.mandate, label: Agree the mandate and scope}, {p: cat.mobilise, label: Appoint the coordinating team}]}
   - {stage: Do, tasks: [{p: gov.assign, label: Confirm owners for every critical asset}, {p: cat.designate, label: Approve designation decisions}]}
   - {stage: Report, tasks: [{p: cat.report, label: Sign off the return to GDS}]}
-  - {stage: Improve, tasks: [{p: gov.assure, label: Review assurance and refresh the mandate}, {m: M09}]}
+  - {stage: Improve, tasks: [{p: gov.assure, label: Review assurance and refresh the mandate}, {m: M09}, {m: M18}, {a: MAT-1}, {a: STR-1}]}
 - id: coo
   title: Lead policy coordinator
   icon: clipboard-list
@@ -1030,13 +1041,13 @@ personas:
   pains: [Requests arrive from several directions with different deadlines, Owners change and nobody updates the record]
   design_for: [Works compressed or part-time hours and picks tasks up after gaps, New to data management]
   success: An assured return goes in on time, built from catalogue records rather than retyped.
-  modules: [M01, M02, M04, M06, M09, M10, M12]
+  modules: [M01, M02, M04, M06, M09, M10, M12, M18]
   journey:
   - {stage: Learn, tasks: [{m: M01}, {m: M04}]}
   - {stage: Prepare, tasks: [{p: cat.mobilise, label: Set up the team and ALB contacts}, {p: cat.discover, label: Build the candidate list}]}
   - {stage: Do, tasks: [{p: cat.designate, label: Run designation}, {p: cat.own, label: Confirm owners and contact points}, {p: cat.describe, label: Get records completed}]}
   - {stage: Report, tasks: [{p: cat.report, label: Prepare and assure the return}]}
-  - {stage: Improve, tasks: [{p: cat.maintain, label: Schedule the annual review}, {m: M09}]}
+  - {stage: Improve, tasks: [{p: cat.maintain, label: Schedule the annual review}, {m: M09}, {a: SKILL-1}, {a: ASSR-1}]}
 - id: own
   title: Data owner
   icon: key-round
@@ -1056,7 +1067,7 @@ personas:
   - {stage: Prepare, tasks: [{p: gov.assign, label: Accept the role and name a successor}]}
   - {stage: Do, tasks: [{p: dq.define, label: Agree quality targets}, {p: dq.prioritise, label: Decide priorities and accept risks}]}
   - {stage: Report, tasks: [{p: dq.report, label: Approve the data quality statement}]}
-  - {stage: Improve, tasks: [{p: dq.review, label: Hold the annual review}, {m: M07}]}
+  - {stage: Improve, tasks: [{p: dq.review, label: Hold the annual review}, {m: M07}, {a: RISK-1}, {a: SUPP-1}]}
 - id: stw
   title: Data steward
   icon: user-cog
@@ -1076,7 +1087,7 @@ personas:
   - {stage: Prepare, tasks: [{p: dq.identify, label: Agree critical data elements}, {p: cat.describe, label: Complete the catalogue record}]}
   - {stage: Do, tasks: [{p: dq.define, label: Write rules and targets}, {p: dq.baseline, label: Measure a baseline}, {p: dq.improve, label: Fix causes at source}]}
   - {stage: Report, tasks: [{p: dq.report, label: Publish the quality statement}]}
-  - {stage: Improve, tasks: [{p: dq.sustain, label: Automate checks}, {m: M08}]}
+  - {stage: Improve, tasks: [{p: dq.sustain, label: Automate checks}, {m: M08}, {a: CULT-1}]}
 - id: cat
   title: Catalogue manager or data custodian
   icon: database
@@ -1090,13 +1101,13 @@ personas:
   pains: [Guidance and model do not list the same properties, Internal-only links break outside the organisation]
   design_for: [Works mainly by keyboard, English is an additional language]
   success: Every critical data asset record is complete, conforms to the standard and can be harvested as DCAT.
-  modules: [M01, M05, M06, M10, M13, M15]
+  modules: [M01, M05, M06, M10, M13, M15, M19]
   journey:
   - {stage: Learn, tasks: [{m: M05}, {m: M06}]}
   - {stage: Prepare, tasks: [{p: cat.discover, label: Search existing registers}]}
   - {stage: Do, tasks: [{p: cat.describe, label: Configure record fields}, {p: cat.publish, label: Expose records as DCAT}]}
   - {stage: Report, tasks: [{p: cat.report, label: Produce the return from records}]}
-  - {stage: Improve, tasks: [{p: cat.maintain, label: Keep records current}]}
+  - {stage: Improve, tasks: [{p: cat.maintain, label: Keep records current}, {a: TOOL-1}, {m: M19}]}
 - id: dql
   title: Data quality lead or analyst
   icon: chart-line
@@ -1110,13 +1121,13 @@ personas:
   pains: [Every team scores issues differently, Quality reported as one average]
   design_for: ["Colour-blind, so charts must not rely on colour alone", "Works across several devices"]
   success: Every critical data asset has scored issues, automated checks and quality reported by group where lawful.
-  modules: [M01, M07, M08, M09, M10, M12, M17]
+  modules: [M01, M07, M08, M09, M10, M12, M17, M19]
   journey:
   - {stage: Learn, tasks: [{m: M07}, {m: M08}]}
   - {stage: Prepare, tasks: [{p: dq.define, label: Build the rule library}]}
   - {stage: Do, tasks: [{p: dq.baseline, label: Run baselines}, {p: dq.prioritise, label: Score and rank issues}]}
   - {stage: Report, tasks: [{p: dq.report, label: Publish quality metadata}]}
-  - {stage: Improve, tasks: [{p: dq.sustain, label: Automate and monitor}, {m: M10}]}
+  - {stage: Improve, tasks: [{p: dq.sustain, label: Automate and monitor}, {m: M10}, {a: TOOL-3}]}
 
 # ---------------------------------------------------------------------------
 # Learning modules
@@ -1134,7 +1145,7 @@ personas:
   pains: [Data owners sit outside the programme and are hard to reach, Migration quality problems surface only at cutover]
   design_for: [Reads on the move between meetings, Needs a one-page view to share with the programme board]
   success: "Every critical asset the programme touches has an owner, a catalogue entry and a quality plan before the programme closes."
-  modules: [M01, M02, M11, M09]
+  modules: [M01, M02, M11, M09, M18, M19]
   journey:
   - stage: Learn
     tasks:
@@ -1148,13 +1159,37 @@ personas:
     tasks:
     - {p: dq.define, label: "Agree quality rules and targets with owners before build"}
     - {p: cat.describe, label: "Catalogue new assets before go-live"}
+    - {a: LEG-2}
   - stage: Report
     tasks:
     - {p: gov.assure, label: "Show DAM evidence at each gate review"}
+    - {a: ASSR-1}
   - stage: Improve
     tasks:
     - {p: dq.sustain, label: "Hand over the DQAP and ownership to business as usual"}
     - {m: M09}
+    - {a: HAND-2}
+    - {a: BEN-1}
+- id: buy
+  title: Commercial or technology lead
+  icon: handshake
+  role: CML
+  summary: You choose, buy or build the tools that catalogue, check and govern critical data, and you write the contracts that keep the data yours.
+  context: You are asked to find a catalogue, quality or master data tool quickly, often with a supplier's suite already on the table. You need requirements you can use, not a lecture on data management.
+  goals: [Buy what the DAM Policy actually needs, Prove a tool works with our data before signing, Keep the option to leave]
+  needs:
+  - {need: "ready-made requirements for each kind of tool, with priorities", so: "I can run a request for information without starting from a blank page"}
+  - {need: "contract clauses that protect our data", so: "we are not locked in when the contract ends"}
+  pains: [Supplier demonstrations use their data and not ours, Bundled suites make it hard to price or leave one part]
+  design_for: [Works to procurement deadlines, Needs downloads that open in a spreadsheet]
+  success: The tool chosen meets every Must requirement in a proof of concept with your own data, and the contract includes export, exit and data processing terms.
+  modules: [M01, M11, M19]
+  journey:
+  - {stage: Learn, tasks: [{m: M01}, {m: M19}]}
+  - {stage: Prepare, tasks: [{a: TOOL-1}, {a: SUPP-1}]}
+  - {stage: Do, tasks: [{a: TOOL-2}, {a: TOOL-3}, {a: SUPP-2}]}
+  - {stage: Report, tasks: [{a: EXIT-2}]}
+  - {stage: Improve, tasks: [{a: TOOL-4}, {a: EXIT-3}, {m: M11}]}
 modules:
 - id: M01
   title: The DAM Policy - what it asks of you
@@ -1426,6 +1461,40 @@ modules:
   check:
   - {q: "Why does rule AI-03 check that each record appears once?", options: [To save storage, So training and test sets do not overlap, Because duplicates are illegal], answer: 1, why: "AI-03 is a uniqueness rule: each record appears once, so training and test sets do not overlap."}
   - {q: "Which operating model check does the AI-ready supplement include?", options: ["Someone owns quality, drift and bias monitoring", The model is retrained weekly, The data is deleted after training], answer: 0, why: "Its operating model checks include that someone owns quality, drift and bias monitoring, and that training sets can be reconstructed exactly."}
+
+# ---------------------------------------------------------------------------
+# Version 1.16.0: modules for people leading data asset management and for people buying or building its tools.
+# ---------------------------------------------------------------------------
+- id: M18
+  title: Leading data asset management - your first year
+  level: Foundation
+  minutes: 25
+  icon: compass
+  caps: [gov, cat, dq]
+  outcomes: ["Set Must, Should and Could aims for your organisation and the outcomes each brings", "Plan the first 30, 60 and 90 days and the 6 and 12 month checkpoints", "Choose the maturity model that fits each aim and measure progress against a baseline"]
+  activities:
+  - {id: a1, type: Read, text: "Read who the leader route is for and the six things to know first.", link: leading.html#who}
+  - {id: a2, type: Do, text: "Take a first maturity baseline with the self-assessment.", link: capability-model.html#cm-self}
+  - {id: a3, type: Do, text: "Fill in the aims and outcomes tabs of the first year capability plan.", link: leading.html#T-LDR-1}
+  - {id: a4, type: Reflect, text: "Which strand would you most need to move by the six-month checkpoint, and what would stop it?"}
+  check:
+  - {q: "Which aim is a Must for every organisation in scope?", options: ["Every critical asset is identified, owned, catalogued, has a quality plan and is reported", "Every data asset in the organisation is quality-managed", "Critical assets are ready for AI"], answer: 0, why: "The DAM Policy asks this of critical data assets. Covering every asset is a later aim, and AI readiness is a Could."}
+  - {q: "Around which maturity level does the DAM Policy minimum for critical assets sit?", options: [Beginning, Learning, Mastering], answer: 1, why: "The crosswalk places the policy minimum around Learning: processes defined and repeatable for critical assets."}
+- id: M19
+  title: Buying tools for data asset management without lock-in
+  level: Practitioner
+  minutes: 30
+  icon: plug
+  caps: [gov, cat, dq]
+  outcomes: ["Pick the requirements that fit the kinds of tool you need, with priorities", "Run a request for information and a proof of concept with your own data", "Ask for contract clauses that keep your data movable"]
+  activities:
+  - {id: a1, type: Read, text: "Read the ready-made requirements and the not-advice notice.", link: tooling.html#buy}
+  - {id: a2, type: Do, text: "Download the pre-filled requirements schedule and remove what you do not need.", link: tooling.html#buy}
+  - {id: a3, type: Do, text: "Plan a proof of concept that includes a full export and re-import.", link: capabilities.html#TOOL-3}
+  - {id: a4, type: Reflect, text: "If your current tool's contract ended next month, could you take everything with you?"}
+  check:
+  - {q: "How should a Must requirement be treated when scoring responses?", options: [Pass or fail, Scored 0 to 4 like the rest, Ignored if the price is low], answer: 0, why: "A response that does not meet a Must fails, however it scores elsewhere."}
+  - {q: "What is the best evidence that a tool will let you leave?", options: ["A full export and re-import in the proof of concept", "A list of connectors", "The supplier's statement that it supports open standards"], answer: 0, why: "A round trip with your own data shows what is lost; a list or a statement does not."}
 
 # ---------------------------------------------------------------------------
 # Learning pathways (version 1.15.0): themed routes through the modules, with what each covers elsewhere,
@@ -1859,6 +1928,14 @@ design:
   - {id: FR-27, kind: Functional, moscow: Should, text: "Give glossary terms and named frameworks, methodologies and standards a tooltip and a link where they are first mentioned on any page, outside headings and existing links.", features: [knowledge], checks: [C-40]}
   - {id: FR-28, kind: Functional, moscow: Should, text: "List each capability's frameworks, methodologies and standards by kind on its Overview, and name the ones that apply at every step.", features: [governance, cataloguing, quality], checks: [C-40]}
   - {id: FR-29, kind: Functional, moscow: Could, text: "Drill down from each slice of the DAMA wheel to its activities and tasks where the portal has them, and publish what a fuller drill-down and a data architecture playbook would take (BL-35, BL-36).", features: [capability-model], checks: [C-40]}
+  # Version 1.16.0: from the Project Compass pilot (standardised templates for playbook activities), a programme choosing a master data tool, and the owner's brief of 17 November 2026.
+  - {id: FR-30, kind: Functional, moscow: Must, text: "Take every capability in the capability model down to activities with steps, outputs, evidence, measures, who does what and a template.", features: [capability-model, change], checks: [C-45]}
+  - {id: FR-31, kind: Functional, moscow: Should, text: "Give people new to data asset management, or leading it, aims by priority, outcomes with indicators, and a plan for 30, 60 and 90 days with 6 and 12 month checkpoints against maturity levels.", features: [personas], checks: [C-46]}
+  - {id: FR-32, kind: Functional, moscow: Must, text: "Reach the data portals compass and the asset governance explorer from every page, and keep the capabilities they show the same as the capability model.", features: [all, capability-model], checks: [C-47]}
+  - {id: FR-33, kind: Functional, moscow: Should, text: "Give ready-made functional and non-functional requirements for each kind of tool, with a request for information, a requirements schedule, an evaluation method and contract clauses.", features: [tooling, data], checks: [C-48]}
+  - {id: FR-34, kind: Functional, moscow: Should, text: "Help learners learn, keep and share what they learn, link it to roles, careers and certifications, and download a learning record to use as CPD evidence.", features: [learning], checks: [C-48]}
+  - {id: FR-35, kind: Functional, moscow: Should, text: "Recommend modules, activities and the next checkpoint by role, profession, organisation maturity and data literacy, reading the self-assessment where there is one.", features: [personas], checks: [C-49]}
+  - {id: FR-36, kind: Functional, moscow: Should, text: "For every stage of designing and delivering a service, show the gates and assessments, the Service Standard points that touch critical data, what reviewers want to see and where the evidence comes from, linking to published guidance rather than repeating it.", features: [change, personas], checks: [C-50]}
   - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services (Pages, issue forms, Discussions, Actions and releases), plus an optional Microsoft Forms route for private feedback.", features: [contact, status, whats-new], checks: [C-05, C-33, HL-01]}
   architecture:
     components:

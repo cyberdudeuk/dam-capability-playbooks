@@ -1,6 +1,11 @@
 # Version 1.4 content and later: capability map, maturity model, professions and skills, delivery and change, lenses, DAMA view, join-up, tours, reuse.
 # Loaded and merged with playbooks.yaml by tools/build.py. Edit here; never edit the generated site.
 rulebook_more:
+- {id: RB-GATE0, group: "Delivery, change and investment", title: "Gate Review 0: Strategic Assessment", publisher: National Infrastructure and Service Transformation Authority, url: "https://www.gov.uk/government/publications/gate-review-0-strategic-assessment", updated: null, prov: S, caps: [gov], why: "NISTA's workbook for the strategic assessment of a programme."}
+- {id: RB-GATE5, group: "Delivery, change and investment", title: "Gate Review 5: Operations Review and Benefits Realisation", publisher: National Infrastructure and Service Transformation Authority, url: "https://www.gov.uk/government/publications/gate-review-5-operations-review-and-benefit-realisation", updated: null, prov: S, caps: [gov], why: "NISTA's workbook for confirming benefits are being realised and the service is running smoothly."}
+- {id: RB-CDMP, group: Skills and professions, title: "CDMP: Certified Data Management Professional", publisher: DAMA International, url: "https://cdmp.info/", updated: null, prov: S, caps: [gov, cat, dq], why: "DAMA International's certification for data management professionals, based on the DAMA-DMBOK."}
+- {id: RB-BCSDME, group: Skills and professions, title: BCS Practitioner Certificate in Data Management Essentials, publisher: BCS, url: "https://www.bcs.org/qualifications-and-certifications/certifications-for-professionals/business-analysis/practitioner-certificate-in-data-management-essentials/", updated: null, prov: S, caps: [gov, cat, dq], why: "A practitioner certificate in good practice for managing an organisation's data."}
+- {id: RB-CILIPREG, group: Skills and professions, title: CILIP professional registration, publisher: CILIP, url: "https://www.cilip.org.uk/page/ProfessionalRegistrationApplyNow", updated: null, prov: S, caps: [gov, cat], why: "Certification, chartership and knowledge management chartership for information professionals, with yearly revalidation through CPD."}
 - id: RB-GREEN
   group: Delivery, change and investment
   title: The Green Book and accompanying guidance
@@ -1226,7 +1231,7 @@ capmap:
     a: realising-our-data-ambitions
     label: Realising our data ambitions
     flag: I
-  playbook: dam.html
+  playbook: capabilities.html#CR-02
   dma:
   - 9
   dmbok:
@@ -1238,7 +1243,7 @@ capmap:
   - strategic-thinking
   profs:
   - PR-DD
-  coverage: Partial
+  coverage: Covered
   note: The policy expects organisations to start with assets of proven reuse value, which needs a way to rank assets that the policy does not spell out.
   prov: O
 - id: CR-03
@@ -1576,7 +1581,7 @@ capmap:
     a: merged-data-sets-and-data-services
     label: Merged data sets and data services
     flag: E
-  playbook: capability-model.html
+  playbook: areas.html#DM-ARC
   dma:
   - 3
   dmbok:
@@ -1590,7 +1595,7 @@ capmap:
   - data-modelling
   profs:
   - PR-DD
-  coverage: New
+  coverage: Covered
   note: A data asset includes the data services (such as APIs) used to reach it, so someone must design and run those services.
   prov: O
 - id: CR-13
@@ -1608,7 +1613,7 @@ capmap:
     a: null
     label: Technology Code of Practice
     flag: E
-  playbook: library.html
+  playbook: capabilities.html#CR-13
   dma:
   - 3
   dmbok:
@@ -1621,7 +1626,7 @@ capmap:
   - metadata-management
   profs:
   - PR-DD
-  coverage: Partial
+  coverage: Covered
   note: Catalogues and automated quality checks need platforms; GDS will build a central discovery service.
   prov: O
 - id: CR-14
@@ -1673,7 +1678,7 @@ capmap:
     a: data-ownership-in-context
     label: Data ownership in context
     flag: I
-  playbook: change.html
+  playbook: areas.html#DM-DOC
   dma:
   - 7
   - 8
@@ -1687,7 +1692,7 @@ capmap:
   - data-compliance-and-security
   profs:
   - PR-KIM
-  coverage: New
+  coverage: Covered
   note: Not mentioned in the policy, but an asset's life cycle ends in retention, transfer or disposal, which records law governs.
   prov: O
 - id: CR-16
@@ -1808,7 +1813,7 @@ capmap:
     a: null
     label: The Orange Book
     flag: E
-  playbook: change.html
+  playbook: capabilities.html#CR-19
   dma:
   - 8
   - 10
@@ -1823,7 +1828,7 @@ capmap:
   profs:
   - PR-SEC
   - PR-DD
-  coverage: New
+  coverage: Covered
   note: The policy cites risk controls and understanding cross-public sector dependencies to manage risk; how is left to each organisation.
   prov: O
 - id: CR-20
@@ -1845,7 +1850,7 @@ capmap:
     a: null
     label: The Sourcing Playbook
     flag: E
-  playbook: change.html
+  playbook: capabilities.html#CR-20
   dma:
   - 1
   dmbok:
@@ -1858,7 +1863,7 @@ capmap:
   profs:
   - PR-COM
   - PR-DD
-  coverage: New
+  coverage: Covered
   note: Many critical assets are held or processed by suppliers; ownership, metadata and quality duties must reach into contracts.
   prov: O
 - id: CR-21
@@ -1880,7 +1885,7 @@ capmap:
     a: build-data-quality-capability
     label: Build data quality capability
     flag: E
-  playbook: professions.html
+  playbook: capabilities.html#CR-21
   dma:
   - 2
   dmbok:
@@ -1894,7 +1899,7 @@ capmap:
   - PR-DD
   - PR-AF
   - PR-KIM
-  coverage: New
+  coverage: Covered
   note: The policy assigns new responsibilities; the guidance lists the skills and training those people need.
   prov: O
 - id: CR-22
@@ -1912,7 +1917,7 @@ capmap:
     a: Know-your-users-and-their-needs
     label: Know your users and their needs
     flag: E
-  playbook: inclusion.html
+  playbook: capabilities.html#CR-22
   dma:
   - 1
   dmbok:
@@ -1924,7 +1929,7 @@ capmap:
   - communicating-between-the-technical-and-non-technical
   profs:
   - PR-DD
-  coverage: Partial
+  coverage: Covered
   note: Ownership and quality only last where people value data and know who uses it.
   prov: O
 - id: CR-23
@@ -1942,7 +1947,7 @@ capmap:
     a: focus-on-continuous-improvement
     label: Focus on continuous improvement
     flag: E
-  playbook: capability-model.html
+  playbook: capabilities.html#CR-23
   dma:
   - 1
   - 2
@@ -1962,7 +1967,7 @@ capmap:
   - data-maturity
   profs:
   - PR-DD
-  coverage: New
+  coverage: Covered
   note: The policy recognises different levels of data maturity; the government maturity framework is the shared way to measure them.
   prov: O
 - id: CR-24
@@ -1980,7 +1985,7 @@ capmap:
     a: evaluate-costs-and-benefits
     label: Evaluate costs and benefits
     flag: E
-  playbook: change.html
+  playbook: capabilities.html#CR-24
   dma:
   - 9
   dmbok:
@@ -1994,7 +1999,7 @@ capmap:
   profs:
   - PR-DD
   - PR-AF
-  coverage: New
+  coverage: Covered
   note: The policy says data must be properly valued and invested in; funding comes through business cases.
   prov: O
 - id: CR-25
@@ -2020,7 +2025,7 @@ capmap:
     a: plan-for-and-manage-changes
     label: Plan for and manage changes
     flag: E
-  playbook: change.html
+  playbook: capabilities.html#CR-25
   dma:
   - 3
   - 9
@@ -2034,7 +2039,7 @@ capmap:
   profs:
   - PR-PD
   - PR-DD
-  coverage: New
+  coverage: Covered
   note: Not in the policy text. Most new and replacement data assets arrive through change programmes, so the controls must be built into them.
   prov: O
 - id: CR-26
@@ -2056,7 +2061,7 @@ capmap:
     a: protecting-information
     label: Protecting information when retiring a service
     flag: E
-  playbook: change.html
+  playbook: capabilities.html#CR-26
   dma:
   - 3
   - 7
@@ -2071,7 +2076,7 @@ capmap:
   profs:
   - PR-DD
   - PR-KIM
-  coverage: New
+  coverage: Covered
   note: Not in the policy. The legacy guidance makes a data asset register its second principle; migrations are where quality is most at risk.
   prov: O
 - id: CR-27
@@ -2089,7 +2094,7 @@ capmap:
     a: how-often-data-ownership-should-be-reviewed-or-updated
     label: How often ownership should be reviewed
     flag: E
-  playbook: change.html
+  playbook: capabilities.html#CR-27
   dma:
   - 10
   dmbok:
@@ -2102,7 +2107,7 @@ capmap:
   profs:
   - PR-PD
   - PR-DD
-  coverage: New
+  coverage: Covered
   note: A named owner must survive staff moves and the end of the project that created the asset.
   prov: O
 - id: CR-28
@@ -2149,7 +2154,7 @@ capmap:
     a: measuring-the-success-of-data-ownership-initiatives
     label: Measuring success of ownership
     flag: I
-  playbook: change.html
+  playbook: capabilities.html#CR-29
   dma:
   - 5
   dmbok:
@@ -2162,7 +2167,7 @@ capmap:
   - delivering-business-impact-through-data
   profs:
   - PR-AF
-  coverage: New
+  coverage: Covered
   note: The policy lists benefits such as less duplication and cleansing; showing they happened needs an evaluation plan.
   prov: O
 - id: CR-30
@@ -2220,7 +2225,7 @@ capmap:
     a: null
     label: 'GovS 007: Security'
     flag: E
-  playbook: perspectives.html
+  playbook: areas.html#DM-SEC
   dma:
   - 8
   dmbok:
@@ -2233,7 +2238,7 @@ capmap:
   profs:
   - PR-CYB
   - PR-SEC
-  coverage: New
+  coverage: Covered
   note: The policy scopes assets by classification and the ownership model makes security a principle, but neither says how to protect a critical asset from, or recover it after, a cyber incident.
   prov: O
 - id: CR-32
@@ -2259,7 +2264,7 @@ capmap:
     a: null
     label: Model Services Contract
     flag: E
-  playbook: perspectives.html
+  playbook: capabilities.html#CR-32
   dma:
   - 3
   - 7
@@ -2274,7 +2279,7 @@ capmap:
   profs:
   - PR-DD
   - PR-PD
-  coverage: New
+  coverage: Covered
   note: Not in the policy. Without open formats, documented schemas and exit terms, every new system becomes the next concentration of hard-to-reach data.
   prov: O
 maturity:
@@ -2918,6 +2923,15 @@ professions:
     - RB-PDPROF
     - RB-GOVS002
     - RB-SRO
+  - persona: buy
+    roles: []
+    profs:
+    - PR-COM
+    - PR-DD
+    learn:
+    - RB-SOURCING
+    - RB-DDATPB
+    - RB-PA23G
   profs:
   - id: PR-DD
     name: Government Digital and Data Profession
@@ -4019,6 +4033,7 @@ dama:
       cat: Apply governance decisions in the catalogue
       dql: Escalate quality risks to owners
       prg: Bring programme decisions into the governance cycle
+      buy: Write data ownership and decision rights into contracts
     dam: []
   - id: DM-ARC
     name: Data architecture
@@ -4033,6 +4048,7 @@ dama:
       cat: Link catalogue entries to systems
       dql: Trace quality problems to where data enters
       prg: Approve designs against it
+      buy: Check tools fit the target architecture before you buy
     dam: []
   - id: DM-MOD
     name: Data modelling and design
@@ -4047,6 +4063,7 @@ dama:
       cat: Publish schemas with entries
       dql: Write rules from the model
       prg: Require documented models from suppliers
+      buy: Require suppliers to hand over documented data models
     dam: []
   - id: DM-OPS
     name: Data storage and operations
@@ -4061,6 +4078,7 @@ dama:
       cat: Record system of record and location
       dql: Check data after restore
       prg: Plan platform moves and decommissioning
+      buy: Agree availability and recovery targets in service levels
     dam: []
   - id: DM-SEC
     name: Data security
@@ -4075,6 +4093,7 @@ dama:
       cat: Record classification and access rights
       dql: Treat odd quality drops as security signals
       prg: Build security in from the start
+      buy: Require security that matches the classification, and incident notice
     dam: []
   - id: DM-INT
     name: Data integration and interoperability
@@ -4089,6 +4108,7 @@ dama:
       cat: Catalogue APIs and data services
       dql: Check data after each integration
       prg: Avoid bespoke, closed integrations
+      buy: Ask for open standards and documented APIs at every boundary
     dam: []
   - id: DM-DOC
     name: Document and content management
@@ -4103,6 +4123,7 @@ dama:
       cat: Record retention and disposal in entries
       dql: Check documents behind key data items
       prg: Plan records transfer when systems retire
+      buy: Make sure tools apply your retention schedule
     dam: []
   - id: DM-REF
     name: Reference and master data
@@ -4117,6 +4138,7 @@ dama:
       cat: Link assets that share reference data
       dql: Check codes against the reference list
       prg: Reuse existing reference data, do not copy it
+      buy: Buy master data tools whose rules and data can be exported
     dam: []
   - id: DM-BI
     name: Data warehousing and business intelligence
@@ -4131,6 +4153,7 @@ dama:
       cat: Catalogue analytical products that are critical
       dql: Publish quality alongside reports
       prg: Plan reporting needs early
+      buy: Make sure reporting tools read data through open routes
     dam: []
   - id: DM-META
     name: Metadata management
@@ -4145,6 +4168,7 @@ dama:
       cat: Run the catalogue and harvest metadata
       dql: Record quality metadata
       prg: Make metadata a delivery output
+      buy: Test a full catalogue export and re-import before you sign
     dam: []
   - id: DM-DQ
     name: Data quality
@@ -4159,6 +4183,7 @@ dama:
       cat: Show quality in entries
       dql: Run the DQAP
       prg: Profile and reconcile in migrations
+      buy: Require quality rules you can read, export and run elsewhere
     dam: []
   lifecycle:
   - data: Plan and design

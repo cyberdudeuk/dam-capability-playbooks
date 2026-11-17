@@ -388,8 +388,10 @@ def run(site, axe_path, brk=None, pages=None):
                 # compass 1.3: dotted terms explain themselves and open their entry in Words explained
                 pg7.click('#tab-lineage')
                 pg7.hover('a.term[data-term="dama"]')
-                pg7.wait_for_timeout(150)
-                if pg7.is_hidden('#tip') or 'DAMA' not in pg7.inner_text('#tip'):
+                # D-054: a fixed 150 ms wait failed intermittently under load; wait for the tooltip itself, up to two seconds
+                try:
+                    pg7.wait_for_function("() => { const t = document.getElementById('tip'); if (!t || t.hidden) return false; const s = getComputedStyle(t); return s.display !== 'none' && s.visibility !== 'hidden' && t.textContent.includes('DAMA'); }", timeout=2000)
+                except Exception:
                     fail('b17_compass', 'a term has no tooltip')
                 pg7.click('a.term[data-term="dama"]')
                 pg7.wait_for_timeout(200)

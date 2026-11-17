@@ -72,6 +72,13 @@ def load(path):
         atext = areas_f.read_text(encoding='utf-8')
         cut += split_values(atext, areas_f.name)
         d['area_guide'] = yaml.safe_load(atext)
+    # Version 1.16.0: capability playbooks with the leader and learning routes, and the procurement requirements and templates
+    for fname, key in (('capability-playbooks.yaml', 'cap_guide'), ('procurement.yaml', 'procurement')):
+        f2 = path.parent / fname
+        if f2.exists():
+            t2 = f2.read_text(encoding='utf-8')
+            cut += split_values(t2, f2.name)
+            d[key] = yaml.safe_load(t2)
     if cut:
         raise ContentError('\n'.join(cut))
     anchors = path.parent / 'source-anchors.json'
@@ -84,10 +91,30 @@ def load(path):
 TEMPLATE_MODES = {'BAU': 'Business as usual', 'Change': 'Change programmes', 'Both': 'Business as usual and change'}
 
 
+def all_activities(d):
+    """Version 1.16.0: every activity a journey or recommendation can point to, with the page it is on: knowledge area
+    activities and capability playbook activities."""
+    out = {x['id']: dict(x, page='areas') for a in (d.get('area_guide') or {}).get('areas', []) for x in a['activities']}
+    out.update({x['id']: dict(x, page='capabilities', cap=pl['id']) for pl in (d.get('cap_guide') or {}).get('playbooks', []) for x in pl['activities']})
+    return out
+
+
+def template_owners(d):
+    """Version 1.16.0: every template with its owner, the owner's short label and the page it lives on. The three capability
+    playbooks own most templates; the capability playbooks page, the leader route and the Learning page own the rest. Every
+    place that lists, writes or checks templates uses this, so a new template cannot miss one of them."""
+    out = [(c['id'], c['short'], CAP_PAGE[c['id']], t) for c in d['capabilities'] for t in c.get('templates', [])]
+    G = d.get('cap_guide') or {}
+    out += [('cpb', 'Capability playbooks', 'capabilities', t) for pl in G.get('playbooks', []) for t in pl.get('templates', [])]
+    out += [('ldr', 'Leading', 'leading', t) for t in (G.get('leader') or {}).get('templates', [])]
+    out += [('lrn', 'Learning', 'learning', t) for t in (G.get('learning') or {}).get('templates', [])]
+    return out
+
+
 def resolve_workbooks(d):
     """A workbook template (version 1.11.0) is a set of tabs. A tab either lists its own fields or reuses another
     template's fields with 'from', so a log defined once is never retyped. Its flat field list is 'Tab: field'."""
-    tm = {t['id']: t for c in d['capabilities'] for t in c.get('templates', [])}
+    tm = {t['id']: t for *_, t in template_owners(d)}
     for t in tm.values():
         if not t.get('sheets'):
             continue
@@ -110,7 +137,9 @@ def write_ods(path, sheets):
 
     def row(cells):
         return '<table:table-row>' + ''.join(f'<table:table-cell office:value-type="string"><text:p>{xesc(c)}</text:p></table:table-cell>' for c in cells) + '</table:table-row>'
-    tables = ''.join(f'<table:table table:name="{xesc(name, {chr(34): "&quot;"})}"><table:table-column table:number-columns-repeated="{len(fields)}"/>{row(fields)}</table:table>' for name, fields in sheets)
+    # Version 1.16.0: a sheet may carry rows after its header, so a template can ship pre-filled (the procurement schedule)
+    tables = ''.join(f'<table:table table:name="{xesc(sh[0], {chr(34): "&quot;"})}"><table:table-column table:number-columns-repeated="{len(sh[1])}"/>{row(sh[1])}'
+                     + ''.join(row([str(c) for c in r]) for r in (sh[2] if len(sh) > 2 else [])) + '</table:table>' for sh in sheets)
     ns = ('xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" '
           'xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"')
     content = f'<?xml version="1.0" encoding="UTF-8"?><office:document-content {ns} office:version="1.3"><office:body><office:spreadsheet>{tables}</office:spreadsheet></office:body></office:document-content>'
@@ -311,6 +340,8 @@ def validate(d):
                 if 'p' in t and t['p'] not in stages: errs.append(f"persona {p['id']}: unknown stage {t['p']}")
                 if 'm' in t and t['m'] not in mods: errs.append(f"persona {p['id']}: unknown module {t['m']}")
                 if 'p' in t and not t.get('label'): errs.append(f"persona {p['id']}: task {t['p']} needs a label")
+                if 'a' in t and t['a'] not in all_activities(d): errs.append(f"persona {p['id']}: unknown activity {t['a']}")
+                if not any(k in t for k in ('p', 'm', 'a')): errs.append(f"persona {p['id']}: a task needs a step, a module or an activity")
     # D-009: an unquoted comma in a YAML flow list silently splits one item into fragments
     lists = [(f"module {m['id']} outcomes", m['outcomes']) for m in d['modules']]
     for p in d['personas']:
@@ -368,6 +399,7 @@ def validate(d):
     for x in d.get('standards', []):
         if x['status'] not in ('Met', 'Partly', 'Not yet'): errs.append(f"{x['id']}: bad status")
     validate_frameworks(d, errs, src, roles)
+    validate_extra(d, errs, reg)
     if errs:
         raise ContentError('\n'.join(errs))
 
@@ -653,7 +685,7 @@ def validate_areas(d, errs):
     caps = {c['id'] for c in d.get('capmap', [])}
     roles = {r['code'] for r in d['roles']}
     rb = {r['id'] for r in d.get('rulebook', [])}
-    tpls = {t['id'] for c in d['capabilities'] for t in c.get('templates', [])}
+    tpls = {t['id'] for *_, t in template_owners(d)}
     sups = {s['id'] for s in d.get('supplements', [])}
     areas = {a['id'] for a in d['dama']['areas']}
     stages = {s['id'] for s in G['stages']}
@@ -695,6 +727,182 @@ def validate_areas(d, errs):
         errs.append(f'areas: knowledge area {i} has no implementation activities')
 
 
+LEADER_PLAN = ['d30', 'd60', 'd90', 'm6', 'm12']
+# The 14 points of the Service Standard, titles and addresses as GOV.UK publishes them (checked 17 November 2026). Cited by
+# number and linked; the points themselves are not repeated here.
+SS_POINTS = {1: ('Understand users and their needs', 'point-1-understand-user-needs'), 2: ('Solve a whole problem for users', 'point-2-solve-a-whole-problem'),
+             3: ('Provide a joined up experience across all channels', 'point-3-join-up-across-channels'), 4: ('Make the service simple to use', 'point-4-make-the-service-simple-to-use'),
+             5: ('Make sure everyone can use the service', 'point-5-make-sure-everyone-can-use-the-service'), 6: ('Have a multidisciplinary team', 'point-6-have-a-multidisciplinary-team'),
+             7: ('Use agile ways of working', 'point-7-use-agile-ways-of-working'), 8: ('Iterate and improve frequently', 'point-8-iterate-and-improve-frequently'),
+             9: ("Create a secure service which protects users' privacy", 'point-9-create-a-secure-service'),
+             10: ('Define what success looks like and publish performance data', 'point-10-define-success-publish-performance-data'),
+             11: ('Choose the right tools and technology', 'point-11-choose-the-right-tools-and-technology'), 12: ('Make new source code open', 'point-12-make-new-source-code-open'),
+             13: ('Use and contribute to open standards, common components and patterns', 'point-13-use-common-standards-components-patterns'),
+             14: ('Operate a reliable service', 'point-14-operate-a-reliable-service')}
+
+
+def evidence_href(d, ref):
+    """Version 1.16.0: where a piece of assessment evidence comes from in the portal: an activity, a template, a core
+    playbook step or a delivery and change practice. None if the reference is unknown."""
+    acts = all_activities(d)
+    if ref in acts:
+        return f'{acts[ref]["page"]}.html#{ref}', acts[ref]['title']
+    tm = {t['id']: (pg, t['name']) for _, _, pg, t in template_owners(d)}
+    if ref in tm:
+        return f'{tm[ref][0]}.html#{ref}', tm[ref][1]
+    if '.' in ref:
+        cid, sid = ref.split('.', 1)
+        for c in d['capabilities']:
+            for st in c['stages']:
+                if c['id'] == cid and st['id'] == sid:
+                    return f'{CAP_PAGE[cid]}.html#{cid}-{sid}', f'{c["short"]} step {st["n"]}: {st["name"]}'
+    for x in (d.get('change') or {}).get('items', []):
+        if x['id'] == ref:
+            return f'change.html#{ref}', x['title']
+    return None
+MOSCOW = ('Must', 'Should', 'Could')
+
+
+def validate_extra(d, errs, reg):
+    """Version 1.16.0: capability playbooks, the leader route, learning support and procurement requirements. Every reference
+    resolves, every capability playbook has activities at each adoption stage and a template, the leader route has every
+    checkpoint with a target for every maturity strand, every procurement requirement says how to prove it, and no address
+    appears anywhere in them."""
+    G, P = d.get('cap_guide'), d.get('procurement')
+    reqs = {r['id'] for r in d['requirements']}
+    caps = {c['id'] for c in d.get('capmap', [])}
+    roles = {r['code'] for r in d['roles']}
+    rb = {r['id'] for r in d.get('rulebook', [])}
+    tpls = {t['id'] for *_, t in template_owners(d)}
+    change = {x['id'] for x in (d.get('change') or {}).get('items', [])}
+    area_acts = {x['id'] for a in (d.get('area_guide') or {}).get('areas', []) for x in a['activities']}
+    stages = {s['id'] for s in (d.get('area_guide') or {}).get('stages', [])}
+    strands = {s['id'] for s in d['maturity']['strands']}
+    levels = set(d['maturity']['levels'])
+    for owner, _, _, t in template_owners(d):
+        if owner in ('cpb', 'ldr', 'lrn'):
+            reg(t['id'], 'templates')
+            if t.get('mode') not in TEMPLATE_MODES:
+                errs.append(f"{t['id']}: mode must be one of {', '.join(TEMPLATE_MODES)}")
+            for f in t['fields']:
+                if f.count('(') != f.count(')'): errs.append(f"{t['id']}: field '{f}' has unbalanced brackets")
+    if G:
+        acts = {x['id'] for pl in G['playbooks'] for x in pl['activities']}
+        seen = set()
+        for pl in G['playbooks']:
+            w = f"capability playbook {pl['id']}"
+            if pl['id'] not in caps: errs.append(f'{w}: not a capability in the capability model')
+            if pl['id'] in seen: errs.append(f'{w}: listed twice')
+            seen.add(pl['id'])
+            if pl['lead'] not in roles: errs.append(f"{w}: unknown lead role {pl['lead']}")
+            if not pl.get('short') or len(pl['short']) > 14: errs.append(f'{w}: needs a short tab label of 14 characters or fewer')
+            if {x['stage'] for x in pl['activities']} != stages: errs.append(f'{w}: needs activities at every adoption stage')
+            if not pl.get('templates'): errs.append(f'{w}: needs at least one template')
+            for i in pl.get('see', []):
+                if i not in area_acts: errs.append(f'{w}: unknown knowledge area activity {i}')
+            for i in pl.get('change', []):
+                if i not in change: errs.append(f'{w}: unknown delivery and change action {i}')
+            for x in pl['activities']:
+                v = f"{w} {x['id']}"
+                reg(x['id'], 'capability activities')
+                if x['id'] in area_acts: errs.append(f'{v}: identifier already used by a knowledge area activity')
+                for k in ('title', 'goal', 'steps', 'outputs', 'evidence', 'measure', 'raci', 'reqs', 'caps', 'refs'):
+                    if not x.get(k): errs.append(f'{v}: {k} missing')
+                if x.get('stage') not in stages: errs.append(f"{v}: unknown stage {x.get('stage')}")
+                for k in ('steps', 'outputs'):
+                    for s in x.get(k, []):
+                        if not isinstance(s, str): errs.append(f'{v}: a {k[:-1]} is not plain text (quote it if it has a colon)')
+                if sum(1 for r in x.get('raci', {}).values() if r == 'A') != 1: errs.append(f'{v}: needs exactly one accountable role')
+                if pl['id'] not in x.get('caps', []): errs.append(f"{v}: must build its own capability {pl['id']}")
+                for k, ok in (('reqs', reqs), ('caps', caps), ('refs', rb), ('templates', tpls), ('links', acts)):
+                    for i in x.get(k, []):
+                        if i not in ok: errs.append(f'{v}: unknown {k[:-1]} {i}')
+                for r in x.get('raci', {}):
+                    if r not in roles: errs.append(f'{v}: unknown role {r}')
+        L = G.get('leader') or {}
+        if [s['id'] for s in L.get('plan', [])] != LEADER_PLAN:
+            errs.append(f'leader route: plan must have the checkpoints {", ".join(LEADER_PLAN)} in order')
+        for a in L.get('aims', []):
+            if a['moscow'].split(' ')[0] not in MOSCOW + ("Won't",): errs.append(f"leader aim: unknown priority {a['moscow']}")
+            for c in a['caps']:
+                if c not in caps: errs.append(f'leader aim: unknown capability {c}')
+        if {a['moscow'] for a in L.get('aims', [])} & set(MOSCOW) != set(MOSCOW): errs.append('leader route: needs Must, Should and Could aims')
+        for o in L.get('outcomes', []):
+            if o['strand'] not in strands: errs.append(f"{o['id']}: unknown maturity strand {o['strand']}")
+        order = d['maturity']['levels']
+        last = {s: -1 for s in strands}
+        for s in L.get('plan', []):
+            if set(s.get('targets', {})) != strands: errs.append(f"leader checkpoint {s['id']}: needs a target for every maturity strand")
+            for st, lv in s.get('targets', {}).items():
+                if lv not in levels: errs.append(f"leader checkpoint {s['id']}: unknown level {lv}")
+                elif st in last:
+                    if order.index(lv) < last[st]: errs.append(f"leader checkpoint {s['id']}: target for {st} goes down")
+                    last[st] = order.index(lv)
+            for i in s.get('activities', []):
+                if i not in acts | area_acts: errs.append(f"leader checkpoint {s['id']}: unknown activity {i}")
+        for m in L.get('models', []):
+            if m['ref'] not in rb: errs.append(f"leader models: unknown rulebook entry {m['ref']}")
+        LR = G.get('learning') or {}
+        for r in (LR.get('career') or {}).get('refs', []):
+            if r not in rb: errs.append(f'learning career: unknown rulebook entry {r}')
+        for c in LR.get('certifications', []):
+            reg(c['id'], 'certifications')
+            if c['ref'] not in rb: errs.append(f"{c['id']}: unknown rulebook entry {c['ref']}")
+            if c.get('prov') not in PROV_TEXT: errs.append(f"{c['id']}: needs a provenance label")
+        for x in LR.get('role_tips', []):
+            if x['role'] not in roles: errs.append(f"learning tips: unknown role {x['role']}")
+        AS = G.get('assessments') or {}
+        if AS:
+            if [s['id'] for s in AS['stages']] != [s['id'] for s in d['change']['stages']]: errs.append('assessments: stages must match the Delivery and change stages')
+            for s in AS['stages']:
+                for n in s['points']:
+                    if n not in SS_POINTS: errs.append(f"assessments {s['id']}: Service Standard has no point {n}")
+                for e in s['evidence']:
+                    if not evidence_href(d, e['ref']): errs.append(f"assessments {s['id']}: unknown evidence reference {e['ref']}")
+                for r in s['refs']:
+                    if r not in rb: errs.append(f"assessments {s['id']}: unknown rulebook entry {r}")
+                if not s['gates'] or not s['look_for']: errs.append(f"assessments {s['id']}: needs gates and what reviewers look for")
+        TL = G.get('tailoring') or {}
+        for pl in G['playbooks']:
+            if pl.get('mode') not in TEMPLATE_MODES: errs.append(f"capability playbook {pl['id']}: mode must be one of {', '.join(TEMPLATE_MODES)}")
+        if [c['id'] for c in TL.get('contexts', [])] != ['bau', 'change', 'both']: errs.append('tailoring: contexts must be bau, change and both')
+        for c in TL.get('contexts', []):
+            for r in c['roles']:
+                if r not in roles: errs.append(f"tailoring context {c['id']}: unknown role {r}")
+        if set(TL.get('persona_context', {})) != {p['id'] for p in d['personas']}: errs.append('tailoring: every persona needs a usual context')
+        for k, v in TL.get('persona_context', {}).items():
+            if v not in ('bau', 'change', 'both'): errs.append(f'tailoring: persona {k} has unknown context {v}')
+        if [x['level'] for x in TL.get('maturity', [])] != d['maturity']['levels']: errs.append('tailoring: needs one entry per maturity level, in order')
+        for x in TL.get('maturity', []):
+            if x['stage'] not in stages: errs.append(f"tailoring {x['level']}: unknown stage {x['stage']}")
+            if x['checkpoint'] not in LEADER_PLAN: errs.append(f"tailoring {x['level']}: unknown checkpoint {x['checkpoint']}")
+        for x in TL.get('literacy', []):
+            for lv in x['levels']:
+                if lv not in LEVELS: errs.append(f"tailoring literacy {x['id']}: unknown module level {lv}")
+        if chr(64) in str(G): errs.append('capability playbooks: no email addresses')
+    if P:
+        cats = {c['id'] for c in (d.get('tooling') or {}).get('categories', [])}
+        for x in P['functional'] + P['nonfunctional']:
+            v = x['id']
+            reg(v, 'procurement requirements')
+            if x['moscow'] not in MOSCOW: errs.append(f'{v}: priority must be Must, Should or Could')
+            for k in ('text', 'test', 'caps', 'refs'):
+                if not x.get(k): errs.append(f'{v}: {k} missing (every requirement says how to prove it)')
+            if 'cat' in x and x['cat'] not in cats: errs.append(f"{v}: unknown kind of tool {x['cat']}")
+            for k, ok in (('caps', caps), ('reqs', reqs), ('refs', rb)):
+                for i in x.get(k, []):
+                    if i not in ok: errs.append(f'{v}: unknown {k[:-1]} {i}')
+        for c in cats:
+            if not any(x.get('cat') == c and x['moscow'] == 'Must' for x in P['functional']) and c not in ('TL-CONTRACT',):
+                errs.append(f'procurement: kind of tool {c} has no Must requirement')
+        for c in P['clauses']:
+            reg(c['id'], 'contract clauses')
+            for i in c['refs']:
+                if i not in rb: errs.append(f"{c['id']}: unknown rulebook entry {i}")
+        if [s['score'] for s in P['scoring']] != [4, 3, 2, 1, 0]: errs.append('procurement: scoring scale must run 4 to 0')
+        if chr(64) in str(P): errs.append('procurement: no email addresses')
+
+
 FLAGS = {'E': ('Explicit', 'The text names this as a requirement or responsibility.'),
          'I': ('Implicit', 'The text depends on it to meet an explicit requirement but does not name it as one.'),
          'N': ('Inferred', 'Not in the text. This portal\'s judgement from good practice and adjacent rulebooks.')}
@@ -709,7 +917,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 44)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 51)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -723,8 +931,8 @@ ROLE_ICONS = {'CDO': 'building-2', 'COO': 'clipboard-list', 'BRD': 'gavel', 'OWN
               'SRO': 'flag', 'PDM': 'calendar-check', 'SVO': 'layers', 'ARC': 'network', 'MIG': 'arrow-right-left', 'CML': 'handshake', 'PMO': 'clipboard-check'}
 CAP_ICONS = {'gov': 'shield-check', 'cat': 'library-big', 'dq': 'gauge'}
 LEVELS = {'Foundation': 'award', 'Practitioner': 'graduation-cap', 'Advanced': 'milestone'}
-PAGE_LEVEL = {**{k: 'Foundation' for k in ('index', 'dam', 'personas', 'learning', 'guide', 'inclusion', 'research', 'involve', 'test', 'contact', 'site-map', 'about', 'whats-new', 'accessibility')},
-              **{k: 'Practitioner' for k in ('areas', 'governance', 'cataloguing', 'quality', 'together', 'sectors', 'change', 'perspectives', 'community', 'library', 'knowledge', 'professions', 'data', 'bodies', 'status', 'notices')},
+PAGE_LEVEL = {**{k: 'Foundation' for k in ('index', 'dam', 'personas', 'leading', 'learning', 'guide', 'inclusion', 'research', 'involve', 'test', 'contact', 'site-map', 'about', 'whats-new', 'accessibility')},
+              **{k: 'Practitioner' for k in ('areas', 'capabilities', 'governance', 'cataloguing', 'quality', 'together', 'sectors', 'change', 'perspectives', 'community', 'library', 'knowledge', 'professions', 'data', 'bodies', 'status', 'notices')},
               **{k: 'Advanced' for k in ('capability-model', 'tooling', 'reuse', 'design')}}
 LEVEL_TEXT = {'Foundation': 'For anyone: no data management background needed.', 'Practitioner': 'For people who do data governance, cataloguing or quality work.',
               'Advanced': 'For specialists: detailed models, standards and technical reuse.'}
@@ -864,20 +1072,23 @@ def barcode_svg(text, label):
 NAV = [
     ('index', 'Home', 'house'), ('dam', 'The policy', 'landmark'), ('governance', 'Governance', 'shield-check'),
     ('cataloguing', 'Cataloguing', 'library-big'), ('quality', 'Quality', 'gauge'), ('sectors', 'Sectors', 'layers'), ('together', 'Joined up', 'workflow'),
-    ('change', 'Delivery and change', 'construction'),
+    ('change', 'Delivery and change', 'construction'), ('capabilities', 'Capability playbooks', 'book-open'),
     ('capability-model', 'Capability model', 'radar'), ('areas', 'Knowledge areas', 'target'), ('perspectives', 'Perspectives', 'eye'), ('community', 'Working together', 'handshake'), ('professions', 'Professions and skills', 'briefcase'), ('tooling', 'Tools and interoperability', 'plug'), ('bodies', 'Boards and networks', 'building-2'),
-    ('personas', 'Your role', 'users-round'), ('learning', 'Learning', 'graduation-cap'), ('library', 'Library', 'library'),
+    ('personas', 'Your role', 'users-round'), ('leading', 'New or leading', 'lightbulb'), ('compass/index', 'Data portals compass', 'compass'),
+    ('explorer/index', 'Asset governance explorer', 'library-big'), ('learning', 'Learning', 'graduation-cap'), ('library', 'Library', 'library'),
     ('knowledge', 'Knowledge', 'network'), ('inclusion', 'Inclusion', 'heart-handshake'), ('about', 'About', 'info'),
 ]
 # Grouped menus keep the global bar to about ten top-level destinations (build standard: use hubs before adding more)
-NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', 'together', 'change'],
+# Version 1.16.0 (C-47): the compass and the explorer are reached from every page, in a group with the route for newcomers
+NAV_GROUPS = {'Playbooks': ['governance', 'cataloguing', 'quality', 'sectors', 'together', 'change', 'capabilities'],
+              'Find your way': ['personas', 'leading', 'compass/index', 'explorer/index'],
               'Frameworks': ['capability-model', 'areas', 'perspectives', 'community', 'professions', 'tooling', 'bodies']}
 # Section colour coding (version 1.8): every page carries a section, styled as an accent colour for orientation
 SECTION = {'index': 'home', 'dam': 'policy', 'governance': 'gov', 'cataloguing': 'cat', 'quality': 'dq', 'sectors': 'sectors', 'together': 'together',
-           'change': 'change', 'capability-model': 'model', 'areas': 'model', 'perspectives': 'lens', 'community': 'community', 'professions': 'skills',
+           'change': 'change', 'capabilities': 'change', 'leading': 'roles', 'capability-model': 'model', 'areas': 'model', 'perspectives': 'lens', 'community': 'community', 'professions': 'skills',
            'personas': 'roles', 'learning': 'learning', 'library': 'library', 'knowledge': 'knowledge', 'inclusion': 'inclusion',
            'data': 'data', 'test': 'test', 'guide': 'guide', 'site-map': 'guide', 'reuse': 'reuse', 'tooling': 'tooling', 'research': 'research', 'bodies': 'community', 'involve': 'research'}
-NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3'}
+NAV_GROUP_ICONS = {'Playbooks': 'book-open', 'Frameworks': 'grid-3x3', 'Find your way': 'compass'}
 CAP_PAGE = {'gov': 'governance', 'cat': 'cataloguing', 'dq': 'quality'}
 PAGE_DESC = {
     'together': 'How data governance, data cataloguing and data quality hand off to each other, with one set of roles and one yearly cycle.',
@@ -901,6 +1112,10 @@ PAGE_DESC = {
     'design': 'Theory of change, research plan, service blueprint, requirements traceability, architecture and Service Standard self-assessment for the portal.',
     'notices': 'Disclaimers, transparency notices, credits and full citations for every source used by the DAM capability playbooks.',
     'accessibility': 'Accessibility statement for the DAM capability playbooks, following the GOV.UK model statement for public sector websites.',
+    'capabilities': 'Activities and templates for the capabilities the DAM Policy depends on beyond governance, cataloguing and quality: strategy, tools, risk, suppliers, skills, maturity, investment, legacy and exit.',
+    'leading': 'For people new to data asset management or leading it: what to aim for, outcomes and targets, and a plan for the first 30, 60 and 90 days with 6 and 12 month checkpoints.',
+    'compass/index': 'Find your way across four websites about public sector data: the DAM playbooks, the Data Quality Commons, the repos asset catalogue and DCAT-AP-UK.',
+    'explorer/index': 'Where data asset management and information asset management meet: the 32 capabilities seen from the information world.',
     'tooling': 'How catalogue, data quality, lineage, master data and governance tools work together, the open standards that connect them, and RFI questions to avoid lock-in.',
     'guide': 'User guide for the DAM capability playbooks: getting around, what the colours and labels mean, guided tours, tutorials and keyboard shortcuts.',
     'site-map': 'Every page on the DAM capability playbooks portal, grouped the way the menus are, with the main sections of each page.',
@@ -1078,7 +1293,7 @@ class Site:
         units = []
         for j in p['journey']:
             for t in j['tasks']:
-                units.append(t['p'] if 'p' in t else 'mod:' + t['m'])
+                units.append(t['p'] if 'p' in t else 'act:' + t['a'] if 'a' in t else 'mod:' + t['m'])
         return units
 
     def hero(self, ic, caption, title, lede, kind='', brief=None, meta=None):
@@ -1489,6 +1704,7 @@ class Site:
                  'inclusion': self.p_inclusion, 'sectors': self.p_sectors, 'capability-model': self.p_model,
                  'professions': self.p_professions, 'change': self.p_change, 'perspectives': self.p_lenses, 'community': self.p_community, 'about': self.p_about, 'contact': self.p_contact, 'status': self.p_status,
                  'whats-new': self.p_whats_new, 'design': self.p_design, 'notices': self.p_notices, 'data': self.p_data, 'test': self.p_test,
+                 'capabilities': self.p_capabilities, 'leading': self.p_leading,
                  'accessibility': self.p_accessibility, 'guide': self.p_guide, 'reuse': self.p_reuse, 'tooling': self.p_tooling, 'research': self.p_research, 'bodies': self.p_bodies, 'areas': self.p_areas, 'involve': self.p_involve, '404': self.p_404}
         for k, fn in pages.items():
             self._key = k
@@ -1512,7 +1728,9 @@ class Site:
         self.write_feed()
         mods = {mm['id']: self.mod_units(mm['id']) for mm in d['modules']}
         (self.out / 'assets' / 'search-index.js').write_text(
-            'window.DCP_INDEX=' + json_safe(self.search) + ';\nwindow.DCP_MODULES=' + json_safe(mods) + ';\n', encoding='utf-8')
+            'window.DCP_INDEX=' + json_safe(self.search) + ';\nwindow.DCP_MODULES=' + json_safe(mods) + ';\n'
+            # Version 1.16.0: module facts for the learning record and refresher reminders on the Learning page
+            + 'window.DCP_MODINFO=' + json_safe({mm['id']: {'t': mm['title'], 'l': mm['level'], 'm': mm['minutes'], 'o': mm['outcomes']} for mm in self.d['modules']}) + ';\n', encoding='utf-8')
         self.write_xref()
         self.exports()
         # D-030: the Open data page lists files that exist, so it is built again once every data file is written
@@ -1574,7 +1792,7 @@ class Site:
         d = self.d
         return {'reqs': len(d['requirements']), 'must': sum(1 for r in d['requirements'] if r['strength'] == 'must'),
                 'stages': sum(len(c['stages']) for c in d['capabilities']),
-                'templates': sum(len(c.get('templates', [])) for c in d['capabilities']),
+                'templates': len(template_owners(d)),
                 'concepts': len(d['concepts']), 'library': len(d['library']), 'sources': len(d['sources']),
                 'verified': sum(1 for s in d['sources'] if s['prov'] == 'V'), 'modules': len(d['modules']),
                 'minutes': sum(mm['minutes'] for mm in d['modules'])}
@@ -1898,6 +2116,12 @@ class Site:
         return self.page('together', 'Joined up', body, drawer, crumbs=['Joined up'])
 
     def task_li(self, t):
+        if 'a' in t:
+            x = all_activities(self.d)[t['a']]
+            stage_icon = {'start': 'flag', 'build': 'wrench', 'embed': 'refresh-cw'}[x['stage']]
+            where = 'Capability playbook' if x['page'] == 'capabilities' else 'Knowledge area'
+            return (f'<li class="task"><span class="task-name">{icon(stage_icon)}<a href="{x["page"]}.html#{x["id"]}">{E(x["title"])}</a>'
+                    f'<span class="hint">{where}, {E(x["id"])}</span></span>{status_tag(["act:" + x["id"]])}</li>')
         if 'm' in t:
             mm = self.mods[t['m']]
             return (f'<li class="task"><span class="task-name">{icon(mm["icon"])}<a href="learning.html#{mm["id"]}">Learn: {E(mm["title"])}</a>'
@@ -1905,6 +2129,80 @@ class Site:
         c, st = self.stage[t['p']]
         return (f'<li class="task"><span class="task-name">{icon(STAGE_ICONS[st["id"]])}<a href="{self.stage_url(t["p"])}">{E(t["label"])}</a>'
                 f'<span class="hint">{E(c["name"])}, step {st["n"]}</span></span>{status_tag([t["p"]])}</li>')
+
+    def assessments_html(self):
+        """Version 1.16.0: critical data at each stage, gate and assessment, on the Delivery and change page."""
+        d, AS = self.d, self.d['cap_guide']['assessments']
+        names = {s['id']: s['name'] for s in d['change']['stages']}
+        sec = ''
+        for s in AS['stages']:
+            pts = ', '.join(f'<a href="https://www.gov.uk/service-manual/service-standard/{SS_POINTS[n][1]}" rel="noopener">point {n}: {E(SS_POINTS[n][0])}</a>' for n in s['points']) or '<span class="hint">Before the Service Standard applies</span>'
+            ev = ''.join(f'<li><a href="{E(evidence_href(d, e["ref"])[0])}">{E(e["text"])}</a> <span class="hint">({E(evidence_href(d, e["ref"])[1])})</span></li>' for e in s['evidence'])
+            sec += (f'<li class="cr-card" id="assess-{s["id"]}"><div class="cr-head">{tile("clipboard-check", "sm")}<div><p class="caption">Stage</p><h3>{E(names[s["id"]])}</h3></div></div>'
+                    f'<dl class="cr-dl"><dt>{icon("flag")} Gates and assessments</dt><dd>{ul(s["gates"])}</dd>'
+                    f'<dt>{icon("landmark")} Service Standard points that touch critical data</dt><dd>{pts}</dd>'
+                    f'<dt>{icon("search")} What reviewers will want to see about critical data</dt><dd>{ul(s["look_for"])}{prov("O")}</dd>'
+                    f'<dt>{icon("package")} Evidence, and where it comes from here</dt><dd><ul class="plain">{ev}</ul></dd>'
+                    f'<dt>{icon("triangle-alert")} Common gaps</dt><dd>{ul(s["gaps"])}</dd>'
+                    f'<dt>{icon("book-marked")} Read the published guidance</dt><dd>' + '; '.join(self.rb_link(r) for r in s['refs']) + '</dd></dl></li>')
+        return (f'<h2 id="assessments">{icon("clipboard-check")} Stages, gates and assessments</h2><p class="lede-sm">{E(AS["intro"])}</p>'
+                f'<div class="callout"><p>{icon("info")} The Service Standard, service assessments, spend control and NISTA gate reviews are published elsewhere and linked here, not repeated. '
+                f'This section adds the critical data evidence for each{prov("O")}. Assessors and reviewers judge against their own published criteria.</p></div>'
+                f'<h3 id="assessment-principles">{icon("lightbulb")} Four principles</h3>{ul(AS["principles"])}'
+                f'<ol class="cr-list two">{sec}</ol><p>Download the evidence by stage as <a href="data/assessment-evidence.csv">CSV</a>.</p>')
+
+    def tailor_html(self):
+        """Version 1.16.0: recommendations by role, profession, organisation maturity and data literacy. The static table
+        gives the same guidance without JavaScript; the script (app.js) reads the data below and the self-assessment."""
+        d, G = self.d, self.d['cap_guide']
+        TL, L = G['tailoring'], G['leader']
+        pmap = {x['persona']: x['profs'] for x in d['professions']['persona_map']}
+        plan = {s['id']: s for s in L['plan']}
+        acts = all_activities(d)
+        pmode = {pl['id']: pl['mode'] for pl in G['playbooks']}
+        data = {'personas': [{'id': p['id'], 'title': p['title'], 'role': p['role'], 'modules': p['modules'], 'profs': pmap.get(p['id'], [])} for p in d['personas']],
+                'profs': [{'id': x['id'], 'name': x['name']} for x in d['professions']['profs']],
+                'modules': {m['id']: {'t': m['title'], 'l': m['level'], 'm': m['minutes']} for m in d['modules']},
+                'acts': [{'id': x['id'], 't': x['title'], 'p': x['page'], 's': x['stage'], 'r': sorted(r for r, v in x['raci'].items() if v in ('A', 'R')), 'c': x['caps'],
+                          'x': pmode.get(x.get('cap'), 'Both')} for x in acts.values()]
+                # the steps of the three core playbooks are the first place to start, so they are candidates too, under their strand's capabilities
+                + [{'id': f'{c["id"]}-{st["id"]}', 't': f'{c["short"]} step {st["n"]}: {st["name"]}', 'p': CAP_PAGE[c['id']], 's': 'start',
+                    'r': sorted(r for r, v in (st.get('raci') or {}).items() if v in ('A', 'R')), 'c': next((s['cr'] for s in d['maturity']['strands'] if s['id'] == c['id']), []), 'x': 'Both'}
+                   for c in d['capabilities'] for st in c['stages']],
+                'strands': [{'id': s['id'], 'name': s['name'], 'cr': s['cr']} for s in d['maturity']['strands']],
+                'capprofs': {c['id']: c['profs'] for c in d['capmap']},
+                'maturity': TL['maturity'], 'literacy': TL['literacy'],
+                'plan': {k: {'name': v['name'], 'focus': v['focus']} for k, v in plan.items()},
+                'stages': {s['id']: s['name'] for s in d['area_guide']['stages']},
+                'contexts': TL['contexts'], 'persona_context': TL['persona_context'], 'roles': {r['code']: r['name'] for r in d['roles']},
+                'phases': [{'id': s['id'], 'name': s['name']} for s in d['change']['stages']],
+                'change': [{'id': x['id'], 't': x['title'], 's': x['stage']} for x in d['change']['items']],
+                'assess': {s['id']: {'g': s['gates'], 'pts': s['points'], 'e': [{'t': e['text'], 'h': evidence_href(d, e['ref'])[0]} for e in s['evidence']]}
+                           for s in G['assessments']['stages']}}
+        opt = lambda xs: ''.join(f'<option value="{E(v)}">{E(lbl)}</option>' for v, lbl in xs)
+        roles = {r['code']: r['name'] for r in d['roles']}
+        rows = [[f'<strong>{E(m["level"])}</strong>', E(d['area_guide']['stages'][[s['id'] for s in d['area_guide']['stages']].index(m['stage'])]['name']),
+                 f'<a href="leading.html#{m["checkpoint"]}">{E(plan[m["checkpoint"]]["name"])}</a>', E(m['advice'])] for m in TL['maturity']]
+        lrows = [[f'<strong>{E(x["name"])}</strong>', E(x['text']), E(', '.join(x['levels'])), ul(x['tips'])] for x in TL['literacy']]
+        form = (f'<div class="tailor js-only" id="tailor-form" role="group" aria-labelledby="tailor"><div class="filters">'
+                f'<div><label for="tl-persona">Your role</label><select id="tl-persona"><option value="">Choose a role</option>{opt((p["id"], p["title"]) for p in d["personas"])}</select></div>'
+                f'<div><label for="tl-prof">Your profession</label><select id="tl-prof"><option value="">Any</option>{opt((x["id"], x["name"].split(" (")[0]) for x in d["professions"]["profs"])}</select></div>'
+                f'<div><label for="tl-mat">Your organisation\'s maturity</label><select id="tl-mat"><option value="">Not sure</option>{opt((m["level"], m["level"]) for m in TL["maturity"])}</select></div>'
+                f'<div><label for="tl-lit">Your organisation\'s data literacy</label><select id="tl-lit"><option value="">Not sure</option>{opt((x["id"], x["name"]) for x in TL["literacy"])}</select></div>'
+                f'<div><label for="tl-ctx">Where you work</label><select id="tl-ctx"><option value="">Usual for my role</option>{opt((c["id"], c["name"]) for c in TL["contexts"])}</select></div>'
+                f'<div><label for="tl-phase">Programme phase</label><select id="tl-phase"><option value="">Not in a programme</option>{opt((s["id"], s["name"]) for s in d["change"]["stages"])}</select></div>'
+                f'</div><p class="hint" id="tl-sa" aria-live="polite"></p><div id="tl-out" aria-live="polite"></div></div>'
+                f'<script type="application/json" id="tailor-data">{json_safe(data)}</script>')
+        static = (f'<h3 id="tailor-maturity">{icon("gauge")} Where to start by maturity</h3>'
+                  + table('t-tailor-mat', 'Starting point by organisation maturity', ['Maturity', 'Start with activities at', 'Next checkpoint', 'Advice'], rows)
+                  + f'<h3 id="tailor-literacy">{icon("graduation-cap")} What to learn by data literacy</h3>'
+                  + table('t-tailor-lit', 'Learning by organisation data literacy', ['Literacy', 'What it looks like', 'Module levels', 'Tips'], lrows)
+                  + f'<h3 id="tailor-context">{icon("construction")} Business as usual or change</h3>'
+                  + table('t-tailor-ctx', 'Guidance by working context', ['Context', 'What it is', 'Roles involved', 'Tips'],
+                          [[f'<strong>{E(c["name"])}</strong>', E(c['text']), E(', '.join(roles[r] for r in c['roles'])), ul(c['tips'])] for c in TL['contexts']])
+                  + '<p>Each role\'s usual context: ' + '; '.join(f'{E(p["title"])}: {E({c["id"]: c["name"] for c in TL["contexts"]}[TL["persona_context"][p["id"]]].lower())}' for p in d['personas']) + '.</p>'
+                  + '<p class="hint">Not sure of your maturity? Take the <a href="capability-model.html#cm-self">self-assessment</a> first; this page reads the result.</p>')
+        return (f'<h2 id="tailor">{icon("route")} Tailor to your organisation</h2><p>{E(TL["intro"])}{prov("O")}</p>{form}{static}')
 
     def p_personas(self):
         d = self.d
@@ -1936,8 +2234,10 @@ class Site:
                          brief=['Pick the role closest to yours. Roles describe responsibilities, not job titles; you may hold more than one.',
                                 'Each route has five stages: learn, prepare, do, report and improve.',
                                 'Mark steps as done to track your progress. It is saved in this browser only.'])
+        body += self.tailor_html()
         body += f'<h2 id="choose">{icon("users-round")} Choose a role</h2><ul class="persona-grid">{cards}</ul><div class="tabs" id="routes"><div role="tablist" aria-label="Roles">{tablist}</div>{panels}</div>'
-        drawer = [{'label': 'Roles', 'icon': 'users-round', 'items': [{'id': 'choose', 'label': 'Choose a role', 'icon': 'users-round', 'count': len(d['personas'])}]
+        drawer = [{'label': 'Roles', 'icon': 'users-round', 'items': [{'id': 'tailor', 'label': 'Tailor to your organisation', 'icon': 'route', 'new': True},
+                                                                         {'id': 'choose', 'label': 'Choose a role', 'icon': 'users-round', 'count': len(d['personas'])}]
                    + [{'id': f'persona-{p["id"]}', 'label': p['title'], 'icon': p['icon']} for p in d['personas']]}]
         return self.page('personas', 'Start from your role', body, drawer, crumbs=['Your role'])
 
@@ -1994,11 +2294,16 @@ class Site:
 <h2 id="journeys">{icon("route")} Journeys by role</h2><ul class="icon-list paths">{paths}</ul>
 <h2 id="pathways">{icon("brain")} Pathways</h2><p>Themed routes through the modules. Each one says what it covers in other projects, what is still missing and the strongest case against it.</p>{pw_html}
 <h2 id="modules">{icon("book-open")} All modules</h2>{filt}<ul class="mod-grid" id="mod-list">{cards}</ul>
+{self.learning_support_html()}
 <h2 id="module-detail">{icon("graduation-cap")} Modules in full</h2>{details}'''
         drawer = [{'label': 'Learning', 'icon': 'graduation-cap', 'items': [
             {'id': 'levels', 'label': 'Levels', 'icon': 'layers', 'count': 3}, {'id': 'journeys', 'label': 'Journeys by role', 'icon': 'route', 'count': len(d['personas'])},
             {'id': 'pathways', 'label': 'Pathways', 'icon': 'brain', 'count': len(d.get('pathways', []))},
-            {'id': 'modules', 'label': 'All modules', 'icon': 'book-open', 'count': len(d['modules'])}]},
+            {'id': 'modules', 'label': 'All modules', 'icon': 'book-open', 'count': len(d['modules'])},
+            {'id': 'learn-keep-share', 'label': 'Learn, keep, share', 'icon': 'brain', 'count': 3, 'new': True},
+            {'id': 'refreshers', 'label': 'Refreshers due', 'icon': 'history', 'new': True},
+            {'id': 'careers', 'label': 'Careers and certifications', 'icon': 'briefcase', 'count': len(d['cap_guide']['learning']['certifications']), 'new': True},
+            {'id': 'cpd', 'label': 'Counting it as CPD', 'icon': 'badge-check', 'new': True}]},
                   {'label': 'Modules', 'icon': 'book-open', 'items': [{'id': mm['id'], 'label': f'{mm["id"]} {mm["title"]}', 'icon': mm['icon']} for mm in d['modules']]}]
         return self.page('learning', 'Learning', body, drawer, crumbs=['Learning'],
                          jsonld={'@type': ['WebPage', 'Course'], 'name': 'DAM capability playbooks learning modules',
@@ -2106,8 +2411,8 @@ class Site:
 <div><label for="l-q">Contains</label><input id="l-q" type="search" name="q"></div>
 <p class="count-out" aria-live="polite"></p></div>'''
         tbl = table('t-lib', 'Playbook material for the three capabilities, wherever it lives', ['Title', 'Type', 'Capability', 'Status', 'For', 'Where'], rows, row_attrs=attrs, tbody_id='lib-table')
-        tlist = [(c, t) for c in d['capabilities'] for t in c.get('templates', [])]
-        tm = [[f'<a href="{CAP_PAGE[c["id"]]}.html#{t["id"]}">{E(t["name"])}</a>', f'<span class="pill {c["id"]}">{E(c["short"])}</span>', E(TEMPLATE_MODES[t['mode']]), str(len(t['fields'])),
+        tlist = [({'id': o, 'short': s, 'page': pg}, t) for o, s, pg, t in template_owners(d)]
+        tm = [[f'<a href="{c["page"]}.html#{t["id"]}">{E(t["name"])}</a>', f'<span class="pill {c["id"]}">{E(c["short"])}</span>', E(TEMPLATE_MODES[t['mode']]), str(len(t['fields'])),
                (f'<a href="data/templates/{t["id"]}.ods">ODS</a>' if t.get('sheets') else f'<a href="data/templates/{t["id"]}.csv">CSV</a>')] for c, t in tlist]
         tm_attrs = [f' data-item data-mode="{"bau change" if t["mode"] == "Both" else t["mode"].lower()}" data-cap="{c["id"]}"' for c, t in tlist]
         tfilt = ('<div class="filters" data-filter="tmpl-table" role="group" aria-label="Filter templates"><div><label for="t-mode">Used in</label><select id="t-mode" name="mode">'
@@ -2444,7 +2749,8 @@ class Site:
 <dt>{icon("briefcase")} Skills</dt><dd>{sk} <span class="hint">(Digital and Data capability framework)</span></dd>
 <dt>{icon("users-round")} Professions</dt><dd>{pr}</dd>
 <dt>{icon("book-open")} Industry models</dt><dd>DAMA-DMBOK: {E("; ".join(c["dmbok"]))}. DCAM: {E("; ".join(c["dcam"]))}.{prov("K")}</dd>
-<dt>{icon(cov)} In this portal</dt><dd><strong>{E(c["coverage"])}</strong>: <a href="{E(c["playbook"])}">{E({k: l for k, l, _ in NAV}.get(c["playbook"][:-5], c["playbook"]))}</a></dd></dl>
+<dt>{icon(cov)} In this portal</dt><dd><strong>{E(c["coverage"])}</strong>: <a href="{E(c["playbook"])}">{E({k: l for k, l, _ in NAV}.get(c["playbook"].split("#")[0][:-5], c["playbook"]))}</a></dd></dl>
+{self.cap_xlinks(c["id"])}
 <p class="flag-check"><a href="{E(self.flag_check_url(c))}">{icon("flag")}Check this flag</a> <span class="hint">Think {E(c["id"])} should be flagged differently? Tell us why.</span></p></li>'''
         cl_opts = ''.join(f'<option value="{slug(x)}">{E(x)}</option>' for x in CLUSTERS)
         reqmap = f'''<p>Filter by cluster, by how the policy treats the capability, or by how far this portal covers it. Download the map as <a href="data/capability-map.csv">CSV</a>.</p>
@@ -2619,13 +2925,15 @@ class Site:
 <div><label for="c-s">Stage</label><select id="c-s" name="stage"><option value="">All</option>{st_opts}</select></div><div><label for="c-q">Contains</label><input id="c-q" type="search" name="q"></div><p class="count-out" aria-live="polite"></p></div>
 <ul class="cr-list" id="ch-list">{cards}</ul>
 <p>Download every action as <a href="data/change-checklist.csv">CSV</a> to load into your own plan or tracker.</p>
+{self.assessments_html()}
 <div class="notice-box">{icon("info")}<p>These practices are this portal's synthesis{prov("O")} of the rulebook entries listed with each one. They add no new requirements; where they differ from your department's own delivery or assurance rules, follow your department.</p></div>'''
         drawer = [{'label': 'Delivery and change', 'icon': 'construction', 'items': [
             {'id': 'gaps', 'label': 'What the policy leaves to you', 'icon': 'flag', 'count': len(gaps)},
             {'id': 'lifecycle', 'label': 'Across the life cycle', 'icon': 'route', 'count': len(ch['stages'])},
             {'id': 'programme-roles', 'label': 'Programme roles', 'icon': 'users-round', 'count': len(ch['programme_roles']['rows']), 'new': True},
             {'id': 'blueprint', 'label': 'Programme blueprint', 'icon': 'workflow', 'count': len(ch['programme_roles']['blueprint']), 'new': True},
-            {'id': 'practices', 'label': 'Practices', 'icon': 'list-checks', 'count': len(ch['items'])}]},
+            {'id': 'practices', 'label': 'Practices', 'icon': 'list-checks', 'count': len(ch['items'])},
+            {'id': 'assessments', 'label': 'Stages, gates and assessments', 'icon': 'clipboard-check', 'count': len(ch['stages']), 'new': True}]},
                   {'label': 'Practices', 'icon': 'list-checks', 'items': [{'id': x['id'], 'label': x['title'], 'icon': x['icon']} for x in ch['items']]}]
         return self.page('change', 'Delivery and change', body, drawer, crumbs=['Playbooks', 'Delivery and change'])
 
@@ -2640,7 +2948,7 @@ class Site:
             ('vocabulary', 'Data asset management vocabulary', 'Glossary and thesaurus as SKOS concepts, with definitions, alternative labels and broader terms.', ['vocabulary.ttl', 'vocabulary.jsonld', 'glossary.csv'], ['glossary', 'SKOS', 'thesaurus']),
             ('metadata-dictionary', 'Metadata data dictionary', 'The metadata properties to record for critical data assets, with obligation and Metadata Exchange Model slot.', ['metadata-dictionary.csv'], ['metadata', 'DCAT']),
             ('templates', 'Playbook templates', 'Fields of every template in the three playbooks, all together and one template at a time; workbooks also as tabbed spreadsheets.',
-             ['templates.csv'] + [f for c in d['capabilities'] for t in c.get('templates', []) for f in
+             ['templates.csv'] + [f for *_, t in template_owners(d) for f in
                                   ([f'templates/{t["id"]}.ods'] + [f'templates/{t["id"]}-{slug(sh["name"])}.csv' for sh in t['sheets']] if t.get('sheets') else [f'templates/{t["id"]}.csv'])],
              ['templates']),
             ('governance-layers', 'Governance layers', 'Five governance layers with the roles in each and what each may and may not change. Proposed by this portal.', ['governance-layers.csv'], ['governance']),
@@ -2649,6 +2957,11 @@ class Site:
              ['sector-rules.csv'] + [f'rules/{x["id"].lower()}.yaml' for x in d.get('supplements', [])], ['data quality', 'rules', 'dqkit']),
             ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
             ('xref', 'Cross-reference manifest', 'The shared keys this portal uses (DAMA areas, requirements, capabilities, practices, sectors, roles, tool categories) and where each lives, so sister portals and tools can link to them.', ['xref.json'], ['interoperability', 'linked data']),
+            ('capability-activities', 'Capability playbook activities', 'Activities for the capabilities beyond governance, cataloguing and quality, with steps, outputs, evidence, measures and who is accountable.', ['capability-activities.csv'], ['capability model', 'playbooks']),
+            ('assessment-evidence', 'Critical data evidence for each stage, gate and assessment', 'For each stage of a programme: the gates and assessments, the Service Standard points that touch critical data, what reviewers want to see and where in the portal the evidence comes from.', ['assessment-evidence.csv'], ['service assessment', 'gate review', 'assurance']),
+            ('leader-plan', 'First year plan for people new to or leading data asset management', 'Checkpoints at 30, 60 and 90 days and at 6 and 12 months, with actions, questions and maturity targets.', ['leader-plan.csv'], ['leadership', 'maturity']),
+            ('procurement', 'Tool requirements and procurement templates', 'Functional and non-functional requirements for data asset management tools, request for information questions, contract clauses and a pre-filled requirements schedule.',
+             ['procurement-requirements.csv', 'procurement-rfi.csv', 'procurement-clauses.csv', 'templates/T-PRC-1-prefilled.ods'], ['procurement', 'RFI', 'requirements']),
             ('interoperability-questions', 'Tool interoperability questions', 'Questions for a request for information or tender for catalogue, data quality, lineage and governance tools, to test interoperability and avoid lock-in.', ['interoperability-questions.csv'], ['procurement', 'interoperability', 'RFI']),
             ('backlog', 'Product backlog and roadmap', 'Every backlog item with its user story, source, status, strategy links, assessment and score, and the roadmap it produces.', ['backlog.csv', 'backlog.json'], ['roadmap', 'backlog', 'user research']),
             ('lineage', 'Ontology and lineage', 'An OWL ontology of the portal and PROV-O lineage from sources to policy requirements, capabilities, portal requirements, pages and checks.', ['ontology.ttl', 'lineage.ttl'], ['lineage', 'PROV-O', 'OWL']),
@@ -3022,7 +3335,7 @@ class Site:
         return self.page('guide', 'User guide', body, drawer, crumbs=['User guide'])
 
     def p_sitemap(self):
-        groups = [('Start here', 'house', ['index', 'dam', 'personas', 'learning', 'guide']),
+        groups = [('Start here', 'house', ['index', 'dam', 'personas', 'leading', 'learning', 'guide']),
                   ('Playbooks', 'book-open', NAV_GROUPS['Playbooks']),
                   ('Frameworks', 'grid-3x3', NAV_GROUPS['Frameworks']),
                   ('Reference', 'library', ['library', 'knowledge', 'inclusion', 'data', 'reuse']),
@@ -3194,7 +3507,8 @@ class Site:
             res += f'<h3>{E(g)}</h3><ul>' + ''.join(f'<li>{self.rb_link(r)}</li>' for r in ids) + '</ul>'
         res += f'<p>The {self.src_link("SRC-MEM")} is the government model for recording critical data assets; ask suppliers to show they support it.</p>'
         tabs = [('tl-overview', 'Overview', overview), ('tl-standards', 'Standards and patterns', standards), ('tl-pairs', 'Working together', matrix),
-                ('tl-bundles', 'Bundles and commercial', bundles), ('tl-procure', 'Procurement', procure), ('tl-resources', 'Resources', res)]
+                ('tl-bundles', 'Bundles and commercial', bundles), ('tl-procure', 'Procurement', procure),
+                ('tl-buy', 'Requirements and templates', self.procurement_html()), ('tl-resources', 'Resources', res)]
         hero = self.hero('plug', 'Frameworks', 'Tools and interoperability', 'How catalogue, data quality, lineage, master data and governance tools can work together, which open standards connect them, and how to buy them without lock-in.',
                          brief=[f'{len(T["categories"])} kinds of tool, mapped to DAMA knowledge areas, with the open standards that connect them.', f'{len(T["pairs"])} common pairings rated for how mature their open routes are.', f'{qn} questions for a request for information or tender, as CSV.'],
                          meta=[('layers', f'{len(T["categories"])} kinds of tool'), ('scale', f'{len(seen)} open standards'), ('circle-help', f'{qn} RFI questions')])
@@ -3207,7 +3521,11 @@ class Site:
             {'id': 'bundles', 'label': 'One supplier or several', 'icon': 'package'},
             {'id': 'barriers', 'label': 'Commercial barriers', 'icon': 'scale', 'count': len(T['barriers'])},
             {'id': 'steps', 'label': 'Six steps to buy', 'icon': 'route', 'count': len(T['steps'])},
-            {'id': 'rfi', 'label': 'RFI questions', 'icon': 'circle-help', 'count': qn, 'new': True},
+            {'id': 'rfi', 'label': 'RFI questions', 'icon': 'circle-help', 'count': qn},
+            {'id': 'buy', 'label': 'Ready-made requirements', 'icon': 'clipboard-list', 'count': len(self.d['procurement']['functional']) + len(self.d['procurement']['nonfunctional']), 'new': True},
+            {'id': 'rfi-pack', 'label': 'Request for information', 'icon': 'circle-help', 'count': len(self.d['procurement']['rfi_sections']), 'new': True},
+            {'id': 'evaluation', 'label': 'Evaluating responses', 'icon': 'scale', 'new': True},
+            {'id': 'clauses', 'label': 'Contract clauses', 'icon': 'file-text', 'count': len(self.d['procurement']['clauses']), 'new': True},
             {'id': 'resources', 'label': 'Where to find out more', 'icon': 'library'}]}]
         return self.page('tooling', 'Tools and interoperability', hero + self.tabbed(tabs, 'Tools and interoperability'), drawer, crumbs=['Frameworks', 'Tools and interoperability'])
 
@@ -3437,52 +3755,292 @@ class Site:
         return self.page('bodies', 'Boards, councils and networks', body, drawer, crumbs=['Frameworks', 'Boards and networks'])
 
     # -- version 1.14.0: knowledge area implementation guide (BL-35, BL-36) ------------------------------
+    # -- version 1.16.0: capability playbooks, the leader route, procurement templates and learning support ----------
+    def cap_xlinks(self, cid):
+        """Where a capability lives across the portal and its sister pages: one row of links, used on the capability
+        playbooks page and the capability model so the three views of the 32 capabilities stay joined (C-47)."""
+        G = self.d.get('cap_guide') or {'playbooks': []}
+        has_pb = any(pl['id'] == cid for pl in G['playbooks'])
+        area_acts = [x['id'] for a in (self.d.get('area_guide') or {}).get('areas', []) for x in a['activities'] if cid in x['caps']]
+        links = [f'<a href="capability-model.html#{cid}">{icon("radar")}Capability model</a>']
+        if has_pb:
+            links.append(f'<a href="capabilities.html#{cid}">{icon("book-open")}Capability playbook</a>')
+        if area_acts:
+            links.append(f'<a href="areas.html#{area_acts[0]}">{icon("target")}Knowledge area activities ({len(area_acts)})</a>')
+        links.append(f'<a href="compass/index.html#lineage">{icon("compass")}Data portals compass</a>')
+        links.append(f'<a href="explorer/index.html#capabilities">{icon("library")}Asset governance explorer</a>')
+        return f'<p class="xlinks" data-xlinks="{cid}"><span class="caption">See this capability in:</span> ' + ' · '.join(links) + '</p>'
+
+    def p_capabilities(self):
+        d, G = self.d, self.d['cap_guide']
+        capm = {c['id']: c for c in d['capmap']}
+        roles = {r['code']: r['name'] for r in d['roles']}
+        S = {s['id']: s for s in d['area_guide']['stages']}
+        chg = {x['id']: x for x in d['change']['items']}
+        area_act = {x['id']: x for a in d['area_guide']['areas'] for x in a['activities']}
+        n_acts = sum(len(pl['activities']) for pl in G['playbooks'])
+        n_tpl = sum(len(pl['templates']) for pl in G['playbooks'])
+        rows, secs = [], []
+        for pl in G['playbooks']:
+            c = capm[pl['id']]
+            cells = [f'{icon(c["icon"])} <a href="#{pl["id"]}">{E(c["name"])}</a><br><span class="hint">{E(TEMPLATE_MODES[pl["mode"]])}</span>']
+            for s in d['area_guide']['stages']:
+                xs = [x for x in pl['activities'] if x['stage'] == s['id']]
+                cells.append('<br>'.join(f'<a href="#{x["id"]}">{E(x["title"])}</a>' for x in xs))
+            rows.append(cells)
+            see = ''.join(f'<li><a href="areas.html#{i}">{E(i)} {E(area_act[i]["title"])}</a></li>' for i in pl.get('see', []))
+            ch = ''.join(f'<li><a href="change.html#{i}">{E(i)} {E(chg[i]["title"])}</a></li>' for i in pl.get('change', []))
+            also = ((f'<div class="panel"><h3>{icon("target")} Already in the knowledge areas</h3><ul>{see}</ul></div>' if see else '')
+                    + (f'<div class="panel"><h3>{icon("construction")} Delivery and change actions this takes further</h3><ul>{ch}</ul></div>' if ch else ''))
+            tmpl = ''.join(self.template_html(tp) for tp in pl['templates'])
+            body = (f'<section class="area-guide" aria-labelledby="{pl["id"]}"><div class="cr-head">{tile(c["icon"], "lg")}<div><p class="caption">{pl["id"]} · {E(c["cluster"])} · '
+                    f'{FLAGS[c["flag"]][0]} in the policy · {len(pl["activities"])} activities</p><h2 id="{pl["id"]}">{E(c["name"])}</h2>'
+                    f'<p><span class="chip mode-{slug(pl["mode"])}">{icon("construction" if pl["mode"] == "Change" else "refresh-cw" if pl["mode"] == "BAU" else "layers")}{E(TEMPLATE_MODES[pl["mode"]])}</span></p></div></div>'
+                    f'{self.cap_xlinks(pl["id"])}'
+                    f'<div class="callout"><p><strong>Why it matters for the DAM Policy:</strong> {E(pl["why"])}{prov("O")}</p>'
+                    f'<p><strong>Usually led by:</strong> {E(roles[pl["lead"]])}. <strong>Content owner:</strong> {E(pl["owner"])}.</p></div>'
+                    f'{progress_widget(["act:" + x["id"] for x in pl["activities"]], "Activities done")}'
+                    + (f'<div class="cols">{also}</div>' if also else '')
+                    + f'<ul class="cr-list two">{"".join(self.activity_card(x, S) for x in pl["activities"])}</ul>'
+                    f'<h3 id="{pl["id"]}-templates">{icon("file-text")} Templates</h3><p class="hint">Working copies may name people; anything published uses roles. <a href="#template-privacy">Why</a>.</p>{tmpl}</section>')
+            secs.append((f'p-{pl["id"]}', pl['short'], body))
+            for x in pl['activities']:
+                self.add_search(x['title'], 'Capability playbook activity', f'capabilities.html#{x["id"]}', x['goal'])
+            for tp in pl['templates']:
+                self.add_search(tp['name'], 'Capability playbook template', f'capabilities.html#{tp["id"]}', ' '.join(tp['fields']))
+        flow = ''.join(f'<li><a href="#t-cpb" class="flow-step"><strong>{E(s["name"])}: {E(s["when"].lower())}</strong><span>{E(s["does"])}</span></a></li>' for s in d['area_guide']['stages'])
+        start = (f'<p class="lede-sm">{E(G["meta"]["intro"])}</p>{self.template_privacy()}'
+                 f'<div class="callout"><p>{icon("lightbulb")} <strong>New to this, or leading it?</strong> Start with <a href="leading.html">what to aim for in your first year</a>, then come back to the capabilities you need.</p></div>'
+                 f'<h2 id="stages">{icon("footprints")} Three stages</h2><ol class="flow" aria-label="Adoption stages">{flow}</ol>'
+                 f'<h2 id="overview">{icon("layers")} All activities at a glance</h2>'
+                 + table('t-cpb', 'Capability playbook activities by stage', ['Capability'] + [f'{s["name"]}: {s["when"].lower()}' for s in d['area_guide']['stages']], rows)
+                 + '<p class="hint">Governance, cataloguing and quality have their own <a href="together.html">playbooks</a>. Data management areas are on <a href="areas.html">Knowledge areas</a>. '
+                   'The <a href="capability-model.html">capability model</a> shows all 32 capabilities and where each is covered.</p>'
+                 + '<p>Download every activity as <a href="data/capability-activities.csv">CSV</a>.</p>')
+        draft = (f'<div class="callout warn" role="note"><p>{icon("triangle-alert")} <strong>Draft.</strong> {E(G["meta"]["status"])}</p></div>')
+        body = self.hero('book-open', 'Playbooks', 'Capability playbooks', 'Activities and templates for the capabilities beyond governance, cataloguing and quality that the DAM Policy depends on: strategy, tools, risk, suppliers, skills, culture, maturity, investment, assurance, legacy, handover, benefits and exit.',
+                         brief=[f'{len(G["playbooks"])} capabilities, {n_acts} activities and {n_tpl} templates.',
+                                'Each capability has activities for before your first return, before your second, and for business as usual.',
+                                'Each links to the same capability in the capability model, the knowledge areas, the data portals compass and the asset governance explorer.'],
+                         meta=[('layers', f'{len(G["playbooks"])} capabilities'), ('list-ordered', f'{n_acts} activities'), ('file-text', f'{n_tpl} templates'), ('clock', f'As of {G["meta"]["as_of"]}')])
+        body += draft + self.tabbed([('p-cpb-start', 'Start here', start)] + secs, 'Capability playbooks')
+        drawer = [{'label': 'Capability playbooks', 'icon': 'book-open', 'items': [
+            {'id': 'stages', 'label': 'Three stages', 'icon': 'footprints', 'count': 3, 'new': True},
+            {'id': 'overview', 'label': 'All activities', 'icon': 'layers', 'count': n_acts, 'new': True}]},
+                  {'label': 'Capabilities', 'icon': 'radar', 'items': [{'id': pl['id'], 'label': capm[pl['id']]['name'], 'icon': capm[pl['id']]['icon'], 'count': len(pl['activities']), 'new': True} for pl in G['playbooks']]}]
+        return self.page('capabilities', 'Capability playbooks', body, drawer, crumbs=['Playbooks', 'Capability playbooks'])
+
+    def p_leading(self):
+        d, L = self.d, self.d['cap_guide']['leader']
+        M = d['maturity']
+        strands = {s['id']: s for s in M['strands']}
+        acts = {x['id']: x for pl in d['cap_guide']['playbooks'] for x in pl['activities']}
+        acts.update({x['id']: x for a in d['area_guide']['areas'] for x in a['activities']})
+        act_page = {x['id']: 'capabilities' for pl in d['cap_guide']['playbooks'] for x in pl['activities']}
+        act_page.update({x['id']: 'areas' for a in d['area_guide']['areas'] for x in a['activities']})
+        capn = {c['id']: c['name'] for c in d['capmap']}
+        who = ''.join(f'<li>{tile(w["icon"], "sm role")}<div><strong>{E(w["name"])}</strong><br>{E(w["text"])}</div></li>' for w in L['who'])
+        basics = ''.join(f'<li><strong><a href="{E(b["link"])}">{E(b["term"])}</a></strong>: {E(b["text"])}</li>' for b in L['basics'])
+        aims_rows = [[f'<span class="pill moscow-{slug(a["moscow"])}">{E(a["moscow"])}</span>', E(a['aim']), E(a['outcome']),
+                      ', '.join(f'<a href="capability-model.html#{c}">{E(capn[c])}</a>' for c in a['caps'])] for a in L['aims']]
+        out_rows = [[E(o['id']), E(o['outcome']), E(o['indicator']), f'{E(o["example"])} <span class="hint">(example)</span>', f'<a href="capability-model.html#strands">{E(strands[o["strand"]]["name"])}</a>'] for o in L['outcomes']]
+        plan = ''
+        for s in L['plan']:
+            al = ''.join(f'<li><a href="{act_page[i]}.html#{i}">{E(i)} {E(acts[i]["title"])}</a></li>' for i in s['activities'])
+            tg = ''.join(f'<li><strong>{E(strands[k]["name"])}:</strong> {E(v)}</li>' for k, v in s['targets'].items())
+            plan += (f'<li class="cr-card plan-step" id="{s["id"]}"><div class="cr-head">{tile(s["icon"], "sm")}<div><p class="caption">Checkpoint</p><h3>{E(s["name"])}</h3></div></div>'
+                     f'<p><strong>Focus:</strong> {E(s["focus"])}{prov("O")}</p>'
+                     f'<details open><summary>What to do</summary><ol>{"".join(f"<li>{E(x)}</li>" for x in s["do"])}</ol></details>'
+                     f'<dl class="cr-dl"><dt>{icon("package")} You will have</dt><dd>{ul(s["have"])}</dd>'
+                     f'<dt>{icon("circle-help")} Questions to ask at the checkpoint</dt><dd>{ul(s["ask"])}</dd>'
+                     f'<dt>{icon("gauge")} Maturity to aim for</dt><dd><ul class="plain">{tg}</ul></dd>'
+                     f'<dt>{icon("list-checks")} Playbook activities</dt><dd><ul class="plain">{al}</ul></dd></dl>'
+                     f'{mark_done("plan:" + s["id"], "Checkpoint done")}</li>')
+        lv = M['levels']
+        trow = [[f'<a href="capability-model.html#strands">{E(strands[k]["name"])}</a>'] + [E(s['targets'][k]) for s in L['plan']] for k in strands]
+        models = [[E(m['need']), f'<a href="{E(m["link"])}">{E(m["use"])}</a>', self.rb_link(m['ref'])] for m in L['models']]
+        tmpl = ''.join(self.template_html(tp) for tp in L['templates'])
+        for tp in L['templates']:
+            self.add_search(tp['name'], 'Leader route template', f'leading.html#{tp["id"]}', ' '.join(tp['fields']))
+        for s in L['plan']:
+            self.add_search(s['name'], 'Leader route checkpoint', f'leading.html#{s["id"]}', s['focus'] + ' ' + ' '.join(s['do']))
+        body = self.hero('compass', 'Get started', 'New or leading? Your first year', E(L['intro']),
+                         brief=['What to aim for, as Must, Should and Could, with the outcomes each brings.',
+                                'Outcomes with indicators and example targets you can adapt.',
+                                'A plan for the first 30, 60 and 90 days, with checkpoints at 6 and 12 months and a maturity target for each.'],
+                         meta=[('flag', '5 checkpoints'), ('target', f'{len(L["outcomes"])} outcomes'), ('gauge', f'{len(M["levels"])} maturity levels')])
+        start = (f'<h2 id="who">{icon("users-round")} Who this is for</h2><ul class="icon-list three">{who}</ul>'
+                 f'<h2 id="basics">{icon("lightbulb")} Six things to know first</h2><ul>{basics}</ul>'
+                 f'<p>Then take <a href="learning.html#M01">module M01</a> and the <a href="personas.html">route for your role</a>.</p>')
+        aims = (f'<h2 id="aims">{icon("list-checks")} What to aim for</h2><p>Aims ordered by priority (MoSCoW). The Must aims are what the DAM Policy needs; the rest make it last{prov("O")}.</p>'
+                + table('t-aims', 'Aims by priority', ['Priority', 'Aim', 'Outcome', 'Capabilities'], aims_rows)
+                + f'<h2 id="outcomes">{icon("target")} Outcomes, indicators and targets</h2><p>Example targets are examples. Set your own from your baseline, and agree them with your board.</p>'
+                + table('t-outcomes', 'Outcomes and indicators', ['ID', 'Outcome', 'Indicator', 'Target', 'Maturity strand'], out_rows))
+        planh = (f'<h2 id="plan">{icon("route")} Your first year</h2><p>Five checkpoints. Tick each one off as you go; your progress stays in this browser.</p>'
+                 f'{progress_widget(["plan:" + s["id"] for s in L["plan"]], "Checkpoints done")}<ol class="cr-list plan-list">{plan}</ol>'
+                 f'<h2 id="targets">{icon("gauge")} Maturity targets at each checkpoint</h2><p>Levels follow the Data Maturity Assessment for Government: {", ".join(lv)}. '
+                 'The DAM Policy minimum for critical assets sits around Learning.</p>'
+                 + table('t-ldr-targets', 'Maturity target by strand and checkpoint', ['Strand'] + [s['name'] for s in L['plan']], trow)
+                 + '<p>Download the plan as <a href="data/leader-plan.csv">CSV</a>.</p>')
+        TLc = d['cap_guide']['tailoring']['contexts']
+        rolen = {r['code']: r['name'] for r in d['roles']}
+        ctx = (f'<h2 id="contexts">{icon("construction")} In business as usual or a change programme</h2><p>The first year looks different depending on where you work. '
+               'In business as usual the checkpoints follow the yearly cycle; in a programme, tie them to the programme\'s phases and gates.</p>'
+               + ''.join(f'<div class="panel"><h3>{E(c["name"])}</h3><p>{E(c["text"])}</p><p><strong>Roles involved:</strong> {E(", ".join(rolen[r] for r in c["roles"]))}</p>{ul(c["tips"])}</div>' for c in TLc)
+               + '<p>For programmes, the <a href="change.html">Delivery and change</a> page gives the data asset actions for each phase, from business case to retirement. '
+                 '<a href="personas.html#tailor">Tailor your route</a> to see the ones for your phase.</p>')
+        assess = (f'<h2 id="models">{icon("radar")} Which maturity model fits your aim</h2>'
+                  + table('t-models', 'Maturity models by need', ['If you need', 'Use', 'Source'], models)
+                  + f'<h2 id="evaluate">{icon("clipboard-check")} Assess and evaluate</h2>{ul(L["evaluation"])}'
+                  + '<p>Use the <a href="capability-model.html#cm-self">self-assessment</a> for each checkpoint, and record the result in the checkpoint review record below.</p>')
+        tpls = f'<h2 id="templates">{icon("file-text")} Templates</h2>{self.template_privacy()}{tmpl}'
+        body += self.tabbed([('ld-start', 'Start here', start), ('ld-aims', 'Aims and outcomes', aims), ('ld-plan', 'First year plan', planh + ctx),
+                             ('ld-assess', 'Assess and evaluate', assess), ('ld-templates', 'Templates', tpls)], 'New or leading')
+        drawer = [{'label': 'New or leading', 'icon': 'compass', 'items': [
+            {'id': 'who', 'label': 'Who this is for', 'icon': 'users-round', 'count': len(L['who']), 'new': True},
+            {'id': 'basics', 'label': 'Things to know first', 'icon': 'lightbulb', 'count': len(L['basics']), 'new': True},
+            {'id': 'aims', 'label': 'What to aim for', 'icon': 'list-checks', 'count': len(L['aims']), 'new': True},
+            {'id': 'outcomes', 'label': 'Outcomes and targets', 'icon': 'target', 'count': len(L['outcomes']), 'new': True},
+            {'id': 'plan', 'label': 'Your first year', 'icon': 'route', 'count': len(L['plan']), 'new': True},
+            {'id': 'contexts', 'label': 'Business as usual or change', 'icon': 'construction', 'count': 3, 'new': True},
+            {'id': 'models', 'label': 'Maturity models', 'icon': 'radar', 'count': len(L['models']), 'new': True},
+            {'id': 'templates', 'label': 'Templates', 'icon': 'file-text', 'count': len(L['templates']), 'new': True}]}]
+        return self.page('leading', 'New or leading? Your first year', body, drawer, crumbs=['Get started', 'New or leading'])
+
+    def procurement_html(self):
+        """The Buying tab on the Tools and interoperability page (version 1.16.0): ready-made requirements, RFI, schedule,
+        evaluation and contract clauses."""
+        P, T = self.d['procurement'], self.d['tooling']
+        cats = {c['id']: c for c in T['categories']}
+        capn = {c['id']: c['name'] for c in self.d['capmap']}
+        mos = {m['code']: m['text'] for m in P['moscow']}
+
+        def frow(x, kind):
+            return [f'<span id="{x["id"]}">{E(x["id"])}</span>', E(cats[x['cat']]['name']) if kind == 'f' else E(x['theme']),
+                    f'{E(x["text"])}', f'<span class="pill moscow-{slug(x["moscow"])}" data-tip="{E(mos[x["moscow"]])}">{E(x["moscow"])}</span>',
+                    E(x['test']), ', '.join(f'<a href="capability-model.html#{c}">{E(capn[c])}</a>' for c in x['caps']),
+                    ', '.join(f'<a href="dam.html#{r}">{r}</a>' for r in x.get('reqs', [])) or '<span class="hint">All</span>',
+                    '; '.join(self.rb_link(r) for r in x['refs'])]
+        fr = P['functional']
+        f_attrs = [f' data-item data-cat="{x["cat"]}" data-moscow="{slug(x["moscow"])}"' for x in fr]
+        filt = ('<div class="filters" data-filter="fr-table" role="group" aria-label="Filter requirements"><div><label for="fr-cat">Kind of tool</label><select id="fr-cat" name="cat"><option value="">All</option>'
+                + ''.join(f'<option value="{c["id"]}">{E(c["name"])}</option>' for c in T['categories'])
+                + '</select></div><div><label for="fr-mos">Priority</label><select id="fr-mos" name="moscow"><option value="">All</option><option value="must">Must</option><option value="should">Should</option><option value="could">Could</option></select></div>'
+                '<p class="count-out" aria-live="polite"></p></div>')
+        hdr = ['ID', 'Kind of tool', 'Requirement', 'Priority', 'How to prove it', 'Capabilities', 'DAM Policy', 'Sources']
+        rfi = ''
+        for s in P['rfi_sections']:
+            if s.get('from') == 'functional':
+                body = f'<p>{E(s["lead"])}</p><p class="hint">Takes the functional requirements you keep from the table above.</p>'
+            elif s.get('from') == 'nonfunctional':
+                body = f'<p>{E(s["lead"])}</p><p class="hint">Takes the non-functional requirements you keep.</p>'
+            elif s.get('from') == 'questions':
+                body = f'<p>{E(s["lead"])}</p><p class="hint">See <a href="#rfi">the interoperability questions</a>.</p>'
+            else:
+                body = ul(s['questions'])
+            rfi += f'<section class="cr-card" id="{s["id"]}"><h3>{icon("list-checks")} {E(s["id"])}: {E(s["name"])}</h3>{body}</section>'
+        clauses = [[f'<span id="{c["id"]}">{E(c["id"])}</span>', f'<strong>{E(c["name"])}</strong>', E(c['text']), E(c['why']), '; '.join(self.rb_link(r) for r in c['refs'])] for c in P['clauses']]
+        scale = [[str(s['score']), f'<strong>{E(s["label"])}</strong>', E(s['text'])] for s in P['scoring']]
+        nmust = sum(1 for x in fr + P['nonfunctional'] if x['moscow'] == 'Must')
+        dl = ('<ul class="dl-list">'
+              f'<li><a href="data/templates/T-PRC-1-prefilled.ods">{icon("download")}Requirements schedule, pre-filled with every requirement (OpenDocument spreadsheet, 3 tabs)</a></li>'
+              f'<li><a href="data/procurement-requirements.csv">{icon("download")}All requirements (CSV)</a></li>'
+              f'<li><a href="data/procurement-rfi.csv">{icon("download")}Request for information questions (CSV)</a></li>'
+              f'<li><a href="data/procurement-clauses.csv">{icon("download")}Contract clauses (CSV)</a></li>'
+              f'<li>Blank templates: <a href="capabilities.html#T-PRC-1">schedule</a>, <a href="capabilities.html#T-PRC-2">RFI response form</a>, <a href="capabilities.html#T-PRC-3">evaluation and moderation</a>, <a href="capabilities.html#T-PRC-4">proof of concept log</a></li></ul>')
+        return (f'<h2 id="buy">{icon("clipboard-list")} Ready-made requirements and templates</h2><p class="lede-sm">{E(P["meta"]["intro"])}{prov("O")}</p>'
+                f'<div class="callout warn" role="note"><p>{icon("triangle-alert")} {E(P["meta"]["not_advice"])} Read with {self.rb_link("RB-PA23G")}.</p></div>'
+                f'<p>{len(fr)} functional and {len(P["nonfunctional"])} non-functional requirements, {nmust} of them Must, with a request for information, a requirements schedule, an evaluation method and contract clauses. '
+                'Every requirement says how a supplier can prove it.</p>' + dl
+                + f'<h3 id="fr">{icon("list-checks")} Functional requirements by kind of tool</h3>{filt}'
+                + table('t-fr', 'Functional requirements', hdr, [frow(x, 'f') for x in fr], row_attrs=f_attrs, tbody_id='fr-table')
+                + f'<h3 id="nfr">{icon("shield-check")} Non-functional requirements for every tool</h3>'
+                + table('t-nfr', 'Non-functional requirements', ['ID', 'Theme', 'Requirement', 'Priority', 'How to prove it', 'Capabilities', 'DAM Policy', 'Sources'], [frow(x, 'n') for x in P['nonfunctional']])
+                + f'<h3 id="rfi-pack">{icon("circle-help")} Request for information</h3><p>Six sections. Copy the requirements you keep into sections B and D.</p><div class="approach-grid">{rfi}</div>'
+                + f'<h3 id="evaluation">{icon("scale")} Evaluating responses</h3>{ul(P["evaluation"])}'
+                + table('t-scoring', 'Scoring scale', ['Score', 'Label', 'What it means'], scale)
+                + '<p class="hint">Priorities: ' + ' '.join(f'<strong>{E(m["code"])}</strong>: {E(m["text"])}' for m in P['moscow']) + '</p>'
+                + f'<h3 id="clauses">{icon("file-text")} Contract clauses to ask for</h3>'
+                + table('t-clauses', 'Contract clauses', ['ID', 'Clause', 'What to include', 'Why it matters for the DAM Policy', 'Sources'], clauses))
+
+    def learning_support_html(self):
+        """Learning support on the Learning page (version 1.16.0): learn, keep and share; tips by role; careers,
+        certifications and CPD; and the learning record a learner can download as the start of a CPD log."""
+        LR = self.d['cap_guide']['learning']
+        roles = {r['code']: r['name'] for r in self.d['roles']}
+        methods = ''.join(f'<section class="cr-card" id="learn-{m["id"]}"><div class="cr-head">{tile(m["icon"], "sm")}<h3>{E(m["name"])}</h3></div>{ul(m["tips"], cls="ticks")}</section>' for m in LR['methods'])
+        tips = [[f'<strong>{E(roles[x["role"]])}</strong>', E(x['tip'])] for x in LR['role_tips']]
+        cr = LR['career']
+        certs = [[f'<span id="{c["id"]}"><strong>{E(c["name"])}</strong></span><br><span class="hint">{E(c["body"])}</span>', E(c['fit']), f'{E(c["cpd"])}{prov(c["prov"])}', self.rb_link(c['ref'])] for c in LR['certifications']]
+        tmpl = ''.join(self.template_html(tp) for tp in LR['templates'])
+        return (f'<h2 id="learn-keep-share">{icon("brain")} Learn it, keep it, share it</h2><p class="lede-sm">{E(LR["intro"])}</p><div class="approach-grid three">{methods}</div>'
+                f'<h3 id="role-tips">{icon("lightbulb")} Tips for your role</h3>' + table('t-role-tips', 'Learning tips by role', ['Role', 'Tip'], tips)
+                + f'<h2 id="refreshers">{icon("history")} Refreshers due</h2><p>Modules you finished a week or a month ago come back here for a quick look at the check of understanding.</p>'
+                  '<div class="js-only" id="refresher-list" aria-live="polite"><p class="hint">Finish a module to see refreshers here.</p></div>'
+                  '<noscript><p>Refresher reminders need JavaScript. Revisit each module\'s check of understanding a week and a month after you finish it.</p></noscript>'
+                + f'<h2 id="careers">{icon("briefcase")} Your role, career and certifications</h2><p>{E(cr["intro"])}</p><ol class="tut">{"".join(f"<li>{E(s)}</li>" for s in cr["steps"])}</ol>'
+                + '<p>' + ' · '.join(self.rb_link(r) for r in cr['refs']) + '</p>'
+                + f'<h3 id="certifications">{icon("award")} Certifications to consider</h3><p>Independent schemes, listed in no order and not endorsed. Each sets its own rules; check them on the scheme\'s own pages.</p>'
+                + table('t-certs', 'Certifications', ['Certification', 'Who it fits', 'CPD and renewal', 'Source'], certs)
+                + f'<h2 id="cpd">{icon("badge-check")} Counting it as CPD</h2>{ul(LR["cpd"])}'
+                + f'<h3 id="learning-record">{icon("download")} Your learning record</h3><p>A file of the modules you have finished in this browser, with their time, level and outcomes, and the date you finished. Add your own notes and use it as the start of your CPD log.</p>'
+                  '<p class="js-only"><a class="btn secondary" id="lr-csv" href="#" download="my-dam-learning-record.csv">' + icon('download') + 'Download my learning record (CSV)</a> <span class="hint" id="lr-count" aria-live="polite"></span></p>'
+                  '<noscript><p>The learning record needs JavaScript. Use the CPD and learning log template below instead.</p></noscript>'
+                + f'<h3 id="cpd-template">{icon("file-text")} CPD and learning log</h3>{tmpl}')
+
+    def raci_list(self, raci):
+        roles = {r['code']: r['name'] for r in self.d['roles']}
+        parts = []
+        for code, lbl in (('A', 'Accountable'), ('R', 'Responsible (does the work)'), ('C', 'Consulted'), ('I', 'Informed')):
+            names = [roles[r] for r, v in raci.items() if v == code]
+            if names:
+                parts.append(f'<li><strong>{lbl}:</strong> {E(", ".join(names))}</li>')
+        return '<ul class="plain">' + ''.join(parts) + '</ul>'
+
+    def activity_card(self, x, stages, inputs=None, extra=''):
+        """One activity with steps, outputs, evidence, measure, who does what, requirements, capabilities, templates and
+        standards. Shared by the Knowledge areas page and, from version 1.16.0, the Capability playbooks page."""
+        d = self.d
+        capn = {c['id']: c['name'] for c in d['capmap']}
+        tpl_page = {t['id']: pg for _, _, pg, t in template_owners(d)}
+        tpl_name = {t['id']: t['name'] for *_, t in template_owners(d)}
+        stage_icon = {'start': 'flag', 'build': 'wrench', 'embed': 'refresh-cw'}
+        st = stages[x['stage']]
+        reqs = ', '.join(f'<a href="dam.html#{r}">{r}</a>' for r in x['reqs'])
+        caps = ', '.join(f'<a href="capability-model.html#{c}">{E(capn[c])}</a>' for c in x['caps'])
+        refs = ''.join(f'<li>{self.rb_link(r)}</li>' for r in x['refs'])
+        tp = ', '.join(f'<a href="{tpl_page[i]}.html#{i}">{E(tpl_name[i])}</a>' for i in x.get('templates', []))
+        ln = ', '.join(f'<a href="#{i}">{i}</a>' for i in x.get('links', []))
+        src = (f'<p class="hint">{icon("info")}Draws on: {E(inputs[x["source"]]["label"].split(":")[0])}{prov(inputs[x["source"]]["prov"])}</p>' if x.get('source') and inputs else '')
+        return (f'<li class="cr-card area-act" id="{x["id"]}" data-item data-kind="{x["stage"]}"><div class="cr-head">{tile(stage_icon[x["stage"]], "sm")}'
+                f'<div><p class="caption">{x["id"]} · {E(st["name"])}: {E(st["when"].lower())}</p><h3>{E(x["title"])}</h3></div></div>'
+                f'<p><strong>Goal:</strong> {E(x["goal"])}{prov("O")}</p>'
+                f'<details open><summary>Steps</summary>{"<ol>" + "".join(f"<li>{E(s)}</li>" for s in x["steps"]) + "</ol>"}</details>'
+                f'<dl class="cr-dl"><dt>{icon("package")} You produce</dt><dd>{ul(x["outputs"])}</dd>'
+                f'<dt>{icon("circle-check")} Evidence it is done</dt><dd>{E(x["evidence"])}</dd>'
+                f'<dt>{icon("gauge")} Measure</dt><dd>{E(x["measure"])}</dd>'
+                f'<dt>{icon("users-round")} Who does what</dt><dd>{self.raci_list(x["raci"])}</dd>'
+                f'<dt>{icon("landmark")} DAM Policy requirements it supports</dt><dd>{reqs}</dd>'
+                f'<dt>{icon("radar")} Capabilities it builds</dt><dd>{caps}</dd>'
+                + (f'<dt>{icon("book-marked")} Templates</dt><dd>{tp}</dd>' if tp else '')
+                + (f'<dt>{icon("signpost")} Goes with</dt><dd>{ln}</dd>' if ln else '')
+                + f'<dt>{icon("ruler")} Standards and guidance</dt><dd><ul class="plain">{refs}</ul></dd></dl>{src}{extra}{mark_done("act:" + x["id"], "Done")}</li>')
+
     def p_areas(self):
         G, d = self.d['area_guide'], self.d
         A = {a['id']: a for a in d['dama']['areas']}
         S = {s['id']: s for s in G['stages']}
         roles = {r['code']: r['name'] for r in d['roles']}
-        capn = {c['id']: c['name'] for c in d['capmap']}
-        tpl_page = {t['id']: CAP_PAGE[c['id']] for c in d['capabilities'] for t in c.get('templates', [])}
-        tpl_name = {t['id']: t['name'] for c in d['capabilities'] for t in c.get('templates', [])}
         sup = {s['id']: s['title'] for s in d.get('supplements', [])}
         inputs = {i['id']: i for i in G['meta']['inputs']}
         n_acts = sum(len(a['activities']) for a in G['areas'])
-        stage_icon = {'start': 'flag', 'build': 'wrench', 'embed': 'refresh-cw'}
         SHORT = {'DM-ARC': 'Architecture', 'DM-MOD': 'Modelling', 'DM-OPS': 'Operations', 'DM-SEC': 'Security', 'DM-INT': 'Integration',
                  'DM-DOC': 'Records', 'DM-REF': 'Reference data', 'DM-BI': 'Reporting', 'DM-META': 'Metadata', 'DM-DQ': 'Data quality'}
         AREA_ICONS = {'DM-GOV': 'shield-check', 'DM-ARC': 'network', 'DM-MOD': 'git-branch', 'DM-OPS': 'server', 'DM-SEC': 'lock-keyhole',
                       'DM-INT': 'arrow-right-left', 'DM-DOC': 'archive', 'DM-REF': 'key-round', 'DM-BI': 'chart-column', 'DM-META': 'library-big', 'DM-DQ': 'gauge'}
 
-        def who(raci):
-            parts = []
-            for code, lbl in (('A', 'Accountable'), ('R', 'Responsible (does the work)'), ('C', 'Consulted'), ('I', 'Informed')):
-                names = [roles[r] for r, v in raci.items() if v == code]
-                if names:
-                    parts.append(f'<li><strong>{lbl}:</strong> {E(", ".join(names))}</li>')
-            return '<ul class="plain">' + ''.join(parts) + '</ul>'
-
         def card(a, x):
-            st = S[x['stage']]
-            reqs = ', '.join(f'<a href="dam.html#{r}">{r}</a>' for r in x['reqs'])
-            caps = ', '.join(f'<a href="capability-model.html#{c}">{E(capn[c])}</a>' for c in x['caps'])
-            refs = ''.join(f'<li>{self.rb_link(r)}</li>' for r in x['refs'])
-            tp = ', '.join(f'<a href="{tpl_page[i]}.html#{i}">{E(tpl_name[i])}</a>' for i in x.get('templates', []))
-            ln = ', '.join(f'<a href="#{i}">{i}</a>' for i in x.get('links', []))
-            src = (f'<p class="hint">{icon("info")}Draws on: {E(inputs[x["source"]]["label"].split(":")[0])}{prov(inputs[x["source"]]["prov"])}</p>' if x.get('source') else '')
-            return (f'<li class="cr-card area-act" id="{x["id"]}" data-item data-kind="{x["stage"]}"><div class="cr-head">{tile(stage_icon[x["stage"]], "sm")}'
-                    f'<div><p class="caption">{x["id"]} · {E(st["name"])}: {E(st["when"].lower())}</p><h3>{E(x["title"])}</h3></div></div>'
-                    f'<p><strong>Goal:</strong> {E(x["goal"])}{prov("O")}</p>'
-                    f'<details open><summary>Steps</summary>{"<ol>" + "".join(f"<li>{E(s)}</li>" for s in x["steps"]) + "</ol>"}</details>'
-                    f'<dl class="cr-dl"><dt>{icon("package")} You produce</dt><dd>{ul(x["outputs"])}</dd>'
-                    f'<dt>{icon("circle-check")} Evidence it is done</dt><dd>{E(x["evidence"])}</dd>'
-                    f'<dt>{icon("gauge")} Measure</dt><dd>{E(x["measure"])}</dd>'
-                    f'<dt>{icon("users-round")} Who does what</dt><dd>{who(x["raci"])}</dd>'
-                    f'<dt>{icon("landmark")} DAM Policy requirements it supports</dt><dd>{reqs}</dd>'
-                    f'<dt>{icon("radar")} Capabilities it builds</dt><dd>{caps}</dd>'
-                    + (f'<dt>{icon("book-marked")} Templates</dt><dd>{tp}</dd>' if tp else '')
-                    + (f'<dt>{icon("signpost")} Goes with</dt><dd>{ln}</dd>' if ln else '')
-                    + f'<dt>{icon("ruler")} Standards and guidance</dt><dd><ul class="plain">{refs}</ul></dd></dl>{src}</li>')
+            return self.activity_card(x, S, inputs)
 
         flow = ''.join(f'<li id="stage-{s["id"]}"><a href="#t-areas" class="flow-step"><strong>{E(s["name"])}: {E(s["when"].lower())}</strong><span>{E(s["does"])}</span></a></li>' for s in G['stages'])
         rows = [[f'{icon(AREA_ICONS["DM-GOV"])} <a href="governance.html">{E(A["DM-GOV"]["name"])}</a>'] + ['<a href="governance.html">The governance playbook</a>' if s['id'] == 'start' else '<span class="hint">See the playbook</span>' for s in G['stages']]]
@@ -3897,17 +4455,55 @@ class Site:
         write_csv('requirements.csv', ['id', 'capability', 'strength', 'requirement', 'source', 'source_url', 'provenance'],
                   [[r['id'], r['cap'], r['strength'], r['text'], self.src[r['src']]['title'], self.src[r['src']]['url'], r['prov']] for r in d['requirements']])
         write_csv('templates.csv', ['template_id', 'template', 'capability', 'field_order', 'field', 'mode'],
-                  [[t['id'], t['name'], c['id'], i + 1, f, t['mode']] for c in d['capabilities'] for t in c.get('templates', []) for i, f in enumerate(t['fields'])])
+                  [[t['id'], t['name'], o, i + 1, f, t['mode']] for o, _, _, t in template_owners(d) for i, f in enumerate(t['fields'])])
+        # Version 1.16.0: capability playbook activities, the leader plan and the procurement pack as open data
+        G, PR = d.get('cap_guide'), d.get('procurement')
+        if G:
+            write_csv('capability-activities.csv', ['capability', 'activity_id', 'stage', 'title', 'goal', 'steps', 'outputs', 'evidence', 'measure', 'accountable', 'requirements', 'capabilities', 'templates', 'sources'],
+                      [[pl['id'], x['id'], x['stage'], x['title'], x['goal'], ' | '.join(x['steps']), ' | '.join(x['outputs']), x['evidence'], x['measure'],
+                        next(r for r, v in x['raci'].items() if v == 'A'), ' '.join(x['reqs']), ' '.join(x['caps']), ' '.join(x.get('templates', [])), ' '.join(x['refs'])]
+                       for pl in G['playbooks'] for x in pl['activities']])
+            write_csv('assessment-evidence.csv', ['stage', 'gates', 'service_standard_points', 'evidence', 'evidence_page', 'what_reviewers_look_for'],
+                      [[s['id'], ' | '.join(s['gates']), ' '.join(str(n) for n in s['points']), e['text'], evidence_href(d, e['ref'])[0], ' | '.join(s['look_for'])]
+                       for s in G['assessments']['stages'] for e in s['evidence']])
+            L = G['leader']
+            write_csv('leader-plan.csv', ['checkpoint_id', 'checkpoint', 'focus', 'actions', 'you_will_have', 'questions', 'activities'] + [f'target_{s["id"]}' for s in d['maturity']['strands']],
+                      [[s['id'], s['name'], s['focus'], ' | '.join(s['do']), ' | '.join(s['have']), ' | '.join(s['ask']), ' '.join(s['activities'])] + [s['targets'][x['id']] for x in d['maturity']['strands']] for s in L['plan']])
+        if PR:
+            cats = {c['id']: c['name'] for c in d['tooling']['categories']}
+            reqrows = ([[x['id'], 'Functional', cats[x['cat']], x['text'], x['moscow'], x['test'], ' '.join(x['caps']), ' '.join(x.get('reqs', [])), ' '.join(x['refs'])] for x in PR['functional']]
+                       + [[x['id'], 'Non-functional', x['theme'], x['text'], x['moscow'], x['test'], ' '.join(x['caps']), ' '.join(x.get('reqs', [])), ' '.join(x['refs'])] for x in PR['nonfunctional']])
+            write_csv('procurement-requirements.csv', ['id', 'type', 'kind_or_theme', 'requirement', 'priority', 'how_to_prove_it', 'capabilities', 'dam_policy_requirements', 'sources'], reqrows)
+            qrows = []
+            for s in PR['rfi_sections']:
+                if s.get('from') == 'functional':
+                    qrows += [[s['id'], s['name'], x['id'], f"{x['text']} {s['lead']}"] for x in PR['functional']]
+                elif s.get('from') == 'nonfunctional':
+                    qrows += [[s['id'], s['name'], x['id'], f"{x['text']} {s['lead']}"] for x in PR['nonfunctional']]
+                elif s.get('from') == 'questions':
+                    qrows += [[s['id'], s['name'], f'{s["id"]}-{i + 1:02d}', q] for i, q in enumerate(q for g in d['tooling']['questions'] for q in g['items'])]
+                else:
+                    qrows += [[s['id'], s['name'], f'{s["id"]}-{i + 1:02d}', q] for i, q in enumerate(s['questions'])]
+            write_csv('procurement-rfi.csv', ['section', 'section_name', 'question_id', 'question'], qrows)
+            write_csv('procurement-clauses.csv', ['id', 'clause', 'what_to_include', 'why_it_matters', 'sources'], [[c['id'], c['name'], c['text'], c['why'], ' '.join(c['refs'])] for c in PR['clauses']])
         # Version 1.11.0: each template on its own, as a header row ready to fill in, and workbooks as tabbed spreadsheets.
         (out / 'templates').mkdir(exist_ok=True)
-        for c in d['capabilities']:
-            for t in c.get('templates', []):
-                if t.get('sheets'):
-                    write_ods(out / 'templates' / f'{t["id"]}.ods', [(sh['name'], sh['fields']) for sh in t['sheets']])
-                    for sh in t['sheets']:
-                        write_csv(f'templates/{t["id"]}-{slug(sh["name"])}.csv', sh['fields'], [])
-                else:
-                    write_csv(f'templates/{t["id"]}.csv', t['fields'], [])
+        for *_, t in template_owners(d):
+            if t.get('sheets'):
+                write_ods(out / 'templates' / f'{t["id"]}.ods', [(sh['name'], sh['fields']) for sh in t['sheets']])
+                for sh in t['sheets']:
+                    write_csv(f'templates/{t["id"]}-{slug(sh["name"])}.csv', sh['fields'], [])
+            else:
+                write_csv(f'templates/{t["id"]}.csv', t['fields'], [])
+        if PR:
+            tm = {t['id']: t for *_, t in template_owners(d)}
+            sh = {s['name']: s['fields'] for s in tm['T-PRC-1']['sheets']}
+            cats = {c['id']: c['name'] for c in d['tooling']['categories']}
+            fr = [[x['id'], cats[x['cat']], x['text'], x['moscow'], '', x['test'], ' '.join(x['caps']), ' '.join(x.get('reqs', [])), '', '', '', ''] for x in PR['functional']]
+            nf = [[x['id'], x['theme'], x['text'], x['moscow'], '', x['test'], '', '', '', ''] for x in PR['nonfunctional']]
+            cl = [[c['id'], c['name'], c['text'], c['why'], '', ''] for c in PR['clauses']]
+            write_ods(out / 'templates' / 'T-PRC-1-prefilled.ods', [('Functional requirements', sh['Functional requirements'], fr),
+                                                                    ('Non-functional requirements', sh['Non-functional requirements'], nf), ('Contract clauses', sh['Contract clauses'], cl)])
         write_csv('glossary.csv', ['id', 'term', 'alt_labels', 'broader', 'definition', 'capabilities', 'provenance'],
                   [[c['id'], c['term'], '; '.join(c.get('alt') or []), c['broader'] or '', c['def'], ' '.join(c['caps']), c['prov']] for c in d['concepts']])
         write_csv('traceability.csv', ['requirement', 'kind', 'moscow', 'text', 'features', 'checks'],
