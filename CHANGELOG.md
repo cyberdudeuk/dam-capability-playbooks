@@ -3,6 +3,8 @@
 ## Unreleased
 - Fixed (D-051, issue 51): one unreachable page on another website no longer fails the build. The compass drops a page the daily sync found gone and flags it for a person; C-35 now accepts that, and still fails on a page dropped for any other reason.
 - Fixed (D-052, issue 50): the release workflow attaches its files to a release a person already made, instead of failing.
+- Added (repository standards for the move to gds-dtx, 17 November 2026): the Cabinet Office vulnerability disclosure route in `SECURITY.md`; pre-commit hooks (detect-secrets against a new `.secrets.baseline`, YAML and JSON checks, whitespace fixes, and gitlint for GDS Way commit messages in `.gitlint`); and `.secrets.baseline` with every candidate audited, recorded in `docs/compliance/secrets-audit.md`.
+- Changed: the open data catalogue no longer lists a dataset that has no published file, so check C-28 passes on builds that run no health check (as `release.yml` does). Regression test: `CatalogueWithoutHealthRun`.
 - Asset governance explorer 2.3.0 (new, `explorer/`): a standalone page showing where data asset management and information asset management meet, linked from every page's footer. Read [docs/explorer.md](docs/explorer.md) for what it covers, how it is produced and its defect register.
   - It covers:
     - the 32 DAM capabilities seen from the information world
