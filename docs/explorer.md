@@ -77,6 +77,7 @@ Each defect has a check that prevents it recurring.
 | AGE-D18 | On phones the sticky masthead covered nearly half the screen | Masthead scrolls away on narrow screens |
 | AGE-D19 | The entrance animation faded text in, briefly below contrast | Motion never changes opacity |
 | AGE-D20 | Dead code was left behind when internal views were removed | ESLint on `explorer/` |
+| AGE-D21 | Opened in a preview that does not run scripts (for example Outlook, Teams or SharePoint), the page looked broken and said nothing | A plain notice, readable without styles, shows until the page starts |
 
 ## The case against, and the answer
 

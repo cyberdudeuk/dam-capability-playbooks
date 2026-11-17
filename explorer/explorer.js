@@ -807,4 +807,5 @@ let open=innerWidth>900;try{const s=localStorage.getItem('age-drawer');if(s!==nu
 function mastH(){const M=document.querySelector('header.mast'),h=getComputedStyle(M).position==='sticky'?M.offsetHeight:0,t=document.getElementById('trail');document.documentElement.style.setProperty('--mast-h',h+'px');document.documentElement.style.scrollPaddingTop=(h+(t.hidden?0:t.offsetHeight+12)+8)+'px'}
 route();fitNav();mastH();new ResizeObserver(()=>{fitNav();mastH()}).observe(document.querySelector('header.mast'));
 window.__AGE={selfCheck,DATA};
+{const nj=document.getElementById('nojs');if(nj)nj.remove();}
 }
