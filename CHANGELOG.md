@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+- Fixed (D-051, issue 51): one unreachable page on another website no longer fails the build. The compass drops a page the daily sync found gone and flags it for a person; C-35 now accepts that, and still fails on a page dropped for any other reason.
+- Fixed (D-052, issue 50): the release workflow attaches its files to a release a person already made, instead of failing.
 - Asset governance explorer 2.3.0 (new, `explorer/`): a standalone page showing where data asset management and information asset management meet, linked from every page's footer. Read [docs/explorer.md](docs/explorer.md) for what it covers, how it is produced and its defect register.
   - It covers:
     - the 32 DAM capabilities seen from the information world
