@@ -1697,7 +1697,6 @@ def c47_portals_in_sync(site, repo, pages):
     page reaches the compass and the explorer from the global bar; the compass and the explorer name the same 32
     capabilities, with the same names, as the capability model; every capability on the capability model links to the
     other views; the compass directory lists the new pages; and the explorer links back to the playbooks."""
-    import json
     errs = []
     F = _content(repo, 'frameworks.yaml')
     names = {c['id']: c['name'] for c in F['capmap']}
@@ -1781,7 +1780,6 @@ def c49_tailoring_and_journeys(site, repo, pages):
     The page carries the four controls, the data the script reads (every persona, profession, maturity level and literacy
     level, and activities and steps to recommend), the same guidance as static tables for readers without JavaScript, and
     the script reads the self-assessment. Every role's route includes at least one activity beyond the core playbook steps."""
-    import json
     import yaml
     errs = []
     h = (site / 'personas.html').read_text(encoding='utf-8')
@@ -1807,6 +1805,9 @@ def c49_tailoring_and_journeys(site, repo, pages):
         if f'id="{cap}"' not in h: errs.append(f'personas.html: static table {cap} missing')
     js = (site / 'assets' / 'app.js').read_text(encoding='utf-8')
     if 'dcp-selfassess-v1' not in js.split('tailor recommendations')[-1]: errs.append('app.js: tailoring does not read the self-assessment')
+    # D-055: links built from form values and stored choices must pass an allowlist (CodeQL js/xss-through-dom)
+    tail = js.split('tailor recommendations')[-1]
+    if not re.search(r'a\.href = SAFE_HREF\.test\(href\) \? href : .#.', tail): errs.append('app.js: tailoring links are not limited to pages of this portal')
     return errs
 
 

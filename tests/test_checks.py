@@ -957,6 +957,10 @@ class Vaccination(unittest.TestCase):
         with self.assertRaises(build.ContentError):
             build.load(self.r / 'content' / 'playbooks.yaml')
 
+    def test_c49_d055_link_without_allowlist(self):
+        edit(self.s / 'assets' / 'app.js', "a.href = SAFE_HREF.test(href) ? href : '#';", 'a.href = href;')
+        self.fails('c49_tailoring_and_journeys')
+
     def test_build_rejects_journey_with_unknown_activity(self):
         edit(self.r / 'content' / 'playbooks.yaml', '{a: TOOL-4}', '{a: TOOL-9}')
         with self.assertRaises(build.ContentError):
