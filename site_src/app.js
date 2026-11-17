@@ -254,9 +254,15 @@
     var saNote = $('#tl-sa');
     if (saNote && weakest) saNote.textContent = 'From your self-assessment: your lowest strand is ' + weakest.name + ' (' + LEVELS[lowest - 1] + '). Recommendations focus on it.';
     function el(tag, text, cls) { var e = doc.createElement(tag); if (text) e.textContent = text; if (cls) e.className = cls; return e; }
-    function link(href, text) { var a = doc.createElement('a'); a.href = href; a.textContent = text; return a; }
+    /* D-055 (CodeQL js/xss-through-dom): links are built partly from form values and stored choices, so only a page of this
+       portal with an optional anchor is allowed; anything else becomes '#' */
+    var SAFE_HREF = /^(?:[a-z0-9-]+\.html)?(?:#[A-Za-z0-9_.-]+)?$/;
+    function link(href, text) { var a = doc.createElement('a'); a.href = SAFE_HREF.test(href) ? href : '#'; a.textContent = text; return a; }
+    function known(list, v) { return list.some(function (x) { return (x.id || x.level) === v; }) ? v : ''; }
     function tailor() {
       Object.keys(ids).forEach(function (k) { var e = $(ids[k]); tsel[k] = e ? e.value : ''; });
+      tsel.persona = known(TD.personas || [], tsel.persona); tsel.phase = known(TD.phases || [], tsel.phase);
+      tsel.mat = known(TD.maturity || [], tsel.mat); tsel.lit = known(TD.literacy || [], tsel.lit); tsel.ctx = known(TD.contexts || [], tsel.ctx);
       store.set(TK, JSON.stringify(tsel));
       tout.textContent = '';
       var per = (TD.personas || []).filter(function (p) { return p.id === tsel.persona; })[0];
