@@ -54,6 +54,7 @@ BREAKS = {
     'compassdir': ('b17_compass', "var q=document.getElementById('dq-q');if(q){q.replaceWith(q.cloneNode(true));}"),
     'compass': ('b17_compass', "var f=document.getElementById('wayfinder');if(f){f.replaceWith(f.cloneNode(true));}"),
     'ask': ('b18_ask_and_copy', "var f=document.querySelector('[data-ask]');if(f){f.replaceWith(f.cloneNode(true));}"),
+    'explorer': ('b19_explorer', "if(location.pathname.indexOf('/explorer/')>-1&&window.__AGE){window.__AGE.DATA.CAPS.pop();}"),
     'selfassess': ('b13_self_assessment', "document.querySelectorAll('[data-sa]').forEach(function(x){x.replaceWith(x.cloneNode(true))});"),
 }
 BREAK_CSS = {
@@ -67,7 +68,7 @@ BREAK_CSS = {
 
 def run(site, axe_path, brk=None, pages=None):
     site = Path(site)
-    pages = pages or sorted(p.name for p in site.glob('*.html')) + (['compass/index.html'] if (site / 'compass' / 'index.html').exists() else [])
+    pages = pages or sorted(p.name for p in site.glob('*.html')) + [f'{d}/index.html' for d in ('compass', 'explorer') if (site / d / 'index.html').exists()]
     axe = Path(axe_path).read_text(encoding='utf-8')
     httpd, base = serve(site)
     failed = {}
@@ -548,6 +549,36 @@ def run(site, axe_path, brk=None, pages=None):
                 except Exception as e:
                     fail('b14_menus_usable', f'{w}px "{name}": menu could not be used: {str(e).splitlines()[0]}')
             ctx5.close()
+        # B-19 (explorer 2.3.0): the asset governance explorer passes its own self-checks, carries no internal working material,
+        # and its wheel drills down from area to unit of work by mouse, keyboard and a shared link
+        if (site / 'explorer' / 'index.html').exists():
+            ctx9 = b.new_context(viewport={'width': 1280, 'height': 900}, bypass_csp=bool(brk))
+            pg9 = ctx9.new_page()
+            try:
+                pg9.goto(f'{base}/explorer/index.html#overview')
+                pg9.wait_for_load_state('load')
+                prep(pg9)
+                res = pg9.evaluate("window.__AGE ? window.__AGE.selfCheck(window.__AGE.DATA, new Date().toISOString().slice(0,10)).filter(r => !r.pass && !r.warn).map(r => r.id + ' ' + r.name) : ['self-check missing']")
+                for r in res:
+                    fail('b19_explorer', f'self-check failed: {r}')
+                pg9.goto(f'{base}/explorer/index.html#wheel?w=W07&c=IM-03&l=3')
+                pg9.wait_for_timeout(300)
+                if 'log the decision, authority, date and evidence' not in pg9.inner_text('#wpanel'):
+                    fail('b19_explorer', 'a shared wheel link does not open at the unit of work')
+                pg9.goto(f'{base}/explorer/index.html#wheel')
+                pg9.wait_for_timeout(200)
+                pg9.focus('.wseg[data-w="W01"]')
+                pg9.keyboard.press('Enter')
+                pg9.wait_for_timeout(200)
+                if 'W01 Information architecture' not in pg9.inner_text('#wpanel'):
+                    fail('b19_explorer', 'the wheel cannot be used with the keyboard')
+                body = pg9.content()
+                for term in ('KIM Baseline', 'away day', 'working draft', 'meeting notes', 'Purview pilot', 'OFFICIAL'):
+                    if term in body:
+                        fail('b19_explorer', f'internal working material on the public page: {term}')
+            except Exception as e:
+                fail('b19_explorer', f'could not be used: {str(e).splitlines()[0]}')
+            ctx9.close()
         b.close()
     httpd.shutdown()
     return failed
@@ -566,7 +597,7 @@ def main(argv=None):
         print(('pass ' if ok else 'FAIL ') + f'vaccination {a.brk}: {want} ' + ('caught the break' if ok else 'did not catch the break'))
         return 0 if ok else 1
     names = ['b01_axe', 'b02_no_horizontal_overflow', 'b03_container_focus', 'b04_no_console_errors', 'b05_keyboard', 'b06_tabs', 'b07_no_script', 'b08_filters',
-             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role', 'b16_tours_and_share', 'b17_compass', 'b18_ask_and_copy']
+             'b09_contact_form', 'b10_progress', 'b11_display', 'b12_sector_finder', 'b13_self_assessment', 'b14_menus_usable', 'b15_dama_role', 'b16_tours_and_share', 'b17_compass', 'b18_ask_and_copy', 'b19_explorer']
     for n in names:
         print(('FAIL ' if n in failed else 'pass ') + n)
         for e in failed.get(n, [])[:15]:

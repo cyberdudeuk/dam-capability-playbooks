@@ -41,6 +41,7 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Have your say | Take part in user research (private sign-up), suggest and vote for ideas (GitHub Discussions, Ideas), and see the roadmap, backlog, prioritisation criteria and decisions log, in the open (ADR 0006) |
 | User guide, Site map, Use and reuse | How to get around, guided tours and tutorials; every page at a glance; ten ways to reuse the content, including AI assistants and a reference MCP server |
 | Notices, Accessibility | Disclaimers, credits, full citations and the accessibility statement |
+| Asset governance explorer | A standalone page on where data and information asset governance meet: capabilities, information-only gaps, an information wheel for knowledge, information, records and content management, standards, landscape, AI, skills, operating models, calendar and horizons, with a wayfinder and guided tour ([docs/explorer.md](docs/explorer.md)) |
 
 ## How the repository supports the portal
 
@@ -57,6 +58,8 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 | Security | CodeQL, Dependabot, secret scanning, private vulnerability reporting |
 
 Nothing in the portal depends on any service other than GitHub and GitHub Pages, except the optional private feedback form.
+
+The [asset governance explorer](https://cyberdudeuk.github.io/dam-capability-playbooks/explorer/) (`explorer/`, published as committed) shows where this portal's capabilities meet information, records and knowledge management.
 
 Not sure which portal you need? The [estate compass](https://cyberdudeuk.github.io/dam-capability-playbooks/compass/) (`compass/`, built with this site) suggests where to start and in what order across all three.
 
