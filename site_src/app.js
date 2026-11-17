@@ -150,6 +150,10 @@
   var state = {};
   (store.get(KEY) || '').split(' ').forEach(function (k) { if (k) state[k] = 1; });
   function save() { store.set(KEY, Object.keys(state).join(' ')); }
+  /* version 1.16.0: the date each step was first ticked, for the learning record and refresher reminders */
+  var DKEY = 'dcp-progress-dates-v1', dates = {};
+  try { dates = JSON.parse(store.get(DKEY) || '{}') || {}; } catch (e) { dates = {}; }
+  function today() { return new Date().toISOString().slice(0, 10); }
   function isDone(id) {
     if (id.indexOf('mod:') === 0) { var acts = MODS[id.slice(4)] || []; return acts.length > 0 && acts.every(function (a) { return state[a]; }); }
     return !!state[id];
@@ -173,18 +177,152 @@
     var c = e.target;
     if (c.matches && c.matches('input[data-progress]')) {
       var id = c.getAttribute('data-progress');
-      if (c.checked) state[id] = 1; else delete state[id];
-      save(); refresh();
+      if (c.checked) { state[id] = 1; if (!dates[id]) dates[id] = today(); } else { delete state[id]; delete dates[id]; }
+      store.set(DKEY, JSON.stringify(dates));
+      save(); refresh(); learningRecord();
     }
   });
   $$('[data-progress-reset]').forEach(function (b) {
     var label = b.lastChild.textContent;
     b.addEventListener('click', function () {
       if (b.getAttribute('data-confirm') !== '1') { b.setAttribute('data-confirm', '1'); b.lastChild.textContent = 'Select again to confirm'; return; }
-      state = {}; store.del(KEY); refresh(); b.removeAttribute('data-confirm'); b.lastChild.textContent = label;
+      state = {}; dates = {}; store.del(KEY); store.del(DKEY); refresh(); learningRecord(); b.removeAttribute('data-confirm'); b.lastChild.textContent = label;
     });
   });
+  /* version 1.16.0: learning record (CSV) and refreshers due a week and a month after a module is finished */
+  var INFO = window.DCP_MODINFO || {}, RKEY = 'dcp-refreshed-v1', refreshed = {};
+  try { refreshed = JSON.parse(store.get(RKEY) || '{}') || {}; } catch (e) { refreshed = {}; }
+  function finishedOn(mid) {
+    var acts = MODS[mid] || [], last = '';
+    acts.forEach(function (a) { if (dates[a] && dates[a] > last) last = dates[a]; });
+    return last || today();
+  }
+  function daysSince(d) { return Math.floor((Date.parse(today()) - Date.parse(d)) / 86400000); }
+  function csvCell(v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function learningRecord() {
+    var link = $('#lr-csv'), list = $('#refresher-list');
+    if (!link && !list) return;
+    var done = Object.keys(INFO).filter(function (mid) { return isDone('mod:' + mid); });
+    if (link) {
+      var rows = [['module', 'title', 'level', 'minutes', 'cpd_hours', 'finished_on', 'outcomes', 'what_i_did_with_it', 'evidence']];
+      done.forEach(function (mid) {
+        var m = INFO[mid];
+        rows.push([mid, m.t, m.l, m.m, (Math.round(m.m / 15) / 4).toFixed(2), finishedOn(mid), m.o.join('; '), '', '']);
+      });
+      link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(rows.map(function (r) { return r.map(csvCell).join(','); }).join('\n')));
+      var c = $('#lr-count');
+      if (c) c.textContent = done.length + (done.length === 1 ? ' module' : ' modules') + ' finished in this browser';
+    }
+    if (list) {
+      var due = done.filter(function (mid) {
+        var n = daysSince(finishedOn(mid)), r = refreshed[mid] || 0;
+        return (n >= 7 && r < 1) || (n >= 30 && r < 2);
+      });
+      list.textContent = '';
+      if (!due.length) {
+        var p = doc.createElement('p'); p.className = 'hint';
+        p.textContent = done.length ? 'Nothing due. Refreshers appear a week and a month after you finish a module.' : 'Finish a module to see refreshers here.';
+        list.appendChild(p);
+        return;
+      }
+      var ul = doc.createElement('ul'); ul.className = 'plain';
+      due.forEach(function (mid) {
+        var li = doc.createElement('li'), a = doc.createElement('a'), b = doc.createElement('button');
+        a.href = '#' + mid; a.textContent = mid + ' ' + INFO[mid].t + ': try the check of understanding again';
+        b.type = 'button'; b.className = 'btn secondary'; b.textContent = 'Done';
+        b.addEventListener('click', function () { refreshed[mid] = (refreshed[mid] || 0) + 1; store.set(RKEY, JSON.stringify(refreshed)); learningRecord(); });
+        li.appendChild(a); li.appendChild(doc.createTextNode(' ')); li.appendChild(b); ul.appendChild(li);
+      });
+      list.appendChild(ul);
+    }
+  }
   refresh();
+  learningRecord();
+
+  /* version 1.16.0: tailor recommendations by role, profession, organisation maturity and data literacy */
+  var tdEl = $('#tailor-data'), tout = $('#tl-out');
+  if (tdEl && tout) {
+    var TD = {}; try { TD = JSON.parse(tdEl.textContent); } catch (e) { TD = {}; }
+    var TK = 'dcp-tailor-v1', LEVELS = ['Beginning', 'Emerging', 'Learning', 'Developing', 'Mastering'], tsel = {};
+    try { tsel = JSON.parse(store.get(TK) || '{}') || {}; } catch (e) { tsel = {}; }
+    var sa2 = {}; try { sa2 = JSON.parse(store.get('dcp-selfassess-v1') || '{}') || {}; } catch (e) { sa2 = {}; }
+    var weakest = null, lowest = 6;
+    (TD.strands || []).forEach(function (st) { var v = +sa2[st.id]; if (v && v < lowest) { lowest = v; weakest = st; } });
+    var ids = { persona: '#tl-persona', prof: '#tl-prof', mat: '#tl-mat', lit: '#tl-lit', ctx: '#tl-ctx', phase: '#tl-phase' };
+    if (!tsel.mat && weakest) tsel.mat = LEVELS[lowest - 1];
+    Object.keys(ids).forEach(function (k) { var el = $(ids[k]); if (el && tsel[k]) el.value = tsel[k]; });
+    var saNote = $('#tl-sa');
+    if (saNote && weakest) saNote.textContent = 'From your self-assessment: your lowest strand is ' + weakest.name + ' (' + LEVELS[lowest - 1] + '). Recommendations focus on it.';
+    function el(tag, text, cls) { var e = doc.createElement(tag); if (text) e.textContent = text; if (cls) e.className = cls; return e; }
+    function link(href, text) { var a = doc.createElement('a'); a.href = href; a.textContent = text; return a; }
+    function tailor() {
+      Object.keys(ids).forEach(function (k) { var e = $(ids[k]); tsel[k] = e ? e.value : ''; });
+      store.set(TK, JSON.stringify(tsel));
+      tout.textContent = '';
+      var per = (TD.personas || []).filter(function (p) { return p.id === tsel.persona; })[0];
+      if (!per) { tout.appendChild(el('p', 'Choose your role to see where to start.', 'hint')); return; }
+      var mat = (TD.maturity || []).filter(function (m) { return m.level === tsel.mat; })[0] || TD.maturity[0];
+      var lit = (TD.literacy || []).filter(function (x) { return x.id === tsel.lit; })[0] || TD.literacy[0];
+      var weakCaps = weakest ? weakest.cr : [];
+      var ctxId = tsel.ctx || (TD.persona_context || {})[per.id] || 'both';
+      if (tsel.phase && !tsel.ctx) ctxId = 'change';
+      var ctx = (TD.contexts || []).filter(function (c) { return c.id === ctxId; })[0];
+      var want = { bau: 'BAU', change: 'Change', both: '' }[ctxId];
+      var profCaps = tsel.prof ? Object.keys(TD.capprofs).filter(function (c) { return TD.capprofs[c].indexOf(tsel.prof) >= 0; }) : [];
+      var scored = (TD.acts || []).map(function (x) {
+        var s = 0;
+        if (x.r.indexOf(per.role) >= 0) s += 3;
+        if (x.s === mat.stage) s += 2;
+        if (x.c.some(function (c) { return weakCaps.indexOf(c) >= 0; })) s += 2;
+        if (x.c.some(function (c) { return profCaps.indexOf(c) >= 0; })) s += 1;
+        if (want && x.x === want) s += 2; else if (want && x.x !== 'Both') s -= 3;
+        return { x: x, s: s };
+      }).filter(function (o) { return o.s >= 4; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 8);
+      var mods = per.modules.filter(function (m) { return TD.modules[m] && lit.levels.indexOf(TD.modules[m].l) >= 0; });
+      var cp = TD.plan[mat.checkpoint];
+      var card = el('div', '', 'callout');
+      card.appendChild(el('p', 'For a ' + per.title.toLowerCase() + ' in an organisation at ' + mat.level + ' maturity with ' + lit.name.toLowerCase() + ' data literacy, working in ' + ({ bau: 'business as usual', change: 'a change programme', both: 'both business as usual and change' }[ctxId]) + ':'));
+      card.appendChild(el('p', mat.advice));
+      var p1 = el('p', 'Your next checkpoint: '); p1.appendChild(link('leading.html#' + mat.checkpoint, cp.name)); p1.appendChild(doc.createTextNode('. ' + cp.focus)); card.appendChild(p1);
+      tout.appendChild(card);
+      tout.appendChild(el('h3', 'Learn first'));
+      var ul1 = el('ul');
+      (mods.length ? mods : per.modules.slice(0, 2)).forEach(function (m) { var li = el('li'); li.appendChild(link('learning.html#' + m, m + ' ' + TD.modules[m].t)); li.appendChild(doc.createTextNode(' (' + TD.modules[m].l + ', ' + TD.modules[m].m + ' minutes)')); ul1.appendChild(li); });
+      tout.appendChild(ul1);
+      tout.appendChild(el('h3', 'Then do'));
+      var ul2 = el('ul');
+      if (!scored.length) ul2.appendChild(el('li', 'Follow your route below, step by step.'));
+      scored.forEach(function (o) { var li = el('li'); li.appendChild(link(o.x.p + '.html#' + o.x.id, o.x.id + ' ' + o.x.t)); li.appendChild(doc.createTextNode(' (' + TD.stages[o.x.s] + ')')); ul2.appendChild(li); });
+      tout.appendChild(ul2);
+      if (tsel.phase) {
+        var ph = (TD.phases || []).filter(function (x) { return x.id === tsel.phase; })[0];
+        var chg = (TD.change || []).filter(function (x) { return x.s === tsel.phase; });
+        if (ph && chg.length) {
+          tout.appendChild(el('h3', 'Delivery and change actions for ' + ph.name.toLowerCase()));
+          var ulc = el('ul');
+          chg.forEach(function (x) { var li = el('li'); li.appendChild(link('change.html#' + x.id, x.id + ' ' + x.t)); ulc.appendChild(li); });
+          tout.appendChild(ulc);
+        }
+        var asx = (TD.assess || {})[tsel.phase];
+        if (asx) {
+          tout.appendChild(el('h3', 'Gates and assessments in this phase: ' + asx.g.join('; ')));
+          var ule = el('ul');
+          asx.e.forEach(function (x) { var li = el('li'); li.appendChild(link(x.h, x.t)); ule.appendChild(li); });
+          tout.appendChild(ule);
+          var pa = el('p'); pa.appendChild(link('change.html#assess-' + tsel.phase, 'What reviewers will want to see about critical data')); tout.appendChild(pa);
+        }
+      }
+      if (ctx) {
+        tout.appendChild(el('h3', 'Who is involved'));
+        tout.appendChild(el('p', ctx.roles.map(function (r) { return TD.roles[r]; }).join(', ') + '.'));
+      }
+      tout.appendChild(el('h3', 'Tips for your organisation'));
+      var ul3 = el('ul'); lit.tips.concat(ctx ? ctx.tips : []).forEach(function (tp) { ul3.appendChild(el('li', tp)); }); tout.appendChild(ul3);
+      var more = el('p'); more.appendChild(link('#persona-' + per.id, 'See your full route as a ' + per.title.toLowerCase())); tout.appendChild(more);
+    }
+    Object.keys(ids).forEach(function (k) { var e = $(ids[k]); if (e) e.addEventListener('change', tailor); });
+    tailor();
+  }
 
   /* knowledge checks */
   $$('fieldset.kc').forEach(function (fs) {

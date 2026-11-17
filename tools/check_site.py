@@ -150,7 +150,10 @@ def c03_links_resolve(site, repo, pages):
                     src = f.read_text(encoding='utf-8')
                     if 'id="tour-data"' not in src or not re.search(r'"id":\s?"' + re.escape(tid) + '"', src):
                         errs.append(f'{name}: {href} starts a tour the page does not have')
-                elif frag not in tp.ids: errs.append(f'{name}: missing anchor {href}')
+                elif frag not in tp.ids:
+                    # Version 1.16.0: a hash-routed page (the asset governance explorer) opens a view named by data-view, not an id
+                    if not re.search(r'data-view="' + re.escape(frag) + '"', f.read_text(encoding='utf-8')):
+                        errs.append(f'{name}: missing anchor {href}')
     return errs
 
 
@@ -1618,6 +1621,217 @@ def E_(s):
     return html.escape(s, quote=True)
 
 
+
+def _content(repo, name):
+    import yaml
+    f = repo / 'content' / name
+    return yaml.safe_load(f.read_text(encoding='utf-8')) if f.exists() else None
+
+
+def c45_capability_playbooks(site, repo, pages):
+    """Rule (version 1.16.0): every capability playbook in the content is on the Capability playbooks page with all its
+    activities and templates, and every capability in the capability model has activity-level guidance somewhere: a core
+    playbook, a capability playbook or at least one knowledge area activity. The activities are also open data."""
+    import csv
+    errs = []
+    G, F = _content(repo, 'capability-playbooks.yaml'), _content(repo, 'frameworks.yaml')
+    A = _content(repo, 'areas.yaml') or {'areas': []}
+    if not G:
+        return ['content/capability-playbooks.yaml is missing']
+    f = site / 'capabilities.html'
+    if not f.exists():
+        return ['capabilities.html is missing']
+    h = f.read_text(encoding='utf-8')
+    n = 0
+    for pl in G['playbooks']:
+        if f'id="{pl["id"]}"' not in h: errs.append(f'capabilities.html: capability {pl["id"]} missing')
+        for x in pl['activities']:
+            n += 1
+            if not re.search(r'class="cr-card area-act" id="' + re.escape(x['id']) + '"', h): errs.append(f'capabilities.html: activity {x["id"]} missing')
+        for tp in pl['templates']:
+            if f'id="{tp["id"]}"' not in h: errs.append(f'capabilities.html: template {tp["id"]} missing')
+    pb_caps = {pl['id'] for pl in G['playbooks']}
+    area_caps = {c for a in A['areas'] for x in a['activities'] for c in x['caps']}
+    for c in F['capmap']:
+        page = c['playbook'].split('#')[0]
+        core = page in ('governance.html', 'cataloguing.html', 'quality.html')
+        if not (core or c['id'] in pb_caps or c['id'] in area_caps):
+            errs.append(f'{c["id"]}: no activity-level guidance in a playbook, a capability playbook or a knowledge area')
+        if c['coverage'] == 'New':
+            errs.append(f'{c["id"]}: still marked New although every capability now has guidance; update its coverage')
+    csvf = site / 'data' / 'capability-activities.csv'
+    rows = list(csv.reader(csvf.open(encoding='utf-8'))) if csvf.exists() else []
+    if len(rows) - 1 != n: errs.append(f'data/capability-activities.csv: {max(len(rows) - 1, 0)} activities, content has {n}')
+    return errs
+
+
+def c46_leader_route(site, repo, pages):
+    """Rule (version 1.16.0): the route for people new to or leading data asset management shows Must, Should and Could
+    aims; every outcome; the five checkpoints (30, 60 and 90 days, 6 and 12 months) in order with a maturity target for
+    every strand; its templates; and the plan as open data."""
+    import csv
+    errs = []
+    G, F = _content(repo, 'capability-playbooks.yaml'), _content(repo, 'frameworks.yaml')
+    f = site / 'leading.html'
+    if not G or not f.exists():
+        return ['leading.html or its content is missing']
+    L, h = G['leader'], f.read_text(encoding='utf-8')
+    ids = re.findall(r'class="cr-card plan-step" id="([a-z0-9]+)"', h)
+    if ids != ['d30', 'd60', 'd90', 'm6', 'm12']: errs.append(f'leading.html: checkpoints shown {ids}')
+    for m in ('Must', 'Should', 'Could'):
+        if f'moscow-{m.lower()}' not in h: errs.append(f'leading.html: no {m} aims shown')
+    for o in L['outcomes']:
+        if f'>{o["id"]}<' not in h: errs.append(f'leading.html: outcome {o["id"]} missing')
+    tb = re.search(r'<caption id="t-ldr-targets">.*?<tbody>(.*?)</tbody>', h, re.S)
+    if not tb or tb.group(1).count('<tr') != len(F['maturity']['strands']): errs.append('leading.html: maturity targets need a row for every strand')
+    for tp in L['templates']:
+        if f'id="{tp["id"]}"' not in h: errs.append(f'leading.html: template {tp["id"]} missing')
+    csvf = site / 'data' / 'leader-plan.csv'
+    rows = list(csv.reader(csvf.open(encoding='utf-8'))) if csvf.exists() else []
+    if len(rows) != 6: errs.append('data/leader-plan.csv: needs a header and five checkpoints')
+    return errs
+
+
+def c47_portals_in_sync(site, repo, pages):
+    """Rule (version 1.16.0): the playbooks, the data portals compass and the asset governance explorer stay joined. Every
+    page reaches the compass and the explorer from the global bar; the compass and the explorer name the same 32
+    capabilities, with the same names, as the capability model; every capability on the capability model links to the
+    other views; the compass directory lists the new pages; and the explorer links back to the playbooks."""
+    import json
+    errs = []
+    F = _content(repo, 'frameworks.yaml')
+    names = {c['id']: c['name'] for c in F['capmap']}
+    for name in pages:
+        if '/' in name or name == '404.html':
+            continue
+        src = (site / name).read_text(encoding='utf-8')
+        bar = re.search(r'<nav class="gbar".*?</nav>', src, re.S)
+        if bar and ('href="compass/index.html"' not in bar.group(0) or 'href="explorer/index.html"' not in bar.group(0)):
+            errs.append(f'{name}: global bar does not reach both the compass and the explorer')
+    ex = site / 'explorer' / 'explorer.js'
+    if not ex.exists():
+        errs.append('explorer: explorer/explorer.js is missing from the site')
+    else:
+        js = ex.read_text(encoding='utf-8').replace("\\'", "'")
+        found = set(re.findall(r"CR-\d\d", js))
+        if found != set(names): errs.append(f'explorer: capabilities differ from the capability model: {sorted(found ^ set(names))}')
+        for k, v in names.items():
+            if v not in js: errs.append(f'explorer: {k} is not named "{v}"')
+        if 'dam-capability-playbooks/' not in (site / 'explorer' / 'index.html').read_text(encoding='utf-8'):
+            errs.append('explorer: does not link back to the playbooks')
+    cf = site / 'compass' / 'index.html'
+    if cf.exists():
+        h = cf.read_text(encoding='utf-8')
+        i = h.index('<script type="application/json" id="data">') + len('<script type="application/json" id="data">')
+        d = json.loads(h[i:h.index('</script>', i)].replace('<\\/', '</'))
+        wc = {k: v['name'] for k, v in (d.get('wheel') or {}).get('caps', {}).items()}
+        if wc != names: errs.append(f'compass: wheel capabilities differ from the capability model: {sorted(k for k in set(wc) | set(names) if wc.get(k) != names.get(k))}')
+        urls = {e['url'] for e in d.get('directory', [])}
+        for pg in ('capabilities.html', 'leading.html', 'explorer/index.html'):
+            if not any(u.endswith('/' + pg) for u in urls): errs.append(f'compass: directory does not list {pg}')
+    cm = site / 'capability-model.html'
+    if cm.exists():
+        h = cm.read_text(encoding='utf-8')
+        for k in names:
+            m = re.search(r'data-xlinks="' + k + r'">(.*?)</p>', h, re.S)
+            if not m or 'explorer/index.html' not in m.group(1) or 'compass/index.html' not in m.group(1):
+                errs.append(f'capability-model.html: {k} does not link to the compass and the explorer')
+    return errs
+
+
+def c48_procurement_and_learning(site, repo, pages):
+    """Rule (version 1.16.0): every ready-made requirement and contract clause is on the Tools and interoperability page
+    with how to prove it, and in the CSV and the pre-filled schedule; the page says it is not commercial advice. The
+    Learning page has learn, keep and share tips, signposted certifications with provenance, the CPD note that this portal
+    awards no credits, and the learning record and refreshers wired to the progress store."""
+    import csv
+    import zipfile
+    errs = []
+    P, G = _content(repo, 'procurement.yaml'), _content(repo, 'capability-playbooks.yaml')
+    h = (site / 'tooling.html').read_text(encoding='utf-8')
+    allr = P['functional'] + P['nonfunctional']
+    for x in allr + P['clauses']:
+        if f'id="{x["id"]}"' not in h: errs.append(f'tooling.html: {x["id"]} missing')
+    for x in allr:
+        if x['test'].replace("'", '&#x27;') not in h and x['test'] not in h: errs.append(f'tooling.html: {x["id"]} does not say how to prove it')
+    if 'not commercial or legal advice' not in h: errs.append('tooling.html: the not-advice notice is missing')
+    rows = list(csv.reader((site / 'data' / 'procurement-requirements.csv').open(encoding='utf-8')))
+    if len(rows) - 1 != len(allr): errs.append('data/procurement-requirements.csv: row count differs from the content')
+    ods = site / 'data' / 'templates' / 'T-PRC-1-prefilled.ods'
+    body = zipfile.ZipFile(ods).read('content.xml').decode('utf-8') if ods.exists() else ''
+    for x in allr + P['clauses']:
+        if f'>{x["id"]}<' not in body: errs.append(f'T-PRC-1-prefilled.ods: {x["id"]} missing')
+    lh = (site / 'learning.html').read_text(encoding='utf-8')
+    LR = G['learning']
+    for m in LR['methods']:
+        if f'id="learn-{m["id"]}"' not in lh: errs.append(f'learning.html: {m["name"]} tips missing')
+    for c in LR['certifications']:
+        sec = re.search(r'id="' + c['id'] + r'".*?</tr>', lh, re.S)
+        if not sec or 'class="prov' not in sec.group(0): errs.append(f'learning.html: {c["id"]} missing or without a provenance label')
+    if 'does not award credits' not in lh: errs.append('learning.html: must say this portal does not award CPD credits')
+    for i in ('lr-csv', 'refresher-list'):
+        if f'id="{i}"' not in lh: errs.append(f'learning.html: #{i} missing')
+    js = (site / 'assets' / 'app.js').read_text(encoding='utf-8')
+    if 'DCP_MODINFO' not in js or 'dcp-progress-dates-v1' not in js: errs.append('app.js: learning record is not wired to the progress store')
+    return errs
+
+
+def c49_tailoring_and_journeys(site, repo, pages):
+    """Rule (version 1.16.0): the role routes can be tailored by role, profession, organisation maturity and data literacy.
+    The page carries the four controls, the data the script reads (every persona, profession, maturity level and literacy
+    level, and activities and steps to recommend), the same guidance as static tables for readers without JavaScript, and
+    the script reads the self-assessment. Every role's route includes at least one activity beyond the core playbook steps."""
+    import json
+    import yaml
+    errs = []
+    h = (site / 'personas.html').read_text(encoding='utf-8')
+    for i in ('tl-persona', 'tl-prof', 'tl-mat', 'tl-lit', 'tl-ctx', 'tl-phase', 'tl-out', 'tailor-data'):
+        if f'id="{i}"' not in h: errs.append(f'personas.html: #{i} missing')
+    m = re.search(r'<script type="application/json" id="tailor-data">(.*?)</script>', h, re.S)
+    if m:
+        td = json.loads(m.group(1).replace('<\\/', '</'))
+        P = yaml.safe_load((repo / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))
+        F = yaml.safe_load((repo / 'content' / 'frameworks.yaml').read_text(encoding='utf-8'))
+        if {x['id'] for x in td['personas']} != {x['id'] for x in P['personas']}: errs.append('tailoring: personas differ from the content')
+        if [x['level'] for x in td['maturity']] != F['maturity']['levels']: errs.append('tailoring: maturity levels differ from the maturity model')
+        if {x['id'] for x in td['profs']} != {x['id'] for x in F['professions']['profs']}: errs.append('tailoring: professions differ from the content')
+        if len(td['acts']) < 50: errs.append('tailoring: too few activities to recommend from')
+        if [c['id'] for c in td.get('contexts', [])] != ['bau', 'change', 'both']: errs.append('tailoring: business as usual, change and both contexts are needed')
+        if set(td.get('persona_context', {})) != {x['id'] for x in P['personas']}: errs.append('tailoring: every persona needs a usual context')
+        if {x['id'] for x in td.get('phases', [])} != {s['id'] for s in F['change']['stages']}: errs.append('tailoring: programme phases differ from the Delivery and change page')
+        if not any(x.get('x') == 'Change' for x in td['acts']) or not any(x.get('x') == 'BAU' for x in td['acts']): errs.append('tailoring: activities need their business as usual or change mode')
+        for p in P['personas']:
+            if not any('a' in tk for j in p['journey'] for tk in j['tasks']):
+                errs.append(f'persona {p["id"]}: route has no activity beyond the core playbook steps')
+    for cap in ('t-tailor-mat', 't-tailor-lit', 't-tailor-ctx'):
+        if f'id="{cap}"' not in h: errs.append(f'personas.html: static table {cap} missing')
+    js = (site / 'assets' / 'app.js').read_text(encoding='utf-8')
+    if 'dcp-selfassess-v1' not in js.split('tailor recommendations')[-1]: errs.append('app.js: tailoring does not read the self-assessment')
+    return errs
+
+
+def c50_stages_gates_assessments(site, repo, pages):
+    """Rule (version 1.16.0): the Delivery and change page shows, for every stage, the gates and assessments, the Service
+    Standard points linked to their GOV.UK pages (cited by number, not copied), what reviewers want to see about critical
+    data, and evidence that links to where it comes from in this portal. The evidence is also open data."""
+    import csv
+    errs = []
+    G = _content(repo, 'capability-playbooks.yaml')
+    h = (site / 'change.html').read_text(encoding='utf-8')
+    if 'id="assessments"' not in h: return ['change.html: stages, gates and assessments section missing']
+    for s in G['assessments']['stages']:
+        m = re.search(r'id="assess-' + s['id'] + r'".*?</li></ol>|id="assess-' + s['id'] + r'".*?(?=<li class="cr-card" id="assess-)', h, re.S)
+        if not m: errs.append(f'change.html: stage {s["id"]} missing'); continue
+        sec = m.group(0)
+        for n in s['points']:
+            if f'https://www.gov.uk/service-manual/service-standard/point-{n}-' not in sec: errs.append(f'change.html: {s["id"]} does not link Service Standard point {n}')
+        if sec.count('<li><a href="') < len(s['evidence']): errs.append(f'change.html: {s["id"]} evidence is not linked to where it comes from')
+    if 'not repeated' not in h: errs.append('change.html: must say the published guidance is linked, not repeated')
+    rows = list(csv.reader((site / 'data' / 'assessment-evidence.csv').open(encoding='utf-8')))
+    if len(rows) - 1 != sum(len(s['evidence']) for s in G['assessments']['stages']): errs.append('data/assessment-evidence.csv: row count differs from the content')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -1626,7 +1840,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name, c44_pathways]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name, c44_pathways, c45_capability_playbooks, c46_leader_route, c47_portals_in_sync, c48_procurement_and_learning, c49_tailoring_and_journeys, c50_stages_gates_assessments]
 
 
 def run(site, repo, only=None, quiet=False):

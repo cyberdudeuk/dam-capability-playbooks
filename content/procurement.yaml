@@ -1,0 +1,176 @@
+# Buying tools for data asset management (version 1.16.0).
+# Ready-made functional and non-functional requirements for each kind of tool on the Tools and interoperability page,
+# and the request for information (RFI), invitation to tender (requirements schedule), evaluation and contract clause
+# templates built from them. Asked for by pilot and community teams choosing catalogue, quality and master data tools
+# (Project Compass pilot session, 11 November 2026; a master data management programme, 13 November 2026).
+#
+# Every requirement is this portal's own synthesis (provenance O) of the DAM Policy, its guidance and the rulebook
+# entries it cites. It is not a government standard and not commercial or legal advice: your commercial team decides the
+# route to market, and the Procurement Act 2023 and its guidance govern how you run it. No product is named or endorsed.
+# The build rejects unknown capabilities, requirements, rulebook entries and tool categories, duplicate identifiers,
+# and any requirement without a way to test it.
+meta:
+  as_of: '2026-11-17'
+  status: Draft by this portal for review by commercial, digital and data professionals. Not government guidance.
+  intro: >-
+    Ready-made requirements to adapt when you buy or build a tool that supports data asset management. Pick the kinds of tool you
+    need, keep the requirements that fit, change the priority to suit, and use them in a request for information (RFI), a tender or
+    an internal build. Each requirement says which DAM Policy requirement and capability it serves, and how a supplier can prove it.
+  not_advice: >-
+    This is not commercial or legal advice. Your commercial team chooses the route to market and the evaluation method, and the
+    Procurement Act 2023 and its guidance govern the process. Do not copy these requirements into a tender without that review.
+  inputs:
+    - id: IN-PILOT
+      label: A pilot team's request for standardised templates for the activities in the playbooks (Project Compass session, 11 November 2026)
+      prov: O
+    - id: IN-MDM
+      label: A programme choosing a master data management tool asked how other public bodies chose and use such tools (13 November 2026)
+      prov: O
+
+moscow:
+  - {code: Must, text: "Without this the tool cannot do the job, or the organisation cannot meet the DAM Policy. A response that does not meet it fails, however it scores elsewhere."}
+  - {code: Should, text: "Important and expected. Scored; a gap needs a plan and a date."}
+  - {code: Could, text: "Useful if it costs little. Scored lightly."}
+  - {code: "Won't (this time)", text: "Out of scope for this purchase. Recorded so the decision is visible."}
+
+scoring:
+  - {score: 4, label: Exceeds, text: "Fully meets the requirement, shown in the demonstration or proof of concept, with evidence of use in the public sector."}
+  - {score: 3, label: Meets, text: "Fully meets the requirement, with credible evidence."}
+  - {score: 2, label: Mostly meets, text: "Meets most of it; the gap is minor and has a dated plan."}
+  - {score: 1, label: Partly meets, text: "Significant gaps, or depends on custom work or a third party."}
+  - {score: 0, label: Does not meet, text: "Not met, not answered, or no evidence."}
+
+evaluation:
+  - "Agree the evaluation method with your commercial team before you publish anything, and publish it with the tender."
+  - "Treat every Must as pass or fail. Score Should and Could requirements from 0 to 4 against the scale here."
+  - "Weight the groups of requirements to reflect your priorities, and keep quality and price separate until both are scored."
+  - "Score independently first, then moderate as a panel and record the reasons for each moderated score."
+  - "Score what the supplier showed you, in the demonstration or proof of concept, above what they wrote."
+  - "Keep the scoring sheets, the moderation notes and the decision. They are part of your assurance evidence."
+
+# Functional requirements by kind of tool. Kinds of tool (cat) are the categories on the Tools and interoperability page.
+functional:
+  # --- Data catalogue and metadata management
+  - {id: FR-CAT-01, cat: TL-CAT, moscow: Must, caps: [CR-06], reqs: [DAM-R02, DAM-R13], refs: [RB-DCATGOV, RB-DCAT], text: "Record every metadata property in the government guidance on describing data assets, with its obligation, in plain English.", test: "Create a record for one of your critical assets with every property filled in; show where each is held."}
+  - {id: FR-CAT-02, cat: TL-CAT, moscow: Must, caps: [CR-06, CR-03], reqs: [DAM-R03], refs: [RB-DCAT, RB-METASTD], text: "Export the records for critical data assets as DCAT in a form that can be reported to the centre, without manual rework.", test: "Export your test records and validate them against the reporting format."}
+  - {id: FR-CAT-03, cat: TL-CAT, moscow: Must, caps: [CR-07], reqs: [DAM-R05, DAM-R10], refs: [RB-DCATGOV], text: "Hold a named data owner, information asset owner and steward for each asset as roles, and record a successor when an owner leaves.", test: "Change an asset's owner and show the history and the successor field."}
+  - {id: FR-CAT-04, cat: TL-CAT, moscow: Must, caps: [CR-06, CR-04], reqs: [DAM-R04], refs: [RB-DCATGOV], text: "Prompt owners to review each record at least once a year, and report which records are overdue.", test: "Show the review reminder and the overdue report for a record past its review date."}
+  - {id: FR-CAT-05, cat: TL-CAT, moscow: Must, caps: [CR-05], reqs: [DAM-R01, DAM-R11], refs: [RB-DCATGOV], text: "Flag which assets are critical data assets, which of the seven purposes each supports, and its security classification.", test: "Filter the catalogue to critical assets by purpose and classification."}
+  - {id: FR-CAT-06, cat: TL-CAT, moscow: Should, caps: [CR-12, CR-14], reqs: [DAM-R12], refs: [RB-DCAT], text: "Link a distribution to the data set it comes from, and show the source data set on the distribution's record.", test: "Create a distribution and its source, and show the link in both records."}
+  - {id: FR-CAT-07, cat: TL-CAT, moscow: Should, caps: [CR-06], reqs: [DAM-R02], refs: [RB-DCAT], text: "Harvest technical metadata, such as tables, columns and types, from your data platforms on a schedule.", test: "Connect to one of your platforms and show a harvested schema refreshed on a schedule."}
+  - {id: FR-CAT-08, cat: TL-CAT, moscow: Should, caps: [CR-06, CR-22], reqs: [DAM-R02], refs: [RB-DCAT], text: "Let users search and browse in plain language, and request access to an asset from its record.", test: "A user with no training finds an asset and requests access during the demonstration."}
+  - {id: FR-CAT-09, cat: TL-CAT, moscow: Should, caps: [CR-16], reqs: [DAM-R01], refs: [RB-GSC], text: "Show or hide records and fields according to the user's access rights and the asset's classification.", test: "Show the same record to two users with different rights."}
+  - {id: FR-CAT-10, cat: TL-CAT, moscow: Could, caps: [CR-06, CR-11], reqs: [DAM-R16], refs: [RB-DCAT, RB-SKOS], text: "Let you add custom properties without losing them on export.", test: "Add a custom property, export as DCAT and show it in the output."}
+  # --- Business glossary and vocabularies
+  - {id: FR-GLOS-01, cat: TL-GLOS, moscow: Must, caps: [CR-06, CR-11], reqs: [DAM-R13], refs: [RB-SKOS], text: "Hold terms with definitions, synonyms, broader and narrower terms, an owner and a status.", test: "Create a term with a broader term and a synonym and show its history."}
+  - {id: FR-GLOS-02, cat: TL-GLOS, moscow: Must, caps: [CR-11, CR-32], reqs: [DAM-R16], refs: [RB-SKOS], text: "Import and export the glossary as SKOS without losing hierarchy, synonyms or links to assets.", test: "Export as SKOS, import into a test instance and compare."}
+  - {id: FR-GLOS-03, cat: TL-GLOS, moscow: Should, caps: [CR-06], reqs: [DAM-R02], refs: [RB-SKOS], text: "Link terms to the data assets and fields that use them.", test: "Show a term and every asset and field linked to it."}
+  - {id: FR-GLOS-04, cat: TL-GLOS, moscow: Should, caps: [CR-07], reqs: [DAM-R05], refs: [RB-SKOS], text: "Route proposed new or changed terms to their steward for approval, and record the decision.", test: "Propose a change, approve it as the steward and show the record."}
+  # --- Data quality profiling, rules and monitoring
+  - {id: FR-DQ-01, cat: TL-DQ, moscow: Must, caps: [CR-08], reqs: [DAM-R06, DAM-R07], refs: [RB-DQHUB], text: "Profile a data set and run rules that measure the data quality dimensions your action plan uses.", test: "Profile one of your critical data sets and run three of your rules."}
+  - {id: FR-DQ-02, cat: TL-DQ, moscow: Must, caps: [CR-08, CR-32], reqs: [DAM-R06], refs: [RB-DQV, RB-CSVW], text: "Hold rules in a readable form you can export and run elsewhere, not only inside the product.", test: "Export the rules and show their content."}
+  - {id: FR-DQ-03, cat: TL-DQ, moscow: Must, caps: [CR-09], reqs: [DAM-R15], refs: [RB-DQHUB], text: "Raise an issue when a rule fails, assign it to an owner, and track it to resolution.", test: "Fail a rule and follow the issue to closure."}
+  - {id: FR-DQ-04, cat: TL-DQ, moscow: Should, caps: [CR-09, CR-08], reqs: [DAM-R15], refs: [RB-DQHUB], text: "Prioritise issues with the government data quality issues framework: target range from importance and impact, priority from the band below target.", test: "Set importance and impact for an asset and show the target and priority produced."}
+  - {id: FR-DQ-05, cat: TL-DQ, moscow: Should, caps: [CR-04, CR-08], reqs: [DAM-R06], refs: [RB-DQV], text: "Publish results as DQV or through an open API so the catalogue can show them on the asset's record.", test: "Show a quality score on the catalogue record, taken from the tool through an open route."}
+  - {id: FR-DQ-06, cat: TL-DQ, moscow: Should, caps: [CR-08], reqs: [DAM-R06], refs: [RB-DQHUB], text: "Show trends over time for each rule and dimension.", test: "Show a three-month trend for one rule."}
+  - {id: FR-DQ-07, cat: TL-DQ, moscow: Could, caps: [CR-08, CR-30], reqs: [DAM-R06], refs: [RB-EQA, RB-PSED], text: "Compare quality across groups of people, such as completeness by age or ethnicity, to show where gaps fall unevenly.", test: "Show completeness of one field split by a protected characteristic in test data."}
+  # --- Lineage and data observability
+  - {id: FR-LIN-01, cat: TL-LIN, moscow: Must, caps: [CR-12, CR-10], reqs: [DAM-R12], refs: [RB-OLINEAGE], text: "Show where a critical data set comes from and where it goes, across systems from more than one supplier.", test: "Trace one of your critical data sets from source to a report."}
+  - {id: FR-LIN-02, cat: TL-LIN, moscow: Should, caps: [CR-11, CR-32], reqs: [DAM-R16], refs: [RB-OLINEAGE, RB-PROVO], text: "Emit and accept OpenLineage events, including from pipelines the supplier does not provide.", test: "Send an OpenLineage event from your own pipeline and show it in the tool."}
+  - {id: FR-LIN-03, cat: TL-LIN, moscow: Should, caps: [CR-31, CR-08], reqs: [DAM-R06], refs: [RB-OLINEAGE], text: "Alert the owner when a pipeline that feeds a critical asset fails or runs late.", test: "Stop a pipeline and show the alert."}
+  - {id: FR-LIN-04, cat: TL-LIN, moscow: Could, caps: [CR-26], reqs: [DAM-R12], refs: [RB-OLINEAGE], text: "Show what depends on a system or table before it is changed or switched off.", test: "Select a table and list everything downstream."}
+  # --- Reference and master data management
+  - {id: FR-MDM-01, cat: TL-MDM, moscow: Must, caps: [CR-14], reqs: [DAM-R12], refs: [RB-REFARCH], text: "Hold a master record for each shared entity, with its identifier and source.", test: "Load two sources of the same entity and show the master record."}
+  - {id: FR-MDM-02, cat: TL-MDM, moscow: Must, caps: [CR-14, CR-08], reqs: [DAM-R06], refs: [RB-REFARCH], text: "Apply matching and survivorship rules you can read, change and export, and send doubtful matches to a steward.", test: "Run matching on test data and resolve a doubtful match."}
+  - {id: FR-MDM-03, cat: TL-MDM, moscow: Must, caps: [CR-14, CR-32], reqs: [DAM-R16], refs: [RB-API, RB-LOCKIN], text: "Extract master and reference data, rules and history in an open format, and serve them through a documented API.", test: "Export everything and call the API for one entity."}
+  - {id: FR-MDM-04, cat: TL-MDM, moscow: Should, caps: [CR-11, CR-14], reqs: [DAM-R13], refs: [RB-REFDATA, RB-UPRN, RB-ONSGEO], text: "Use national identifiers and code lists, such as UPRN, company numbers and ONS geography codes, where they exist.", test: "Load a national code list and match local values to it."}
+  - {id: FR-MDM-05, cat: TL-MDM, moscow: Should, caps: [CR-14], reqs: [DAM-R04], refs: [RB-REFDATA], text: "Version reference lists and record who changed what and why.", test: "Change a code and show the version history."}
+  - {id: FR-MDM-06, cat: TL-MDM, moscow: Could, caps: [CR-28, CR-14], reqs: [DAM-R16], refs: [RB-REFDATA, RB-SKOS], text: "Publish reference lists for others to reuse, with persistent identifiers.", test: "Publish a list and resolve one of its identifiers."}
+  # --- Governance workflow, policy and access
+  - {id: FR-POL-01, cat: TL-POL, moscow: Must, caps: [CR-07, CR-01], reqs: [DAM-R05, DAM-R09], refs: [RB-DSGF], text: "Route stewardship tasks, approvals and access requests to the named owner or steward, and keep the decision record.", test: "Raise an access request and approve it as the owner."}
+  - {id: FR-POL-02, cat: TL-POL, moscow: Must, caps: [CR-16], reqs: [DAM-R01], refs: [RB-GSC], text: "Hold classifications and access policies that other tools can read through an API.", test: "Read an asset's classification from another tool through the API."}
+  - {id: FR-POL-03, cat: TL-POL, moscow: Should, caps: [CR-17, CR-28], reqs: [DAM-R09], refs: [RB-DSGF, RB-ICODSA], text: "Manage data sharing requests and agreements, with the lawful basis and legal gateway recorded.", test: "Record a sharing request with its gateway and approve it."}
+  - {id: FR-POL-04, cat: TL-POL, moscow: Should, caps: [CR-19], reqs: [DAM-R09], refs: [RB-ORANGE], text: "Record exceptions to policy with an owner, a reason and an expiry date, and remind before expiry.", test: "Create an exception and show the expiry reminder."}
+  # --- Data contracts and data products
+  - {id: FR-CON-01, cat: TL-CONTRACT, moscow: Should, caps: [CR-12, CR-08], reqs: [DAM-R06], refs: [RB-ODCS], text: "Store data contracts as ODCS files you can keep in your own repository.", test: "Export a contract and validate it against the ODCS schema."}
+  - {id: FR-CON-02, cat: TL-CONTRACT, moscow: Should, caps: [CR-08, CR-11], reqs: [DAM-R06], refs: [RB-ODCS], text: "Check data against the contract's schema and quality thresholds, and tell the owner when it breaks.", test: "Break a contract in test data and show the notification."}
+  - {id: FR-CON-03, cat: TL-CONTRACT, moscow: Could, caps: [CR-06], reqs: [DAM-R02], refs: [RB-ODPS], text: "Describe data products with ODPS and link them to their catalogue records.", test: "Show a data product linked to its catalogue record."}
+  # --- Records and content management
+  - {id: FR-REC-01, cat: TL-REC, moscow: Must, caps: [CR-15], reqs: [DAM-R04], refs: [RB-TNAIM, RB-ISO15489], text: "Apply your retention schedule and disposal actions, and record each disposal.", test: "Apply a schedule to a record and show the disposal record."}
+  - {id: FR-REC-02, cat: TL-REC, moscow: Should, caps: [CR-15, CR-06], reqs: [DAM-R02], refs: [RB-ISO23081], text: "Share retention and disposal decisions with the catalogue so an asset and its records follow one schedule.", test: "Show the retention period on the asset's catalogue record."}
+  - {id: FR-REC-03, cat: TL-REC, moscow: Could, caps: [CR-15], reqs: [DAM-R04], refs: [RB-TNATRANS], text: "Prepare records for transfer to an archive in the format the archive accepts.", test: "Package one record for transfer."}
+  # --- AI assistants and search over metadata
+  - {id: FR-AI-01, cat: TL-AI, moscow: Should, caps: [CR-18, CR-22], reqs: [DAM-R02], refs: [RB-AIPLAY, RB-MCPSPEC], text: "Let an assistant your organisation already approves read the catalogue through an open protocol or documented API.", test: "Ask an approved assistant a question answered from the catalogue."}
+  - {id: FR-AI-02, cat: TL-AI, moscow: Must, caps: [CR-16, CR-18], reqs: [DAM-R01], refs: [RB-AIPLAY, RB-GSC], text: "Apply the same access rules to an assistant as to the person using it, and never show restricted metadata.", test: "Ask about a restricted asset as a user without access and show the refusal."}
+  - {id: FR-AI-03, cat: TL-AI, moscow: Should, caps: [CR-18], reqs: [DAM-R02], refs: [RB-AIPLAY, RB-ATRS], text: "Show the sources behind every answer, and record use so it can be described in an algorithmic transparency record if one is needed.", test: "Ask a question and follow the source links in the answer."}
+
+# Non-functional requirements apply to every kind of tool.
+nonfunctional:
+  - {id: NFR-01, theme: Accessibility, moscow: Must, caps: [CR-30, CR-22], refs: [RB-A11YREQ, RB-MODEL], text: "Every screen staff use meets WCAG 2.2 level AA, not only public pages, and the supplier provides an accessibility statement.", test: "An accessibility audit of the screens used in the proof of concept, and the statement."}
+  - {id: NFR-02, theme: Accessibility, moscow: Should, caps: [CR-30], refs: [RB-A11YREQ], text: "Works with screen readers, screen magnifiers, voice control and keyboard only.", test: "Complete a core task with a screen reader and with keyboard only."}
+  - {id: NFR-03, theme: Security, moscow: Must, caps: [CR-16, CR-31], refs: [RB-GSC, RB-NCSCCLOUD], text: "Meets the security your data's classification requires, and the supplier shows how the service meets the NCSC cloud security principles.", test: "The supplier's statement against the principles, reviewed by your security team."}
+  - {id: NFR-04, theme: Security, moscow: Must, caps: [CR-16], refs: [RB-SBD, RB-GOVS007], text: "Data is encrypted in transit and at rest, and the supplier explains key management.", test: "Architecture description reviewed by your security team."}
+  - {id: NFR-05, theme: Security, moscow: Should, caps: [CR-31], refs: [RB-NCSCIR, RB-CAF], text: "The supplier will tell you about an incident affecting your data within an agreed time, and support your response.", test: "The incident clause and the supplier's last incident report process."}
+  - {id: NFR-06, theme: Security, moscow: Should, caps: [CR-31, CR-16], refs: [RB-NCSCPQC], text: "The supplier has a plan for moving to post-quantum cryptography in line with the NCSC timelines.", test: "The supplier's written plan."}
+  - {id: NFR-07, theme: Identity and access, moscow: Must, caps: [CR-16], refs: [RB-NCSCCLOUD], text: "Uses your identity provider for sign-in and roles, rather than its own user store.", test: "Sign in through your identity provider in the proof of concept."}
+  - {id: NFR-08, theme: Identity and access, moscow: Should, caps: [CR-16, CR-19], refs: [RB-NCSC10], text: "Logs who viewed or changed what, and lets you export the logs to your own monitoring.", test: "Export a day of audit log."}
+  - {id: NFR-09, theme: Data protection, moscow: Must, caps: [CR-17, CR-20], refs: [RB-DPA, RB-MTC20, RB-PPN020], text: "Processes personal data only on your instructions, under a data processing schedule, with the location of processing stated.", test: "The processing schedule and the list of sub-processors and locations."}
+  - {id: NFR-10, theme: Data protection, moscow: Should, caps: [CR-17], refs: [RB-DPA], text: "Lets you find, export and delete a person's data to meet their rights.", test: "Find and export one test person's data."}
+  - {id: NFR-11, theme: Interoperability, moscow: Must, caps: [CR-11, CR-32], refs: [RB-PPN0715, RB-TCOP4, RB-OPEN], text: "Uses open standards at every boundary with other tools, and names the standard and version for each.", test: "The supplier's list of standards with versions, checked against the open standards for government."}
+  - {id: NFR-12, theme: Interoperability, moscow: Must, caps: [CR-11, CR-12], refs: [RB-API, RB-OAS], text: "Every object and action in the interface is available through a documented API, described in OpenAPI.", test: "The OpenAPI description, and a call for one object you choose."}
+  - {id: NFR-13, theme: Portability and exit, moscow: Must, caps: [CR-32, CR-20], refs: [RB-LOCKIN, RB-TCOP11], text: "You can export all your content, including custom fields, history, owners, classifications and links, at any time, in open formats, without supplier help or extra charge.", test: "A full export in the proof of concept, compared with what was loaded."}
+  - {id: NFR-14, theme: Portability and exit, moscow: Must, caps: [CR-32, CR-26], refs: [RB-LOCKIN, RB-MSC], text: "The supplier gives a costed exit plan and will help you move to another product at the end of the contract.", test: "The exit plan and the exit assistance terms."}
+  - {id: NFR-15, theme: Portability and exit, moscow: Should, caps: [CR-32, CR-13], refs: [RB-LOCKIN], text: "Each capability can be priced, bought and ended separately, even when sold as a suite.", test: "A price for each capability on its own."}
+  - {id: NFR-16, theme: Hosting and resilience, moscow: Should, caps: [CR-31, CR-12], refs: [RB-CLOUD, RB-NCSCCLOUD], text: "States availability, recovery time and recovery point targets, and reports against them.", test: "The service level terms and the last year's performance."}
+  - {id: NFR-17, theme: Hosting and resilience, moscow: Should, caps: [CR-12], refs: [RB-CLOUD], text: "Handles the number of assets, users and runs you expect in three years without a change of product tier you have not priced.", test: "A load test or reference site at that scale, and the price at that volume."}
+  - {id: NFR-18, theme: Support and change, moscow: Should, caps: [CR-13, CR-27], refs: [RB-SVC], text: "Gives notice of changes that affect you, lets you test them first, and supports versions for an agreed time.", test: "The release and support policy."}
+  - {id: NFR-19, theme: Support and change, moscow: Should, caps: [CR-21], refs: [RB-SVC], text: "Provides training and guidance your staff can use without the supplier, in accessible formats.", test: "A sample of the training and guidance."}
+  - {id: NFR-20, theme: Records and retention, moscow: Should, caps: [CR-15], refs: [RB-TNAIM], text: "Lets you apply retention to the tool's own content and logs, and delete them when the schedule says.", test: "Set retention on a test record and show its deletion."}
+  - {id: NFR-21, theme: AI and transparency, moscow: Must, caps: [CR-18], refs: [RB-AIPLAY, RB-ETH], text: "States any AI in the product, what it does with your data, and lets you turn it off. Your data is not used to train models without your agreement.", test: "The supplier's AI statement and the setting to turn it off."}
+  - {id: NFR-22, theme: Open source and reuse, moscow: Could, caps: [CR-32, CR-28], refs: [RB-OPENSRC, RB-CHOOSE], text: "Open source components, or the whole product, are named with their licences, and anything built for you can be shared across government.", test: "The software bill of materials and the intellectual property terms."}
+  - {id: NFR-23, theme: Usability, moscow: Should, caps: [CR-22, CR-21], refs: [RB-SVC], text: "People who look after data part time can do the common tasks without specialist training.", test: "Usability test with two of your stewards in the proof of concept."}
+
+rfi_sections:
+  - id: RFI-A
+    name: About you
+    questions:
+      - Describe your organisation and the product, and who builds and supports it.
+      - Which UK public sector bodies use the product for a similar purpose, and can we speak to one?
+      - Which buying routes is the product available through, such as G-Cloud?
+  - id: RFI-B
+    name: Fit with our needs
+    from: functional
+    lead: For each requirement, say whether the product meets it now, partly, on a dated roadmap or not, and how you would show it.
+  - id: RFI-C
+    name: Interoperability and exit
+    from: questions
+    lead: The questions from the Tools and interoperability page.
+  - id: RFI-D
+    name: Security, accessibility and data protection
+    from: nonfunctional
+    lead: For each requirement, say how the product meets it and what evidence you can provide.
+  - id: RFI-E
+    name: Commercial
+    questions:
+      - Describe the pricing model, what drives the price, and the price at our expected volume today and in three years.
+      - Can each capability be bought and ended separately?
+      - What are the renewal terms, and is any price increase capped?
+      - What does exit cost, and what help do you give?
+  - id: RFI-F
+    name: Proof
+    questions:
+      - Would you take part in a proof of concept with our own test data, including a full export and re-import?
+      - What would you need from us for the proof of concept, and how long would it take?
+
+# Clauses to ask your commercial and legal teams to include. Each says why it matters for the DAM Policy.
+clauses:
+  - {id: CL-01, name: Ownership of content, caps: [CR-32, CR-20], refs: [RB-MSC, RB-LOCKIN], text: "You own your data and everything you put into or create in the tool: metadata, glossary, rules, results, lineage and configuration.", why: "Without it the assets you report under the policy, and their history, may not be yours to move."}
+  - {id: CL-02, name: Export in open formats, caps: [CR-32], refs: [RB-LOCKIN, RB-PPN0715], text: "Full export at any time, in named open formats, at no extra charge, tested before go-live and before each renewal.", why: "Keeps you able to report and to change product."}
+  - {id: CL-03, name: Exit plan and assistance, caps: [CR-32, CR-26], refs: [RB-MSC, RB-LOCKIN], text: "A costed exit plan in the contract, updated each year, with the supplier's help to move.", why: "An exit you have not planned is the legacy of the future."}
+  - {id: CL-04, name: Data processing, caps: [CR-17, CR-20], refs: [RB-MTC20, RB-PPN020], text: "A data processing schedule naming the processing, sub-processors and locations.", why: "Needed whenever personal data is processed for you."}
+  - {id: CL-05, name: Separate prices, caps: [CR-13, CR-24], refs: [RB-TCOP11], text: "A price for each capability, and the right to end one without ending the rest.", why: "Lets you replace one part without replacing everything."}
+  - {id: CL-06, name: Capped increases, caps: [CR-24], refs: [RB-TCOP11], text: "A cap on price increases at renewal, and notice of any change.", why: "Keeps the cost in the business case true."}
+  - {id: CL-07, name: Security and incidents, caps: [CR-31, CR-16], refs: [RB-GSC, RB-NCSCIR], text: "Security that matches the classification, notice of incidents within an agreed time, and help to respond.", why: "Critical data assets must stay available and protected."}
+  - {id: CL-08, name: Accessibility, caps: [CR-30], refs: [RB-A11YREQ], text: "The tool meets WCAG 2.2 AA for staff screens, with an accessibility statement kept up to date.", why: "The accessibility regulations apply to tools staff use."}
+  - {id: CL-09, name: Service levels, caps: [CR-31], refs: [RB-NCSCCLOUD], text: "Availability, recovery time and recovery point targets, reported each month, with remedies.", why: "Owners need to know how long a critical asset could be unavailable."}
+  - {id: CL-10, name: AI use of your data, caps: [CR-18], refs: [RB-AIPLAY], text: "No use of your data to train models without written agreement, and a setting to turn AI features off.", why: "Keeps control of how your data is used."}
