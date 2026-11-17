@@ -14,10 +14,10 @@ Version 1.10.0, 5 November 2026. The build delivered every backlog item that sof
 
 ## BL-22 Clearance and an official home (Now)
 - **Decision needed:** whether this prototype becomes guidance departments may rely on.
-- **Options:** (1) stay a practitioner prototype, clearly labelled, as now; (2) offer it to the GDS data management team as a candidate for the DAM Policy's supporting guidance, through the Data Management Community; (3) take it through the DSA Peer Review Group to the DSA Steering Board for endorsement of specific artefacts (for example the capability model or the sector quality rules).
+- **Options:** (1) stay a practitioner prototype, clearly labelled, as now; (2) offer it to the Government Data Directorate as a candidate for the DAM Policy's supporting guidance, through the Data Management Community; (3) take it through the DSA Peer Review Group to the DSA Steering Board for endorsement of specific artefacts (for example the capability model or the sector quality rules).
 - **What a reviewer will ask:** sources and provenance (every fact labelled), accessibility (WCAG 2.2 AA checks on every release), security (no server, strict content security policy, reviewed actions), licences (OGL v3.0 content, MIT code) and ownership (a named team to keep it current).
 - **Move to an official GitHub organisation:** transfer the repository only when an owning team agrees; keep the owner-only collaborator rule.
-- **Who:** service owner, then the GDS data management team.
+- **Who:** service owner, then the Government Data Directorate.
 
 ## BL-10 and BL-11 Rounds 1 and 2 (Next)
 - **Ready:** discussion guide, usability tasks, consent questions and accessibility session notes in the bundle; tasks on Help us test.
