@@ -1,0 +1,41 @@
+# publiccode.yml: machine-readable description for public sector software catalogues.
+# Standard: https://yml.publiccode.tools  Drafted from the launchpad card and CITATION.cff; checked by the official
+# parser (publiccode-parser-go). Version, release date and licence must agree with CITATION.cff.
+# No email address is given: contact is by the contact form only.
+publiccodeYmlVersion: '0'
+name: Data Asset Management capability playbooks
+url: https://github.com/cyberdudeuk/dam-capability-playbooks
+landingURL: https://cyberdudeuk.github.io/dam-capability-playbooks/
+softwareVersion: 1.10.1
+releaseDate: '2026-11-06'
+platforms:
+- web
+categories:
+- knowledge-management
+developmentStatus: development
+softwareType: standalone/web
+description:
+  en:
+    shortDescription: Step-by-step guidance on data governance, cataloguing and quality for critical data assets
+      in UK government.
+    longDescription: 'Step-by-step guidance on data governance, data cataloguing and data quality for critical data
+      assets in UK government, built around the data asset management policy. It is for: Data owners, stewards,
+      catalogue managers and data leaders. Status, as the project states it: Prototype. Not official government
+      guidance or policy unless the project says otherwise.'
+    documentation: https://cyberdudeuk.github.io/dam-capability-playbooks/
+    features:
+    - Every requirement of the policy with the step that meets it
+    - Step-by-step governance, cataloguing and quality methods
+    - Sector supplements with runnable quality rules
+    - Capability model with self-assessment and crosswalks
+    - Open data with a DCAT catalogue for harvesting
+legal:
+  license: MIT AND OGL-UK-3.0
+maintenance:
+  type: community
+  contacts:
+  - name: Data Asset Management capability playbooks maintainers (contact form only)
+localisation:
+  localisationReady: false
+  availableLanguages:
+  - en
