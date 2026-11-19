@@ -6,8 +6,8 @@ publiccodeYmlVersion: '0'
 name: Data Asset Management capability playbooks
 url: https://github.com/cyberdudeuk/dam-capability-playbooks
 landingURL: https://cyberdudeuk.github.io/dam-capability-playbooks/
-softwareVersion: 1.10.1
-releaseDate: '2026-11-06'
+softwareVersion: 1.16.0
+releaseDate: '2026-11-19'
 platforms:
 - web
 categories:

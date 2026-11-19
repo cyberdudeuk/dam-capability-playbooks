@@ -11,6 +11,9 @@ from pathlib import Path
 
 import yaml
 
+# D-056: the vaccines below read the current version, so a release cannot silently disarm them.
+VERSION = str(yaml.safe_load((Path(__file__).resolve().parent.parent / 'content' / 'playbooks.yaml').read_text(encoding='utf-8'))['meta']['version'])
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'tools'))
 import build  # noqa: E402
@@ -342,7 +345,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c23_repository_metadata')
 
     def test_c23_citation_version_drift(self):
-        edit(self.r / 'CITATION.cff', 'version: 1.10.1', 'version: 1.3.9')
+        edit(self.r / 'CITATION.cff', f'version: {VERSION}', 'version: 1.3.9')
         self.fails('c23_repository_metadata')
 
     def test_c24_third_party_action(self):
@@ -464,7 +467,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c31_navigation_aids')
 
     def test_c32_mcp_version_mismatch(self):
-        edit(self.r / 'integrations' / 'mcp' / 'server.py', "'version': '1.10.1'", "'version': '0.0.1'")
+        edit(self.r / 'integrations' / 'mcp' / 'server.py', f"'version': '{VERSION}'", "'version': '0.0.1'")
         self.fails('c32_mcp_server')
 
     def test_c32_mcp_tool_undescribed(self):

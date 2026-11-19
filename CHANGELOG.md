@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+
+## 1.16.0 (2026-11-19)
 - Version 1.16.0: from everything you need to adopt the DAM Policy, not only its three named capabilities.
   - **Capability playbooks** (new page, Playbooks menu): 13 capabilities from the capability model that had no activity-level guidance: strategy, tools, risk, suppliers, skills, culture, maturity, investment, assurance, legacy, handover, benefits and exit. They have 40 activities across the three adoption stages, each with steps, outputs, evidence, a measure, who does what, requirements and sources, plus 16 templates. Every capability in the model now has activity-level guidance; C-45 checks this.
   - **New or leading? Your first year** (new page, Find your way menu): for people new to data asset management and for those leading a team or the capability. It covers aims by priority (MoSCoW), outcomes with indicators and example targets, and a plan for the first 30, 60 and 90 days with checkpoints at 6 and 12 months. Each checkpoint has a maturity target per strand on the Data Maturity Assessment for Government levels, and the page explains which maturity model fits which aim and how to evaluate. C-46 checks it.
