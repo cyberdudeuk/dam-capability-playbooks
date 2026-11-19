@@ -4,4 +4,4 @@ python-barcode==0.16.1
 playwright==1.65.2
 Pillow==13.0.0
 rdflib==7.6.0
-ruff==0.16.9
+ruff==0.17.5
