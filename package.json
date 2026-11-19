@@ -4,6 +4,9 @@
   "description": "Test-only dependencies. Nothing here is shipped in the site.",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "axe-core": "4.14.1",
+    "eslint": "9.39.5",
     "@eslint/js": "10.0.1",
     "axe-core": "4.14.0",
     "eslint": "10.15.0",
