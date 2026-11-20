@@ -141,10 +141,10 @@ rulebook_more:
   publisher: GOV.UK (data.gov.uk)
   url: https://www.digital-economy-act-register.data.gov.uk/
   updated: null
-  prov: S
+  prov: V
   caps: [gov, cat]
-  why: The public register of agreements made under the public service delivery, debt, fraud and civil registration powers in Part 5 of the Act.
-# Version 1.12.0 (issues #20 and #22): found by web search on 11 November 2026 (S).
+  why: "The public register of agreements made under the public service delivery, debt, fraud and civil registration powers in Part 5 of the Act. Each agreement records one main sharing method, so it undercounts APIs, and it covers only Part 5 powers. Use it to find what your organisation already shares."
+# Version 1.12.0 (issues #20 and #22): found by web search on 11 November 2026 (S). Opened and read on 20 November 2026: 667 agreements, filterable by controller and power (V).
 - id: RB-ICODSA
   group: Data protection
   title: 'Data sharing: a code of practice - data sharing agreements'
@@ -705,6 +705,17 @@ rulebook_more:
   - gov
   - cat
   why: Public cloud first for new or migrating services; data assets move with them.
+- id: RB-APICAT
+  group: Technology and architecture
+  title: API catalogue
+  publisher: Data Standards Authority
+  url: https://www.api.gov.uk/
+  updated: null
+  prov: V
+  caps:
+  - cat
+  why: "Lists APIs published by UK public sector organisations, grouped by owner. Search it for the APIs your organisation publishes when finding data already shared. A listing does not mean the API is open to everyone."
+# Opened and read on 20 November 2026 (V).
 - id: RB-API
   group: Technology and architecture
   title: API technical and data standards
@@ -5629,7 +5640,7 @@ standards_map:
     gov.operate: [RB-DPA, RB-ICOSHARE, RB-ICODSA, RB-GSC, RB-TNAIM]
     gov.assure: [RB-DMAHUB, RB-IAAP, RB-CMMI, RB-SVCASSESS]
     cat.mobilise: [RB-NDLPUB, RB-DSA, RB-METASTD]
-    cat.discover: [RB-TNAIM, RB-DCATGOV]
+    cat.discover: [RB-TNAIM, RB-DCATGOV, RB-DEAREG, RB-APICAT]
     cat.designate: [RB-GSC, RB-DPA]
     cat.own: [RB-SMROLES, RB-KIM]
     cat.describe: [RB-DCAT, RB-DCATGOV, RB-METASTD, RB-SKOS, RB-GEMINI, RB-ISO23081]
