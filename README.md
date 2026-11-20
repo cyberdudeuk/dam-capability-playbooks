@@ -19,7 +19,7 @@ UK government departments and arm's length bodies. It is more detailed than GOV.
 
 | Page | What it gives you |
 |---|---|
-| The policy | Every requirement, its strength and source, and the step that meets it |
+| The policy | Every requirement, its strength and source, and the step that meets it; which GOV.UK guidance should point to the policy and which it should point to |
 | Governance, Cataloguing, Quality | Step-by-step methods with progress tracking, roles, templates, measures, escalation and sector depth |
 | Sectors | Supplements for health, social care, geospatial, statistics, sharing, AI and more, with a finder and quality rules the Data Quality Commons kit can run |
 | Delivery and change | Embedding the policy in business as usual and in programmes: business cases, spend control, assurance, legacy exits, contracts, handover and benefits |

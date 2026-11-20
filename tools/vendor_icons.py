@@ -18,7 +18,8 @@ list-ordered wrench presentation activity calendar-check accessibility heart-han
 route map arrow-right download printer type award timer layers circle chevron-down chevron-right x rotate-ccw panel-left
 compass milestone badge-check signpost hand-helping languages eye brain a-large-small sliders-horizontal play link
 banknote construction handshake arrow-right-left trending-up radar archive briefcase grid-3x3 school
-ban check circle-x code-xml footprints git-branch history kanban map-pin megaphone mountain navigation package plug sparkles thumbs-up trophy vote""".split()
+ban check circle-x code-xml footprints git-branch history kanban map-pin megaphone mountain navigation package plug sparkles thumbs-up trophy vote
+arrow-down-to-line arrow-up-from-line""".split()
 
 
 def main():

@@ -1,6 +1,14 @@
 # Changelog
 
 ## Unreleased
+- **Joined up with other government guidance** (The policy page, new section): a register of 27 cross-references from a scan of 609 GOV.UK pages on 20 November 2026. It lists stale or broken references to fix, guidance that should point to the DAM Policy, and guidance the DAM guidance should point to. Each row links to the exact GOV.UK section where there is one, says what the page says today, and suggests a change and a priority. It can be filtered by kind and priority, and downloaded as `data/cross-references.csv`. These are this portal's suggestions, not GDS positions. C-51 checks it, and C-22 now checks the policy page's GOV.UK section links too.
+  - What the scan found: outside the DAM collection, only the Service Manual's data management community page links to the policy. GovS 005 names it without a link, and none of the 14 Service Standard points or 13 Technology Code of Practice points mentions it. Four live pages still use the older essential shared data assets wording.
+  - New verification findings F-08 to F-12: the superseded essential shared data assets guide is still published; the old 'Data ownership in government' address now redirects to the wrong page; four pages still use the ESDA wording; almost no guidance links to the policy; and the DAM guidance links unofficial and commercial sources.
+  - Nine new rulebook entries, including Service Standard point 13, Technology Code of Practice point 10, the section 46 records management code and the information asset owner guidance. Sections they link to are recorded in `content/source-anchors.json`, and the weekly health run now re-checks them (HL-02).
+  - New glossary term: cross-reference (inbound and outbound). New requirement FR-37.
+- Fixed before publishing (D-060, D-061, from visual inspection): the new section read "dam policy" because group names were lowercased for the summary cards, each table caption repeated its heading, and the priority pill broke "Should" across two lines. Each group now has its own count phrase, the guidance owner and date sit under the title so the table fits a laptop screen, and priority pills do not wrap. C-51 fails on each, with negative tests.
+- Fixed (D-058): `package.json` listed three test tools twice with different versions. Nothing installed changes. `tests/test_dependencies.py` now fails on any repeated key.
+- Fixed (D-059): the icons were drawn from lucide-static 1.69.0 although 1.73.0 is pinned. They are regenerated from 1.73.0, which redraws two icons slightly (circle-help and route), and a test now fails if the two drift apart again. Two icons added for the new section.
 
 ## 1.16.0 (2026-11-20)
 - Version 1.16.0: from everything you need to adopt the DAM Policy, not only its three named capabilities.

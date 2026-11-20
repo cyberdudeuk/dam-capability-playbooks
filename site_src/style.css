@@ -695,3 +695,5 @@ a.std{text-decoration-style:dotted}
 /* D-044: an opacity fade-in failed colour contrast while it ran, so motion here moves, never fades */
 @media (prefers-reduced-motion:no-preference){.pathway{animation:pw-in .4s ease-out both}@keyframes pw-in{from{transform:translateY(.4rem)}to{transform:none}}}
 .pw-mods a{display:inline-block;min-height:24px;min-width:24px;padding:.1rem .4rem;margin:.1rem .25rem .1rem 0;line-height:1.4}
+/* Version 1.17.0 (D-061): a priority word must not break inside its pill in a narrow table column */
+.chip.xr-pri{white-space:nowrap}

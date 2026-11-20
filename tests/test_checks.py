@@ -964,6 +964,64 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'assets' / 'app.js', "a.href = SAFE_HREF.test(href) ? href : '#';", 'a.href = href;')
         self.fails('c49_tailoring_and_journeys')
 
+    # Version 1.17.0: the GOV.UK cross-reference register on the policy page (C-51, and C-22 now covers dam.html)
+    def test_c51_row_missing(self):
+        edit(self.s / 'dam.html', '<span id="XR-12">', '<span id="XR-99">')
+        self.fails('c51_cross_references')
+
+    def test_c51_unrecorded_section(self):
+        edit(self.s / 'dam.html', '#what-it-means"', '#made-up-section"')
+        self.fails('c51_cross_references')
+
+    def test_c22_now_checks_the_policy_page(self):
+        edit(self.s / 'dam.html', '#what-it-means"', '#made-up-section"')
+        self.fails('c22_signposts_verified')
+
+    def test_c51_suggestions_note_removed(self):
+        edit(self.s / 'dam.html', 'not GDS positions', 'GDS positions')
+        self.fails('c51_cross_references')
+
+    def test_c51_finding_unlinked(self):
+        edit(self.s / 'dam.html', '<a href="about.html#F-08">F-08</a>', 'F-08')
+        self.fails('c51_cross_references')
+
+    def test_c51_csv_differs(self):
+        p = self.s / 'data' / 'cross-references.csv'
+        p.write_text(''.join(p.read_text(encoding='utf-8').splitlines(keepends=True)[:-1]), encoding='utf-8')
+        self.fails('c51_cross_references')
+
+    def test_c51_d060_lowercase_dam(self):
+        edit(self.s / 'dam.html', 'pages that do not yet point to the DAM Policy', 'guidance that should point to the dam policy', count=99)
+        self.fails('c51_cross_references')
+
+    def test_c51_d060_caption_repeats_heading(self):
+        edit(self.s / 'dam.html', '<caption id="t-xr-fix">7 pages with stale or broken references</caption>', '<caption id="t-xr-fix">Fix stale or broken references</caption>')
+        self.fails('c51_cross_references')
+
+    def test_c51_d061_priority_pill_may_wrap(self):
+        edit(self.s / 'assets' / 'style.css', '.chip.xr-pri{white-space:nowrap}', '')
+        self.fails('c51_cross_references')
+
+    def test_build_rejects_crossref_unknown_doc(self):
+        edit(self.r / 'content' / 'frameworks.yaml', 'doc: RB-TCOP10,', 'doc: RB-NOPE,')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_crossref_unrecorded_section(self):
+        edit(self.r / 'content' / 'frameworks.yaml', 'a: what-it-means,', 'a: what-it-really-means,')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_crossref_off_gov_uk(self):
+        edit(self.r / 'content' / 'frameworks.yaml', 'url: "https://www.gov.uk/government/publications/state-of-digital-government-review"', 'url: "https://example.org/review"')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_joined_row_that_needs_change(self):
+        edit(self.r / 'content' / 'frameworks.yaml', 'today: "Links the policy.", action: "None.", moscow: Won\'t}', 'today: "Links the policy.", action: "None.", moscow: Could}')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
     def test_build_rejects_journey_with_unknown_activity(self):
         edit(self.r / 'content' / 'playbooks.yaml', '{a: TOOL-4}', '{a: TOOL-9}')
         with self.assertRaises(build.ContentError):

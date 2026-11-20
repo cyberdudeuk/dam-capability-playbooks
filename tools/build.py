@@ -399,6 +399,7 @@ def validate(d):
     for x in d.get('standards', []):
         if x['status'] not in ('Met', 'Partly', 'Not yet'): errs.append(f"{x['id']}: bad status")
     validate_frameworks(d, errs, src, roles)
+    validate_crossrefs(d, errs, src)
     validate_extra(d, errs, reg)
     if errs:
         raise ContentError('\n'.join(errs))
@@ -596,6 +597,55 @@ def research_score(item, R, ideas=None):
     score = round(sum(c['weight'] * a[c['id']] / 3 for c in R['criteria']))
     band = next(b for m, b, _ in R['bands'] if score >= m)
     return score, band, a, v
+
+
+XR_PRIORITY = ('Must', 'Should', 'Could', "Won't")
+
+
+def validate_crossrefs(d, errs, src):
+    """Version 1.17.0: the GOV.UK cross-reference register (crossrefs in frameworks.yaml). Every row points to a rulebook
+    or source entry, or names a GOV.UK page that has no place in the rulebook; every deep link is to a recorded section;
+    every finding it cites exists; and only 'Already joined' rows may need no change."""
+    X = d.get('crossrefs')
+    if not X:
+        return
+    rb = {x['id'] for x in d['rulebook']}
+    anchors = d.get('_anchors', {})
+    findings = {x['id'] for x in d.get('findings', [])}
+    groups = [g['id'] for g in X['groups']]
+    for g in X['groups']:
+        if g['icon'] not in ICON_SET: errs.append(f"crossrefs group {g['id']}: unknown icon {g['icon']}")
+        # Visual inspection, 20 November 2026: lowercasing a group name for a stat card turned 'DAM' into 'dam', and a
+        # caption that repeated the heading was read twice. Each group gives its own count phrase, used as written.
+        if not g.get('count') or g['count'] == g['name']: errs.append(f"crossrefs group {g['id']}: needs a count phrase that differs from its name")
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', str(X.get('verified', ''))): errs.append('crossrefs: verified must be a date')
+    if not isinstance(X.get('scanned'), int) or X['scanned'] < 1: errs.append('crossrefs: scanned must be a page count')
+    seen = set()
+    for x in X['items']:
+        w = f"crossrefs {x.get('id')}"
+        if not re.fullmatch(r'XR-\d{2}', x.get('id', '')): errs.append(f'{w}: id must look like XR-01')
+        if x['id'] in seen: errs.append(f'{w}: listed twice')
+        seen.add(x['id'])
+        if x['group'] not in groups: errs.append(f"{w}: unknown group {x['group']}")
+        if x['moscow'] not in XR_PRIORITY: errs.append(f'{w}: priority must be Must, Should, Could or Won\'t')
+        if (x['group'] == 'joined') != (x['moscow'] == "Won't"): errs.append(f"{w}: only an 'Already joined' row may need no change, and it must say Won't")
+        if x.get('doc'):
+            if x['doc'] not in rb and x['doc'] not in src: errs.append(f"{w}: unknown rulebook or source entry {x['doc']}")
+            if any(k in x for k in ('title', 'url')): errs.append(f'{w}: give either doc or title and url, not both')
+        else:
+            if not all(x.get(k) for k in ('title', 'url')): errs.append(f'{w}: needs doc, or title and url')
+            elif not x['url'].startswith('https://www.gov.uk/'): errs.append(f'{w}: a page outside the rulebook must be on GOV.UK')
+        if x.get('a'):
+            if not x.get('doc'): errs.append(f'{w}: a section link needs a rulebook or source entry')
+            elif x['a'] not in anchors.get(x['doc'], []): errs.append(f"{w}: {x['doc']} has no verified section #{x['a']}")
+        # Owner as GOV.UK names it on the day checked, not the rulebook's publisher label, which can lag a rename
+        if not str(x.get('owner', '')).strip(): errs.append(f'{w}: owner missing')
+        if x.get('finding') and x['finding'] not in findings: errs.append(f"{w}: unknown finding {x['finding']}")
+        if x.get('updated') is not None and not re.fullmatch(r'\d{4}-\d{2}-\d{2}', str(x['updated'])): errs.append(f'{w}: updated must be a date or null')
+        for k in ('today', 'action'):
+            if len(str(x.get(k, '')).split()) < 1: errs.append(f'{w}: {k} is empty')
+    for g in groups:
+        if not any(x['group'] == g for x in X['items']): errs.append(f'crossrefs group {g}: has no rows')
 
 
 def validate_research(d, errs, rb):
@@ -917,7 +967,7 @@ CLUSTER_ICONS = dict(zip(CLUSTERS, ['compass', 'layers', 'settings-2', 'shield-c
 DQKIT_CHECKS = {'not_null', 'required_columns', 'unique', 'type', 'regex', 'in_set', 'range', 'not_future', 'compare', 'sum_max', 'freshness',
                 'no_gaps', 'header_has_unit', 'not_unknown', 'group_disparity', 'identifier', 'outlier'}
 DQKIT_SCHEMES = {'nhs_number', 'nino', 'uk_postcode', 'lei', 'uprn', 'gss_code', 'company_number', 'charity_number', 'school_urn', 'ods_code'}
-KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 51)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
+KNOWN_CHECKS = {f"C-{i:02d}" for i in range(1, 52)} | {f"B-{i:02d}" for i in range(1, 19)} | {'HL-01', 'HL-02', 'T-VAL'}
 ICON_SET = json.loads((ROOT / 'site_src' / 'icons.json').read_text())['icons']
 
 STAGE_ICONS = {
@@ -1005,6 +1055,15 @@ def md_code(html):
 
 def slug(s):
     return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
+
+
+MONTHS = ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')
+
+
+def fmt_date(iso):
+    """An ISO date as GOV.UK writes it, for example 2024-02-23 as 23 February 2024."""
+    y, m, dd = (int(p) for p in str(iso).split('-'))
+    return f'{dd} {MONTHS[m - 1]} {y}'
 
 
 def progress_widget(ids, label, kind='bar'):
@@ -1771,6 +1830,8 @@ class Site:
             self.add_search(x['title'], f'Rulebook: {x["group"]}', f'dam.html#{x["id"]}', x['why'])
         for x in self.d['findings']:
             self.add_search(f'{x["id"]} {x["title"]}', 'Verification finding', f'about.html#{x["id"]}', x['detail'])
+        for x in (self.d.get('crossrefs') or {}).get('items', []):
+            self.add_search(f'{x["id"]} {self.xr_target(x)[0]}', 'Cross-reference', f'dam.html#{x["id"]}', x['today'])
         for x in self.d['design']['requirements']:
             self.add_search(f'{x["id"]} {x["text"]}', 'Portal requirement', f'design.html#{x["id"]}', '')
         for o in self.d['open_register']:
@@ -1872,6 +1933,7 @@ class Site:
         tbl = table('t-reqs', 'Policy requirements and the steps that meet them', ['ID', 'Strength', 'Capability', 'Requirement', 'Source', 'Met by'], rows, row_attrs=attrs, tbody_id='req-table')
         musts = {c['id']: sum(1 for r in d['requirements'] if r['cap'] == c['id'] and r['strength'] == 'must') for c in d['capabilities']}
         mustcards = ''.join(f'<div class="stat-card {c["id"]}">{tile(CAP_ICONS[c["id"]], c["id"])}<span class="big">{musts[c["id"]]}</span><span>&#39;must&#39; requirements met by {E(c["name"].lower())}</span></div>' for c in d['capabilities'])
+        xr_html, xr_n = self.crossrefs_html()
         body = self.hero('landmark', 'The spine of the playbooks', 'What the DAM Policy requires',
                          f'What the <a href="{E(self.src["SRC-DAM"]["url"])}">data asset management policy in government</a> and its linked guidance require, which capability meets each requirement, and which step does the work.',
                          brief=['The policy applies to UK government departments and their arm\'s length bodies. It is optional for public corporations and does not apply to councils.',
@@ -1897,6 +1959,7 @@ class Site:
 <ol class="timeline">{tl}</ol>
 <h2 id="support">{icon("hand-helping")} Support available</h2>
 <ul class="icon-list">{sup}</ul>
+{xr_html}
 <h2 id="rulebook">{icon("scale")} Related policies, standards, legislation and rulebooks</h2>
 <p>Other government and public sector rules that apply alongside the DAM Policy. Each link was checked on {E(self.m["verified_on"])}: V means the page was fetched and its title confirmed; S means the site blocked automated checking, so open it before relying on it.</p>
 <div class="filters" data-filter="rb-list" role="group" aria-label="Filter the rulebook"><div><label for="r-cap">Capability</label><select id="r-cap" name="cap"><option value="">All</option><option value="gov">Data governance</option><option value="cat">Data cataloguing</option><option value="dq">Data quality</option></select></div>
@@ -1907,8 +1970,9 @@ class Site:
             {'id': 'requirements', 'label': 'Requirements', 'icon': 'list-checks', 'count': len(d['requirements'])},
             {'id': 'accountability', 'label': 'Who is accountable', 'icon': 'users', 'count': 7},
             {'id': 'timeline', 'label': 'Rollout and reporting dates', 'icon': 'calendar-clock', 'count': len(d['timeline'])},
-            {'id': 'support', 'label': 'Support available', 'icon': 'hand-helping', 'count': len(d['support'])},
-            {'id': 'rulebook', 'label': 'Related rulebooks', 'icon': 'scale', 'count': len(d['rulebook']), 'new': True}]}]
+            {'id': 'support', 'label': 'Support available', 'icon': 'hand-helping', 'count': len(d['support'])}]
+            + ([{'id': 'crossrefs', 'label': 'Joined up with other guidance', 'icon': 'arrow-right-left', 'count': xr_n, 'new': True}] if xr_n else [])
+            + [{'id': 'rulebook', 'label': 'Related rulebooks', 'icon': 'scale', 'count': len(d['rulebook']), 'new': True}]}]
         return self.page('dam', 'What the DAM Policy requires', body, drawer, crumbs=['The policy'], desc='What the DAM Policy requires and which capability meets it')
 
     def raci_table(self, c, tid):
@@ -2063,6 +2127,51 @@ class Site:
                            f'<span class="hint">{E(x["publisher"])}{" · updated " + E(x["updated"]) if x.get("updated") else ""}</span>{E(x["why"])}</li>' for x in items if x['group'] == g)
             groups.append(f'<h3>{E(g)}</h3><ul class="rulebook">{rows}</ul>')
         return f'<div id="{filt_id}">{"".join(groups)}</div>'
+
+    def xr_target(self, x):
+        """Version 1.17.0: the GOV.UK page a cross-reference row is about, as (title, url). A row points at a rulebook or
+        source entry where one exists (link, not copy: ADR 0002), with an optional verified section."""
+        if x.get('doc'):
+            s = self.rb.get(x['doc']) or self.src[x['doc']]
+            return s['title'], s['url'] + (f'#{x["a"]}' if x.get('a') else '')
+        return x['title'], x['url']
+
+    def crossrefs_html(self):
+        """Version 1.17.0 (C-51): which GOV.UK guidance should point to the DAM Policy, and which the DAM guidance should
+        point to, from a scan of GOV.UK. Suggestions by this portal, filterable by group and priority."""
+        X = self.d.get('crossrefs')
+        if not X:
+            return '', 0
+        found = {f['id'] for f in self.d['findings']}
+        filt = ('<div class="filters" data-filter="xr-list" role="group" aria-label="Filter the cross-references">'
+                '<div><label for="x-group">Kind</label><select id="x-group" name="group"><option value="">All</option>'
+                + ''.join(f'<option value="{g["id"]}">{E(g["name"])}</option>' for g in X['groups']) + '</select></div>'
+                '<div><label for="x-pri">Priority</label><select id="x-pri" name="moscow"><option value="">All</option>'
+                + ''.join(f'<option value="{slug(p)}">{E(p)}</option>' for p in XR_PRIORITY) + '</select></div>'
+                '<div><label for="x-q">Contains</label><input id="x-q" type="search" name="q"></div><p class="count-out" aria-live="polite"></p></div>')
+        secs = []
+        for g in X['groups']:
+            items = [x for x in X['items'] if x['group'] == g['id']]
+            rows, attrs = [], []
+            for x in items:
+                title, url = self.xr_target(x)
+                when = f'updated {fmt_date(x["updated"])}' if x.get('updated') else 'redirect, no date'
+                fnd = f' <a href="about.html#{x["finding"]}">{E(x["finding"])}</a>' if x.get('finding') in found else ''
+                # Visual inspection (D-060 follow-on): owner and date sit under the title, so the table fits a laptop screen
+                rows.append([f'<span id="{x["id"]}">{E(x["id"])}</span>', f'<a href="{E(url)}">{E(title)}</a><span class="hint">{E(x["owner"])}, {E(when)}</span>',
+                             self.gloss(x['today']) + fnd, E(x['action']), f'<span class="chip xr-pri">{E(x["moscow"])}</span>'])
+                attrs.append(f' data-item data-group="{g["id"]}" data-moscow="{slug(x["moscow"])}"')
+            secs.append(f'<h3 id="xr-{g["id"]}">{icon(g["icon"])} {E(g["name"])}</h3><p>{E(g["lede"])}</p>'
+                        + table(f't-xr-{g["id"]}', f'{len(items)} {g["count"]}', ['ID', 'Guidance', 'What it says today', 'Suggested change', 'Priority'], rows, row_attrs=attrs))
+        links_in = sum(1 for x in X['items'] if x['group'] == 'joined' and x.get('doc'))
+        stats = ''.join(f'<div class="stat-card">{tile(g["icon"])}<span class="big">{sum(1 for x in X["items"] if x["group"] == g["id"])}</span><span>{E(g["count"])}</span></div>' for g in X['groups'])
+        html_ = (f'<h2 id="crossrefs">{icon("arrow-right-left")} Joined up with other government guidance</h2>'
+                 f'<p>{self.gloss(X["intro"])}{prov("V", X["verified"])}</p><div class="stat-row">{stats}</div>'
+                 f'<div class="warning" role="note">{icon("triangle-alert")}<span>{E(X["limits"])}</span></div>'
+                 f'<details class="sbs-details"><summary>{icon("chevron-right", "i chev")}How the {X["scanned"]} pages were checked</summary><p>{E(X["method"])}</p></details>'
+                 f'{filt}<div id="xr-list">{"".join(secs)}</div>'
+                 f'<p>Download the register as <a href="data/cross-references.csv">CSV</a>. GOV.UK pages linking to the policy from outside its collection: {links_in}.</p>')
+        return html_, len(X['items'])
 
     # Sector signposting (version 1.5, ADR 0004): one home for sector content (the Sectors page), signposted where it is used
     def cap_sups(self, cid):
@@ -2958,6 +3067,7 @@ class Site:
             ('change-checklist', 'Delivery and change actions', 'Actions for embedding the DAM Policy in business as usual and change programmes.', ['change-checklist.csv'], ['change', 'delivery']),
             ('xref', 'Cross-reference manifest', 'The shared keys this portal uses (DAMA areas, requirements, capabilities, practices, sectors, roles, tool categories) and where each lives, so sister portals and tools can link to them.', ['xref.json'], ['interoperability', 'linked data']),
             ('capability-activities', 'Capability playbook activities', 'Activities for the capabilities beyond governance, cataloguing and quality, with steps, outputs, evidence, measures and who is accountable.', ['capability-activities.csv'], ['capability model', 'playbooks']),
+            ('cross-references', 'Cross-references between the DAM Policy and other government guidance', 'Which GOV.UK guidance should point to the DAM Policy, which guidance the DAM guidance should point to, and stale references to fix, from a scan of GOV.UK.', ['cross-references.csv'], ['cross-references', 'policy', 'standards']),
             ('assessment-evidence', 'Critical data evidence for each stage, gate and assessment', 'For each stage of a programme: the gates and assessments, the Service Standard points that touch critical data, what reviewers want to see and where in the portal the evidence comes from.', ['assessment-evidence.csv'], ['service assessment', 'gate review', 'assurance']),
             ('leader-plan', 'First year plan for people new to or leading data asset management', 'Checkpoints at 30, 60 and 90 days and at 6 and 12 months, with actions, questions and maturity targets.', ['leader-plan.csv'], ['leadership', 'maturity']),
             ('procurement', 'Tool requirements and procurement templates', 'Functional and non-functional requirements for data asset management tools, request for information questions, contract clauses and a pre-filled requirements schedule.',
@@ -4454,6 +4564,12 @@ class Site:
             (out / name).write_text(buf.getvalue(), encoding='utf-8')
         write_csv('requirements.csv', ['id', 'capability', 'strength', 'requirement', 'source', 'source_url', 'provenance'],
                   [[r['id'], r['cap'], r['strength'], r['text'], self.src[r['src']]['title'], self.src[r['src']]['url'], r['prov']] for r in d['requirements']])
+        X = d.get('crossrefs')
+        if X:
+            gname = {g['id']: g['name'] for g in X['groups']}
+            write_csv('cross-references.csv', ['id', 'kind', 'guidance', 'url', 'owner', 'last_updated', 'what_it_says_today', 'suggested_change', 'priority', 'finding', 'verified'],
+                      [[x['id'], gname[x['group']], *self.xr_target(x), x['owner'], x.get('updated') or '', x['today'], x['action'], x['moscow'], x.get('finding', ''), X['verified']]
+                       for x in X['items']])
         write_csv('templates.csv', ['template_id', 'template', 'capability', 'field_order', 'field', 'mode'],
                   [[t['id'], t['name'], o, i + 1, f, t['mode']] for o, _, _, t in template_owners(d) for i, f in enumerate(t['fields'])])
         # Version 1.16.0: capability playbook activities, the leader plan and the procurement pack as open data

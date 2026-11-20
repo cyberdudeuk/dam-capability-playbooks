@@ -1,5 +1,24 @@
 {
  "anchors": {
+  "RB-IAO": [
+   "IAMs",
+   "ai-resources-for-the-public-sector",
+   "compliance",
+   "continuous-improvement",
+   "data-ethics-framework",
+   "data-handling-principles",
+   "data-ownership-model",
+   "iao-accountabilities",
+   "iao-hub",
+   "iao-priorities-and-activities",
+   "iao-training",
+   "information-asset-management",
+   "resources",
+   "security-and-risk",
+   "what-the-iao-role-is-and-why-its-important",
+   "who-iaos-should-be",
+   "who-iaos-work-with-in-their-organisation"
+  ],
   "RB-LEGACY": [
    "aim-to-use-continuous-improvement-planning-to-keep-your-technology-up-to-date",
    "build-a-complete-and-accurate-register-of-your-data-assets",
@@ -12,6 +31,38 @@
    "principles-for-managing-legacy-technology",
    "use-the-technology-code-of-practice-as-a-basis-for-your-decisions",
    "when-is-it-time-to-migrate-your-legacy-technology"
+  ],
+  "RB-RECINFO": [
+   "help-others-validate-your-data",
+   "help-users-find-use-and-identify-your-data-set",
+   "make-sure-your-data-is-used-appropriately",
+   "making-metadata-machine-readable-and-accessible",
+   "metadata-you-should-record",
+   "record-the-provenance-of-your-data",
+   "recording-dates-in-your-metadata",
+   "using-conformsto",
+   "using-creator-or-contributor",
+   "using-datecreated",
+   "using-description",
+   "using-encodingformat",
+   "using-expires",
+   "using-hasdigitaldocumentpermission",
+   "using-identifier",
+   "using-license",
+   "using-metadata-in-government",
+   "using-name",
+   "using-supersededby",
+   "using-supersedes",
+   "using-temporalcoverage",
+   "where-to-record-and-store-your-metadata",
+   "who-should-use-this-guidance"
+  ],
+  "RB-REFDATA": [
+   "appoint-a-reference-data-owner-and-steward-to-manage-your-publishing-strategy",
+   "define-a-reference-data-publishing-strategy",
+   "establish-and-use-a-single-trusted-source-for-your-reference-data",
+   "provide-user-support-for-your-reference-data",
+   "publish-your-reference-data-for-usability-and-security"
   ],
   "RB-RETIRE": [
    "consider-user-needs",
@@ -27,6 +78,51 @@
    "users-who-access-your-service-on-govuk",
    "users-who-access-your-service-using-apis",
    "users-who-access-your-service-with-assisted-digital-support"
+  ],
+  "RB-SECPD": [
+   "access-to-personal-data",
+   "accuracy-of-personal-data",
+   "activities-to-consider",
+   "appendix",
+   "cyber-security",
+   "data-anonymisation-pseudonymisation",
+   "definition-of-personal-data",
+   "identify-risks",
+   "identify-your-data-assets",
+   "loss-of-personal-data",
+   "not-sharing-personal-data",
+   "principle1",
+   "principle10",
+   "principle2",
+   "principle3",
+   "principle4",
+   "principle5",
+   "principle6",
+   "principle7",
+   "principle8",
+   "principle9",
+   "principles-introduction",
+   "sharing-personal-data",
+   "types-of-risk",
+   "who-these-principles-are-for",
+   "why-these-principles-are-important"
+  ],
+  "RB-SVC13": [
+   "related-guidance",
+   "service-standard-points",
+   "what-it-means",
+   "why-its-important"
+  ],
+  "RB-TCOP10": [
+   "agreeing-and-exiting-supplier-contracts",
+   "archiving-deleting-or-renewing-data",
+   "choosing-the-right-technology-processes-and-training",
+   "follow-the-required-data-regulations",
+   "how-making-better-use-of-data-use-will-help-your-programme",
+   "plan-how-you-will-manage-your-data-throughout-its-lifecycle",
+   "publishing-and-sharing-your-data",
+   "related-guides",
+   "storing-and-standardising-your-data"
   ],
   "SRC-DAM": [
    "data-assets-in-scope",
@@ -301,5 +397,13 @@
   ]
  },
  "note": "Section anchors read from the GOV.UK Content API. The build refuses any signpost to an anchor not listed here; the health run re-checks them live.",
- "recorded": "2026-11-05"
+ "recorded": "2026-11-05",
+ "recorded_by_doc": {
+  "RB-IAO": "2026-11-20",
+  "RB-RECINFO": "2026-11-20",
+  "RB-REFDATA": "2026-11-20",
+  "RB-SECPD": "2026-11-20",
+  "RB-SVC13": "2026-11-20",
+  "RB-TCOP10": "2026-11-20"
+ }
 }

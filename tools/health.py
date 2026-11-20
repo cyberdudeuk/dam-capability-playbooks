@@ -105,6 +105,10 @@ def check_anchors(d):
         for sg in c['signposts']:
             if sg.get('a'):
                 want.setdefault(sg['doc'], set()).add(sg['a'])
+    # Version 1.17.0: sections the cross-reference register links to are watched the same way
+    for x in (f.get('crossrefs') or {}).get('items', []):
+        if x.get('a') and x.get('doc'):
+            want.setdefault(x['doc'], set()).add(x['a'])
     out = []
     for doc, anchors in sorted(want.items()):
         url = urls[doc]
