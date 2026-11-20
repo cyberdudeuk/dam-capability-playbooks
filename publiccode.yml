@@ -7,7 +7,7 @@ name: Data Asset Management capability playbooks
 url: https://github.com/cyberdudeuk/dam-capability-playbooks
 landingURL: https://cyberdudeuk.github.io/dam-capability-playbooks/
 softwareVersion: 1.16.0
-releaseDate: '2026-11-19'
+releaseDate: '2026-11-20'
 platforms:
 - web
 categories:
