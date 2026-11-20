@@ -780,6 +780,12 @@ class Vaccination(unittest.TestCase):
     def test_build_rejects_duplicate_standard_alias(self):
         self._rejects('    RB-SKOS: [SKOS]', '    RB-SKOS: [SKOS, DCAT]')
 
+    # Defect D-066: two pull requests each added a D-064; main stopped building. The build must refuse it.
+    def test_build_rejects_duplicate_defect_id(self):
+        edit(self.r / 'content' / 'playbooks.yaml', '- {id: D-065, found:', '- {id: D-064, found:')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
     def test_build_rejects_short_standard_alias(self):
         self._rejects('    RB-SDMX: [SDMX]', '    RB-SDMX: [SDM]')
 
@@ -985,7 +991,7 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'dam.html', '<a href="about.html#F-08">F-08</a>', 'F-08')
         self.fails('c51_cross_references')
 
-    # Defect D-064: a step's columns overflowed a 320 px screen (C-52)
+    # Defect D-065: a step's columns overflowed a 320 px screen (C-52)
     def test_c52_uncapped_grid_minimum(self):
         edit(self.s / 'assets' / 'style.css', 'minmax(min(15rem,100%),1fr)', 'minmax(15rem,1fr)')
         self.fails('c52_grids_fit_narrow_screens')
