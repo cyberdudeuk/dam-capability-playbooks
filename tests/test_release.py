@@ -54,31 +54,51 @@ def run_tag_step(event, confirm, version='1.16.0', changelog='## 1.16.0 (2026-11
         return done.returncode, env_file.read_text(), done.stdout
 
 
-def run_step(script, release_exists):
+def run_step(script, state, event='push'):
+    """Run the release step with stand-ins. state: None (no release), 'draft', 'complete' or 'published'."""
     with tempfile.TemporaryDirectory() as d:
         # A stand-in git answers rev-parse with a fixed commit id, so no repository is needed.
         (Path(d) / 'git').write_text('#!/bin/sh\necho 0123456789abcdef0123456789abcdef01234567\n')
         (Path(d) / 'git').chmod(0o755)
         log = Path(d) / 'calls'
         fake = Path(d) / 'gh'
-        # The stand-in records every call; "release view" succeeds only when the release exists.
-        fake.write_text('#!/bin/sh\necho "$@" >> "%s"\n[ "$1 $2" = "release view" ] && exit %d\nexit 0\n'
-                        % (log, 0 if release_exists else 1))
+        # The stand-in records every call. "release view" prints the state the real --jq filter would print, or fails
+        # when there is no release.
+        view = 'exit 1' if state is None else f'echo {state}; exit 0'
+        fake.write_text(f'#!/bin/sh\necho "$@" >> "{log}"\nif [ "$1 $2" = "release view" ]; then {view}; fi\nexit 0\n')
         fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
-        env = dict(os.environ, PATH=f'{d}:{os.environ["PATH"]}', GITHUB_REF_NAME='v9.9.9', TAG='v9.9.9')
+        env = dict(os.environ, PATH=f'{d}:{os.environ["PATH"]}', GITHUB_REF_NAME='v9.9.9', TAG='v9.9.9',
+                   GITHUB_EVENT_NAME=event)
         subprocess.run(['bash', '-e', '-c', script], env=env, check=True, cwd=d)
         return log.read_text().splitlines()
 
 
 class Release(unittest.TestCase):
     def test_existing_release_gets_the_files(self):
-        calls = run_step(release_step(), release_exists=True)
+        calls = run_step(release_step(), 'draft')
         self.assertTrue(any(c.startswith('release upload v9.9.9') and '--clobber' in c for c in calls), calls)
         self.assertFalse(any(c.startswith('release create') for c in calls), calls)
 
-    def test_new_release_is_created_with_its_tag_on_the_checked_commit(self):
-        calls = run_step(release_step(), release_exists=False)
-        self.assertTrue(any(c.startswith('release create v9.9.9') and '--target 0123456789abcdef0123456789abcdef01234567' in c for c in calls), calls)
+    def test_run_button_makes_a_draft_on_the_checked_commit(self):
+        # D-064: the workflow token cannot create the tag, so Run leaves a draft for a person to publish.
+        calls = run_step(release_step(), None, event='workflow_dispatch')
+        made = [c for c in calls if c.startswith('release create v9.9.9')]
+        self.assertTrue(made and '--draft' in made[0] and '--target 0123456789abcdef0123456789abcdef01234567' in made[0], calls)
+
+    def test_tag_push_with_no_release_publishes_one(self):
+        calls = run_step(release_step(), None, event='push')
+        made = [c for c in calls if c.startswith('release create v9.9.9')]
+        self.assertTrue(made and '--draft' not in made[0], calls)
+
+    def test_complete_release_is_left_alone(self):
+        # D-064: publishing the draft pushes the tag; the release is already complete and immutable.
+        calls = run_step(release_step(), 'complete')
+        self.assertFalse(any(c.startswith(('release upload', 'release create')) for c in calls), calls)
+
+    def test_d064_break_uploading_to_a_complete_release_is_caught(self):
+        broken = release_step().replace('complete) echo', 'complete) gh release upload "$TAG" "$zip" --clobber; echo')
+        calls = run_step(broken, 'complete')
+        self.assertTrue(any(c.startswith('release upload') for c in calls), calls)
 
     def test_run_button_tags_the_version_typed(self):
         code, env, _ = run_tag_step('workflow_dispatch', '1.16.0')
@@ -112,7 +132,7 @@ class Release(unittest.TestCase):
         # Deliberate break: without --target, Run would tag whatever GitHub picks (the default branch), not the
         # commit that was checked.
         broken = release_step().replace(' --target "$(git rev-parse HEAD)"', '')
-        calls = run_step(broken, release_exists=False)
+        calls = run_step(broken, None, event='workflow_dispatch')
         self.assertFalse(any('--target ' in c for c in calls), calls)
 
     def test_checkout_refuses_anything_but_a_commit_id_and_a_commit_off_main(self):
@@ -124,7 +144,7 @@ class Release(unittest.TestCase):
     def test_d052_break_unguarded_create_is_caught(self):
         # Deliberate break: the old step, which always creates, must fail the existing-release test's expectation.
         old = 'gh release create "$GITHUB_REF_NAME" "dam-capability-playbooks-${GITHUB_REF_NAME}.zip" --generate-notes'
-        calls = run_step(old, release_exists=True)
+        calls = run_step(old, 'draft')
         self.assertFalse(any(c.startswith('release upload') for c in calls), calls)
 
 

@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Changed (D-064): Run now makes a draft release, with its zip, on the checked commit. A person publishes it on the Releases page, and publishing creates the tag. The tag push that follows finds the release complete and stops. 1.16.0 was released this way on 20 November 2026.
 - Fixed (D-063): the release job installs the browser before running the tests, with the same retry as the main build. The first Run of 1.16.0 stopped safely before tagging because two browser tests could not start.
 - Added (D-062): a Run button on the release workflow. Type the version and, optionally, a commit on main. It checks the version against that commit's content and changelog, builds and checks the commit, then tags it and creates the release with the site zip in one step. Pushing a version tag still works.
 - **Joined up with other government guidance** (The policy page, new section): a register of 27 cross-references from a scan of 609 GOV.UK pages on 20 November 2026. It lists stale or broken references to fix, guidance that should point to the DAM Policy, and guidance the DAM guidance should point to. Each row links to the exact GOV.UK section where there is one, says what the page says today, and suggests a change and a priority. It can be filtered by kind and priority, and downloaded as `data/cross-references.csv`. These are this portal's suggestions, not GDS positions. C-51 checks it, and C-22 now checks the policy page's GOV.UK section links too.
