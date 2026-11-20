@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Changed (D-064): Run now makes a draft release, with its zip, on the checked commit. A person publishes it on the Releases page, and publishing creates the tag. The tag push that follows finds the release complete and stops. 1.16.0 was released this way on 20 November 2026.
 - Fixed (D-063): the release job installs the browser before running the tests, with the same retry as the main build. The first Run of 1.16.0 stopped safely before tagging because two browser tests could not start.
 - **Find what is already shared** (Cataloguing, step 2 Discover candidates): search the published Digital Economy Act register of information sharing agreements and the government API catalogue for your organisation, because data already shared is the place to start a return. The step says how to read the register with care: each agreement records one main sharing method, so it undercounts APIs, and it covers only Part 5 powers, so treat finds as candidates and confirm each with the team that runs the sharing. A new checklist item and a tip point to the NDL PubSec MCP exchanges map as a source of leads. New rulebook entry: API catalogue (RB-APICAT, opened and read 20 November 2026); the register entry (RB-DEAREG) is now verified and says what it leaves out. Both appear under the step's frameworks and standards.
 - Fixed (D-064, from visual inspection): at 320 px, opening a step on a Method tab made the page scroll sideways. All 16 repeating grids now cap their column minimum, and C-52 fails on an uncapped one.
