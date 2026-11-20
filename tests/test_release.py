@@ -31,6 +31,17 @@ def step_named(prefix):
     return runs[0]
 
 
+def release_runs():
+    wf = yaml.safe_load((ROOT / '.github' / 'workflows' / 'release.yml').read_text(encoding='utf-8'))
+    return [s.get('run', '') for s in wf['jobs']['release']['steps']]
+
+
+def browser_before_tests(runs):
+    install = [i for i, r in enumerate(runs) if 'playwright install' in r]
+    tests = [i for i, r in enumerate(runs) if 'unittest discover' in r]
+    return bool(install and tests and install[0] < tests[0])
+
+
 def run_tag_step(event, confirm, version='1.16.0', changelog='## 1.16.0 (2026-11-20)\n'):
     with tempfile.TemporaryDirectory() as d:
         (Path(d) / 'content').mkdir()
@@ -87,6 +98,15 @@ class Release(unittest.TestCase):
     def test_tag_push_uses_the_pushed_tag(self):
         code, env, _ = run_tag_step('push', '')
         self.assertEqual((code, env.strip()), (0, 'TAG=v7.7.7'))
+
+    def test_d063_browser_installed_before_the_tests(self):
+        # D-063: the release ran the full test suite without a browser, so the two browser tests errored and 1.16.0
+        # could not be released.
+        self.assertTrue(browser_before_tests(release_runs()))
+
+    def test_d063_break_no_browser_is_caught(self):
+        runs = [r for r in release_runs() if 'playwright install' not in r]
+        self.assertFalse(browser_before_tests(runs))
 
     def test_d062_break_release_without_target_is_caught(self):
         # Deliberate break: without --target, Run would tag whatever GitHub picks (the default branch), not the
