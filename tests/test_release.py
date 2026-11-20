@@ -80,7 +80,7 @@ class Release(unittest.TestCase):
         self.assertFalse(any(c.startswith('release create') for c in calls), calls)
 
     def test_run_button_makes_a_draft_on_the_checked_commit(self):
-        # D-065: the workflow token cannot create the tag, so Run leaves a draft for a person to publish.
+        # D-064: the workflow token cannot create the tag, so Run leaves a draft for a person to publish.
         calls = run_step(release_step(), None, event='workflow_dispatch')
         made = [c for c in calls if c.startswith('release create v9.9.9')]
         self.assertTrue(made and '--draft' in made[0] and '--target 0123456789abcdef0123456789abcdef01234567' in made[0], calls)
@@ -91,11 +91,11 @@ class Release(unittest.TestCase):
         self.assertTrue(made and '--draft' not in made[0], calls)
 
     def test_complete_release_is_left_alone(self):
-        # D-065: publishing the draft pushes the tag; the release is already complete and immutable.
+        # D-064: publishing the draft pushes the tag; the release is already complete and immutable.
         calls = run_step(release_step(), 'complete')
         self.assertFalse(any(c.startswith(('release upload', 'release create')) for c in calls), calls)
 
-    def test_d065_break_uploading_to_a_complete_release_is_caught(self):
+    def test_d064_break_uploading_to_a_complete_release_is_caught(self):
         broken = release_step().replace('complete) echo', 'complete) gh release upload "$TAG" "$zip" --clobber; echo')
         calls = run_step(broken, 'complete')
         self.assertTrue(any(c.startswith('release upload') for c in calls), calls)

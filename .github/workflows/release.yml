@@ -69,7 +69,7 @@ jobs:
       - env:
           GH_TOKEN: ${{ github.token }}
         # D-052 (issue 50): a person may make the release by hand first. Attach the files to it rather than fail.
-        # D-065: releases here are immutable once published, and the workflow token cannot create a tag on an older
+        # D-064: releases here are immutable once published, and the workflow token cannot create a tag on an older
         # commit, so Run makes a draft with the zip and a person publishes it (publishing creates the tag). When the
         # tag push from that publish arrives, the release is already complete, so this step says so and stops.
         run: |
