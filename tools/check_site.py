@@ -438,7 +438,8 @@ def c22_signposts_verified(site, repo, pages):
     fw = repo / 'content' / 'frameworks.yaml'
     rb = yaml.safe_load(fw.read_text(encoding='utf-8')).get('rulebook_more', []) if fw.exists() else []
     url_to_id = {x['url']: x['id'] for x in d['sources'] + d.get('rulebook', []) + rb}
-    for name in ('capability-model.html', 'change.html', 'professions.html'):
+    # Version 1.17.0: the policy page now deep-links GOV.UK sections from its cross-reference register
+    for name in ('capability-model.html', 'change.html', 'professions.html', 'dam.html'):
         if not (site / name).exists():
             errs.append(f'{name} missing'); continue
         t = (site / name).read_text(encoding='utf-8')
@@ -1833,6 +1834,57 @@ def c50_stages_gates_assessments(site, repo, pages):
     return errs
 
 
+def c51_cross_references(site, repo, pages):
+    """Rule (version 1.17.0): the policy page shows the GOV.UK cross-reference register: every row, linked to its page and,
+    where given, to a section recorded as verified; every finding it cites exists; it says these are suggestions with the
+    date they were checked; and the CSV holds the same rows."""
+    import csv
+    import json as _json
+    errs = []
+    X = _content(repo, 'frameworks.yaml').get('crossrefs')
+    if not X: return ['content/frameworks.yaml: crossrefs missing']
+    P = _content(repo, 'playbooks.yaml')
+    fw = _content(repo, 'frameworks.yaml')
+    docs = {x['id']: x for x in P['sources'] + P['rulebook'] + fw.get('rulebook_more', [])}
+    anchors = _json.loads((repo / 'content' / 'source-anchors.json').read_text())['anchors']
+    h = (site / 'dam.html').read_text(encoding='utf-8')
+    m = re.search(r'<h2 id="crossrefs">.*?(?=<h2 id=)', h, re.S)
+    if not m: return ['dam.html: cross-references section missing']
+    sec = m.group(0)
+    if 'data-filter="xr-list"' not in sec or 'id="xr-list"' not in sec: errs.append('dam.html: cross-references cannot be filtered')
+    if X['limits'] not in sec.replace('&#x27;', "'").replace('&#39;', "'"): errs.append('dam.html: must say the cross-references are suggestions, not GDS positions')
+    for g in X['groups']:
+        if f'id="xr-{g["id"]}"' not in sec: errs.append(f'dam.html: group {g["id"]} missing')
+    # D-060: a lowercased group name read 'dam policy', and each caption repeated its heading
+    if re.search(r'\bdam (policy|guidance|collection)\b', re.sub(r'<[^>]+>', ' ', sec)): errs.append('dam.html: DAM is written in lower case in the cross-references')
+    for g in X['groups']:
+        cap = re.search(r'<caption id="t-xr-' + g['id'] + r'">(.*?)</caption>', sec)
+        if cap and cap.group(1) == g['name']: errs.append(f'dam.html: the {g["id"]} table caption repeats its heading')
+    # D-061: the priority pill wrapped mid-word ('Sho', 'uld') in a narrow column
+    css = (site / 'assets' / 'style.css').read_text(encoding='utf-8')
+    if '.chip.xr-pri{white-space:nowrap}' not in css.replace(' ', ''): errs.append('style.css: priority pills in the cross-references may wrap mid-word')
+    if sec.count('class="chip xr-pri"') != len(X['items']): errs.append('dam.html: every cross-reference priority needs the no-wrap pill')
+    about = (site / 'about.html').read_text(encoding='utf-8')
+    for x in X['items']:
+        row = re.search(r'<tr data-item data-group="[^"]+" data-moscow="[^"]+"><th scope="row"[^>]*><span id="' + x['id'] + r'">.*?</tr>', sec, re.S)
+        if not row: errs.append(f'dam.html: {x["id"]} missing or not filterable'); continue
+        url = docs[x['doc']]['url'] if x.get('doc') else x['url']
+        if x.get('a'):
+            if x['a'] not in anchors.get(x['doc'], []): errs.append(f'{x["id"]}: {x["doc"]} has no verified section #{x["a"]}')
+            url += '#' + x['a']
+        if f'href="{url.replace("&", "&amp;")}"' not in row.group(0): errs.append(f'dam.html: {x["id"]} does not link {url}')
+        if x.get('finding'):
+            if f'href="about.html#{x["finding"]}"' not in row.group(0): errs.append(f'dam.html: {x["id"]} does not link its finding')
+            if f'id="{x["finding"]}"' not in about: errs.append(f'about.html: finding {x["finding"]} missing')
+    for href in set(re.findall(r'href="(https://www\.gov\.uk/[^"#]+)#([^"]+)"', sec)):
+        doc = next((k for k, v in docs.items() if v['url'] == href[0].replace('&amp;', '&')), None)
+        if doc not in anchors or href[1] not in anchors[doc]: errs.append(f'dam.html: #{href[1]} on {href[0]} is not a recorded section')
+    with (site / 'data' / 'cross-references.csv').open(encoding='utf-8') as fh:
+        rows = list(csv.reader(fh))
+    if [r[0] for r in rows[1:]] != [x['id'] for x in X['items']]: errs.append('data/cross-references.csv: rows differ from the content')
+    return errs
+
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -1841,7 +1893,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name, c44_pathways, c45_capability_playbooks, c46_leader_route, c47_portals_in_sync, c48_procurement_and_learning, c49_tailoring_and_journeys, c50_stages_gates_assessments]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name, c44_pathways, c45_capability_playbooks, c46_leader_route, c47_portals_in_sync, c48_procurement_and_learning, c49_tailoring_and_journeys, c50_stages_gates_assessments, c51_cross_references]
 
 
 def run(site, repo, only=None, quiet=False):

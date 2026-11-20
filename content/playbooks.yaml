@@ -908,6 +908,7 @@ concepts:
 - {id: exit-plan, term: Exit plan, alt: [exit strategy], broader: null, caps: [gov], src: null, prov: O, def: "How you would move your data and content out of a product, with the formats, steps, time and cost, written before you sign and tested each year."}
 - {id: cpd, term: Continuing professional development, alt: [CPD], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "The learning you record to keep your skills current, often required by a professional body to keep a certification or chartered status."}
 - {id: data-literacy, term: Data literacy, alt: [data skills], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "How well people across an organisation can read, understand, question and use data, and talk about it with confidence."}
+- {id: cross-reference, term: Cross-reference, alt: [inbound reference, outbound reference], broader: null, caps: [gov, cat, dq], src: null, prov: O, def: "A link from one piece of guidance to another. Inbound means other guidance points to the DAM Policy. Outbound means the DAM guidance points to other guidance."}
 
 # ---------------------------------------------------------------------------
 # Accountability records shown on the About page
@@ -991,12 +992,17 @@ defects:
 - {id: D-055, found: "Code scanning on pull request 55 (17 November 2026)", defect: "The tailoring built link addresses partly from form values and stored choices, so a crafted value could have become a javascript address.", cause: "A new script reused the link pattern without the allowlist that D-048 added elsewhere.", check: "Links in the tailoring must be a page of this portal with an optional anchor, and stored choices must match known values. C-49 fails if the allowlist is removed, and a test proves it."}
 - {id: D-056, found: "Release 1.16.0 (19 November 2026)", defect: "Two vaccine tests (C-23 citation drift, C-32 MCP version) edited a version typed into the test, 1.10.1, so a release that changed the version would have disarmed them without a failure.", cause: "The break hard-coded a fact of the data at the time.", check: "The tests read the version from content/playbooks.yaml, so they keep failing on a broken copy after every release."}
 - {id: D-057, found: "CI on pull request 67 (20 November 2026)", defect: "The linter failed the build: two variables in explorer/explorer.js were given starting values that were never read.", cause: "A newer ESLint added the no-useless-assignment rule, and the Dependabot update that brought it in had nothing to lint that day.", check: "The CI linter step (D-LINT-01) fails on any finding; the two assignments are removed."}
+- {id: D-058, found: "Cross-reference work (20 November 2026)", defect: "package.json listed @eslint/js, axe-core and eslint twice, each time with two different versions.", cause: "A dependency update added new entries instead of replacing the old ones. JSON keeps the last value without warning, so nothing failed.", check: "tests/test_dependencies.py fails on any key repeated in package.json or package-lock.json; a negative test proves it."}
+- {id: D-059, found: "Cross-reference work (20 November 2026)", defect: "The vendored icons were drawn from lucide-static 1.69.0 while package.json pinned 1.73.0, so regenerating them would silently redraw icons.", cause: "A dependency update bumped the pinned version without regenerating site_src/icons.json, and no check compared the two.", check: "tests/test_dependencies.py fails if icons.json was not drawn from the pinned version; a negative test proves it. The icons are regenerated from 1.73.0."}
+- {id: D-060, found: "Visual inspection of the policy page (20 November 2026)", defect: "The new cross-references section read 'guidance that should point to the dam policy', and each table caption repeated the heading above it.", cause: "Stat card labels were made by lowercasing group names, which lowercased the DAM acronym, and captions reused the group name.", check: "Each group gives its own count phrase, used as written, and the build refuses one equal to the group name. C-51 fails on a lowercase 'dam' in the section or a caption that repeats its heading; two negative tests prove it."}
+- {id: D-061, found: "Visual inspection of the policy page in dark mode at 1280 pixels (20 November 2026)", defect: "In the cross-references tables the priority pill broke 'Should' across two lines.", cause: "Pills wrap like ordinary text, and the priority column is narrow.", check: "Priority pills in the register carry a no-wrap class (other pills keep wrapping so long ones still fit phones). C-51 fails if the class or its style is missing; a negative test proves it."}
 adversarial:
 - {challenge: "Another portal adds to the scatter it claims to fix. Practitioners already describe the playbooks as 'published, none joined'.", answer: "It holds no second copy of anything with a master elsewhere. GOV.UK pages, the MEM and the Data Quality Commons are linked, not copied. What it adds is the join: the requirements matrix, one role model and the interlocks."}
 - {challenge: "Readers will mistake this playbook's stage sequences for GOV.UK requirements.", answer: "Every requirement carries its source and strength (must, should, method, gap); stages are labelled as synthesis; provenance badges sit on every fact."}
 - {challenge: "Base rate: catalogue programmes commonly stall on adoption rather than on tooling (K, a lead not a measured fact).", answer: "The method puts ownership before description and reporting from catalogue records, so effort lands where adoption fails. Whether that is enough is untested (OR-04)."}
 - {challenge: "It is built before learning from users.", answer: "Named as a risk (OR-04). The journeys say they are assumed needs."}
 - {challenge: "It is hosted outside an official organisation and is not cleared.", answer: "Stated on every page and in OR-03. The content is OGL and the code MIT, so it can move to an official organisation unchanged."}
+- {challenge: "A public, unofficial portal listing changes other teams should make to their GOV.UK guidance could be read as GDS asking for them, and 27 suggestions from one scan may be wrong in detail.", answer: "Every row says it is this portal's suggestion, not a GDS position, and that each page's owner decides. Each fact links to the live page, with the date it was checked, and the weekly health run re-checks the sections it links to. Base rate: GOV.UK pages often lag a policy that replaces another; the ESDA wording is still live on four pages six months after the DAM Policy, which is the disconfirming test this register would fail if it were wrong."}
 
 # ---------------------------------------------------------------------------
 # Page introductions (what each page is for, who it is for)
@@ -1858,6 +1864,37 @@ findings:
   src: SRC-MD
   verified: '2026-11-05'
   action: "Proposed crosswalk below, to be agreed by the metadata standards owner (OR-06)."
+# Version 1.17.0: from the GOV.UK cross-reference scan of 20 November 2026 (crossrefs in frameworks.yaml, C-51)
+- id: F-08
+  title: The superseded essential shared data assets guide is still published
+  detail: "'Make essential shared data assets available across government' (last updated 23 February 2024) is still live on GOV.UK. It is not withdrawn and does not redirect to the DAM collection."
+  src: null
+  verified: '2026-11-20'
+  action: "This portal uses the DAM Policy's terms only. Ask the page owner to withdraw it with a pointer to the DAM collection (XR-01)."
+- id: F-09
+  title: The old 'Data ownership in government' address sends readers to the wrong page
+  detail: "The ESDA-era address for 'Data ownership in government' now redirects to the guidance on identifying critical data assets, not to the data ownership model. The identification guidance, the data quality action plan guide and the information asset owner guidance all still link to the old address."
+  src: SRC-OWN
+  verified: '2026-11-20'
+  action: "This portal links the data ownership model directly. Ask the page owner to redirect the old address to the model (XR-02, XR-14)."
+- id: F-10
+  title: Four live GOV.UK pages still use the essential shared data assets wording
+  detail: "The Data and AI Ethics Framework, 'Using metadata to describe data assets in a data catalogue', 'Principles for securing personal data in government services' and the GovS 005 continuous improvement assessment framework still ask teams to designate or prioritise essential shared data assets."
+  src: null
+  verified: '2026-11-20'
+  action: "Read 'critical data asset' wherever these pages say 'essential shared data asset'. Ask each page owner to update the wording (XR-03 to XR-06)."
+- id: F-11
+  title: Almost no GOV.UK guidance links to the DAM Policy
+  detail: "Of 609 GOV.UK pages read on 20 November 2026, only the Service Manual's data management community page links to the policy from outside the DAM collection. GovS 005 names the policy without a link. None of the 14 Service Standard points or 13 Technology Code of Practice points mentions it."
+  src: SRC-DAM
+  verified: '2026-11-20'
+  action: "The policy page lists the guidance that should point to the policy and what it should say (XR-08 to XR-20)."
+- id: F-12
+  title: The DAM guidance links unofficial and commercial sources
+  detail: "The data ownership model links an unofficial GDPR text site rather than legislation.gov.uk. The metadata guidance links Wikipedia. The data quality action plan guide links a supplier's PDF for quality dimensions. The guide and the issues framework also use the old action plan address, which still redirects correctly."
+  src: SRC-DQAP
+  verified: '2026-11-20'
+  action: "This portal cites legislation.gov.uk and the Government Data Quality Framework instead. Ask the guidance owner to do the same (XR-07)."
 
 # Proposed crosswalk for the four guidance properties missing from the MEM (OR-06). Proposal, not agreed.
 mem_proposal:
@@ -1939,6 +1976,7 @@ design:
   - {id: FR-34, kind: Functional, moscow: Should, text: "Help learners learn, keep and share what they learn, link it to roles, careers and certifications, and download a learning record to use as CPD evidence.", features: [learning], checks: [C-48]}
   - {id: FR-35, kind: Functional, moscow: Should, text: "Recommend modules, activities and the next checkpoint by role, profession, organisation maturity and data literacy, reading the self-assessment where there is one.", features: [personas], checks: [C-49]}
   - {id: FR-36, kind: Functional, moscow: Should, text: "For every stage of designing and delivering a service, show the gates and assessments, the Service Standard points that touch critical data, what reviewers want to see and where the evidence comes from, linking to published guidance rather than repeating it.", features: [change, personas], checks: [C-50]}
+  - {id: FR-37, kind: Functional, moscow: Should, text: "Show which GOV.UK guidance should point to the DAM Policy and which guidance the DAM guidance should point to, with stale references to fix, each linked to the exact section and checked against GOV.UK.", features: [dam, data], checks: [C-51, C-22, HL-02]}
   - {id: IR-01, kind: Integration, moscow: Must, text: "Use only GitHub services (Pages, issue forms, Discussions, Actions and releases), plus an optional Microsoft Forms route for private feedback.", features: [contact, status, whats-new], checks: [C-05, C-33, HL-01]}
   architecture:
     components:
