@@ -1,11 +1,23 @@
 name: Release
 # Plain commands only: the repository allows no third-party actions (D-018).
-# A person pushes a version tag (for example v1.1.0). This workflow builds, checks and attaches the site as a zip.
+# A person starts a release, either by pushing a version tag (for example v1.1.0), or by pressing Run here (D-062).
+# Run builds and checks the chosen commit (main unless another is named), checks that its content version is the
+# one typed, tags it, and creates the release with the site zip in one step, so it works with immutable releases.
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type the version to release, exactly as in content/playbooks.yaml (for example 1.16.0)'
+        required: true
+      commit:
+        description: 'Commit to release (leave blank for the head of main)'
+        required: false
+        default: ''
 permissions:
   contents: write
+concurrency: {group: release, cancel-in-progress: false}
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -13,26 +25,44 @@ jobs:
       - name: Check out the commit (plain git; the repository allows no third-party actions)
         env:
           GH_TOKEN: ${{ github.token }}
+          COMMIT: ${{ inputs.commit }}
         run: |
           git init -q .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch -q --depth 1 origin "${GITHUB_SHA}"
-          git checkout -q FETCH_HEAD
+          target="${COMMIT:-$GITHUB_SHA}"
+          [[ "$target" =~ ^[0-9a-f]{7,40}$ ]] || { echo "::error::'$target' is not a commit id. Nothing was released."; exit 1; }
+          git fetch -q origin main && git fetch -q origin "$target"
+          git checkout -q "$target"
+          git merge-base --is-ancestor HEAD origin/main || { echo "::error::$target is not on main. Nothing was released."; exit 1; }
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: Work out the tag (a pressed button must name the version in the content)
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: |
+          v=$(sed -n 's/^  version: *//p' content/playbooks.yaml | head -1)
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            [ "$CONFIRM" = "$v" ] || { echo "::error::You typed '$CONFIRM' but content/playbooks.yaml says '$v'. Nothing was released."; exit 1; }
+            grep -q "^## $v " CHANGELOG.md || { echo "::error::CHANGELOG.md has no section for $v. Nothing was released."; exit 1; }
+            echo "TAG=v$v" >> "$GITHUB_ENV"
+          else
+            echo "TAG=${GITHUB_REF_NAME}" >> "$GITHUB_ENV"
+          fi
       - name: Python environment (runner's own Python 3, isolated in a virtual environment)
         run: |
           python3 -m venv "$RUNNER_TEMP/venv"
           echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
       - run: pip install -r requirements.txt
       - run: python tools/build.py && python tools/check_site.py && python -m unittest discover -s tests
-      - run: cd site && zip -qr "../dam-capability-playbooks-${GITHUB_REF_NAME}.zip" .
+      - run: cd site && zip -qr "../dam-capability-playbooks-${TAG}.zip" .
       - env:
           GH_TOKEN: ${{ github.token }}
         # D-052 (issue 50): a person may make the release by hand first. Attach the files to it rather than fail.
+        # D-062: when Run was pressed, `gh release create --target` makes the tag on the checked commit, with the zip,
+        # in one step (tag pushes cannot be relied on, and releases here are immutable once published).
         run: |
-          zip="dam-capability-playbooks-${GITHUB_REF_NAME}.zip"
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" "$zip" --clobber
+          zip="dam-capability-playbooks-${TAG}.zip"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$zip" --clobber
           else
-            gh release create "$GITHUB_REF_NAME" "$zip" --generate-notes --title "$GITHUB_REF_NAME"
+            gh release create "$TAG" "$zip" --generate-notes --title "$TAG" --target "$(git rev-parse HEAD)"
           fi
