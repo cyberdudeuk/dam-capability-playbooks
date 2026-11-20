@@ -1,0 +1,5 @@
+Contact: https://github.com/cyberdudeuk/dam-capability-playbooks/security/advisories/new
+Policy: https://github.com/cyberdudeuk/dam-capability-playbooks/blob/main/SECURITY.md
+Expires: 2027-11-05T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://cyberdudeuk.github.io/dam-capability-playbooks/.well-known/security.txt

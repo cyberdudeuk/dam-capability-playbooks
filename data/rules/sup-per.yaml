@@ -1,0 +1,29 @@
+# Data about people: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-data-about-people
+  title: 'Starter rules: Data about people (adapt column names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: PER-01
+  check: not_null
+  description: Family name is recorded
+  dimension: completeness
+  column: family_name
+- id: PER-02
+  check: not_future
+  description: Date of birth is not in the future
+  dimension: validity
+  column: date_of_birth
+- id: PER-03
+  check: unique
+  description: Each person is recorded once
+  dimension: uniqueness
+  columns:
+  - person_id
+- id: PER-04
+  check: not_unknown
+  description: Ethnicity is not unknown, where it is lawfully collected
+  dimension: completeness
+  column: ethnicity

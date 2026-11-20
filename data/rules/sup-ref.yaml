@@ -1,0 +1,33 @@
+# Reference data and identifiers: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-reference-data-and-identifiers
+  title: 'Starter rules: Reference data and identifiers (adapt column names to your
+    data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: REF-01
+  check: identifier
+  description: Area code is a GSS code
+  dimension: validity
+  column: area_code
+  scheme: gss_code
+- id: REF-02
+  check: identifier
+  description: Company number is in Companies House format
+  dimension: validity
+  column: company_number
+  scheme: company_number
+- id: REF-03
+  check: identifier
+  description: LEI is valid, including its check digits
+  dimension: validity
+  column: lei
+  scheme: lei
+- id: REF-04
+  check: identifier
+  description: Charity number is in a valid format
+  dimension: validity
+  column: charity_number
+  scheme: charity_number

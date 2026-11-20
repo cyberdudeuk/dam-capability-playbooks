@@ -1,0 +1,5 @@
+entity_id,Entity,Description,Related entity,Relationship,Cardinality
+PERSON,Person,Someone the service supports,,,
+CASE,Case,A piece of work about one person,PERSON,is about,many to one
+APPOINTMENT,Appointment,A meeting held for a case,CASE,is held for,many to one
+OUTCOME,Outcome,What an appointment recorded,APPOINTMENT,records,one to one

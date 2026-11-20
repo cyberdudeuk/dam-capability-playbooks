@@ -1,0 +1,6 @@
+layer,name,roles,may,may_not
+1,Direction,Data governance board; Chief data officer,"Set data policy, standards and risk appetite; Resolve escalations between owners; Approve exceptions above an owner's authority",Edit records or quality rules directly
+2,Asset accountability,Data owner; Information asset owner,"Approve classification, access policy and sharing; Approve changes to the meaning of data items; Accept risks and approve exceptions for their assets; Approve retention and disposal","Change systems or data directly, without the custodian"
+3,Stewardship,Data steward; Catalogue manager; Data quality lead or analyst,"Maintain catalogue records, glossary definitions and metadata; Set and run quality rules within the owner's targets; Propose changes to meaning, access or classification",Change classification or approve sharing; Change a definition's meaning without the owner
+4,Custody and operation,Data custodian,"Run storage, backups and technical access controls; Carry out approved access changes, fixes and disposal",Grant access without approval; Change what data means
+5,Use,Data users,Use the data for the agreed purpose; Report problems and request access or changes,Change master data; Share the data on without approval

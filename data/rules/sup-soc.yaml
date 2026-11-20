@@ -1,0 +1,42 @@
+# Adult and children's social care data: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-adult-and-children-s-social-care-data
+  title: 'Starter rules: Adult and children''s social care data (adapt column names
+    to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: SOC-01
+  check: identifier
+  description: Supplying council is a valid GSS code
+  dimension: validity
+  column: la_code
+  scheme: gss_code
+- id: SOC-02
+  check: identifier
+  description: NHS number is valid where present, so care and health records can be
+    linked
+  dimension: validity
+  column: nhs_number
+  scheme: nhs_number
+- id: SOC-03
+  check: not_future
+  description: Event dates are not in the future
+  dimension: validity
+  column: event_start_date
+- id: SOC-04
+  check: freshness
+  description: Each council's latest submission is no more than one quarter and 30
+    days old
+  dimension: timeliness
+  column: submission_date
+  expected: P3M
+  lag: P30D
+- id: SOC-05
+  check: unique
+  description: Each event is recorded once for each person
+  dimension: uniqueness
+  columns:
+  - person_id
+  - event_id

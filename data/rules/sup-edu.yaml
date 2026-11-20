@@ -1,0 +1,21 @@
+# Pupil and learner data: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-pupil-and-learner-data
+  title: 'Starter rules: Pupil and learner data (adapt column names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: EDU-01
+  check: identifier
+  description: School unique reference number is 6 digits
+  dimension: validity
+  column: school_urn
+  scheme: school_urn
+- id: EDU-02
+  check: unique
+  description: Each pupil appears once per census
+  dimension: uniqueness
+  columns:
+  - pupil_id
+  - census_date

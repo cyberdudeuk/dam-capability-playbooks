@@ -1,0 +1,11 @@
+id,clause,what_to_include,why_it_matters,sources
+CL-01,Ownership of content,"You own your data and everything you put into or create in the tool: metadata, glossary, rules, results, lineage and configuration.","Without it the assets you report under the policy, and their history, may not be yours to move.",RB-MSC RB-LOCKIN
+CL-02,Export in open formats,"Full export at any time, in named open formats, at no extra charge, tested before go-live and before each renewal.",Keeps you able to report and to change product.,RB-LOCKIN RB-PPN0715
+CL-03,Exit plan and assistance,"A costed exit plan in the contract, updated each year, with the supplier's help to move.",An exit you have not planned is the legacy of the future.,RB-MSC RB-LOCKIN
+CL-04,Data processing,"A data processing schedule naming the processing, sub-processors and locations.",Needed whenever personal data is processed for you.,RB-MTC20 RB-PPN020
+CL-05,Separate prices,"A price for each capability, and the right to end one without ending the rest.",Lets you replace one part without replacing everything.,RB-TCOP11
+CL-06,Capped increases,"A cap on price increases at renewal, and notice of any change.",Keeps the cost in the business case true.,RB-TCOP11
+CL-07,Security and incidents,"Security that matches the classification, notice of incidents within an agreed time, and help to respond.",Critical data assets must stay available and protected.,RB-GSC RB-NCSCIR
+CL-08,Accessibility,"The tool meets WCAG 2.2 AA for staff screens, with an accessibility statement kept up to date.",The accessibility regulations apply to tools staff use.,RB-A11YREQ
+CL-09,Service levels,"Availability, recovery time and recovery point targets, reported each month, with remedies.",Owners need to know how long a critical asset could be unavailable.,RB-NCSCCLOUD
+CL-10,AI use of your data,"No use of your data to train models without written agreement, and a setting to turn AI features off.",Keeps control of how your data is used.,RB-AIPLAY
