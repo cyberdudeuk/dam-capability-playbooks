@@ -69,12 +69,20 @@ jobs:
       - env:
           GH_TOKEN: ${{ github.token }}
         # D-052 (issue 50): a person may make the release by hand first. Attach the files to it rather than fail.
-        # D-062: when Run was pressed, `gh release create --target` makes the tag on the checked commit, with the zip,
-        # in one step (tag pushes cannot be relied on, and releases here are immutable once published).
+        # D-064: releases here are immutable once published, and the workflow token cannot create a tag on an older
+        # commit, so Run makes a draft with the zip and a person publishes it (publishing creates the tag). When the
+        # tag push from that publish arrives, the release is already complete, so this step says so and stops.
         run: |
           zip="dam-capability-playbooks-${TAG}.zip"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$zip" --clobber
-          else
-            gh release create "$TAG" "$zip" --generate-notes --title "$TAG" --target "$(git rev-parse HEAD)"
-          fi
+          state=$(gh release view "$TAG" --json isDraft,assets --jq "if .isDraft then \"draft\" elif ([.assets[].name] | index(\"$zip\")) then \"complete\" else \"published\" end" 2>/dev/null) || state=none
+          case "$state" in
+            complete) echo "::notice::$TAG is already published with $zip. Nothing to do." ;;
+            draft|published) gh release upload "$TAG" "$zip" --clobber ;;
+            *)
+              if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+                gh release create "$TAG" "$zip" --draft --generate-notes --title "$TAG" --target "$(git rev-parse HEAD)"
+                echo "::notice::Draft $TAG is ready with $zip. Publish it on the Releases page: publishing creates the tag."
+              else
+                gh release create "$TAG" "$zip" --generate-notes --title "$TAG"
+              fi ;;
+          esac
