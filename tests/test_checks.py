@@ -985,7 +985,7 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'dam.html', '<a href="about.html#F-08">F-08</a>', 'F-08')
         self.fails('c51_cross_references')
 
-    # Defect D-063: a step's columns overflowed a 320 px screen (C-52)
+    # Defect D-064: a step's columns overflowed a 320 px screen (C-52)
     def test_c52_uncapped_grid_minimum(self):
         edit(self.s / 'assets' / 'style.css', 'minmax(min(15rem,100%),1fr)', 'minmax(15rem,1fr)')
         self.fails('c52_grids_fit_narrow_screens')

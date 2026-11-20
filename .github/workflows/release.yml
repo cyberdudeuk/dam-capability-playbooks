@@ -52,6 +52,18 @@ jobs:
           python3 -m venv "$RUNNER_TEMP/venv"
           echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
       - run: pip install -r requirements.txt
+      - name: Browser for the browser-based tests (D-063, same retry as pages.yml, D-036)
+        run: |
+          ok=0
+          for attempt in 1 2 3; do
+            if timeout 600 python -m playwright install --with-deps chromium; then ok=1; break; fi
+            echo "::warning::Installing the browser and its system packages failed (attempt $attempt); retrying in 60 seconds"
+            sleep 60
+          done
+          if [ "$ok" != 1 ]; then
+            echo "::warning::System packages could not be installed; installing the browser alone"
+            timeout 600 python -m playwright install chromium
+          fi
       - run: python tools/build.py && python tools/check_site.py && python -m unittest discover -s tests
       - run: cd site && zip -qr "../dam-capability-playbooks-${TAG}.zip" .
       - env:
