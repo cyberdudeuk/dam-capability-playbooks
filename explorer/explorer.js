@@ -288,7 +288,7 @@ function about(){const seen=new Set(SRC.map(x=>x[1]));[...LAND.filter(x=>x.url).
 
 /* detail sheet */
 const sheet=document.getElementById('sheet'),scrim=document.getElementById('scrim');let lastFocus=null;
-function openDetail(id){const c=CAPS.find(x=>x.id===id),x=GAPS.find(y=>y.id===id);let h='';
+function openDetail(id){const c=CAPS.find(x=>x.id===id),x=GAPS.find(y=>y.id===id);let h;
  if(c){
   h=`<p class="lbl">${esc(DCL[c.dc])}</p><h2 id="sh-title" style="margin-top:0">${c.id} ${esc(c.name)}</h2><p><span class="chip ${relClass(c.rel)}" style="cursor:default">${REL[c.rel]}</span></p><dl class="kv"><dt>In the DAM Policy</dt><dd>${FLAG[c.flag]}</dd><dt>Information-world counterpart</dt><dd>${gl(c.info)}</dd><dt>Information cluster</dt><dd>${c.ic?esc(ICL[c.ic]):'Not applicable'}</dd></dl><p><a href="https://cyberdudeuk.github.io/dam-capability-playbooks/capability-model.html">Open the DAM capability model</a></p><p class="note">The relationship and cluster are this resource's proposals.</p>`;}
  else if(x){h=`<p class="lbl">${esc(ICL[x.ic])}</p><h2 id="sh-title" style="margin-top:0">${x.id} ${esc(x.name)}</h2><p><span class="chip r-gap" style="cursor:default">${REL.gap}</span></p><dl class="kv"><dt>Process</dt><dd>${esc(x.proc)}</dd><dt>Activity</dt><dd>${esc(x.act)}</dd><dt>Unit of work</dt><dd>${esc(x.unit)}</dd><dt>Grounded in</dt><dd>${gl(x.src)}</dd></dl><p><a href="#gaps">See all gaps</a></p>`;}
@@ -592,7 +592,7 @@ const WLEVELS=[['DD','Senior leader'],['G6','Head of team'],['G7','Lead or manag
 const WAYGOALS=[['orient','Get oriented','PW1'],['decide','Join up assurance','PW2'],['plan','Plan across the horizons','PW6'],['deliver','Deliver registers and catalogues','PW8'],['ai','Govern AI or make information AI-ready','PW3'],['skills','Build skills and literacy','PW5'],['own','Cover the information gaps','PW7'],['model','Choose how to organise','PW4']];
 // Routing rule: pick the persona nearest to the reader, and the pathway that serves their goal
 function wayfind(team,level,goal,D){D=D||DATA;
- let p=null;
+ let p;
  if(team==='Business')p='P7';else if(team==='AI')p='P8';
  else if(team==='Data'||team==='Information'){const g=level==='Other'?'G7':level;p=(D.PERSONAS.find(x=>x.team===team&&x.grade===g)||{}).id}
  else p={DD:'P1',G6:'P3',G7:'P5',Other:'P7'}[level];
