@@ -1,0 +1,25 @@
+name: Documentation kit
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  schedule:
+    - cron: "41 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  artefacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Every rule can fail (negative tests)
+        run: python3 tools/artefact_check.py --self-test
+      - name: Documentation kit matches its manifest
+        run: python3 tools/artefact_check.py .

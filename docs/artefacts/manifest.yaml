@@ -1,0 +1,35 @@
+# Documentation kit manifest (estate operating model EST-OM-001). Checked by tools/artefact_check.py.
+project: P02
+name: DAM capability playbooks
+grade: G3
+as_of: 2026-11-20
+artefacts:
+  toc:
+    status: present
+    path: docs/artefacts/01-theory-of-change.md
+    review_date: 2027-02-20
+  ur:
+    status: present
+    path: docs/artefacts/02-ur-bundle.md
+    shared_ref: EST-UR-001 (estate user research bundle; master kept in the private cdo-connect-hub repository)
+    review_date: 2027-02-20
+  prd:
+    status: present
+    path: docs/artefacts/03-prd.md
+    review_date: 2027-02-20
+  ftir:
+    status: present
+    path: docs/artefacts/04-ftir.md
+    review_date: 2027-02-20
+  sad:
+    status: present
+    path: docs/artefacts/05-sad.md
+    review_date: 2027-02-20
+  hld:
+    status: present
+    path: docs/artefacts/06-hld.md
+    review_date: 2027-02-20
+  lld:
+    status: present
+    path: docs/artefacts/07-lld.md
+    review_date: 2027-02-20
