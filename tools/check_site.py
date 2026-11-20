@@ -1886,7 +1886,7 @@ def c51_cross_references(site, repo, pages):
 
 
 def c52_grids_fit_narrow_screens(site, repo, pages):
-    """Rule (defect D-065): a repeating grid never asks for a column wider than its container. With
+    """Rule (defect D-064): a repeating grid never asks for a column wider than its container. With
     minmax(15rem, 1fr) a step's two columns needed 240 px inside a 208 px box at 320 px, so the page scrolled
     sideways once a step was opened on the Method tab. Every repeat(auto-fit|auto-fill) column minimum is capped
     with min(..., 100%)."""
