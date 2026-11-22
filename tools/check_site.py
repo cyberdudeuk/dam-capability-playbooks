@@ -1898,6 +1898,27 @@ def c52_grids_fit_narrow_screens(site, repo, pages):
     return errs
 
 
+
+def c53_tool_homes(site, repo, pages):
+    """Rule (defect D-068): the Tools list on the data quality playbook says where each tool lives. It said the Data
+    Quality Commons was the home of every tool after a GOV.UK template and DAM Policy Explorer tools were added. The
+    sentence above the list must name the home of every tool it links."""
+    import re as _re
+    t = (site / 'quality.html').read_text(encoding='utf-8')
+    m = _re.search(r'<h2 id="tools">.*?</h2><p>(.*?)</p><ul class="link-list">(.*?)</ul>', t, _re.S)
+    if not m:
+        return ['quality.html: the Tools section was not found']
+    intro, errs = m.group(1), []
+    homes = {'assets.publishing.service.gov.uk': 'GOV.UK', 'www.gov.uk': 'GOV.UK', 'cyberdudeuk.github.io/dam-policy-explorer': 'DAM Policy Explorer',
+             'cyberdudeuk.github.io/dq-commons': 'Data Quality Commons'}
+    for h in _re.findall(r'href="([^"]+)"', m.group(2)):
+        home = next((v for k, v in homes.items() if k in h), None)
+        if home is None:
+            errs.append(f'quality.html: tool link with no known home: {h}')
+        elif home not in intro:
+            errs.append(f'quality.html: the Tools introduction does not name {home}, the home of {h}')
+    return errs
+
 CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_no_external_assets, c06_dqap_expansion,
           c07_no_annex_a, c08_provenance_on_requirements, c09_no_decks_or_films, c10_tables, c11_machine_readable,
           c12_csp_clean, c13_accessible_graphics, c14_colophon_and_contact, c15_no_placeholders, c16_search_engines,
@@ -1906,7 +1927,7 @@ CHECKS = [c01_page_basics, c02_unique_ids, c03_links_resolve, c04_no_email, c05_
           c25_workflow_inventory, c26_commit_identity,
           c27_registers_in_repository, c28_open_data_catalogue, c29_limitations_referenced, c30_testing_pack,
           c31_navigation_aids, c32_mcp_server, c33_tooling_and_feedback, c34_sister_portals, c35_estate_compass, c36_have_your_say, c37_involvement_and_reuse,
-          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name, c44_pathways, c45_capability_playbooks, c46_leader_route, c47_portals_in_sync, c48_procurement_and_learning, c49_tailoring_and_journeys, c50_stages_gates_assessments, c51_cross_references, c52_grids_fit_narrow_screens]
+          c38_pilot_requirements, c39_backlog_18_22, c40_tooltips_and_standards, c41_knowledge_areas, c42_icons_resolve, c43_compass_name, c44_pathways, c45_capability_playbooks, c46_leader_route, c47_portals_in_sync, c48_procurement_and_learning, c49_tailoring_and_journeys, c50_stages_gates_assessments, c51_cross_references, c52_grids_fit_narrow_screens, c53_tool_homes]
 
 
 def run(site, repo, only=None, quiet=False):

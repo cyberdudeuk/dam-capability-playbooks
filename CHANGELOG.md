@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+- **Data quality action plans, start to finish** (Data quality playbook): the Tools list now leads with the GDS DQAP template, the DAM Policy Explorer's new quality plan tool (check a filled-in template on your device, build a plan step by step, or test an equivalent process against the seven steps), the mapping from a DQAP to W3C DQV and DCAT, and the six GOV.UK data quality dimensions published as a shared SKOS and DQV vocabulary. Step 6, Report openly, now says which DQV links put results and issues on the catalogue record. The walkthrough itself stays here; the checking tool lives in the explorer, so there is one copy of each.
+- Fixed before publishing (D-068, from visual inspection): the sentence above the data quality Tools list said the Data Quality Commons was the home of every tool. It now names GOV.UK, the DAM Policy Explorer and the Data Quality Commons, and C-53 fails if a tool's home is not named.
 - Fixed (D-066): main stopped building twice. #72 and #73 both recorded a defect as D-064; then both fixes (#74 and #75) were merged, each renumbering a different one to D-065. Final numbering: D-064 is the step-column fix and D-065 is release by draft. The build refuses a duplicate id, and a test now proves it.
 - Changed (D-065): Run now makes a draft release, with its zip, on the checked commit. A person publishes it on the Releases page, and publishing creates the tag. The tag push that follows finds the release complete and stops. 1.16.0 was released this way on 20 November 2026.
 - Fixed (D-063): the release job installs the browser before running the tests, with the same retry as the main build. The first Run of 1.16.0 stopped safely before tagging because two browser tests could not start.
