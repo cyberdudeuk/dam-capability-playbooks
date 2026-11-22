@@ -2044,7 +2044,7 @@ class Site:
             pr = ''.join(f'<li>{E(x["name"])}</li>' for x in c['principles'])
             tools = ''.join(f'<li><a href="{E(t["url"])}">{icon("wrench")}{E(t["name"])}</a></li>' for t in c['tools'])
             extra_method = (f'<h2 id="principles">{icon("compass")} Principles and dimensions</h2><p>From {self.src_link("SRC-GDQF")}.</p><h3>Five principles</h3><ol>{pr}</ol>'
-                            f'<h3>Six dimensions</h3><ul class="icon-list">{dims}</ul><h2 id="tools">{icon("wrench")} Tools</h2><p>The Data Quality Commons is the authoritative home for these tools{prov("P")}. Files you check stay on your device.</p><ul class="link-list">{tools}</ul>')
+                            f'<h3>Six dimensions</h3><ul class="icon-list">{dims}</ul><h2 id="tools">{icon("wrench")} Tools</h2><p>GDS publishes the template on GOV.UK. Each tool has one home, the DAM Policy Explorer or the Data Quality Commons, and is linked from here rather than copied{prov("P")}. Files you check stay on your device.</p><ul class="link-list">{tools}</ul>')
             extra_drawer = [{'id': 'principles', 'label': 'Principles and dimensions', 'icon': 'compass', 'count': 11},
                             {'id': 'tools', 'label': 'Tools', 'icon': 'wrench', 'count': len(c['tools'])}]
         std_html, std_n = self.cap_standards(cid)

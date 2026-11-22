@@ -1002,6 +1002,11 @@ class Vaccination(unittest.TestCase):
         edit(self.s / 'dam.html', '<a href="about.html#F-08">F-08</a>', 'F-08')
         self.fails('c51_cross_references')
 
+    # Defect D-068: the Tools introduction named one home for tools that live in three places (C-53)
+    def test_c53_tool_home_not_named(self):
+        edit(self.s / 'quality.html', 'the DAM Policy Explorer or the Data Quality Commons', 'the Data Quality Commons')
+        self.fails('c53_tool_homes')
+
     # Defect D-064: a step's columns overflowed a 320 px screen (C-52)
     def test_c52_uncapped_grid_minimum(self):
         edit(self.s / 'assets' / 'style.css', 'minmax(min(15rem,100%),1fr)', 'minmax(15rem,1fr)')
