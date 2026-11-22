@@ -780,6 +780,17 @@ class Vaccination(unittest.TestCase):
     def test_build_rejects_duplicate_standard_alias(self):
         self._rejects('    RB-SKOS: [SKOS]', '    RB-SKOS: [SKOS, DCAT]')
 
+    # Defect D-067: requirements linked to the top of a GOV.UK document, not its section. The build must refuse both.
+    def test_build_rejects_requirement_without_section(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'src: SRC-DAM, a: data-ownership, ', 'src: SRC-DAM, ')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
+    def test_build_rejects_requirement_with_unverified_section(self):
+        edit(self.r / 'content' / 'playbooks.yaml', 'a: data-ownership, ', 'a: no-such-section, ')
+        with self.assertRaises(build.ContentError):
+            build.load(self.r / 'content' / 'playbooks.yaml')
+
     # Defect D-066: two pull requests each added a D-064; main stopped building. The build must refuse it.
     def test_build_rejects_duplicate_defect_id(self):
         edit(self.r / 'content' / 'playbooks.yaml', '- {id: D-065, found:', '- {id: D-064, found:')

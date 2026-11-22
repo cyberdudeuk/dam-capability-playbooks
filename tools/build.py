@@ -261,6 +261,8 @@ def validate(d):
         if r['cap'] not in caps: errs.append(f"{r['id']}: unknown capability {r['cap']}")
         if r['prov'] not in provs: errs.append(f"{r['id']}: bad provenance {r['prov']}")
         if r['strength'] not in {'must', 'should', 'may', 'method', 'gap'}: errs.append(f"{r['id']}: bad strength")
+        if not r.get('a'): errs.append(f"{r['id']}: no section anchor (D-067)")
+        elif r['a'] not in d.get('_anchors', {}).get(r['src'], []): errs.append(f"{r['id']}: {r['src']} has no verified section #{r['a']} (D-067)")
     for s in d['sources']:
         if s['prov'] not in provs: errs.append(f"{s['id']}: bad provenance")
         if not str(s['url']).startswith('https://'): errs.append(f"{s['id']}: url must be https")
@@ -1328,11 +1330,11 @@ class Site:
             return True
         return s.rfind('<a ', 0, pos) > s.rfind('</a>', 0, pos)
 
-    def src_link(self, sid):
+    def src_link(self, sid, a=None):
         if not sid:
             return 'Practitioner material (not yet published)'
         s = self.src[sid]
-        return f'<a href="{E(s["url"])}">{E(s["title"])}</a>{prov(s["prov"], self.m["verified_on"])}'
+        return f'<a href="{E(self.doc_url(sid, a))}">{E(s["title"])}</a>{prov(s["prov"], self.m["verified_on"])}'
 
     def req_links(self, ids):
         return ' '.join(f'<a class="pill {self.req[i]["cap"]}" href="dam.html#{i}" data-tip="{E(self.req[i]["text"])}">{E(i)}</a>' for i in ids)
@@ -1920,7 +1922,7 @@ class Site:
                            for cc in d['capabilities'] for st in cc['stages'] if r['id'] in st.get('reqs', []))
             rows.append([f'<span id="{r["id"]}">{E(r["id"])}</span>', f'<span class="strength {r["strength"]}">{E(r["strength"])}</span>',
                          f'<a class="pill {c["id"]}" href="{CAP_PAGE[c["id"]]}.html">{E(c["short"])}</a>',
-                         self.gloss(r['text']) + prov(r['prov'], self.m['verified_on']), self.src_link(r['src']),
+                         self.gloss(r['text']) + prov(r['prov'], self.m['verified_on']), self.src_link(r['src'], r.get('a')),
                          met or 'No step yet (see the open register)'])
             attrs.append(f' data-item data-cap="{r["cap"]}" data-strength="{r["strength"]}"')
         filt = f'''<div class="filters" data-filter="req-table" role="group" aria-label="Filter requirements">
@@ -4563,7 +4565,7 @@ class Site:
             w.writerow(header); w.writerows(rows)
             (out / name).write_text(buf.getvalue(), encoding='utf-8')
         write_csv('requirements.csv', ['id', 'capability', 'strength', 'requirement', 'source', 'source_url', 'provenance'],
-                  [[r['id'], r['cap'], r['strength'], r['text'], self.src[r['src']]['title'], self.src[r['src']]['url'], r['prov']] for r in d['requirements']])
+                  [[r['id'], r['cap'], r['strength'], r['text'], self.src[r['src']]['title'], self.doc_url(r['src'], r.get('a')), r['prov']] for r in d['requirements']])
         X = d.get('crossrefs')
         if X:
             gname = {g['id']: g['name'] for g in X['groups']}
