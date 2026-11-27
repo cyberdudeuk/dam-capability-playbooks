@@ -478,11 +478,11 @@ def c23_repository_metadata(site, repo, pages):
 # ADR 0005: the only actions not owned by the repository owner, each pinned to a commit checked against its release tag
 # with git ls-remote on 5 November 2026. Update a commit only after checking the new one the same way.
 REVIEWED_ACTIONS = {
-    'actions/dependency-review-action': 'a1d282b36b6f3519aa1f3fc636f609c47dddb294',   # v5.0.0
+    'actions/dependency-review-action': 'bbc44d14a204704ccc493733616cd1e93a0321ec',   # v5.0.1, the commit tag v5.0.1 resolves to (checked 27 November 2026)
     'actions/checkout': '3d3c42e5aac5ba805825da76410c181273ba90b1',                   # v7.0.1
     'actions/upload-artifact': 'cf430e030ddbb5b0abf93d22962f4752f3646cd9',            # v7.0.2
-    'github/codeql-action/upload-sarif': '33d7b85da1a04171e211befe2c739303b9a4c066',  # v4.39.3, the commit tag v4.39.3 resolves to (checked 13 November 2026)  # v4.39.2
-    'ossf/scorecard-action': 'fa7117db83c52d787ae5a89f350999701505d78e',              # v2.5.0
+    'github/codeql-action/upload-sarif': '1bd86f2fdb4b86187fa4059f16f31a3202acc9ea',  # v4.39.4, the commit tag v4.39.4 resolves to (checked 27 November 2026)
+    'ossf/scorecard-action': '23f22cd43608bae7a1f1fa2603d7314dee9538a5',              # v2.6.0, the commit tag v2.6.0 resolves to (checked 27 November 2026)
 }
 
 

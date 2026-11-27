@@ -353,11 +353,13 @@ class Vaccination(unittest.TestCase):
         self.fails('c24_actions_pinned')
 
     def test_c24_reviewed_action_at_another_commit(self):
-        edit(self.r / '.github' / 'workflows' / 'scorecard.yml', 'ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e', 'ossf/scorecard-action@0000000000000000000000000000000000000000')
+        pin = 'ossf/scorecard-action@' + check_site.REVIEWED_ACTIONS['ossf/scorecard-action']  # D-069: follows the reviewed list
+        edit(self.r / '.github' / 'workflows' / 'scorecard.yml', pin, 'ossf/scorecard-action@0000000000000000000000000000000000000000')
         self.fails('c24_actions_pinned')
 
     def test_c24_reviewed_action_by_tag(self):
-        edit(self.r / '.github' / 'workflows' / 'dependency-review.yml', 'actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294', 'actions/dependency-review-action@v5')
+        pin = 'actions/dependency-review-action@' + check_site.REVIEWED_ACTIONS['actions/dependency-review-action']  # D-069
+        edit(self.r / '.github' / 'workflows' / 'dependency-review.yml', pin, 'actions/dependency-review-action@v5')
         self.fails('c24_actions_pinned')
 
     def test_c24_unpinned_own_action(self):
