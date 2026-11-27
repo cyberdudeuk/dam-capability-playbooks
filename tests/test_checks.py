@@ -256,6 +256,7 @@ class Vaccination(unittest.TestCase):
         self.fails('c16_search_engines')
 
     def test_c16_subfolder_page_missing_favicon(self):
+        # D-070: the explorer shipped with no favicon because c16 only looked at top-level pages
         # D-069: the explorer shipped with no favicon because c16 only looked at top-level pages
         t = (self.s / 'explorer' / 'index.html').read_text(encoding='utf-8')
         t = re.sub(r'<link rel="icon"[^>]*>\n?', '', t)
