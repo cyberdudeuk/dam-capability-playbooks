@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Fixed (D-069): the asset governance explorer and the data portals compass had no favicon, so they showed a blank tab icon. Both now use the site icon; the compass embeds it because its security policy allows only embedded images. C-16 now checks pages in sub-folders too, which is how the compass gap was found.
 - Changed: three reviewed actions updated after checking each commit against its release tag with git ls-remote on 27 November 2026: dependency-review-action v5.0.1, scorecard-action v2.6.0 and codeql-action upload-sarif v4.39.4 (Dependabot #82, #83, #84; ADR 0005).
 - Fixed (D-069): two C-24 tests looked for the old pinned commits by value, so every reviewed-action update failed even after its review was recorded. They now read the pins from REVIEWED_ACTIONS.
 - Fixed (D-070): the asset governance explorer and the data portals compass had no favicon, so they showed a blank tab icon. Both now use the site icon; the compass embeds it because its security policy allows only embedded images. C-16 now checks pages in sub-folders too, which is how the compass gap was found.
