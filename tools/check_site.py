@@ -327,6 +327,13 @@ def c16_search_engines(site, repo, pages):
         if name not in ('404.html', 'index.html') and name not in sm: errs.append(f'sitemap.xml: {name} not listed')
     for f in ('favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'og-image.png'):
         if not (site / 'assets' / f).exists(): errs.append(f'assets/{f} missing')
+    # D-069: the tools in sub-folders (explorer, compass) are pages too and need a favicon that resolves
+    for sub in sorted(site.glob('*/index.html')):
+        rel = sub.relative_to(site).as_posix()
+        hrefs = re.findall(r'<link[^>]*rel="icon"[^>]*href="([^"]+)"', sub.read_text(encoding='utf-8'))
+        if not hrefs: errs.append(f'{rel}: no favicon')
+        for h in hrefs:
+            if not h.startswith('data:') and not (sub.parent / h).resolve().exists(): errs.append(f'{rel}: favicon {h} does not resolve')
     return errs
 
 

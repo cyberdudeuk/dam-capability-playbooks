@@ -255,6 +255,17 @@ class Vaccination(unittest.TestCase):
         (self.s / 'assets' / 'og-image.png').unlink()
         self.fails('c16_search_engines')
 
+    def test_c16_subfolder_page_missing_favicon(self):
+        # D-069: the explorer shipped with no favicon because c16 only looked at top-level pages
+        t = (self.s / 'explorer' / 'index.html').read_text(encoding='utf-8')
+        t = re.sub(r'<link rel="icon"[^>]*>\n?', '', t)
+        (self.s / 'explorer' / 'index.html').write_text(t, encoding='utf-8')
+        self.fails('c16_search_engines')
+
+    def test_c16_subfolder_favicon_must_resolve(self):
+        edit(self.s / 'explorer' / 'index.html', '../assets/favicon.svg', '../assets/missing.svg')
+        self.fails('c16_search_engines')
+
     def test_c17_name_in_page(self):
         edit(self.s / 'about.html', '<h1>', '<h1>Written by Eman' + 'uel ')
         self.fails('c17_no_personal_details')
