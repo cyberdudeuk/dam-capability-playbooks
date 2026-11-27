@@ -14,12 +14,12 @@ request, and the OpenSSF Scorecard. Rebuilding them as plain commands would take
 
 ## Decision
 - Reviewed actions, recorded in `REVIEWED_ACTIONS` in `tools/check_site.py`:
-  - `actions/dependency-review-action` v5.0.0 (`a1d282b3`)
+  - `actions/dependency-review-action` v5.0.1 (`bbc44d14`), from 27 November 2026 (v5.0.0, `a1d282b3`, before)
   - `actions/checkout` v7.0.1 (`3d3c42e5`)
   - `actions/upload-artifact` v7.0.2 (`cf430e03`)
-  - `github/codeql-action/upload-sarif` v4.39.3 (`33d7b85d`), from 13 November 2026 (v4.39.2, `1fc58d04`, before)
-  - `ossf/scorecard-action` v2.5.0 (`fa7117db`)
-- Each commit was checked against the upstream tag with `git ls-remote` on 5 November 2026.
+  - `github/codeql-action/upload-sarif` v4.39.4 (`1bd86f2f`), from 27 November 2026 (v4.39.3, `33d7b85d`, from 13 November; v4.39.2, `1fc58d04`, before)
+  - `ossf/scorecard-action` v2.6.0 (`23f22cd4`), from 27 November 2026 (v2.5.0, `fa7117db`, before)
+- Each commit was checked against the upstream tag with `git ls-remote`: on 5 November 2026, and again for each later update on the date shown.
 - C-24 fails on any other action, or on a listed action at a different commit. C-25 lists the two new workflows.
 - Dependabot proposes new commits; a person checks each against its tag and updates the list in the same pull request.
 - The build, check and publish workflow keeps using plain commands only.
