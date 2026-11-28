@@ -1,5 +1,7 @@
 # Data Asset Management (DAM) capability playbooks
 
+[![gds-dtx readiness: ready with exceptions, 10 of 10 GDS Way MUST checks met](docs/conformance/badge.svg)](docs/conformance/report.md)
+
 Step-by-step guidance on data governance, data cataloguing and data quality for critical data assets in UK government,
 with the [data asset management policy in government](https://www.gov.uk/government/publications/data-asset-management-policy-in-government)
 as the spine.
