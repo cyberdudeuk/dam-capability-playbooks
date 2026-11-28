@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asset governance explorer</title>
+<link rel="canonical" href="https://cyberdudeuk.github.io/dam-capability-playbooks/explorer/">
+<meta name="description" content="Where data asset management and information asset management meet: capabilities, gaps, standards, landscape, AI, skills, operating models, calendar and horizons.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="explorer.css">
+</head>
+<body>
+<div id="nojs" role="alert" style="background:#fff3cd;color:#3d2c00;border:2px solid #8a5a00;border-radius:8px;padding:12px 16px;margin:12px;font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;max-width:900px"><strong>This page has not started.</strong> It is an interactive page that runs in a web browser. If you are seeing this in a preview (for example in Outlook, Teams, SharePoint, OneDrive or a chat window), download the file and open it in Edge, Chrome, Firefox or Safari. If it is already open in a browser, scripts may be blocked by a setting or policy.</div>
+<a class="skip" href="#main">Skip to content</a>
+<div class="mark"><span><strong>Prototype</strong> · Not government policy or guidance</span><span id="revline">Reviewed 16 November 2026</span></div>
+<header class="mast">
+<div class="mrow">
+<button class="dtoggle" id="dtog" aria-controls="drawer" aria-expanded="true"><span class="sw" aria-hidden="true"></span><span>Contents</span></button>
+<a class="logo" href="#overview">
+<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="15" cy="20" r="11" fill="var(--data)" opacity=".9"/><circle cx="25" cy="20" r="11" fill="var(--info)" opacity=".85"/><path d="M20 10.6a11 11 0 0 1 0 18.8a11 11 0 0 1 0-18.8z" fill="var(--ink)"/></svg>
+<span>Asset governance explorer<small>Where data and information asset governance meet</small></span></a>
+<span class="status" id="stat" role="status"><span class="pulse" id="pulse"></span><span id="stattext">Running checks</span></span>
+</div>
+<nav class="global" aria-label="Sections">
+<ul id="navlist"></ul>
+<div class="more" id="more" hidden><button aria-expanded="false" aria-haspopup="true" id="morebtn">More <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"/></svg></button><ul id="morelist"></ul></div>
+</nav>
+<div class="lensbar" id="lensbar" role="group" aria-label="Lens and transformation filters"></div>
+<div class="lenshelp" id="lenshelp" hidden></div>
+</header>
+<div class="shell" id="shell">
+<aside class="drawer" id="drawer" aria-label="On this page"><h2>On this page</h2><ol id="toc"></ol></aside>
+<main id="main" tabindex="-1">
+<nav class="trail" id="trail" aria-label="Pathway progress" hidden></nav>
+
+<section class="view" id="v-overview" data-view="overview">
+<h1>26 of the 32 DAM capabilities also govern information. 13 information-only capabilities sit outside the playbooks.</h1>
+<p class="lede">The data asset management (DAM) playbooks already cover most of what an information asset management equivalent would need. The gap is concentrated in the records lifecycle and in knowledge management. Select any item for detail.</p>
+<div class="startcta"><div><h2 id="o-start">New here? Find your way</h2><p style="margin:0">Answer three questions for a suggested route, follow a persona's journey, or pick a task pathway. Each step opens the right view with the lens already set.</p></div><p class="pact"><a class="btn" href="#start?tab=find">Open the wayfinder</a><a class="btn ghost" href="#start?tab=paths">Browse pathways</a></p></div>
+<div class="figs" id="figs"></div>
+<h2 id="o-board">Coverage board</h2>
+<div class="key"><span><i class="r-data" style="border-color:var(--data)"></i>Data only</span><span><i style="background:var(--shared);border-color:var(--shared)"></i>Shared by both worlds</span><span><i class="r-adapt" style="border-color:var(--info)"></i>Needs an information version</span><span><i style="background:var(--info);border-color:var(--info)"></i>Gap: information only</span></div>
+<div class="board" id="board"></div>
+<div class="panel" style="margin-top:18px"><h2 id="o-scan" style="margin-top:0">What the wider scan adds</h2><ul><li><a href="#landscape">Landscape</a>: most developments converge or align on the same assets, owners and AI readiness; divergence is mainly statutory (Scottish records law, health roles) or regulatory.</li><li><a href="#calendar">Calendar</a>: assurance cycles from different regimes stack up in the same months.</li><li><a href="#models">Operating models</a>: distinct, dual-hatted and one-leads-the-other arrangements all exist; one register and one accountability model work under each.</li><li><a href="#wheel">Information wheel</a>: twelve areas of knowledge, information, records and content management around a governance hub, each drilling down to a unit of work.</li><li><a href="#ai">AI</a>: AI can help deliver every cluster, and every cluster is what makes AI governable.</li></ul></div>
+<div class="grid2" style="margin-top:18px">
+<div class="panel"><h2 id="o-clusters" style="margin-top:0">Coverage by information capability cluster</h2><p style="font-size:14px;color:var(--mute)">Each bar counts the DAM capabilities that are shared or need an information version, plus the information-only gaps, in each of the eight proposed information clusters.</p><div class="bars" id="cbars"></div></div>
+</div>
+</section>
+
+<section class="view" id="v-capabilities" data-view="capabilities" hidden>
+<h1>DAM capabilities, seen from the information world</h1>
+<p class="lede">All 32 capabilities from the DAM capability playbooks' capability model, each with its relationship to information asset management and its information-world counterpart.</p>
+<h2 id="c-filter">Filter</h2>
+<div class="tools">
+<label for="f-rel">Relationship<select id="f-rel"><option value="">All</option><option value="shared">Shared</option><option value="adapt">Needs an information version</option><option value="data">Data only</option></select></label>
+<label for="f-dc">DAM cluster<select id="f-dc"><option value="">All</option></select></label>
+<label for="f-q">Search<input type="search" id="f-q" placeholder="e.g. retention"></label>
+<button class="btn ghost" id="f-reset" type="button">Reset</button>
+</div>
+<p id="c-count" aria-live="polite"></p>
+<h2 id="c-list">Capabilities</h2>
+<div class="scroll"><table class="stack" id="ctable"><thead><tr><th>ID</th><th>Capability</th><th>DAM cluster</th><th>In the DAM Policy</th><th>Relationship</th><th>Information-world counterpart</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="view" id="v-gaps" data-view="gaps" hidden>
+<h1>The information-only gap, from top-level capability to a single unit of work</h1>
+<p class="lede">These capabilities have no DAM counterpart. An information asset management playbook would cover them. Each one is broken down from domain to cluster, capability, process, activity and a single unit of work.</p>
+<div id="gaplist"></div>
+</section>
+
+<section class="view" id="v-wheel" data-view="wheel" hidden>
+<h1>The information wheel: knowledge, information, records and content</h1>
+<p class="lede">An equivalent of the DAMA wheel for the information world. Information governance sits at the hub, with twelve areas around it across information management, records management, enterprise content management and knowledge management. Each area drills down to capabilities, processes, activities and the smallest unit of work.</p>
+<div class="figs" id="wfigs"></div>
+<p class="note">A proposed reference model, built from the standards on this page (ISO 15489-1, ISO 23081-1, ISO 30301, ISO 14721, ISO 30401, ARMA IGIM, the Section 46 Code and TNA's assessment tools). Areas and capabilities marked Gap reuse the breakdown from the gap list. <span class="tag p">Proposed</span></p>
+<h2 id="w-wheel">Explore the wheel</h2>
+<div class="wkey" id="wlegend"></div>
+<div class="wgrid"><div class="wsvg" id="wsvg"></div><div class="wpanel" id="wpanel" aria-live="polite"></div></div>
+</section>
+
+<section class="view" id="v-standards" data-view="standards" hidden>
+<h1>Industry reference models and standards, and where they meet</h1>
+<p class="lede">The maturity models, frameworks and standards for data, information, knowledge and AI governance, what they share and what is unique to each, and how they come together in information asset registers (IARs) and data catalogues.</p>
+<div class="tabs" role="tablist" id="stabs">
+<button role="tab" aria-selected="true" aria-controls="sp1" id="st1">Models and standards</button>
+<button role="tab" aria-selected="false" aria-controls="sp2" id="st2">Shared and unique</button>
+<button role="tab" aria-selected="false" aria-controls="sp3" id="st3">Through IARs and catalogues</button>
+</div>
+<div class="tabpanel" role="tabpanel" id="sp1" aria-labelledby="st1">
+<h2 id="s-models">Reference models and standards</h2>
+<div class="tools"><label for="f-dom">Domain<select id="f-dom"><option value="">All</option><option value="D">Data</option><option value="I">Information and records</option><option value="K">Knowledge</option><option value="A">AI</option></select></label><label for="f-typ">Type<select id="f-typ"><option value="">All</option></select></label></div>
+<div class="cards" id="stdcards"></div>
+</div>
+<div class="tabpanel" role="tabpanel" id="sp2" aria-labelledby="st2" hidden>
+<h2 id="s-matrix">What is shared, what is unique</h2>
+<p>A filled dot means the reference addresses the theme as a core concern; a ring means it touches it. This is the author's reading of each reference's published scope, not a formal mapping.</p>
+<div class="scroll"><table class="mx" id="mx"></table></div>
+<h3>Shared ground</h3><div id="sharedtxt"></div>
+<h3>Unique to each world</h3><div class="cards" id="uniq"></div>
+</div>
+<div class="tabpanel" role="tabpanel" id="sp3" aria-labelledby="st3" hidden>
+<h2 id="s-xwalk">How the standards are delivered through IARs and data catalogues</h2>
+<p>One asset, three records of it: the IAR answers who is accountable and how it is protected and retained; the data catalogue answers what it is and how to find and use it; the records system holds the evidence and controls disposal. The crosswalk maps the GKIM IAR guide's mandatory fields to DCAT 3 and records-management metadata, so one entry can feed both registers.</p>
+<div class="figs" id="xfigs"></div>
+<div class="scroll"><table class="stack" id="xwalk"><thead><tr><th>IAR field (GKIM guide)</th><th>DCAT 3 / Dublin Core term</th><th>Records metadata (ISO 23081 type)</th><th>Standard it serves</th><th>Fit</th></tr></thead><tbody></tbody></table></div>
+<p class="note">The mapping is a proposal for the join-up on registers, not an agreed profile. Where no DCAT core term exists the row says so: those fields need a UK extension (for example in the cross-government Metadata Exchange Model) or stay IAR-only.</p>
+</div>
+</section>
+
+
+<section class="view" id="v-landscape" data-view="landscape" hidden>
+<h1>Across government and the public sector, data, information and AI governance are converging on the same assets, owners and readiness agenda</h1>
+<p class="lede">A scan of developments from central government, health, devolved and local government, and international peers. Each item is tagged by how it relates to the others, the lens it sits in (business as usual or change), its transformation type (evolution, reform or revolution) and its horizon. The lens bar at the top filters every view.</p>
+<h2 id="l-summary">How the developments relate</h2>
+<div class="bars" id="relbars"></div>
+<h2 id="l-filter">Filter</h2>
+<div class="tools">
+<label for="l-sec">Sector<select id="l-sec"><option value="">All</option></select></label>
+<label for="l-rel">Relationship<select id="l-rel"><option value="">All</option></select></label>
+<label for="l-dom">Domain<select id="l-dom"><option value="">All</option><option value="D">Data</option><option value="I">Information and records</option><option value="K">Knowledge</option><option value="A">AI</option><option value="S">Security and privacy</option><option value="L">Skills and capability</option></select></label>
+<label for="l-q">Search<input type="search" id="l-q" placeholder="e.g. records"></label>
+</div>
+<p id="l-count" aria-live="polite"></p>
+<h2 id="l-items">Developments</h2>
+<div class="cards" id="landcards"></div>
+</section>
+
+<section class="view" id="v-ai" data-view="ai" hidden>
+<h1>AI helps deliver every cluster, and every cluster is what makes AI governable</h1>
+<p class="lede">Two directions. AI for governance: where AI can do or speed up the work of each capability cluster. Governance for AI: what AI governance needs from data and information governance, and what each capability must take from AI governance in return.</p>
+<div class="figs" id="aifigs"></div>
+<h2 id="ai-two">Two directions</h2>
+<div class="grid2">
+<div class="panel"><h3 style="margin-top:0">AI for governance</h3><p>Classify, tag and describe at scale; draft metadata and catalogue entries; flag quality issues; support appraisal and sensitivity review; find information for requests; remediate the digital heap.</p><p class="note">Each use is itself an AI system that needs an owner, an impact assessment, a transparency record where in scope, and records of what it decided.</p></div>
+<div class="panel"><h3 style="margin-top:0">Governance for AI</h3><p>AI is only as safe as what it is given and what it leaves behind: known, owned, described, lawful and current inputs; recorded provenance; and prompts, outputs and actions kept as records where they evidence decisions.</p><p class="note">The accountability model's AI-readiness questions and the AI-ready datasets guidelines both start from the register and the catalogue.</p></div>
+</div>
+<h2 id="ai-table">By capability cluster</h2>
+<div class="scroll"><table class="stack" id="aitable"><thead><tr><th>Cluster</th><th>How AI helps deliver it</th><th>AI governance it must apply</th><th>What AI governance needs from it</th><th>Lens</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="view" id="v-skills" data-view="skills" hidden>
+<h1>Two professions, one set of assets: a learning route from awareness to leadership</h1>
+<p class="lede">How literacy, upskilling, subject expertise, education, awareness and learning and development line up across data, information and AI, and the capability frameworks that govern each.</p>
+<h2 id="k-frameworks">Frameworks and programmes</h2>
+<div class="cards" id="skcards"></div>
+<h2 id="k-ladder">Learning ladder</h2>
+<p>Each level names who it is for and the route in each world. The shared column is where one learning product could serve both professions.</p>
+<div class="scroll"><table class="stack" id="ladder"><thead><tr><th>Level</th><th>Who</th><th>Data (DAM)</th><th>Information (GKIM)</th><th>AI</th><th>Shared route <span class="tag p">Proposed</span></th></tr></thead><tbody></tbody></table></div>
+<h2 id="k-roles">Role crosswalk</h2>
+<p>Equivalent roles across the two worlds and the frameworks that describe them. This crosswalk is a proposal; no published mapping between the two frameworks was found.</p>
+<div class="scroll"><table class="stack" id="rolex"><thead><tr><th>Accountability</th><th>Data world</th><th>Information world</th><th>AI world</th><th>Framework</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="view" id="v-models" data-view="models" hidden>
+<h1>Distinct, dual-hatted or one leading the other: how organisations arrange the two worlds</h1>
+<p class="lede">Evidence from central government, the NHS, local government and international peers on how data, information and AI responsibilities are split or combined, with what each arrangement needs from a playbook.</p>
+<h2 id="m-models">The three models</h2>
+<div class="cards" id="modelcards"></div>
+<h2 id="m-fit">Which model fits which situation</h2>
+<div class="scroll"><table class="stack" id="modelfit"><thead><tr><th>Situation</th><th>Better fit</th><th>Why</th><th>Lens</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="view" id="v-calendar" data-view="calendar" hidden>
+<h1>The governance year: when data, information and AI obligations fall across the public sector</h1>
+<p class="lede">Recurring cycles by month and lane, then the dated milestones from November 2026 to April 2028. Assurance and reporting cycles from different regimes stack up in the same months.</p>
+<h2 id="cal-grid">Annual cycle</h2>
+<div class="scroll"><div class="calgrid" id="calgrid"></div></div>
+<p class="note">Months are where a recurring obligation or observance usually falls. Some are fixed in law or standards; others vary by cycle and are marked as such.</p>
+<h2 id="cal-dated">Dated milestones</h2>
+<ul class="tl" id="callist"></ul>
+</section>
+
+<section class="view" id="v-horizons" data-view="horizons" hidden>
+<h1>Three horizons, three kinds of change</h1>
+<p class="lede">The developments placed by horizon and by transformation type. The Three Horizons tool is part of the GO-Science Futures Toolkit. Horizon 1 keeps today's system running, horizon 3 is the future being sought, and horizon 2 is the transition between them.</p>
+<h2 id="h-grid">Horizon by transformation</h2>
+<div class="scroll"><div class="hgrid" id="hgrid"></div></div>
+<h2 id="h-read">Reading the grid</h2>
+<div class="cards" id="hread"></div>
+</section>
+
+
+
+
+
+
+<section class="view" id="v-start" data-view="start" hidden>
+<h1>Find your way</h1>
+<p class="lede">Four ways in: answer three questions, follow the journey of someone like you, pick a task pathway, or browse the site map. Steps open the right view at the right section, with the lens already set.</p>
+<div class="tabs" role="tablist" id="wtabs" aria-label="Ways to find your way"></div>
+<div class="tabpanel" role="tabpanel" id="wp-find" aria-labelledby="wt-find"></div>
+<div class="tabpanel" role="tabpanel" id="wp-personas" aria-labelledby="wt-personas" hidden></div>
+<div class="tabpanel" role="tabpanel" id="wp-journeys" aria-labelledby="wt-journeys" hidden></div>
+<div class="tabpanel" role="tabpanel" id="wp-paths" aria-labelledby="wt-paths" hidden></div>
+<div class="tabpanel" role="tabpanel" id="wp-guide" aria-labelledby="wt-guide" hidden></div>
+<div class="tabpanel" role="tabpanel" id="wp-map" aria-labelledby="wt-map" hidden></div>
+</section>
+
+<section class="view" id="v-glossary" data-view="glossary" hidden>
+<h1>Glossary</h1>
+<p class="lede">Terms used across both worlds. The same terms show as tooltips wherever they appear on the page.</p>
+<div class="tools"><label for="g-q">Search terms<input type="search" id="g-q" placeholder="e.g. IAO"></label></div>
+<div class="scroll"><table class="stack" id="gtable"><thead><tr><th>Term</th><th>Meaning</th><th>World</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="view" id="v-about" data-view="about" hidden>
+<h1>Method, sources and checks</h1>
+<h2 id="a-prov">How to read the labels</h2>
+<p><span class="tag v">Verified</span> read in the named source on 16 November 2026. <span class="tag d">Draft</span> taken from a draft or working document; may change. <span class="tag p">Proposed</span> this resource's own suggestion or mapping, for discussion.</p>
+<h2 id="a-sources">Sources</h2><div id="srcs"></div>
+<h2 id="a-schedule">Update schedule</h2>
+<p>Reviewed monthly. Next review: <strong id="nextrev"></strong>. The page warns when that date has passed. Changes are recorded in the change log below.</p>
+<h2 id="a-checks">Self-checks</h2>
+<p>These checks run every time the page loads. They test the page's own data for completeness, broken references, stale dates and content that must never appear.</p>
+<ul class="checks" id="checks" style="list-style:none;padding:0"></ul>
+<h2 id="a-log">Change log</h2>
+<ul><li><strong>2.3.0, 16 November 2026:</strong> first public edition: capabilities, gaps, the information wheel, icons, a Display menu (larger text, easier spacing, reduced motion, high contrast), standards, landscape, AI, skills, operating models, calendar, horizons, a wayfinder with personas, journeys and pathways, a guided tour, a user guide and an In short line on every view. Internal planning material is kept out of this edition.</li></ul>
+</section>
+</main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Detail" tabindex="-1"><button class="btn ghost close" id="shclose" type="button">Close</button><div id="shbody"></div></div>
+<div id="tip" role="tooltip"></div>
+
+<footer>
+<div class="fgrid">
+<div><strong>Disclaimer</strong><p>A prototype to support discussion across the public sector. It is not government policy or guidance, or the agreed position of any team or organisation. Draft and proposed items are labelled.</p></div>
+<div><strong>Transparency</strong><p>Built with an AI assistant (Claude) from the sources listed under Method, sources and checks. Every proposed mapping is labelled as such. Industry standards are summarised from their publishers' scope statements; no standard text is reproduced.</p></div>
+<div><strong>Contact</strong><p>To comment or suggest a change, use the feedback form on the <a href="https://cyberdudeuk.github.io/dam-capability-playbooks/">DAM capability playbooks</a>.</p></div>
+</div>
+<div class="colophon" id="colophon"><span>Asset governance explorer · <a href="https://cyberdudeuk.github.io/dam-capability-playbooks/explorer/">permanent link</a> · version <span id="ver"></span> · reviewed 16 November 2026</span><span class="codes" id="codes"><svg role="img" aria-label="QR code linking to the public edition" width="84" height="84" version="1.1" viewBox="0 0 16.4 16.4" xmlns="http://www.w3.org/2000/svg"><path d="M0.8,0.8H1.2V1.2H0.8zM1.2,0.8H1.6V1.2H1.2zM1.6,0.8H2V1.2H1.6zM2,0.8H2.4V1.2H2zM2.4,0.8H2.8V1.2H2.4zM2.8,0.8H3.2V1.2H2.8zM3.2,0.8H3.6V1.2H3.2zM4,0.8H4.4V1.2H4zM4.4,0.8H4.8V1.2H4.4zM5.2,0.8H5.6V1.2H5.2zM5.6,0.8H6V1.2H5.6zM6,0.8H6.4V1.2H6zM6.8,0.8H7.2V1.2H6.8zM7.2,0.8H7.6V1.2H7.2zM7.6,0.8H8V1.2H7.6zM8.4,0.8H8.8V1.2H8.4zM8.8,0.8H9.2V1.2H8.8zM10.8,0.8H11.2V1.2H10.8zM11.2,0.8H11.6V1.2H11.2zM11.6,0.8H12V1.2H11.6zM12,0.8H12.4V1.2H12zM12.8,0.8H13.2V1.2H12.8zM13.2,0.8H13.6V1.2H13.2zM13.6,0.8H14V1.2H13.6zM14,0.8H14.4V1.2H14zM14.4,0.8H14.8V1.2H14.4zM14.8,0.8H15.2V1.2H14.8zM15.2,0.8H15.6V1.2H15.2zM0.8,1.2H1.2V1.6H0.8zM3.2,1.2H3.6V1.6H3.2zM4.4,1.2H4.8V1.6H4.4zM6,1.2H6.4V1.6H6zM7.2,1.2H7.6V1.6H7.2zM8.4,1.2H8.8V1.6H8.4zM9.6,1.2H10V1.6H9.6zM10,1.2H10.4V1.6H10zM10.4,1.2H10.8V1.6H10.4zM10.8,1.2H11.2V1.6H10.8zM12.8,1.2H13.2V1.6H12.8zM15.2,1.2H15.6V1.6H15.2zM0.8,1.6H1.2V2H0.8zM1.6,1.6H2V2H1.6zM2,1.6H2.4V2H2zM2.4,1.6H2.8V2H2.4zM3.2,1.6H3.6V2H3.2zM4.8,1.6H5.2V2H4.8zM5.6,1.6H6V2H5.6zM6,1.6H6.4V2H6zM6.4,1.6H6.8V2H6.4zM7.2,1.6H7.6V2H7.2zM7.6,1.6H8V2H7.6zM8,1.6H8.4V2H8zM9.2,1.6H9.6V2H9.2zM10.4,1.6H10.8V2H10.4zM11.6,1.6H12V2H11.6zM12,1.6H12.4V2H12zM12.8,1.6H13.2V2H12.8zM13.6,1.6H14V2H13.6zM14,1.6H14.4V2H14zM14.4,1.6H14.8V2H14.4zM15.2,1.6H15.6V2H15.2zM0.8,2H1.2V2.4H0.8zM1.6,2H2V2.4H1.6zM2,2H2.4V2.4H2zM2.4,2H2.8V2.4H2.4zM3.2,2H3.6V2.4H3.2zM4,2H4.4V2.4H4zM4.4,2H4.8V2.4H4.4zM4.8,2H5.2V2.4H4.8zM6,2H6.4V2.4H6zM6.8,2H7.2V2.4H6.8zM8,2H8.4V2.4H8zM10.4,2H10.8V2.4H10.4zM10.8,2H11.2V2.4H10.8zM11.2,2H11.6V2.4H11.2zM11.6,2H12V2.4H11.6zM12,2H12.4V2.4H12zM12.8,2H13.2V2.4H12.8zM13.6,2H14V2.4H13.6zM14,2H14.4V2.4H14zM14.4,2H14.8V2.4H14.4zM15.2,2H15.6V2.4H15.2zM0.8,2.4H1.2V2.8H0.8zM1.6,2.4H2V2.8H1.6zM2,2.4H2.4V2.8H2zM2.4,2.4H2.8V2.8H2.4zM3.2,2.4H3.6V2.8H3.2zM4,2.4H4.4V2.8H4zM4.4,2.4H4.8V2.8H4.4zM5.6,2.4H6V2.8H5.6zM6.4,2.4H6.8V2.8H6.4zM7.2,2.4H7.6V2.8H7.2zM7.6,2.4H8V2.8H7.6zM8,2.4H8.4V2.8H8zM8.8,2.4H9.2V2.8H8.8zM10,2.4H10.4V2.8H10zM11.2,2.4H11.6V2.8H11.2zM11.6,2.4H12V2.8H11.6zM12,2.4H12.4V2.8H12zM12.8,2.4H13.2V2.8H12.8zM13.6,2.4H14V2.8H13.6zM14,2.4H14.4V2.8H14zM14.4,2.4H14.8V2.8H14.4zM15.2,2.4H15.6V2.8H15.2zM0.8,2.8H1.2V3.2H0.8zM3.2,2.8H3.6V3.2H3.2zM4,2.8H4.4V3.2H4zM5.2,2.8H5.6V3.2H5.2zM5.6,2.8H6V3.2H5.6zM7.2,2.8H7.6V3.2H7.2zM7.6,2.8H8V3.2H7.6zM8.4,2.8H8.8V3.2H8.4zM10.4,2.8H10.8V3.2H10.4zM10.8,2.8H11.2V3.2H10.8zM12,2.8H12.4V3.2H12zM12.8,2.8H13.2V3.2H12.8zM15.2,2.8H15.6V3.2H15.2zM0.8,3.2H1.2V3.6H0.8zM1.2,3.2H1.6V3.6H1.2zM1.6,3.2H2V3.6H1.6zM2,3.2H2.4V3.6H2zM2.4,3.2H2.8V3.6H2.4zM2.8,3.2H3.2V3.6H2.8zM3.2,3.2H3.6V3.6H3.2zM4,3.2H4.4V3.6H4zM4.8,3.2H5.2V3.6H4.8zM5.6,3.2H6V3.6H5.6zM6.4,3.2H6.8V3.6H6.4zM7.2,3.2H7.6V3.6H7.2zM8,3.2H8.4V3.6H8zM8.8,3.2H9.2V3.6H8.8zM9.6,3.2H10V3.6H9.6zM10.4,3.2H10.8V3.6H10.4zM11.2,3.2H11.6V3.6H11.2zM12,3.2H12.4V3.6H12zM12.8,3.2H13.2V3.6H12.8zM13.2,3.2H13.6V3.6H13.2zM13.6,3.2H14V3.6H13.6zM14,3.2H14.4V3.6H14zM14.4,3.2H14.8V3.6H14.4zM14.8,3.2H15.2V3.6H14.8zM15.2,3.2H15.6V3.6H15.2zM4,3.6H4.4V4H4zM6,3.6H6.4V4H6zM6.8,3.6H7.2V4H6.8zM8.8,3.6H9.2V4H8.8zM9.2,3.6H9.6V4H9.2zM10,3.6H10.4V4H10zM11.6,3.6H12V4H11.6zM0.8,4H1.2V4.4H0.8zM2.4,4H2.8V4.4H2.4zM3.2,4H3.6V4.4H3.2zM3.6,4H4V4.4H3.6zM4,4H4.4V4.4H4zM5.2,4H5.6V4.4H5.2zM7.2,4H7.6V4.4H7.2zM8.8,4H9.2V4.4H8.8zM10,4H10.4V4.4H10zM12,4H12.4V4.4H12zM12.4,4H12.8V4.4H12.4zM12.8,4H13.2V4.4H12.8zM13.2,4H13.6V4.4H13.2zM13.6,4H14V4.4H13.6zM14,4H14.4V4.4H14zM15.2,4H15.6V4.4H15.2zM0.8,4.4H1.2V4.8H0.8zM1.6,4.4H2V4.8H1.6zM2,4.4H2.4V4.8H2zM2.4,4.4H2.8V4.8H2.4zM3.6,4.4H4V4.8H3.6zM4.4,4.4H4.8V4.8H4.4zM5.6,4.4H6V4.8H5.6zM6,4.4H6.4V4.8H6zM6.4,4.4H6.8V4.8H6.4zM8,4.4H8.4V4.8H8zM8.4,4.4H8.8V4.8H8.4zM9.6,4.4H10V4.8H9.6zM10.4,4.4H10.8V4.8H10.4zM10.8,4.4H11.2V4.8H10.8zM11.2,4.4H11.6V4.8H11.2zM11.6,4.4H12V4.8H11.6zM12,4.4H12.4V4.8H12zM13.6,4.4H14V4.8H13.6zM14,4.4H14.4V4.8H14zM14.4,4.4H14.8V4.8H14.4zM14.8,4.4H15.2V4.8H14.8zM1.2,4.8H1.6V5.2H1.2zM1.6,4.8H2V5.2H1.6zM2.8,4.8H3.2V5.2H2.8zM3.2,4.8H3.6V5.2H3.2zM4.4,4.8H4.8V5.2H4.4zM6.8,4.8H7.2V5.2H6.8zM8.4,4.8H8.8V5.2H8.4zM9.6,4.8H10V5.2H9.6zM10,4.8H10.4V5.2H10zM10.4,4.8H10.8V5.2H10.4zM11.2,4.8H11.6V5.2H11.2zM11.6,4.8H12V5.2H11.6zM12,4.8H12.4V5.2H12zM12.4,4.8H12.8V5.2H12.4zM13.2,4.8H13.6V5.2H13.2zM13.6,4.8H14V5.2H13.6zM14.4,4.8H14.8V5.2H14.4zM1.2,5.2H1.6V5.6H1.2zM1.6,5.2H2V5.6H1.6zM2.4,5.2H2.8V5.6H2.4zM2.8,5.2H3.2V5.6H2.8zM3.6,5.2H4V5.6H3.6zM4.8,5.2H5.2V5.6H4.8zM5.2,5.2H5.6V5.6H5.2zM5.6,5.2H6V5.6H5.6zM6.8,5.2H7.2V5.6H6.8zM7.2,5.2H7.6V5.6H7.2zM7.6,5.2H8V5.6H7.6zM8,5.2H8.4V5.6H8zM8.4,5.2H8.8V5.6H8.4zM8.8,5.2H9.2V5.6H8.8zM9.2,5.2H9.6V5.6H9.2zM9.6,5.2H10V5.6H9.6zM10,5.2H10.4V5.6H10zM11.2,5.2H11.6V5.6H11.2zM11.6,5.2H12V5.6H11.6zM12,5.2H12.4V5.6H12zM12.8,5.2H13.2V5.6H12.8zM13.2,5.2H13.6V5.6H13.2zM13.6,5.2H14V5.6H13.6zM14.4,5.2H14.8V5.6H14.4zM14.8,5.2H15.2V5.6H14.8zM0.8,5.6H1.2V6H0.8zM2.4,5.6H2.8V6H2.4zM2.8,5.6H3.2V6H2.8zM3.2,5.6H3.6V6H3.2zM3.6,5.6H4V6H3.6zM4,5.6H4.4V6H4zM5.2,5.6H5.6V6H5.2zM6.4,5.6H6.8V6H6.4zM7.6,5.6H8V6H7.6zM8.8,5.6H9.2V6H8.8zM9.2,5.6H9.6V6H9.2zM10.4,5.6H10.8V6H10.4zM11.6,5.6H12V6H11.6zM12,5.6H12.4V6H12zM12.4,5.6H12.8V6H12.4zM12.8,5.6H13.2V6H12.8zM13.2,5.6H13.6V6H13.2zM14,5.6H14.4V6H14zM14.4,5.6H14.8V6H14.4zM14.8,5.6H15.2V6H14.8zM15.2,5.6H15.6V6H15.2zM1.2,6H1.6V6.4H1.2zM3.6,6H4V6.4H3.6zM4.8,6H5.2V6.4H4.8zM6.4,6H6.8V6.4H6.4zM6.8,6H7.2V6.4H6.8zM7.2,6H7.6V6.4H7.2zM8,6H8.4V6.4H8zM9.2,6H9.6V6.4H9.2zM10,6H10.4V6.4H10zM11.6,6H12V6.4H11.6zM12,6H12.4V6.4H12zM12.4,6H12.8V6.4H12.4zM13.6,6H14V6.4H13.6zM14,6H14.4V6.4H14zM0.8,6.4H1.2V6.8H0.8zM1.2,6.4H1.6V6.8H1.2zM2,6.4H2.4V6.8H2zM2.4,6.4H2.8V6.8H2.4zM2.8,6.4H3.2V6.8H2.8zM3.2,6.4H3.6V6.8H3.2zM3.6,6.4H4V6.8H3.6zM4.4,6.4H4.8V6.8H4.4zM4.8,6.4H5.2V6.8H4.8zM5.2,6.4H5.6V6.8H5.2zM5.6,6.4H6V6.8H5.6zM6.4,6.4H6.8V6.8H6.4zM6.8,6.4H7.2V6.8H6.8zM7.2,6.4H7.6V6.8H7.2zM7.6,6.4H8V6.8H7.6zM8.8,6.4H9.2V6.8H8.8zM10,6.4H10.4V6.8H10zM10.8,6.4H11.2V6.8H10.8zM11.2,6.4H11.6V6.8H11.2zM11.6,6.4H12V6.8H11.6zM12,6.4H12.4V6.8H12zM12.8,6.4H13.2V6.8H12.8zM13.2,6.4H13.6V6.8H13.2zM13.6,6.4H14V6.8H13.6zM14,6.4H14.4V6.8H14zM14.4,6.4H14.8V6.8H14.4zM14.8,6.4H15.2V6.8H14.8zM0.8,6.8H1.2V7.2H0.8zM1.2,6.8H1.6V7.2H1.2zM1.6,6.8H2V7.2H1.6zM2,6.8H2.4V7.2H2zM2.8,6.8H3.2V7.2H2.8zM3.6,6.8H4V7.2H3.6zM4,6.8H4.4V7.2H4zM4.4,6.8H4.8V7.2H4.4zM4.8,6.8H5.2V7.2H4.8zM6,6.8H6.4V7.2H6zM6.4,6.8H6.8V7.2H6.4zM6.8,6.8H7.2V7.2H6.8zM7.6,6.8H8V7.2H7.6zM8,6.8H8.4V7.2H8zM9.6,6.8H10V7.2H9.6zM10,6.8H10.4V7.2H10zM10.4,6.8H10.8V7.2H10.4zM11.2,6.8H11.6V7.2H11.2zM11.6,6.8H12V7.2H11.6zM12.8,6.8H13.2V7.2H12.8zM13.2,6.8H13.6V7.2H13.2zM13.6,6.8H14V7.2H13.6zM14.4,6.8H14.8V7.2H14.4zM0.8,7.2H1.2V7.6H0.8zM1.2,7.2H1.6V7.6H1.2zM1.6,7.2H2V7.6H1.6zM2,7.2H2.4V7.6H2zM2.4,7.2H2.8V7.6H2.4zM2.8,7.2H3.2V7.6H2.8zM3.2,7.2H3.6V7.6H3.2zM3.6,7.2H4V7.6H3.6zM4.4,7.2H4.8V7.6H4.4zM4.8,7.2H5.2V7.6H4.8zM6,7.2H6.4V7.6H6zM6.8,7.2H7.2V7.6H6.8zM8,7.2H8.4V7.6H8zM8.4,7.2H8.8V7.6H8.4zM9.6,7.2H10V7.6H9.6zM10.4,7.2H10.8V7.6H10.4zM12,7.2H12.4V7.6H12zM12.4,7.2H12.8V7.6H12.4zM12.8,7.2H13.2V7.6H12.8zM13.2,7.2H13.6V7.6H13.2zM14,7.2H14.4V7.6H14zM14.4,7.2H14.8V7.6H14.4zM1.6,7.6H2V8H1.6zM2.8,7.6H3.2V8H2.8zM5.6,7.6H6V8H5.6zM6,7.6H6.4V8H6zM6.4,7.6H6.8V8H6.4zM7.2,7.6H7.6V8H7.2zM8.4,7.6H8.8V8H8.4zM8.8,7.6H9.2V8H8.8zM9.2,7.6H9.6V8H9.2zM10.8,7.6H11.2V8H10.8zM11.6,7.6H12V8H11.6zM12,7.6H12.4V8H12zM13.6,7.6H14V8H13.6zM14.8,7.6H15.2V8H14.8zM1.2,8H1.6V8.4H1.2zM1.6,8H2V8.4H1.6zM3.2,8H3.6V8.4H3.2zM4.8,8H5.2V8.4H4.8zM5.6,8H6V8.4H5.6zM6,8H6.4V8.4H6zM6.4,8H6.8V8.4H6.4zM7.2,8H7.6V8.4H7.2zM7.6,8H8V8.4H7.6zM8.8,8H9.2V8.4H8.8zM11.2,8H11.6V8.4H11.2zM11.6,8H12V8.4H11.6zM12.4,8H12.8V8.4H12.4zM12.8,8H13.2V8.4H12.8zM13.6,8H14V8.4H13.6zM14,8H14.4V8.4H14zM14.4,8H14.8V8.4H14.4zM3.6,8.4H4V8.8H3.6zM4,8.4H4.4V8.8H4zM4.4,8.4H4.8V8.8H4.4zM4.8,8.4H5.2V8.8H4.8zM5.6,8.4H6V8.8H5.6zM7.6,8.4H8V8.8H7.6zM8,8.4H8.4V8.8H8zM9.2,8.4H9.6V8.8H9.2zM9.6,8.4H10V8.8H9.6zM10.4,8.4H10.8V8.8H10.4zM11.2,8.4H11.6V8.8H11.2zM11.6,8.4H12V8.8H11.6zM14.4,8.4H14.8V8.8H14.4zM14.8,8.4H15.2V8.8H14.8zM0.8,8.8H1.2V9.2H0.8zM1.6,8.8H2V9.2H1.6zM3.2,8.8H3.6V9.2H3.2zM3.6,8.8H4V9.2H3.6zM4,8.8H4.4V9.2H4zM4.8,8.8H5.2V9.2H4.8zM5.2,8.8H5.6V9.2H5.2zM5.6,8.8H6V9.2H5.6zM6,8.8H6.4V9.2H6zM6.4,8.8H6.8V9.2H6.4zM6.8,8.8H7.2V9.2H6.8zM7.6,8.8H8V9.2H7.6zM8.4,8.8H8.8V9.2H8.4zM8.8,8.8H9.2V9.2H8.8zM9.2,8.8H9.6V9.2H9.2zM9.6,8.8H10V9.2H9.6zM10,8.8H10.4V9.2H10zM12.4,8.8H12.8V9.2H12.4zM12.8,8.8H13.2V9.2H12.8zM13.2,8.8H13.6V9.2H13.2zM14.4,8.8H14.8V9.2H14.4zM1.2,9.2H1.6V9.6H1.2zM1.6,9.2H2V9.6H1.6zM2.4,9.2H2.8V9.6H2.4zM3.6,9.2H4V9.6H3.6zM4.4,9.2H4.8V9.6H4.4zM4.8,9.2H5.2V9.6H4.8zM5.6,9.2H6V9.6H5.6zM6,9.2H6.4V9.6H6zM6.8,9.2H7.2V9.6H6.8zM7.2,9.2H7.6V9.6H7.2zM7.6,9.2H8V9.6H7.6zM10,9.2H10.4V9.6H10zM10.8,9.2H11.2V9.6H10.8zM11.2,9.2H11.6V9.6H11.2zM11.6,9.2H12V9.6H11.6zM12,9.2H12.4V9.6H12zM13.2,9.2H13.6V9.6H13.2zM13.6,9.2H14V9.6H13.6zM14.8,9.2H15.2V9.6H14.8zM0.8,9.6H1.2V10H0.8zM1.6,9.6H2V10H1.6zM3.2,9.6H3.6V10H3.2zM4,9.6H4.4V10H4zM4.8,9.6H5.2V10H4.8zM5.6,9.6H6V10H5.6zM6,9.6H6.4V10H6zM6.4,9.6H6.8V10H6.4zM6.8,9.6H7.2V10H6.8zM8,9.6H8.4V10H8zM9.2,9.6H9.6V10H9.2zM9.6,9.6H10V10H9.6zM10,9.6H10.4V10H10zM10.4,9.6H10.8V10H10.4zM10.8,9.6H11.2V10H10.8zM11.6,9.6H12V10H11.6zM12,9.6H12.4V10H12zM12.4,9.6H12.8V10H12.4zM12.8,9.6H13.2V10H12.8zM13.2,9.6H13.6V10H13.2zM13.6,9.6H14V10H13.6zM14,9.6H14.4V10H14zM14.4,9.6H14.8V10H14.4zM1.2,10H1.6V10.4H1.2zM2,10H2.4V10.4H2zM2.4,10H2.8V10.4H2.4zM3.6,10H4V10.4H3.6zM4.8,10H5.2V10.4H4.8zM6.8,10H7.2V10.4H6.8zM7.2,10H7.6V10.4H7.2zM8.8,10H9.2V10.4H8.8zM9.2,10H9.6V10.4H9.2zM10,10H10.4V10.4H10zM12,10H12.4V10.4H12zM12.8,10H13.2V10.4H12.8zM13.2,10H13.6V10.4H13.2zM13.6,10H14V10.4H13.6zM14.4,10H14.8V10.4H14.4zM14.8,10H15.2V10.4H14.8zM0.8,10.4H1.2V10.8H0.8zM1.2,10.4H1.6V10.8H1.2zM2,10.4H2.4V10.8H2zM2.8,10.4H3.2V10.8H2.8zM3.2,10.4H3.6V10.8H3.2zM3.6,10.4H4V10.8H3.6zM4,10.4H4.4V10.8H4zM4.8,10.4H5.2V10.8H4.8zM5.2,10.4H5.6V10.8H5.2zM5.6,10.4H6V10.8H5.6zM6.8,10.4H7.2V10.8H6.8zM7.2,10.4H7.6V10.8H7.2zM8.4,10.4H8.8V10.8H8.4zM8.8,10.4H9.2V10.8H8.8zM10,10.4H10.4V10.8H10zM10.4,10.4H10.8V10.8H10.4zM12.4,10.4H12.8V10.8H12.4zM12.8,10.4H13.2V10.8H12.8zM13.2,10.4H13.6V10.8H13.2zM14,10.4H14.4V10.8H14zM14.4,10.4H14.8V10.8H14.4zM14.8,10.4H15.2V10.8H14.8zM15.2,10.4H15.6V10.8H15.2zM0.8,10.8H1.2V11.2H0.8zM1.6,10.8H2V11.2H1.6zM2.8,10.8H3.2V11.2H2.8zM5.2,10.8H5.6V11.2H5.2zM5.6,10.8H6V11.2H5.6zM6,10.8H6.4V11.2H6zM6.4,10.8H6.8V11.2H6.4zM8,10.8H8.4V11.2H8zM8.4,10.8H8.8V11.2H8.4zM9.2,10.8H9.6V11.2H9.2zM9.6,10.8H10V11.2H9.6zM10.4,10.8H10.8V11.2H10.4zM11.2,10.8H11.6V11.2H11.2zM11.6,10.8H12V11.2H11.6zM12,10.8H12.4V11.2H12zM12.4,10.8H12.8V11.2H12.4zM13.6,10.8H14V11.2H13.6zM14,10.8H14.4V11.2H14zM14.4,10.8H14.8V11.2H14.4zM2.8,11.2H3.2V11.6H2.8zM3.2,11.2H3.6V11.6H3.2zM4.8,11.2H5.2V11.6H4.8zM5.6,11.2H6V11.6H5.6zM6,11.2H6.4V11.6H6zM6.8,11.2H7.2V11.6H6.8zM7.6,11.2H8V11.6H7.6zM8.4,11.2H8.8V11.6H8.4zM9.2,11.2H9.6V11.6H9.2zM9.6,11.2H10V11.6H9.6zM10,11.2H10.4V11.6H10zM10.4,11.2H10.8V11.6H10.4zM10.8,11.2H11.2V11.6H10.8zM11.6,11.2H12V11.6H11.6zM12.4,11.2H12.8V11.6H12.4zM13.2,11.2H13.6V11.6H13.2zM14,11.2H14.4V11.6H14zM14.4,11.2H14.8V11.6H14.4zM1.6,11.6H2V12H1.6zM2,11.6H2.4V12H2zM2.8,11.6H3.2V12H2.8zM3.6,11.6H4V12H3.6zM4,11.6H4.4V12H4zM5.6,11.6H6V12H5.6zM6,11.6H6.4V12H6zM6.4,11.6H6.8V12H6.4zM6.8,11.6H7.2V12H6.8zM7.2,11.6H7.6V12H7.2zM7.6,11.6H8V12H7.6zM8.4,11.6H8.8V12H8.4zM8.8,11.6H9.2V12H8.8zM9.2,11.6H9.6V12H9.2zM10.4,11.6H10.8V12H10.4zM11.2,11.6H11.6V12H11.2zM12.4,11.6H12.8V12H12.4zM12.8,11.6H13.2V12H12.8zM13.6,11.6H14V12H13.6zM14.4,11.6H14.8V12H14.4zM14.8,11.6H15.2V12H14.8zM0.8,12H1.2V12.4H0.8zM1.2,12H1.6V12.4H1.2zM2.4,12H2.8V12.4H2.4zM2.8,12H3.2V12.4H2.8zM3.2,12H3.6V12.4H3.2zM3.6,12H4V12.4H3.6zM4,12H4.4V12.4H4zM4.4,12H4.8V12.4H4.4zM4.8,12H5.2V12.4H4.8zM5.2,12H5.6V12.4H5.2zM6,12H6.4V12.4H6zM6.4,12H6.8V12.4H6.4zM7.6,12H8V12.4H7.6zM8.8,12H9.2V12.4H8.8zM9.2,12H9.6V12.4H9.2zM9.6,12H10V12.4H9.6zM10,12H10.4V12.4H10zM10.4,12H10.8V12.4H10.4zM11.2,12H11.6V12.4H11.2zM11.6,12H12V12.4H11.6zM12,12H12.4V12.4H12zM12.4,12H12.8V12.4H12.4zM12.8,12H13.2V12.4H12.8zM13.2,12H13.6V12.4H13.2zM13.6,12H14V12.4H13.6zM14.4,12H14.8V12.4H14.4zM15.2,12H15.6V12.4H15.2zM4,12.4H4.4V12.8H4zM5.6,12.4H6V12.8H5.6zM6.4,12.4H6.8V12.8H6.4zM6.8,12.4H7.2V12.8H6.8zM7.2,12.4H7.6V12.8H7.2zM8,12.4H8.4V12.8H8zM9.2,12.4H9.6V12.8H9.2zM10,12.4H10.4V12.8H10zM10.8,12.4H11.2V12.8H10.8zM11.2,12.4H11.6V12.8H11.2zM11.6,12.4H12V12.8H11.6zM12,12.4H12.4V12.8H12zM13.6,12.4H14V12.8H13.6zM14.8,12.4H15.2V12.8H14.8zM0.8,12.8H1.2V13.2H0.8zM1.2,12.8H1.6V13.2H1.2zM1.6,12.8H2V13.2H1.6zM2,12.8H2.4V13.2H2zM2.4,12.8H2.8V13.2H2.4zM2.8,12.8H3.2V13.2H2.8zM3.2,12.8H3.6V13.2H3.2zM4,12.8H4.4V13.2H4zM4.4,12.8H4.8V13.2H4.4zM4.8,12.8H5.2V13.2H4.8zM5.2,12.8H5.6V13.2H5.2zM6.4,12.8H6.8V13.2H6.4zM6.8,12.8H7.2V13.2H6.8zM7.2,12.8H7.6V13.2H7.2zM7.6,12.8H8V13.2H7.6zM8.8,12.8H9.2V13.2H8.8zM10,12.8H10.4V13.2H10zM10.4,12.8H10.8V13.2H10.4zM11.2,12.8H11.6V13.2H11.2zM12,12.8H12.4V13.2H12zM12.8,12.8H13.2V13.2H12.8zM13.6,12.8H14V13.2H13.6zM0.8,13.2H1.2V13.6H0.8zM3.2,13.2H3.6V13.6H3.2zM4.4,13.2H4.8V13.6H4.4zM5.2,13.2H5.6V13.6H5.2zM5.6,13.2H6V13.6H5.6zM6,13.2H6.4V13.6H6zM6.4,13.2H6.8V13.6H6.4zM7.2,13.2H7.6V13.6H7.2zM7.6,13.2H8V13.6H7.6zM8,13.2H8.4V13.6H8zM8.4,13.2H8.8V13.6H8.4zM8.8,13.2H9.2V13.6H8.8zM9.6,13.2H10V13.6H9.6zM10.4,13.2H10.8V13.6H10.4zM11.2,13.2H11.6V13.6H11.2zM12,13.2H12.4V13.6H12zM13.6,13.2H14V13.6H13.6zM14,13.2H14.4V13.6H14zM14.4,13.2H14.8V13.6H14.4zM0.8,13.6H1.2V14H0.8zM1.6,13.6H2V14H1.6zM2,13.6H2.4V14H2zM2.4,13.6H2.8V14H2.4zM3.2,13.6H3.6V14H3.2zM4,13.6H4.4V14H4zM4.8,13.6H5.2V14H4.8zM5.2,13.6H5.6V14H5.2zM6.4,13.6H6.8V14H6.4zM8,13.6H8.4V14H8zM9.6,13.6H10V14H9.6zM10.4,13.6H10.8V14H10.4zM12,13.6H12.4V14H12zM12.4,13.6H12.8V14H12.4zM12.8,13.6H13.2V14H12.8zM13.2,13.6H13.6V14H13.2zM13.6,13.6H14V14H13.6zM14,13.6H14.4V14H14zM14.4,13.6H14.8V14H14.4zM0.8,14H1.2V14.4H0.8zM1.6,14H2V14.4H1.6zM2,14H2.4V14.4H2zM2.4,14H2.8V14.4H2.4zM3.2,14H3.6V14.4H3.2zM5.6,14H6V14.4H5.6zM7.2,14H7.6V14.4H7.2zM8.4,14H8.8V14.4H8.4zM8.8,14H9.2V14.4H8.8zM9.2,14H9.6V14.4H9.2zM10,14H10.4V14.4H10zM10.4,14H10.8V14.4H10.4zM11.6,14H12V14.4H11.6zM12.4,14H12.8V14.4H12.4zM12.8,14H13.2V14.4H12.8zM13.2,14H13.6V14.4H13.2zM15.2,14H15.6V14.4H15.2zM0.8,14.4H1.2V14.8H0.8zM1.6,14.4H2V14.8H1.6zM2,14.4H2.4V14.8H2zM2.4,14.4H2.8V14.8H2.4zM3.2,14.4H3.6V14.8H3.2zM4.8,14.4H5.2V14.8H4.8zM5.2,14.4H5.6V14.8H5.2zM6,14.4H6.4V14.8H6zM6.4,14.4H6.8V14.8H6.4zM7.2,14.4H7.6V14.8H7.2zM7.6,14.4H8V14.8H7.6zM8.8,14.4H9.2V14.8H8.8zM10,14.4H10.4V14.8H10zM10.8,14.4H11.2V14.8H10.8zM11.2,14.4H11.6V14.8H11.2zM12,14.4H12.4V14.8H12zM12.4,14.4H12.8V14.8H12.4zM12.8,14.4H13.2V14.8H12.8zM14.4,14.4H14.8V14.8H14.4zM0.8,14.8H1.2V15.2H0.8zM3.2,14.8H3.6V15.2H3.2zM5.6,14.8H6V15.2H5.6zM7.6,14.8H8V15.2H7.6zM8,14.8H8.4V15.2H8zM9.2,14.8H9.6V15.2H9.2zM11.6,14.8H12V15.2H11.6zM12.4,14.8H12.8V15.2H12.4zM13.6,14.8H14V15.2H13.6zM14.4,14.8H14.8V15.2H14.4zM14.8,14.8H15.2V15.2H14.8zM0.8,15.2H1.2V15.6H0.8zM1.2,15.2H1.6V15.6H1.2zM1.6,15.2H2V15.6H1.6zM2,15.2H2.4V15.6H2zM2.4,15.2H2.8V15.6H2.4zM2.8,15.2H3.2V15.6H2.8zM3.2,15.2H3.6V15.6H3.2zM4,15.2H4.4V15.6H4zM4.8,15.2H5.2V15.6H4.8zM5.2,15.2H5.6V15.6H5.2zM5.6,15.2H6V15.6H5.6zM6,15.2H6.4V15.6H6zM6.8,15.2H7.2V15.6H6.8zM7.6,15.2H8V15.6H7.6zM8.4,15.2H8.8V15.6H8.4zM8.8,15.2H9.2V15.6H8.8zM9.2,15.2H9.6V15.6H9.2zM10.4,15.2H10.8V15.6H10.4zM12.4,15.2H12.8V15.6H12.4zM13.2,15.2H13.6V15.6H13.2zM14,15.2H14.4V15.6H14zM14.4,15.2H14.8V15.6H14.4zM14.8,15.2H15.2V15.6H14.8zM15.2,15.2H15.6V15.6H15.2z" id="qr-path" fill="#000000" fill-opacity="1" fill-rule="nonzero" stroke="none"/></svg><svg role="img" aria-label="Barcode: version AGE-2.3.0-PUB" viewBox="0 0 37.600 16.058" width="180" height="69">
+    <!--Autogenerated with python-barcode 0.16.1-->
+    <g id="barcode_group">
+        <rect width="100%" height="100%" style="fill:white"/>
+        <rect x="1.000mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="1.600mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="2.200mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="3.200mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="3.600mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="4.400mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="5.400mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="6.000mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="6.800mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="7.600mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="8.400mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="9.000mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="9.800mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="10.400mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="11.000mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="12.000mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="12.800mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="13.800mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="14.200mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="14.800mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="15.600mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="16.400mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="17.200mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="17.600mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="18.600mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="19.200mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="20.000mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="20.800mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="21.400mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="22.200mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="23.000mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="23.600mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="24.200mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="25.200mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="26.000mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="26.800mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="27.400mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="28.000mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="28.800mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="29.600mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="30.400mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="30.800mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="31.800mm" y="1.000mm" width="0.800mm" height="10.000mm" style="fill:black;"/>
+        <rect x="32.800mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="33.200mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="34.000mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <rect x="35.000mm" y="1.000mm" width="0.600mm" height="10.000mm" style="fill:black;"/>
+        <rect x="35.800mm" y="1.000mm" width="0.200mm" height="10.000mm" style="fill:black;"/>
+        <rect x="36.200mm" y="1.000mm" width="0.400mm" height="10.000mm" style="fill:black;"/>
+        <text x="18.800mm" y="14.000mm" style="fill:black;font-size:6pt;text-anchor:middle;">AGE-2.3.0-PUB</text>
+    </g>
+</svg>
+</span></div>
+</footer>
+
+<script src="explorer.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Fraud and error: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-fraud-and-error
+  title: 'Starter rules: Fraud and error (adapt column names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: FRD-01
+  check: identifier
+  description: National Insurance number is in a valid format
+  dimension: validity
+  column: nino
+  scheme: nino
+- id: FRD-02
+  check: unique
+  description: Each person appears once in the matching base
+  dimension: uniqueness
+  columns:
+  - person_id
+- id: FRD-03
+  check: not_null
+  description: Date of birth is recorded, so matches are not made on name alone
+  dimension: completeness
+  column: date_of_birth

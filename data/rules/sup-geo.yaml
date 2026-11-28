@@ -1,0 +1,45 @@
+# Geospatial and address data: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-geospatial-and-address-data
+  title: 'Starter rules: Geospatial and address data (adapt column names to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: GEO-01
+  check: not_null
+  description: UPRN is recorded
+  dimension: completeness
+  column: uprn
+- id: GEO-02
+  check: identifier
+  description: UPRN is 1 to 12 digits
+  dimension: validity
+  column: uprn
+  scheme: uprn
+- id: GEO-03
+  check: identifier
+  description: Postcode is in Royal Mail format
+  dimension: validity
+  column: postcode
+  scheme: uk_postcode
+- id: GEO-04
+  check: range
+  description: Easting is within the British National Grid range
+  dimension: validity
+  column: easting
+  min: 0
+  max: 700000
+- id: GEO-05
+  check: range
+  description: Northing is within the British National Grid range
+  dimension: validity
+  column: northing
+  min: 0
+  max: 1300000
+- id: GEO-06
+  check: identifier
+  description: Area code is a GSS code
+  dimension: validity
+  column: area_code
+  scheme: gss_code

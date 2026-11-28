@@ -1,0 +1,24 @@
+id,group,question
+RFI-01,Standards and export,"Which open standards does the product read and write for catalogue records, glossaries, quality results, lineage and data contracts? Give versions."
+RFI-02,Standards and export,"Can we export everything, including custom fields, history, owners, classifications, comments and links, at any time, in open formats, without supplier help or extra charge?"
+RFI-03,Standards and export,"Describe a round trip, exporting our catalogue as DCAT and re-importing it into another product. What is lost?"
+RFI-04,Standards and export,Does the product support the government Metadata Exchange Model for critical data assets?
+RFI-05,"APIs, connectors and plugins",Is every object and action in the user interface available through a documented API? Provide the OpenAPI description.
+RFI-06,"APIs, connectors and plugins","List each connector, who builds and maintains it, its licence and price, and how quickly it follows new versions of the connected system."
+RFI-07,"APIs, connectors and plugins","Which connectors exist for other suppliers' catalogues, quality tools, lineage tools and records systems?"
+RFI-08,"APIs, connectors and plugins",Does the product emit and accept OpenLineage events? Can it read ODCS data contracts?
+RFI-09,"APIs, connectors and plugins","What rate limits, call charges or tier limits apply to APIs and events?"
+RFI-10,Content ownership and portability,"Confirm that metadata, glossary terms, quality rules, scores, lineage and any content the product derives from our data belong to us."
+RFI-11,Content ownership and portability,In what form are quality rules held? Can they be read and run outside the product?
+RFI-12,Content ownership and portability,Can we keep data contracts and rules in our own code repository and have the product read them from there?
+RFI-13,Commercial terms and exit,"Give separate prices for each capability, and confirm we can stop any one at renewal without penalty."
+RFI-14,Commercial terms and exit,Model the price at today's volumes and at three and five times them.
+RFI-15,Commercial terms and exit,"Which features, connectors, single sign-on or provisioning sit in higher tiers?"
+RFI-16,Commercial terms and exit,"What does exit involve, how long does it take, what support is included, and what does it cost, including any cloud egress?"
+RFI-17,Commercial terms and exit,Are licence prices the same on any cloud or on our own infrastructure?
+RFI-18,"Security, identity and AI","Does the product use our identity provider for sign-in and automated user provisioning, at no extra charge?"
+RFI-19,"Security, identity and AI",Can classification and access policies be read by other tools?
+RFI-20,"Security, identity and AI","If the product includes AI features, where are prompts and answers processed and stored, are they used to train models, and can they be switched off?"
+RFI-21,"Security, identity and AI","Can an assistant we already approve query the product through an open protocol, respecting the same access rules?"
+RFI-22,Evidence,"Name customers who use the product with another supplier's catalogue, quality or lineage tool, and how they connect them."
+RFI-23,Evidence,Will you take part in a short proof of concept using our data and an interoperability test we define?

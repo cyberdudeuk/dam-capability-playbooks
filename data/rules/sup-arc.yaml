@@ -1,0 +1,14 @@
+# Data architecture and models: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-data-architecture-and-models
+  title: 'Starter rules: Data architecture and models (adapt column names to your
+    data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: ARC-01
+  check: unique
+  description: Each entity's key is unique
+  dimension: uniqueness
+  column: entity_id

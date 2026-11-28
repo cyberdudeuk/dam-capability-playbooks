@@ -1,0 +1,25 @@
+# Devolved governments and local government: starter quality rules in the Data Quality Commons (dqkit) format.
+# Generated from content/playbooks.yaml. Column names are examples; map them to your own data.
+asset:
+  id: example-devolved-governments-and-local-government
+  title: 'Starter rules: Devolved governments and local government (adapt column names
+    to your data)'
+  owner: Your organisation
+  importance: 3
+rules:
+- id: DEV-01
+  check: in_set
+  description: Nation is recorded from the allowed list
+  dimension: validity
+  column: nation
+  values:
+  - England
+  - Scotland
+  - Wales
+  - Northern Ireland
+- id: DEV-02
+  check: identifier
+  description: Area code is a GSS code
+  dimension: validity
+  column: area_code
+  scheme: gss_code
